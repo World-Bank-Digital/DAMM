@@ -185,6 +185,22 @@ close several of them without her answers:
 **Then:** loop 2 as the exit gate (re-verification, not re-research) → v1.7 stamped with
 G3 sign-off → DAR Studio 2.0.
 
+**DAR Studio integration has started** (23 Aug 2026), without violating standing decision 5:
+every value the twelve rulings can change is *data* in the canonical model file, so a ruling
+edits the model and bumps `revision` — the app is built once. State so far, in
+`~/Projects/dar-studio-v2` (its own git repo):
+
+- `model/` here exports `DAMM-v1.7-model.json` from the engine; `reference_scorer.py` +
+  `test_model_parity.py` prove the file alone reproduces every engine figure (verifier
+  stage 8, so the model cannot drift from the engine).
+- The app carries `src/lib/damm-v17/` — zod-validated loader + a TypeScript port of the
+  reference scorer, held to the pipeline's own Egypt/Nigeria outputs figure-for-figure
+  (23 tests; the app suite is 353/353). The v1.5 layer still stands beside it.
+- Remaining steps, in order: retire the v1.6-removed machinery (stages, CMS/EMS/OES,
+  coverage, confidence weights — 36 files still touch EMS), then evidence entry and the
+  readiness-matrix UI. After any model regeneration, re-copy
+  `model/DAMM-v1.7-model.json` → `src/data/model_v1_7.json` and rerun the app tests.
+
 **Also queued:** seed the Practice Library (25–30 entries); Studio v1 freeze; the loop-2
 workflow fixes already identified (tier enum in the research schema, per-country lead
 injection, FAOSTAT bulk-file route).
