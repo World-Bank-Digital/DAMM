@@ -68,6 +68,31 @@ def substantive(s):
     neg = ("none found", "no ", "not ", "n/a", "unpublished", "unmeasured", "unverified", "no published")
     return not s.strip().lower().startswith(neg)
 
+
+# The shared qualitative ladder. Extracted so the automated research orchestrator
+# derives levels through this function instead of reimplementing it: two copies of a
+# scoring rule are two rules, and the second one drifts. Behaviour is unchanged — the
+# verifier regenerates both countries' inputs and checks them figure for figure.
+LADDER_BASE = {"Absent": 1, "Announced": 2, "Adopted": 3, "Operating": 3}
+
+def ladder_level(rung, quality_evidence="", scale_evidence=""):
+    """Return (level, why) for a ladder indicator, or (None, "") if the rung is missing.
+
+    Operating earns +1 for substantive evidence of quality and a further +1 for
+    substantive evidence of scale, capped at 5. Quality gates scale: reach claimed
+    with no evidence of what is being delivered is not a level 5.
+    """
+    base = LADDER_BASE.get(rung)
+    if not base:
+        return None, ""
+    lvl, why = base, ""
+    if rung == "Operating" and substantive(quality_evidence):
+        lvl, why = lvl + 1, "+quality"
+        if substantive(scale_evidence):
+            lvl, why = lvl + 1, "+quality+scale"
+    return min(lvl, 5), why
+
+
 def build(iso):
     mp = json.load(open("machine_pass.json"))[ISO[iso].capitalize()]
     cells = {}
@@ -126,13 +151,8 @@ def build(iso):
             lvl = None; why = ""
             if kind == "l":
                 rung = c.get("presence_rung")
-                base = {"Absent": 1, "Announced": 2, "Adopted": 3, "Operating": 3}.get(rung)
-                if base:
-                    lvl = base
-                    if rung == "Operating" and substantive(c.get("quality_evidence")):
-                        lvl += 1; why = "+quality"
-                        if substantive(c.get("scale_evidence")): lvl += 1; why = "+quality+scale"
-                    lvl = min(lvl, 5)
+                lvl, why = ladder_level(rung, c.get("quality_evidence"), c.get("scale_evidence"))
+                if lvl:
                     queue.append((i, m.get("name",""), f"ladder {rung}{why} -> L{lvl}",
                                   (c.get("quality_evidence","") or "")[:160], (c.get("scale_evidence","") or "")[:160]))
                 else:
@@ -191,8 +211,12 @@ def build(iso):
                 f.write(f"| {i} | {pd} | {nd} | {str(n['value'])[:60]} |\n")
     print(f"{iso}: rows={len(rows)} queue={len(queue)} dlog={len(dlog)}")
 
-for iso in ("EGY", "NGA"):
-    have = [b for b in "ABCDEFG" if os.path.exists(f"research/{iso}_{b}.json")]
-    print(f"{iso}: bundles on disk: {have}")
-    if len(have) == 7 or "--partial" in sys.argv:
-        build(iso)
+# Guarded so the module can be imported for its derivation rules — `ladder_level`,
+# `norm_tier`, `substantive`, and the `standalone`/`americanize` text normalizers —
+# without rebuilding both countries as a side effect of the import.
+if __name__ == "__main__":
+    for iso in ("EGY", "NGA"):
+        have = [b for b in "ABCDEFG" if os.path.exists(f"research/{iso}_{b}.json")]
+        print(f"{iso}: bundles on disk: {have}")
+        if len(have) == 7 or "--partial" in sys.argv:
+            build(iso)

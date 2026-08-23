@@ -22,7 +22,8 @@ Reasoning vendors (Anthropic, OpenAI, Gemini) are reached through one uniform
 rather than comparing each vendor's built-in search.
 """
 
-import json, os, re, time, unicodedata, urllib.parse, urllib.request, urllib.error
+import json, os, re, threading, time, unicodedata
+import urllib.parse, urllib.request, urllib.error
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
@@ -77,6 +78,9 @@ class Ledger:
         self.ceiling, self.label = ceiling, label
         self.calls = []
         self._t0 = time.time()
+        # Fetches and vendor calls run concurrently, so the counter is shared state.
+        # Without the lock two callers can both pass `check` on the last dollar.
+        self._lock = threading.Lock()
 
     # -- pricing ---------------------------------------------------
     @staticmethod
@@ -93,17 +97,20 @@ class Ledger:
              + content_pages * PRICES.get("exa", {}).get("per_content_page", 0.0) \
              + fetches * PRICES.get("jina", {}).get("per_fetch", 0.0) \
              + requests * p.get("per_request", 0.0)
-        self.calls.append(dict(vendor=vendor, pass_name=pass_name, model=model,
-                               in_tok=in_tok, out_tok=out_tok, searches=searches,
-                               content_pages=content_pages, fetches=fetches,
-                               requests=requests, cost=round(cost, 6), detail=detail[:200],
-                               at=round(time.time() - self._t0, 1)))
+        with self._lock:
+            self.calls.append(dict(vendor=vendor, pass_name=pass_name, model=model,
+                                   in_tok=in_tok, out_tok=out_tok, searches=searches,
+                                   content_pages=content_pages, fetches=fetches,
+                                   requests=requests, cost=round(cost, 6),
+                                   detail=detail[:200],
+                                   at=round(time.time() - self._t0, 1)))
         return cost
 
     # -- reading ---------------------------------------------------
     def spent(self, pass_name=None):
-        return round(sum(c["cost"] for c in self.calls
-                         if pass_name is None or c["pass_name"] == pass_name), 6)
+        with self._lock:
+            return round(sum(c["cost"] for c in self.calls
+                             if pass_name is None or c["pass_name"] == pass_name), 6)
 
     def cap(self, pass_name):
         return self.ceiling * self.ALLOCATION.get(pass_name, 1.0)
@@ -407,13 +414,32 @@ class LLM:
 
     # -- the one call ----------------------------------------------
     def json_call(self, system, user, schema, pass_name, max_tokens=8000, detail=""):
-        """Return a dict validated against `schema` by the vendor's own JSON mode."""
-        self.ledger.check(pass_name)
-        fn = getattr(self, "_call_" + self.vendor)
-        out, in_tok, out_tok = fn(system, user, schema, max_tokens)
-        self.ledger.record(self.vendor, pass_name, model=self.model,
-                           in_tok=in_tok, out_tok=out_tok, detail=detail)
-        return out
+        """Return a dict validated against `schema` by the vendor's own JSON mode.
+
+        A reasoning model can spend its whole output allowance thinking and return an
+        empty body. That is a budget failure, not a refusal, and silently turning it
+        into a missing row would be the worst kind of gap — one caused by us. So an
+        empty or unparseable body is retried once with double the room, and only then
+        raises.
+        """
+        last = None
+        for attempt in range(2):
+            self.ledger.check(pass_name)
+            fn = getattr(self, "_call_" + self.vendor)
+            try:
+                out, in_tok, out_tok = fn(system, user, schema, max_tokens * (attempt + 1))
+            except json.JSONDecodeError as e:
+                last = VendorError(f"{self.model} returned no parseable JSON "
+                                   f"(likely the output allowance was spent on "
+                                   f"reasoning): {e}")
+                self.ledger.record(self.vendor, pass_name, model=self.model,
+                                   out_tok=max_tokens * (attempt + 1),
+                                   detail=f"EMPTY {detail}")
+                continue
+            self.ledger.record(self.vendor, pass_name, model=self.model,
+                               in_tok=in_tok, out_tok=out_tok, detail=detail)
+            return out
+        raise last
 
     def _call_anthropic(self, system, user, schema, max_tokens):
         import anthropic
@@ -450,13 +476,16 @@ class LLM:
             contents=user,
             config=types.GenerateContentConfig(
                 system_instruction=system,
-                max_output_tokens=max_tokens,
+                # Thinking tokens are drawn from this same allowance, so a budget
+                # sized for the answer alone returns an empty body. The floor buys
+                # the model room to think and still answer.
+                max_output_tokens=max(max_tokens, 16000),
                 response_mime_type="application/json",
                 response_json_schema=_gemini_schema(schema),
             ),
         )
         u = r.usage_metadata
-        return (json.loads(r.text),
+        return (json.loads(r.text or ""),
                 getattr(u, "prompt_token_count", 0) or 0,
                 (getattr(u, "candidates_token_count", 0) or 0)
                 + (getattr(u, "thoughts_token_count", 0) or 0))

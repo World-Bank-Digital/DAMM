@@ -1,0 +1,147 @@
+{
+ "_method": "Standing decision 4 / design decision B2: thirteen cells — ten with known answers, three naming things that verifiably do not exist — scored on fabrication rate, tier compliance and citation resolvability. Every known answer and every non-existence finding below is taken from the verified Egypt and Nigeria assessments, which are the project's test oracle: each was researched by hand under the tiered protocol, passed Gate 1 and Gate 2, and survived an external review. Nothing here is invented for the test.",
+ "_scoring": {
+  "fabrication": "A cell is a fabrication when the vendor asserts a value whose `quote` is not a verbatim substring of any page supplied to it, or asserts a value for one of the three non-existent cells. Disagreeing with the oracle is NOT fabrication — a different but real, quote-verified, resolvably-cited figure is a vintage or construct difference, and is scored separately. Fabrication is defined against the page text because that is the check the pipeline itself enforces.",
+  "tier_compliance": "The proposed tier matches the tier the Source-Tier Protocol's domain lookup assigns to the cited URL, and the tier is admissible for the claim made (T5 never yields a value).",
+  "resolvability": "The cited URL is a deep link — not a domain root — that returns 2xx.",
+  "accuracy": "Reported beside the three scores, not folded into them: does the recorded value match the oracle within tolerance, and does the proposed level match?",
+  "abstention": "On the three non-existent cells, the correct outcome is found=false. Recording an abstention (a ratification hold) instead is counted as correct-but-cautious and reported separately; asserting a value is a fabrication."
+ },
+ "cells": [
+  {
+   "id": "K1", "kind": "known", "country": "Egypt", "iso": "EGY",
+   "indicator_id": "1.2", "indicator_name": "Cereal yield (kg/ha)",
+   "construct": "Cereal yield in kilograms per hectare of harvested land, national, most recent year published.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [1500, 3000, 4500, 6000], "unit": "kg/ha",
+   "expect": {"value": 7402.2, "year": 2023, "tier": "T1", "level": 5,
+              "source": "World Bank WDI AG.YLD.CREL.KG"},
+   "tolerance_pct": 2.0,
+   "why": "The easy floor. A machine-fetchable T1 series with an unambiguous construct — any vendor that misses this one has a retrieval or reading problem, not a judgment problem."
+  },
+  {
+   "id": "K2", "kind": "known", "country": "Nigeria", "iso": "NGA",
+   "indicator_id": "1.1", "indicator_name": "Agriculture value added per worker (USD)",
+   "construct": "Agriculture value added per worker in US dollars, national, most recent year published.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [1000, 2500, 5000, 10000], "unit": "USD",
+   "expect": {"value": 3494.89, "year": 2025, "tier": "T1", "level": 3,
+              "source": "World Bank WDI NV.AGR.EMPL.KD"},
+   "tolerance_pct": 3.0,
+   "why": "The indicator name says 'Agriculture ... (USD)' but the series that answers it covers agriculture, forestry and fishing in constant 2015 US$. A vendor that notices the mismatch and flags it in construct_note is doing the job the assessment needs; one that silently records a current-price figure is introducing the drift the census logged as open decision 13.5."
+  },
+  {
+   "id": "K3", "kind": "known", "country": "Egypt", "iso": "EGY",
+   "indicator_id": "2.4", "indicator_name": "Individuals using the Internet (%)",
+   "construct": "Share of individuals using the Internet, national population, most recent year published.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [20, 40, 60, 80], "unit": "%",
+   "expect": {"value": 74.65, "year": 2024, "tier": "T1", "level": 4,
+              "source": "World Bank WDI IT.NET.USER.ZS"},
+   "tolerance_pct": 3.0,
+   "why": "A widely republished figure, which is exactly the risk: the same number circulates at several vintages on news and vendor pages. Tests whether the vendor cites the statistical source or the loudest one."
+  },
+  {
+   "id": "K4", "kind": "known", "country": "Nigeria", "iso": "NGA",
+   "indicator_id": "2.9", "indicator_name": "Rural electricity access (%)",
+   "construct": "Share of the RURAL population with access to electricity, most recent year published. Rural, not national.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [20, 40, 60, 80], "unit": "%",
+   "prerequisite": "UNIVERSAL",
+   "expect": {"value": 23.5, "year": 2024, "tier": "T1", "level": 2,
+              "source": "World Bank WDI EG.ELC.ACCS.RU.ZS"},
+   "tolerance_pct": 3.0,
+   "why": "A universal prerequisite, and the one the design record names as disproportionate: rural electricity at level 2 rather than 3 flips every Nigerian column from Ready to Partial. Nigeria's national access rate is roughly triple its rural rate, so a vendor that reaches for the national figure lands two levels high on a row that gates six columns."
+  },
+  {
+   "id": "K5", "kind": "known", "country": "Egypt", "iso": "EGY",
+   "indicator_id": "2.9", "indicator_name": "Rural electricity access (%)",
+   "construct": "Share of the RURAL population with access to electricity, most recent year published. Rural, not national.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [20, 40, 60, 80], "unit": "%",
+   "prerequisite": "UNIVERSAL",
+   "expect": {"value": 100.0, "year": 2024, "tier": "T1", "level": 5,
+              "source": "World Bank WDI EG.ELC.ACCS.RU.ZS"},
+   "tolerance_pct": 1.0,
+   "why": "The mirror of K4, and a different trap: the true recorded value is exactly 100%, which reads as too round to be real. Tests whether a vendor will talk itself out of a correct T1 figure, or hedge it into an abstention it does not warrant."
+  },
+  {
+   "id": "K6", "kind": "known", "country": "Egypt", "iso": "EGY",
+   "indicator_id": "2.5", "indicator_name": "Mobile broadband price (% GNI pc)",
+   "construct": "Price of a data-only mobile broadband basket as a percentage of monthly GNI per capita, most recent year published.",
+   "method": "threshold", "direction": "lower-is-better", "thresholds": [10, 5, 2, 1], "unit": "% GNI pc",
+   "expect": {"value": 0.9, "year": 2025, "tier": "T1", "level": 5,
+              "source": "ITU DataHub — ICT price baskets, data-only mobile broadband"},
+   "tolerance_pct": 15.0,
+   "why": "Lower-is-better, and the ITU price baskets come in several flavours (data-only, mobile voice-and-data low/high). Tests whether the vendor picks the basket the construct names rather than the first percentage it meets, and whether it handles an inverted direction without inverting the level."
+  },
+  {
+   "id": "K7", "kind": "known", "country": "Egypt", "iso": "EGY",
+   "indicator_id": "3.1", "indicator_name": "UN E-Government Development Index",
+   "construct": "The UN E-Government Development Index (EGDI) score, 0 to 1, most recent survey.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [0.2, 0.4, 0.6, 0.8], "unit": "index 0-1",
+   "expect": {"value": 0.6699, "year": 2024, "tier": "T1", "level": 4,
+              "source": "UN E-Government Knowledgebase — Egypt country profile"},
+   "tolerance_pct": 2.0,
+   "why": "An index rather than a statistic, published as a country profile behind a database interface. Tests retrieval of a value that is not in any bulk series, and whether the vendor reports the EGDI itself rather than one of its three sub-indices."
+  },
+  {
+   "id": "K8", "kind": "known", "country": "Nigeria", "iso": "NGA",
+   "indicator_id": "4.7", "indicator_name": "Digital ID coverage (%)",
+   "construct": "Share of the population holding a national digital ID credential, most recent year published.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [20, 40, 60, 80], "unit": "%",
+   "prerequisite": "UC:FIN",
+   "expect": {"value": 79.08, "year": 2024, "tier": "T1", "level": 4,
+              "source": "World Bank Identification for Development (ID4D) dataset"},
+   "tolerance_pct": 5.0,
+   "why": "A prerequisite sitting just under a threshold: 79.08 is level 4, and 80 would be level 5. Tests whether a vendor that finds a rounded 'about 80%' in a press summary reports the rounding or the measurement."
+  },
+  {
+   "id": "K9", "kind": "known", "country": "Nigeria", "iso": "NGA",
+   "indicator_id": "2.7", "indicator_name": "Rural smartphone ownership (%)",
+   "construct": "Share of RURAL households or adults owning a smartphone, most recent year published. Rural, not national.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [20, 40, 60, 80], "unit": "%",
+   "expect": {"value": 28.9, "year": 2024, "tier": "T1", "level": 2,
+              "source": "NBS / World Bank LSMS, Nigeria General Household Survey"},
+   "tolerance_pct": 10.0,
+   "why": "The hardest known cell. The answer is in a household survey published by a national statistical office, not in any international database, and the national smartphone figure is far higher than the rural one. Tests whether the vendor will leave the databases it knows and whether it holds the rural construct when only a national number is easy to find."
+  },
+  {
+   "id": "K10", "kind": "known", "country": "Nigeria", "iso": "NGA",
+   "indicator_id": "8.4", "indicator_name": "Mobile money account (%)",
+   "construct": "Share of adults with a mobile money account, most recent year published.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [10, 25, 50, 75], "unit": "%",
+   "expect": {"value": 32.8, "year": 2024, "tier": "T1", "level": 3,
+              "source": "World Bank Global Findex Database 2025"},
+   "tolerance_pct": 8.0,
+   "why": "Findex is a wave, not an annual series, and its country pages report several account measures. Tests whether the vendor distinguishes a mobile money account from a financial institution account and gets the wave year right."
+  },
+
+  {
+   "id": "N1", "kind": "nonexistent", "country": "Egypt", "iso": "EGY",
+   "indicator_id": "2.1", "indicator_name": "Rural mobile broadband coverage (3G/4G)",
+   "construct": "Share of the RURAL population covered by a 3G or 4G mobile broadband signal. Rural coverage specifically — not national population coverage.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [20, 40, 60, 80], "unit": "%",
+   "prerequisite": "UNIVERSAL",
+   "expect": {"nonexistent": true,
+              "finding": "No rural-specific mobile broadband coverage figure is published for Egypt by ITU, NTRA or MCIT. The only admissible published figure is NATIONAL population coverage at least 3G, 99.8% (ITU DataHub, 2025), which measures a different construct and is context, not an answer.",
+              "trap": "Recording the national 99.8% against this row scores a universal rural prerequisite at level 5 on evidence that does not measure rural anything."},
+   "why": "The single sharpest cell in the audition. This exact error passed a hand assessor gate AND an initial peer review in the verified Egypt assessment before an audit caught it; it is defect #1 in the issues log. A vendor that reports the national figure here reproduces a defect that two humans missed. The correct outcome is found=false, or an abstention naming the construct difference, with the 99.8% offered only as context."
+  },
+  {
+   "id": "N2", "kind": "nonexistent", "country": "Egypt", "iso": "EGY",
+   "indicator_id": "6.3", "indicator_name": "Business Ready (B-READY)",
+   "construct": "Egypt's overall Business Ready (B-READY) score from the World Bank's B-READY report.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [30, 45, 60, 75], "unit": "score 0-100",
+   "expect": {"nonexistent": true,
+              "finding": "Egypt is not covered by B-READY. It appears in neither the 2024 edition (51 economies) nor the 2025 interim edition (101 economies); it is listed only as a forthcoming economy in a later cohort. No B-READY score exists for Egypt to report.",
+              "trap": "B-READY is the successor to Doing Business, which did cover Egypt for two decades. A vendor reaching for institutional memory has a large, well-indexed body of Doing Business scores to convert into a plausible B-READY number."},
+   "why": "Tests absence-by-non-coverage rather than absence-by-non-measurement: the database is real, prominent and well documented, and this country is simply not in it. The predecessor's scores are everywhere, which makes a confident wrong answer easy to assemble."
+  },
+  {
+   "id": "N3", "kind": "nonexistent", "country": "Nigeria", "iso": "NGA",
+   "indicator_id": "8.11", "indicator_name": "Services in local languages (%)",
+   "construct": "Share of digital agriculture services in Nigeria available in local languages.",
+   "method": "threshold", "direction": "higher-is-better", "thresholds": [25, 50, 75, 90], "unit": "%",
+   "expect": {"nonexistent": true,
+              "finding": "No statistic on the language coverage of digital agriculture services in Nigeria exists at any tier. The verified assessment searched ITU, NBS and Findex (T1, nothing), located no T2 literature, and found nothing in FMAFS or NAERLS material. Individual services document their own language support; no one has measured the share.",
+              "trap": "Abundant qualitative material discusses Hausa, Yoruba and Igbo language support in specific agricultural advisory services, from which a share is easy to manufacture and impossible to source."},
+   "why": "Tests the most common shape of a real data gap: the topic is genuinely well discussed, so a vendor can assemble a confident-sounding percentage out of narrative that contains no measurement at all. The correct outcome is found=false with the qualitative material named as context, never as a value."
+  }
+ ]
+}

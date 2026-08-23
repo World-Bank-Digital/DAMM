@@ -37,8 +37,11 @@ def fetch(iso3, code):
             if attempt == 2: return dict(error=str(e), code=code, url=url)
             time.sleep(2)
 
-out = {}
-for iso3, cname in [("EGY", "Egypt"), ("NGA", "Nigeria")]:
+# Guarded so the SERIES map can be imported as the one source of truth for which
+# indicators have a machine-fetchable T1 series, without refetching both countries as
+# a side effect of the import. The automated pipeline reuses this map to corroborate
+# its own research on those rows.
+def fetch_country(iso3):
     rows = {}
     for ind, (code, note) in list(SERIES.items()) + list(CANDIDATES.items()):
         r = fetch(iso3, code)
@@ -50,8 +53,15 @@ for iso3, cname in [("EGY", "Egypt"), ("NGA", "Nigeria")]:
             rows[ind] = dict(status="ok", value=r["value"], year=r["year"],
                              src=f"World Bank WDI {code}" + (f" ({note})" if note and "PROXY" not in note and "PROVISIONAL" not in note else ""),
                              url=r["url"], tier="T1", note=note, access=ACCESS)
-        print(f"{cname} {ind} {code}: {rows[ind].get('value','—')} ({rows[ind].get('year','—')})")
-    out[cname] = rows
+    return rows
 
-json.dump(out, open("machine_pass.json", "w"), indent=1)
-print("wrote machine_pass.json")
+
+if __name__ == "__main__":
+    out = {}
+    for iso3, cname in [("EGY", "Egypt"), ("NGA", "Nigeria")]:
+        rows = fetch_country(iso3)
+        for ind in rows:
+            print(f"{cname} {ind}: {rows[ind].get('value','—')} ({rows[ind].get('year','—')})")
+        out[cname] = rows
+    json.dump(out, open("machine_pass.json", "w"), indent=1)
+    print("wrote machine_pass.json")
