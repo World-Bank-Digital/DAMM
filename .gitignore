@@ -1,3 +1,9 @@
+# Secrets — never committed. The pipeline reads vendor keys from a local .env
+# (standing decision 3: keys live on disk, never in a transcript, never in git).
+.env
+.env.*
+!.env.example
+
 # Build scratch and OS cruft — never source of record.
 __pycache__/
 *.pyc
