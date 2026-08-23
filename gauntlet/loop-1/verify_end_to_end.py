@@ -180,6 +180,21 @@ for c in ("Egypt", "Nigeria"):
     ok(f"{c}: 7 sheets incl. Tiers and Issues",
        len(wb.sheetnames) == 7 and {"Tiers","Issues"} <= set(wb.sheetnames), ", ".join(wb.sheetnames))
 
+# ── 8 canonical model export ────────────────────────────────────────────────
+stage(8, "Canonical model — the export DAR Studio consumes")
+rc, out = run("python3 ../../model/export_model.py")
+ok("model exports from the engine", rc == 0, out.strip().splitlines()[-1][:90] if out.strip() else "")
+rc, out = run("python3 ../../model/test_model_parity.py")
+last = out.strip().splitlines()[-1][:110] if out.strip() else ""
+ok("model file alone reproduces every engine figure", rc == 0, last)
+mj = json.load(open("../../model/DAMM-v1.7-model.json"))
+ok("model is versioned and flagged unratified",
+   mj["version"] == "1.7" and mj["ratified"] is False and mj["revision"] >= 1,
+   f'v{mj["version"]} rev{mj["revision"]} ratified={mj["ratified"]}')
+ok("every open decision names the fields it governs",
+   len(mj["open_decisions"]) == 12 and all(d.get("governs") is not None for d in mj["open_decisions"]),
+   f'{len(mj["open_decisions"])} decisions')
+
 stamp = datetime.datetime.now().strftime("%d %B %Y, %H:%M")
 head = (f"# DAMM v1.7 — end-to-end build and verification record\n\n"
         f"Run {stamp}. Every artifact below was regenerated from the sources of record and then checked; "
