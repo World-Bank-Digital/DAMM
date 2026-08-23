@@ -239,6 +239,10 @@ def score_answer(cell, ans, pack):
         s["resolvable"], s["resolve_detail"] = ok, why
     else:
         s["resolvable"], s["resolve_detail"] = None, "no citation asserted"
+    # None means the check could not decide — no citation to check, or the publisher's
+    # own server failed. Either way it is excluded from the rate, never counted as a
+    # failure.
+    s["resolve_checked"] = s["resolvable"] is not None
 
     e = cell["expect"]
     if cell["kind"] == "known":
@@ -264,6 +268,7 @@ def rates(scores, cells_by_id):
     asserted = [s for s in scores if s["asserted"]]
     known = [s for s in scores if s["kind"] == "known"]
     absent = [s for s in scores if s["kind"] == "nonexistent"]
+    checked = [s for s in asserted if s.get("resolve_checked")]
     def pct(a, b):
         return None if not b else round(100.0 * a / b, 1)
     return dict(
@@ -272,7 +277,9 @@ def rates(scores, cells_by_id):
         fabrication_rate=pct(sum(1 for s in scores if s["fabricated"]), n),
         asserted=len(asserted),
         tier_compliance=pct(sum(1 for s in asserted if s["tier_ok"]), len(asserted)),
-        resolvability=pct(sum(1 for s in asserted if s["resolvable"]), len(asserted)),
+        resolvability=pct(sum(1 for s in checked if s["resolvable"]), len(checked)),
+        resolve_checked=len(checked),
+        resolve_inconclusive=len(asserted) - len(checked),
         off_pack_citations=sum(1 for s in scores if s.get("off_pack_citation")),
         value_accuracy=pct(sum(1 for s in known if s.get("value_match")), len(known)),
         level_accuracy=pct(sum(1 for s in known if s.get("level_match")), len(known)),
@@ -394,9 +401,65 @@ def write_report(res, path):
 
 # ------------------------------------------------------------------ main
 
+def assemble(cells, state, ledger, prior_spend=None):
+    """Build the results file and the report from whatever state holds.
+
+    Shared by the live run and by --rescore, so a corrected scoring rule and a
+    fresh run always produce the same shape of report.
+    """
+    done = [c for c in cells if c["id"] in state["cells"]]
+    ent_names = sorted({n for c in done for n in state["cells"][c["id"]]["answers"]})
+    out_entrants = []
+    for name in ent_names:
+        answers = {c["id"]: state["cells"][c["id"]]["answers"].get(name, {}) for c in done}
+        scores = {c["id"]: state["cells"][c["id"]]["scores"].get(name, {}) for c in done}
+        have = [s for s in scores.values() if s]
+        out_entrants.append(dict(name=name, answers=answers, scores=scores,
+                                 rates=rates(have, {c["id"]: c for c in done})))
+    out_entrants.sort(key=lambda e: (e["rates"]["fabrication_rate"],
+                                     -(e["rates"]["tier_compliance"] or 0)))
+
+    discovery = {}
+    for c in done:
+        st = state["cells"][c["id"]]
+        for p in st["pack"]:
+            for who in p["surfaced_by"].split(", ") if isinstance(p["surfaced_by"], str) \
+                    else p["surfaced_by"]:
+                d = discovery.setdefault(who, dict(pages=0, admissible=0, cells=set()))
+                d["pages"] += 1
+                if p["tier"] in ("T1", "T2", "T3"):
+                    d["admissible"] += 1
+                    d["cells"].add(c["id"])
+    for d in discovery.values():
+        d["admissible_cells"] = len(d.pop("cells"))
+
+    res = dict(meta=dict(run_at=time.strftime("%d %B %Y, %H:%M"),
+                         spend=(prior_spend or ledger.summary()),
+                         pages_fetched=sum(len(state["cells"][c["id"]]["pack"]) for c in done)),
+               cells=done, entrants=out_entrants, discovery=discovery)
+    json.dump(res, open(RESULTS, "w"), indent=1, default=str)
+    write_report(res, REPORT)
+
+    print("\n" + "=" * 72)
+    for e in out_entrants:
+        r = e["rates"]
+        print(f"{e['name']:34} fabrication {str(r['fabrication_rate']):>5}%  "
+              f"tier {str(r['tier_compliance']):>5}%  resolvable {str(r['resolvability']):>5}%  "
+              f"value {str(r['value_accuracy']):>5}%  absence {str(r['absence_detected']):>5}%")
+    print(f"\nspend ${res['meta']['spend'].get('total', 0):.2f} · "
+          f"wrote {os.path.basename(REPORT)}")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--rescore", action="store_true",
+                    help="rebuild the scores and the report from the saved state, "
+                         "without making a single vendor call — the checkpointed pages "
+                         "and answers are the evidence, so a corrected scoring rule is "
+                         "applied to the run that already happened rather than "
+                         "occasioning a new one")
     ap.add_argument("--cells", default="")
     ap.add_argument("--ceiling", type=float, default=40.0)
     args = ap.parse_args()
@@ -409,6 +472,23 @@ def main():
         cells = [c for c in cells if c["id"] in want]
 
     ledger = V.Ledger(ceiling=args.ceiling, label="audition")
+
+    def log(m):
+        print(m, flush=True)
+
+    if args.rescore:
+        state = json.load(open(STATE))
+        prior = json.load(open(os.path.join(HERE, "audition_spend.json")))
+        print(f"rescoring {len(state['cells'])} cells from saved evidence — "
+              "no vendor calls")
+        for cid, st in state["cells"].items():
+            pack = [dict(p, text=st["pack_text"].get(p["url"], "")) for p in st["pack"]]
+            cell = next(c for c in spec["cells"] if c["id"] == cid)
+            st["scores"] = {name: score_answer(cell, a, pack)
+                            for name, a in st["answers"].items()}
+        json.dump(state, open(STATE, "w"), indent=1)
+        return assemble(cells, state, ledger, prior_spend=prior.get("summary"))
+
     print(f"budget ceiling ${args.ceiling:.0f} · {len(cells)} cells")
     entrants = build_entrants(ledger)
     print("entrants: " + ", ".join(e["name"] for e in entrants))
@@ -417,9 +497,6 @@ def main():
     if args.resume and os.path.exists(STATE):
         state = json.load(open(STATE))
         print(f"resuming — {len(state['cells'])} cells already done")
-
-    def log(m):
-        print(m, flush=True)
 
     for cell in cells:
         if cell["id"] in state["cells"]:
@@ -464,47 +541,7 @@ def main():
         json.dump(state, open(STATE, "w"), indent=1)
         ledger.save(os.path.join(HERE, "audition_spend.json"))
 
-    # ---- assemble
-    done = [c for c in cells if c["id"] in state["cells"]]
-    ent_names = sorted({n for c in done for n in state["cells"][c["id"]]["answers"]})
-    out_entrants = []
-    for name in ent_names:
-        answers = {c["id"]: state["cells"][c["id"]]["answers"].get(name, {}) for c in done}
-        scores = {c["id"]: state["cells"][c["id"]]["scores"].get(name, {}) for c in done}
-        have = [s for s in scores.values() if s]
-        out_entrants.append(dict(name=name, answers=answers, scores=scores,
-                                 rates=rates(have, {c["id"]: c for c in done})))
-    out_entrants.sort(key=lambda e: (e["rates"]["fabrication_rate"],
-                                     -(e["rates"]["tier_compliance"] or 0)))
-
-    discovery = {}
-    for c in done:
-        st = state["cells"][c["id"]]
-        for p in st["pack"]:
-            for who in p["surfaced_by"].split(", ") if isinstance(p["surfaced_by"], str) \
-                    else p["surfaced_by"]:
-                d = discovery.setdefault(who, dict(pages=0, admissible=0, cells=set()))
-                d["pages"] += 1
-                if p["tier"] in ("T1", "T2", "T3"):
-                    d["admissible"] += 1
-                    d["cells"].add(c["id"])
-    for d in discovery.values():
-        d["admissible_cells"] = len(d.pop("cells"))
-
-    res = dict(meta=dict(run_at=time.strftime("%d %B %Y, %H:%M"),
-                         spend=ledger.summary(),
-                         pages_fetched=sum(len(state["cells"][c["id"]]["pack"]) for c in done)),
-               cells=done, entrants=out_entrants, discovery=discovery)
-    json.dump(res, open(RESULTS, "w"), indent=1, default=str)
-    write_report(res, REPORT)
-
-    print("\n" + "=" * 72)
-    for e in out_entrants:
-        r = e["rates"]
-        print(f"{e['name']:34} fabrication {str(r['fabrication_rate']):>5}%  "
-              f"tier {str(r['tier_compliance']):>5}%  resolvable {str(r['resolvability']):>5}%  "
-              f"value {str(r['value_accuracy']):>5}%  absence {str(r['absence_detected']):>5}%")
-    print(f"\nspend ${ledger.spent():.2f} · wrote {os.path.basename(REPORT)}")
+    return assemble(cells, state, ledger)
 
 
 if __name__ == "__main__":

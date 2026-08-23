@@ -180,7 +180,13 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=3):
 TIER_DOMAINS = [
     ("T1", ["fao.org", "faostat", "aquastat", "worldbank.org", "data.worldbank.org",
             "api.worldbank.org", "itu.int", "ifad.org", "wfp.org", "findex",
-            "unstats.un.org", "ilostat.ilo.org", "data.un.org", "unicef.org/statistics",
+            "ilostat.ilo.org", "unicef.org/statistics",
+            # UN official databases are T1 by host, not by the un.org suffix: the same
+            # suffix also carries the UN's newswire. The audition made this concrete —
+            # every entrant proposed T1 for the E-Government Knowledgebase and was
+            # marked non-compliant by a lookup that had never heard of the host.
+            "unstats.un.org", "data.un.org", "publicadministration.un.org",
+            "population.un.org", "comtrade.un.org", "sdgs.un.org", "unctadstat.unctad.org",
             "capmas.gov.eg", "nigerianstat.gov.ng", "dhsprogram.com", "ipcinfo.org"]),
     ("T2", ["openknowledge.worldbank.org", "openknowledge.fao.org", "cgiar.org", "ifpri.org",
             "doi.org", "nature.com", "sciencedirect.com", "springer.com", "link.springer.com",
@@ -190,6 +196,7 @@ TIER_DOMAINS = [
             "cbn.gov.ng", "cbe.org.eg", "fmard.gov.ng", "fmino.gov.ng"]),
     ("T4", ["gsma.com", "giz.de", "usaid.gov", "agra.org", "reliefweb.int",
             "ifc.org", "cgap.org", "technoserve.org", "mercycorps.org"]),
+    ("T5", ["news.un.org", "blogs.worldbank.org", "un.org/press"]),
 ]
 _GOV_RE = re.compile(r"\.gov(\.[a-z]{2})?$|\.go\.[a-z]{2}$|\.gouv\.[a-z]{2}$")
 
@@ -292,11 +299,18 @@ def jina_fetch(url, ledger, pass_name, max_chars=120000, timeout=90):
     return (txt or "")[:max_chars]
 
 
-def url_resolves(url, timeout=25):
+def url_resolves(url, timeout=25, retries=2):
     """Citation resolvability: does the deep link actually return a document?
 
+    Returns (verdict, detail) where verdict is True, False, or None.
+
     A domain root is not a citation (protocol rule 3), so a bare-root URL fails here
-    even when it answers 200.
+    even when it answers 200. But a publisher's server failing on the day we check is
+    not a bad citation, and marking it one would fault a vendor for someone else's
+    outage — which is what happened in the audition, where a page Jina had already
+    fetched successfully answered a Cloudflare 522 minutes later. Server-side failures
+    and timeouts therefore return None: inconclusive, and excluded from the rate rather
+    than counted against it.
     """
     if not url or not url.lower().startswith("http"):
         return False, "not a url"
@@ -306,13 +320,22 @@ def url_resolves(url, timeout=25):
     req = urllib.request.Request(url, method="GET", headers={
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"})
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return (200 <= r.status < 300), f"HTTP {r.status}"
-    except urllib.error.HTTPError as e:
-        return False, f"HTTP {e.code}"
-    except Exception as e:
-        return False, type(e).__name__
+    last = (None, "unchecked")
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return (200 <= r.status < 300), f"HTTP {r.status}"
+        except urllib.error.HTTPError as e:
+            if e.code >= 500:
+                last = (None, f"HTTP {e.code} — publisher server error, inconclusive")
+            elif e.code in (403, 429):
+                last = (None, f"HTTP {e.code} — fetch blocked, inconclusive")
+            else:
+                return False, f"HTTP {e.code}"
+        except Exception as e:
+            last = (None, f"{type(e).__name__} — inconclusive")
+        time.sleep(1 + attempt)
+    return last
 
 
 def perplexity_citations(question, ledger, pass_name, model="sonar-pro"):
