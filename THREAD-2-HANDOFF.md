@@ -8,15 +8,15 @@ by interview, your scope, your acceptance test, and the traps that cost real tim
 
 ## Status in one paragraph
 
-DAMM v1.7 is built and verified (72 checks). A 24-file review package for Katreyna Schroeder is
+DAMM v1.7 is built and verified (76 checks). A 24-file review package for Katreyna Schroeder is
 finished and **being sent** — it is not yours to touch. DAR Studio has been rebuilt on v1.7: the
 v1.5 domain layer is retired (−23,399 lines), and the app now carries a zod-validated model
 loader and a scorer held figure-for-figure to the assessment pipeline's own Egypt and Nigeria
 outputs. A design interview then settled **27 decisions** for an automated research-and-drafting
 pipeline; they are recorded in `DAR-Studio-Automation-Design.md` and **are not to be
-relitigated**. Vendor API keys are now in place. Your job is the first build phase: the model
-file changes, the vendor audition, and the research orchestrator — proven by a shadow run of
-Egypt against the verified assessment.
+relitigated**. Vendor API keys are now in place, and Task 0 (the model file changes) is already
+done. Your job is the rest of the first build phase: the vendor audition and the research
+orchestrator — proven by a shadow run of Egypt against the verified assessment.
 
 ---
 
@@ -45,14 +45,14 @@ There is **no Time Machine on this Mac** — git is the only backup.
 
 - **The model is canonical and machine-readable.** `model/export_model.py` generates
   `DAMM-v1.7-model.json` from the engine; `reference_scorer.py` scores from that file alone and
-  `test_model_parity.py` proves it reproduces every engine figure (276 checks). Verifier stage 8
+  `test_model_parity.py` proves it reproduces every engine figure (293 checks). Verifier stage 8
   keeps it from drifting.
 - **The diagnostic report renderer works.** `render_v17.py` emits ten Playbook-tagged sections,
   four chart types, standalone, with an **emit-blocking QC gate**. It survived a gauntlet and an
   external review. Decision E1: **use it as-is.** Do not rewrite it.
 - **The app's domain layer is v1.7.** `src/lib/damm-v17/` — validated loader, scorer, evidence
-  bridge, server actions, workspace UI. 123 tests pass; typecheck and lint clean.
-- **`verify_end_to_end.py` regenerates and checks everything** — 8 stages, 72 checks. Run it
+  bridge, server actions, workspace UI. 133 tests pass; typecheck and lint clean.
+- **`verify_end_to_end.py` regenerates and checks everything** — 8 stages, 76 checks. Run it
   before and after your changes; it must stay green.
 
 ---
