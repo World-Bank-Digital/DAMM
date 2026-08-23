@@ -1,0 +1,33 @@
+{
+ "_note": "Unit prices in US dollars, used only to convert measured usage counts into a spend figure. Usage counts (tokens, searches, pages) are recorded exactly; dollars are derived. Correct a price here and every past run's cost recomputes from its recorded counts — no re-run needed. Every line names where the price came from and when it was read, so a stale price is visible rather than silent.",
+ "_read_on": "2026-08-24",
+ "anthropic": {
+  "_source": "claude-api skill model table, cached 2026-06-24",
+  "claude-opus-5":   {"in_per_mtok": 5.00,  "out_per_mtok": 25.00},
+  "claude-opus-4-8": {"in_per_mtok": 5.00,  "out_per_mtok": 25.00},
+  "claude-sonnet-5": {"in_per_mtok": 3.00,  "out_per_mtok": 15.00},
+  "claude-haiku-4-5":{"in_per_mtok": 1.00,  "out_per_mtok": 5.00},
+  "_default":        {"in_per_mtok": 5.00,  "out_per_mtok": 25.00}
+ },
+ "openai": {
+  "_source": "UNCONFIRMED — placeholder at Anthropic Opus-tier rates so the counter never reads low. Replace with the published rate for whichever model resolve_model() selects; the recorded token counts make the correction exact.",
+  "_default": {"in_per_mtok": 5.00, "out_per_mtok": 25.00}
+ },
+ "gemini": {
+  "_source": "UNCONFIRMED — placeholder at Anthropic Opus-tier rates so the counter never reads low. Replace with the published rate for whichever model resolve_model() selects.",
+  "_default": {"in_per_mtok": 5.00, "out_per_mtok": 25.00}
+ },
+ "perplexity": {
+  "_source": "UNCONFIRMED — placeholder at Anthropic Opus-tier rates plus a per-request search fee. Perplexity is a discovery peer only (decision C6), so its share of spend is small by construction.",
+  "_default": {"in_per_mtok": 5.00, "out_per_mtok": 25.00, "per_request": 0.005}
+ },
+ "exa": {
+  "_source": "UNCONFIRMED — Exa publishes per-search and per-page-of-contents pricing. Counts are exact; correct these two numbers to make the dollars exact.",
+  "per_search": 0.005,
+  "per_content_page": 0.001
+ },
+ "jina": {
+  "_source": "UNCONFIRMED — Jina Reader bills per token of returned page text. Priced here per fetched page as an upper-bound placeholder.",
+  "per_fetch": 0.001
+ }
+}

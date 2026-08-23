@@ -12,3 +12,6 @@ __pycache__/
 
 # LibreOffice recalc leftovers
 .~lock.*
+
+# Local virtualenv for the research pipeline (vendor SDKs). Never source of record.
+.venv/
