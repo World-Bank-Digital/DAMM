@@ -188,6 +188,22 @@ def run_gates(ans, *, country, indicator_id, is_prerequisite, quote_ok, quote_pa
                             f"for level {claimed}"))
             return out
     out.append(Gate("coherence", "pass", ""))
+
+    # 7. argument — a level below 5 must say what the level above would have required.
+    #
+    # This is the design record's own standard, applied mechanically: "A level with no
+    # negative finding is an assertion, not an assessment." It matters most exactly
+    # where the machine sets a level from non-numeric evidence, because there the
+    # argument is the only thing between the evidence and the score.
+    claimed = ans.get("proposed_level")
+    if isinstance(claimed, int) and 1 <= claimed <= 4 \
+            and len((ans.get("negative_finding") or "").strip()) < 20:
+        out.append(Gate("argument", "hold",
+                        f"level {claimed} is proposed with no negative finding — nothing "
+                        f"is recorded about what level {claimed + 1} would have required "
+                        f"and the evidence does not show"))
+        return out
+    out.append(Gate("argument", "pass", ""))
     return out
 
 

@@ -167,7 +167,16 @@ def retrieve(spec, country, llm, ledger, log):
                        tier=V.tier_for_url(u), surfaced_by=[who])
         ranked.append(seen[u])
 
+    # The planner's queries plus one deterministic query built from the country and the
+    # indicator name. Two probe runs of the same row produced a Documented level and a
+    # gap purely because the planner's three queries went a different way the second
+    # time and never reached the ministry page that carries the answer. A plain,
+    # always-present query costs one search and puts a floor under retrieval, so a row's
+    # outcome turns less on which phrasing the planner happened to choose.
     queries = [q for q in (plan.get("queries") or [])[:MAX_QUERIES] if q.strip()]
+    baseline = f"{country} {spec['name']}"
+    if not any(baseline.lower() == q.lower() for q in queries):
+        queries.append(baseline)
 
     def one_search(q):
         try:
@@ -227,13 +236,19 @@ def retrieve(spec, country, llm, ledger, log):
 
 # ------------------------------------------------------------------ derivation
 
-def derive_class(value_kind, tier, url):
+def derive_class(spec, value_kind, tier, url):
     """The evidence class is derived from what was recorded, never chosen.
 
     A T5-only citation derives Judged, never Documented — a design invariant, and the
     reason the tier gate can hold a row without deleting what it found.
+
+    A ladder indicator is never Measured, whatever the vendor returned. Measured means
+    "the level is threshold-derived from a recorded number", and a ladder indicator has
+    no thresholds to derive against — its level comes from the presence rung. Neither
+    verified assessment carries a single Measured ladder row, and letting one through
+    would put a class on the page that its own level could not have come from.
     """
-    if value_kind == "number":
+    if value_kind == "number" and spec["method"] != "ladder":
         return "Measured"
     if url and tier and tier != "T5":
         return "Documented"
@@ -250,16 +265,24 @@ def derive_level(spec, ans, cls, verdict):
         if lvl is None:
             return None, "ladder rung not established"
         return lvl, f"ladder {ans.get('presence_rung')}{why}"
-    if cls != "Measured":
-        # A threshold row with no number has nothing to compare against its cut points.
-        # Guessing one would be the assessor judgment C2 removed, so the row holds.
-        return None, "threshold indicator with no numeric value"
-    try:
-        v = float(str(ans["value"]).replace(",", "").replace("%", "").strip())
-    except (ValueError, KeyError):
-        return None, "recorded value is not numeric"
-    return tlevel(v, "H" if spec["direction"] == "higher-is-better" else "L",
-                  spec["thresholds"]), "threshold"
+    if cls == "Measured":
+        try:
+            v = float(str(ans["value"]).replace(",", "").replace("%", "").strip())
+        except (ValueError, KeyError):
+            return None, "recorded value is not numeric"
+        return tlevel(v, "H" if spec["direction"] == "higher-is-better" else "L",
+                      spec["thresholds"]), "threshold"
+    # A threshold indicator that no one publishes a headline number for. The evidence is
+    # real — a range, several partial measures, a qualitative finding — and the machine
+    # argues it against the cut points itself, which is what C2 means by the machine
+    # setting levels. Both verified assessments carry rows of exactly this shape:
+    # Documented, with a level. Holding them instead would report an absence where there
+    # is evidence, and manufacturing a number from a range would give the row a
+    # precision its sources do not have.
+    claimed = ans.get("proposed_level")
+    if isinstance(claimed, int) and 1 <= claimed <= 5:
+        return claimed, "argued against the cut points from non-numeric evidence"
+    return None, "no level argued and no numeric value recorded"
 
 
 def numeric(ans):
@@ -317,7 +340,7 @@ def row_from(spec, ans, verdict, gate, pack, corroboration, country):
                     note=compose_note(ans, verdict, gate, "", corroboration),
                     tier="", tier_detail="", url="")
 
-    cls = derive_class(ans.get("value_kind"), tier, url)
+    cls = derive_class(spec, ans.get("value_kind"), tier, url)
     level, how = derive_level(spec, ans, cls, verdict)
     if cls == "Measured":
         value = numeric(ans)
