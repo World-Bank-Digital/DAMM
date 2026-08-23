@@ -47,6 +47,9 @@ import machine_pass
 
 PASS = "research"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
+# The assessment year comes from the model file, so a ratification that moves it moves
+# the currency gate with it rather than leaving a constant behind in this file.
+ASSESSMENT_YEAR = json.load(open(MODEL_FILE))["config"]["assessment_year"]
 
 MAX_QUERIES = 3
 EXA_RESULTS = 6
@@ -388,7 +391,8 @@ def research_row(spec, country, llm, ledger, wdi, log):
                             quote_ok=quote_ok,
                             quote_page_tier=(page or {}).get("tier", ""),
                             cited_url=cited, page_urls=set(by_url),
-                            derived_level=ladder_derived, is_ladder=is_ladder)
+                            derived_level=ladder_derived, is_ladder=is_ladder,
+                            assessment_year=ASSESSMENT_YEAR)
     verdict, gate = G.verdict_of(gate_list)
     asserted = bool(ans.get("found")) and ans.get("value_kind") in ("number", "statement") \
         and str(ans.get("value", "")).strip() != ""

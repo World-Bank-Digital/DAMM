@@ -89,8 +89,23 @@ class Gate:
         return dict(gate=self.name, verdict=self.verdict, reason=self.reason)
 
 
+# How old a document may be and still, by itself, establish that something exists NOW.
+#
+# This is a calibration parameter, not a settled rule, and it is set generously on
+# purpose: a law, strategy or programme document from within the last decade plausibly
+# still describes the current state, so the gate does not fire on the ordinary case of
+# a 2019 act or a 2021 strategy. What it stops is the case the first Egypt shadow run
+# produced — a national soil database recorded as *Adopted* on the strength of a 2001
+# FAO workshop report describing a GIS in use since 1997. That document is real, and it
+# was quote-verified; it establishes what existed twenty-five years ago, which is not
+# what a presence rung claims. The model's own `staleness_years` is 3, but staleness
+# only flags a row, and three years is far too tight to gate a legal instrument on.
+PRESENCE_EVIDENCE_MAX_AGE = 10
+
+
 def run_gates(ans, *, country, indicator_id, is_prerequisite, quote_ok, quote_page_tier,
-              cited_url, page_urls, derived_level=None, is_ladder=False):
+              cited_url, page_urls, derived_level=None, is_ladder=False,
+              assessment_year=None):
     """Return the ordered list of gate outcomes for one answer.
 
     `quote_ok` is the result of verifying the answer's quote against the page it cited;
@@ -189,7 +204,26 @@ def run_gates(ans, *, country, indicator_id, is_prerequisite, quote_ok, quote_pa
             return out
     out.append(Gate("coherence", "pass", ""))
 
-    # 7. argument — a level below 5 must say what the level above would have required.
+    # 7. currency — a present-tense claim needs evidence from the present.
+    #
+    # Adopted and Operating assert that something is in place now. A document can only
+    # establish what was true when it was written, so past a certain age it stops being
+    # evidence for a present-tense claim and becomes evidence for a historical one.
+    # Announced and Absent are exempt: an announcement is a dated event, and absence is
+    # not established by a document at all.
+    rung = ans.get("presence_rung")
+    year = ans.get("year") or 0
+    if is_ladder and rung in ("Adopted", "Operating") and assessment_year and year:
+        age = assessment_year - year
+        if age > PRESENCE_EVIDENCE_MAX_AGE:
+            out.append(Gate("currency", "hold",
+                            f"the rung '{rung}' asserts that this is in place now, but "
+                            f"the evidence is from {year} — {age} years old, and it can "
+                            f"establish only what was true then"))
+            return out
+    out.append(Gate("currency", "pass", ""))
+
+    # 8. argument — a level below 5 must say what the level above would have required.
     #
     # This is the design record's own standard, applied mechanically: "A level with no
     # negative finding is an assertion, not an assessment." It matters most exactly
