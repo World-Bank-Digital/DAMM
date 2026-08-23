@@ -29,7 +29,8 @@ Egypt against the verified assessment.
 | **Design record — read this** | `DAR-Studio-Automation-Design.md` (27 decisions) |
 | **Model handoff** | `DAMM-v1.7-HANDOFF.md` (state, standing decisions, invariants) |
 | **Specification** | `DAMM-v1.7-Specification.md` — §13 = the twelve open decisions |
-| **Canonical model** | `model/DAMM-v1.7-model.json` + `export_model.py` + parity test |
+| **Canonical model** | `model/DAMM-v1.7-model.json` + `export_model.py` + parity test (293 checks) |
+| **DAR chapter bindings** | `dar_outline` in the model file — what each chapter may cite |
 | **Pipeline** | `gauntlet/loop-1/` — engine, renderer, workbook builder, verifier |
 | **Verified assessments** | `gauntlet/loop-1/{EGY,NGA}_v17.json` — **the test oracle. Do not overwrite.** |
 | **Vendor keys** | `.env` (gitignored). Six keys, all set. Never print them, never put them in chat. |
@@ -58,24 +59,30 @@ There is **no Time Machine on this Mac** — git is the only backup.
 
 ## Your scope
 
-### Task 0 — model file changes (no keys needed, do this first)
+### Task 0 — model file changes — **DONE, do not redo**
 
-Three additions to `model/export_model.py`, per decisions **E4, F1, F4**:
+Completed 24 August 2026 (decisions E4, F1, F3, F4). What exists now:
 
-1. **Per-chapter DAR evidence bindings.** The 11-chapter outline is recoverable from git
-   (`git -C ~/Projects/dar-studio-v2 show 95628de:src/data/model_v1_5.json`, key `dar_outline`).
-   Each chapter declares the pillars, indicators and matrix cells it may cite. This upgrades the
-   fidelity checker from "did it invent a number" to "did it use the *right* number" — a
-   financing chapter citing connectivity indicators reads fluently and is wrong.
-2. **Foresight method declaration** — scenarios → preferred future → backcasting to milestones,
-   named in the model file so it is ratifiable like every other rule.
-3. **Candidate-indicator carry for milestone metrics.** Where a milestone needs a metric outside
-   the 57, it becomes a candidate indicator — recorded, carried, **outside every aggregate**,
-   flagged as a ratification item. Same mechanism as `A1-CAND-IMP` / `A1-CAND-IRR`.
+- **`dar_outline`** — the 11 chapters, each with a `binding` naming the pillars, indicators,
+  use cases, prerequisites and derived sources it may cite, plus `kind`
+  (diagnostic / prescriptive) and a `note`. Chapter 2's description was rewritten: the v1.5
+  original named CMS/EMS/OES, stages and core gates, none of which exist any more.
+  **Chapter 5 (Costs and financing) binds no pillar at all**, and its note states in capitals
+  that the model carries no cost, budget or financing data of any kind — the only quantities
+  available are initiatives' own reported scale figures from the register.
+- **`derived_sources`** — the closed vocabulary a binding may draw on.
+- **`foresight`** — method, three named steps, `ratified: false`, and `milestone_binding`
+  (indicator_id · target_level · target_year) with the candidate fallback.
+- **`candidate_indicators`** — id pattern, required fields, and the `never` list barring a
+  candidate from every mean, every prerequisite and the readiness matrix.
 
-Extend `test_model_parity.py` to cover the new structures. Re-run `verify_end_to_end.py`.
+Enforced in three places: `test_model_parity.py` (**293 checks**, up from 276), the app's zod
+loader (an unresolvable binding is a build error, not a silent hole), and 10 new app tests.
+**The invariants were negative-controlled** — five deliberate violations injected, all five
+caught. Verification is **76 checks, all passing**; the app is **133 tests**, typecheck and lint
+clean. The model has been copied to the app; both repos are committed and pushed.
 
-### Task 1 — vendor audition (decision B2)
+### Task 1 — vendor audition (decision B2) — **start here**
 
 Standing decision 4 fixes the method and **it has never been run**: 13 cells — 10 with known
 answers, 3 naming things that verifiably do not exist — scored on **fabrication rate, tier
