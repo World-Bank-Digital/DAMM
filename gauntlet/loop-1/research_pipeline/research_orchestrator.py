@@ -195,7 +195,7 @@ def retrieve(spec, country, llm, ledger, log):
     # Perplexity as discovery peer only (C6). Its citations join the fetch queue and
     # are quote-verified like any other page; its prose is kept beside the row as a
     # lead and can never become the source of record.
-    ppx = {"citations": [], "lead_prose": ""}
+    ppx = {"citations": [], "lead_prose": "", "error": ""}
     try:
         ppx = V.perplexity_citations(
             f"For {country} only: {construct} Which published source states this, and "
@@ -206,7 +206,11 @@ def retrieve(spec, country, llm, ledger, log):
     except V.BudgetExhausted:
         raise
     except Exception as e:
-        log(f"    ! perplexity discovery failed: {str(e)[:100]}")
+        # Recorded on the row, not just logged: a row that lost its discovery peer was
+        # researched on a narrower base than its neighbours, and that difference has to
+        # be visible to anyone reading the row afterwards.
+        ppx["error"] = str(e)[:200]
+        log(f"    ! {spec['id']}: perplexity discovery unavailable — {str(e)[:90]}")
 
     ranked.sort(key=lambda s: (s["tier"], -len(s["surfaced_by"])))
     quota, chosen = dict(TIER_QUOTA), []
@@ -420,6 +424,7 @@ def research_row(spec, country, llm, ledger, wdi, log):
                   queries=plan.get("queries", []),
                   perplexity_citations=ppx.get("citations", []),
                   perplexity_lead=ppx.get("lead_prose", "")[:1200],
+                  perplexity_error=ppx.get("error", ""),
                   pack=[{k: v for k, v in p.items() if k != "text"} for p in pack],
                   wdi_corroboration=w if w else None)
     return row, record

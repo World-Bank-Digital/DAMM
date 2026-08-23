@@ -165,6 +165,16 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=3):
             last = VendorError(f"{e.code} {url.split('?')[0]} :: {detail}")
             if e.code in (400, 401, 403, 404, 422):   # not retryable
                 raise last
+            if e.code == 429:
+                # A rate limit is a wait, not a failure, and giving up on one turns a
+                # vendor's throttle into a hole in the evidence. Honour Retry-After
+                # when it is offered, and otherwise back off far enough to matter.
+                try:
+                    wait = float(e.headers.get("Retry-After") or 0)
+                except (TypeError, ValueError):
+                    wait = 0
+                time.sleep(max(wait, 8 * (attempt + 1)))
+                continue
         except Exception as e:                        # timeouts, connection resets
             last = VendorError(f"{type(e).__name__} {url.split('?')[0]} :: {e}")
         time.sleep(2 * (attempt + 1))
@@ -338,6 +348,15 @@ def url_resolves(url, timeout=25, retries=2):
     return last
 
 
+# Perplexity throttles hardest of the six, and it is the one vendor whose calls have no
+# reason to overlap: it contributes leads, not answers, so serialising it costs a little
+# wall-clock and buys every row its discovery peer. Without this, four concurrent rows
+# rate-limited each other and rows silently lost their C6 pass.
+_PPX_LOCK = threading.Lock()
+_PPX_MIN_GAP = 1.5
+_ppx_last = [0.0]
+
+
 def perplexity_citations(question, ledger, pass_name, model="sonar-pro"):
     """Discovery peer (decision C6).
 
@@ -347,9 +366,14 @@ def perplexity_citations(question, ledger, pass_name, model="sonar-pro"):
     citations through Jina and quote-verify there.
     """
     ledger.check(pass_name)
-    j = _http("https://api.perplexity.ai/chat/completions",
-              {"model": model, "messages": [{"role": "user", "content": question}]},
-              {"Authorization": "Bearer " + key("PERPLEXITY_API_KEY")})
+    with _PPX_LOCK:
+        gap = _PPX_MIN_GAP - (time.time() - _ppx_last[0])
+        if gap > 0:
+            time.sleep(gap)
+        j = _http("https://api.perplexity.ai/chat/completions",
+                  {"model": model, "messages": [{"role": "user", "content": question}]},
+                  {"Authorization": "Bearer " + key("PERPLEXITY_API_KEY")})
+        _ppx_last[0] = time.time()
     u = (j.get("usage") or {}) if isinstance(j, dict) else {}
     ledger.record("perplexity", pass_name, model=model, requests=1,
                   in_tok=u.get("prompt_tokens", 0), out_tok=u.get("completion_tokens", 0),
