@@ -64,6 +64,7 @@ python3 verify_end_to_end.py   # regenerates ALL of the above and checks 7 stage
 cd .. && bash build_package.sh # assembles the package locally, then publishes to pCloud (non-fatal)
 
 git add -A && git commit       # commit every verified state — there is no Time Machine here
+git push pcloud main           # off-machine copy; a failed push is safe, just retry
 ```
 
 **Sources of record** (never generated — these are the inputs):
@@ -202,8 +203,16 @@ injection, FAOSTAT bulk-file route).
   locally and only then copies it to pCloud, in one bulk operation, as a **non-fatal** step.
   If the mount is down the build still succeeds and prints the exact re-publish command.
 - **There is no Time Machine destination configured on this Mac.** Local disk has no OS-level
-  backup, which is why the project is under git. **Commit after every verified state.** The
-  pCloud package copy is a convenience for sharing, not a backup of the work.
+  backup, which is why the project is under git with an off-machine remote:
+  `pcloud` → `~/pCloud Drive/02 World Bank/Projects/DAR/DAMM.git` (a bare repo; `main` tracks it).
+  **Commit and push after every verified state** — a remote only protects what was pushed.
+  Restore with `git clone "<that path>"`; verified to return all 101 files byte-identical.
+  This uses the mount for what it is good at — a few large writes, seconds — never for build
+  traffic. And a push that dies mid-flight is *safe*: git writes objects first and moves refs
+  last and atomically, so a dropped mount leaves harmless dangling objects, never a broken
+  history. Retry it. The pCloud *package* copy is for sharing, not backup.
+- **Still worth doing: point Time Machine at an external disk.** The git remote covers this
+  project; nothing covers the rest of the Mac.
 - **Never `pkill` LibreOffice unless you have confirmed it is idle.** Killing a conversion
   mid-write leaves a zombie holding a document lock that poisons every later recalculation.
   `verify_end_to_end.py` now waits for live conversions and only force-kills a genuine hang.
