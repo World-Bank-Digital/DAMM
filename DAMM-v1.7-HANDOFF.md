@@ -23,7 +23,10 @@ sign-off → rebuild DAR Studio against the ratified model.**
 
 ## Where everything lives
 
-All paths relative to `~/pCloud Drive/02 World Bank/Projects/DAR/DAMM/`.
+All paths relative to **`~/DAR/Claude/DAMM/`** — the project moved off pCloud to local disk on
+23 August 2026 and is now a **git repository**. pCloud is a *publish target* for finished
+packages, not the working tree: `~/pCloud Drive/02 World Bank/Projects/DAR/DAMM/` receives a
+copy of the review package and nothing else. Work, build and verify locally; commit as you go.
 
 | Artifact | Path | Role |
 |---|---|---|
@@ -38,6 +41,7 @@ All paths relative to `~/pCloud Drive/02 World Bank/Projects/DAR/DAMM/`.
 | **Issues log** | `gauntlet/loop-1/issues-log.md` | 38 defects with root-cause fixes. The gauntlet's real product. |
 | **Verification record** | `gauntlet/loop-1/VERIFICATION-RECORD.md` | The end-to-end run: 63 checks, all passing. |
 | **Old app (frozen)** | `~/Projects/dar-studio-v2/` | Still runs the v1.3 model. To be overhauled, not patched. |
+| **Published copy** | `~/pCloud Drive/02 World Bank/Projects/DAR/DAMM/Katreyna-Review-Package-2026-08-23/` | The review package only, byte-identical to the local build. Written by `build_package.sh`; never edited there. |
 
 ---
 
@@ -47,7 +51,7 @@ Everything downstream regenerates from the **sources of record**. Nothing is han
 between generation and verification; corrections are input files, not edits to outputs.
 
 ```
-cd gauntlet/loop-1
+cd ~/DAR/Claude/DAMM/gauntlet/loop-1
 
 python3 build_inputs.py        # research + machine pass + 4 correction layers → {ISO}_v17_input.json
 python3 engine_v17.py EGY_v17_input.json EGY_v17.json Egypt
@@ -57,7 +61,9 @@ python3 render_v17.py NGA
 python3 build_workbook_v17.py  # → workbooks-v1.7/ (3 files)
 
 python3 verify_end_to_end.py   # regenerates ALL of the above and checks 7 stages → VERIFICATION-RECORD.md
-cd .. && bash build_package.sh # assembles the review package (stages locally, one bulk copy to pCloud)
+cd .. && bash build_package.sh # assembles the package locally, then publishes to pCloud (non-fatal)
+
+git add -A && git commit       # commit every verified state — there is no Time Machine here
 ```
 
 **Sources of record** (never generated — these are the inputs):
@@ -186,11 +192,18 @@ injection, FAOSTAT bulk-file route).
 
 ## Environment gotchas (all cost real time in the last thread)
 
-- **pCloud Drive drops under sustained writes.** It failed twice, both times during package
-  assembly. Symptoms: `Socket is not connected`, `Device not configured`, then zsh cannot
-  spawn because the working directory is on the dead mount. **Fix in place:**
-  `build_package.sh` stages the package on local disk and does one bulk copy. If it drops
-  again, the finished build survives at `/private/tmp/claude-501/pkgbuild/`.
+- **pCloud Drive drops under sustained writes — this is why the project left it.** It failed
+  four times on 23 August 2026, always during sustained writes. It is a `synchronous`
+  `pcloudfs` FUSE mount, so every write blocks on the network: exactly the wrong shape for a
+  pipeline that does thousands of small writes. Symptoms: `Socket is not connected`,
+  `Device not configured`, then **zsh cannot spawn at all** because the working directory is
+  on the dead mount — recover by moving the shell off it first (`cd ~/DAR/Claude/DAMM`).
+  **Fix in place:** the project lives on local disk; `build_package.sh` assembles the package
+  locally and only then copies it to pCloud, in one bulk operation, as a **non-fatal** step.
+  If the mount is down the build still succeeds and prints the exact re-publish command.
+- **There is no Time Machine destination configured on this Mac.** Local disk has no OS-level
+  backup, which is why the project is under git. **Commit after every verified state.** The
+  pCloud package copy is a convenience for sharing, not a backup of the work.
 - **Never `pkill` LibreOffice unless you have confirmed it is idle.** Killing a conversion
   mid-write leaves a zombie holding a document lock that poisons every later recalculation.
   `verify_end_to_end.py` now waits for live conversions and only force-kills a genuine hang.
