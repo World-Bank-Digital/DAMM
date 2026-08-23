@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dar-studio",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/randeepsudan/Projects/dar-studio-v2 && npm run dev"],
+      "port": 8080
+    }
+  ]
+}

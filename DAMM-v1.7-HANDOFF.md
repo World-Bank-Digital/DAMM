@@ -196,10 +196,18 @@ edits the model and bumps `revision` — the app is built once. State so far, in
 - The app carries `src/lib/damm-v17/` — zod-validated loader + a TypeScript port of the
   reference scorer, held to the pipeline's own Egypt/Nigeria outputs figure-for-figure
   (23 tests; the app suite is 353/353). The v1.5 layer still stands beside it.
-- Remaining steps, in order: retire the v1.6-removed machinery (stages, CMS/EMS/OES,
-  coverage, confidence weights — 36 files still touch EMS), then evidence entry and the
-  readiness-matrix UI. After any model regeneration, re-copy
-  `model/DAMM-v1.7-model.json` → `src/data/model_v1_7.json` and rerun the app tests.
+- **The v1.5 machinery is retired and the app rebuilt on v1.7** (app commit `36f7166`,
+  −23,399/+2,143 lines). Chassis survives (auth, BYOK, audit); evidence entry mirrors the
+  workbook's columns (value, source, URL, tier, year, level, hold); the workspace shows the
+  pillar profile with rated/held, prerequisites, the matrix with both means, per-row open
+  questions and the twelve decisions. The demo packs load the REAL Egypt/Nigeria gauntlet
+  assessments and reproduce the pipeline figure-for-figure — verified live in the browser,
+  including an edit → rescore → revert cycle. The LLM features (draft, deck, dossier, red
+  team, research) were removed, not ported: they rebuild against the ratified model after
+  the §13 rulings, and git keeps their code.
+- After any model regeneration, re-copy `model/DAMM-v1.7-model.json` →
+  `src/data/model_v1_7.json`, regenerate the app fixtures if the assessments changed, and
+  rerun the app tests (123 must pass).
 
 **Also queued:** seed the Practice Library (25–30 entries); Studio v1 freeze; the loop-2
 workflow fixes already identified (tier enum in the research schema, per-country lead
