@@ -8,7 +8,7 @@
   "ratified": false,
   "ratification_note": "Twelve design decisions are open in specification section 13. Every value they can change is data in this file. A consumer must not present an unratified value as settled: see `open_decisions` for which fields each ruling governs.",
   "generated_from": "gauntlet/loop-1/engine_v17.py",
-  "generated_on": "2026-08-23",
+  "generated_on": "2026-08-24",
   "prohibitions": [
     "No cross-country ranking.",
     "No band used as a project development objective, disbursement-linked indicator or disbursement condition.",
@@ -1527,6 +1527,379 @@
       }
     }
   ],
+  "derived_sources": {
+    "pillar_profile": "Per-pillar mean, band, rated/held denominators and evidence composition.",
+    "layer_profile": "Foundation / Enablers / Transformation / Outcomes means.",
+    "leapfrog": "Foundation minus Transformation, and the structural flag.",
+    "matrix": "The six use-case readiness columns with both means.",
+    "prerequisites": "Presence status of the twelve prerequisite rows.",
+    "constraints": "Lowest-level rated indicators, the binding-constraint list.",
+    "kpi_baseline": "Measured A1/O1 rows carried as baseline readings.",
+    "register": "The initiative and solutions register, tier-badged.",
+    "evidence_ledger": "Every row with class, level, source, tier, year; gaps, holds and stale readings.",
+    "foresight.scenarios": "Scenario set produced by the foresight stage.",
+    "foresight.preferred_future": "The selected preferred future.",
+    "foresight.milestones": "Backcast milestones and their indicator bindings."
+  },
+  "dar_outline": [
+    {
+      "n": "1",
+      "title": "Country and sector context",
+      "kind": "diagnostic",
+      "content": "Agricultural structure, need and climate exposure; the national digital context the roadmap has to work inside.",
+      "binding": {
+        "pillars": [
+          "A1",
+          "C1",
+          "O1"
+        ],
+        "indicators": [],
+        "use_cases": [],
+        "prerequisites": [],
+        "derived": [
+          "constraints",
+          "register"
+        ]
+      },
+      "note": "A1 reads as NEED: a low reading is a large opportunity, never low maturity."
+    },
+    {
+      "n": "2",
+      "title": "Where the country stands",
+      "kind": "diagnostic",
+      "content": "Pillar and layer profiles with their rated denominators; the use-case readiness matrix; prerequisite status; the structural gap; what the evidence rests on.",
+      "binding": {
+        "pillars": [
+          "A1",
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "E1",
+          "O1"
+        ],
+        "indicators": [],
+        "use_cases": [
+          "ADV",
+          "SMF",
+          "MKT",
+          "SCM",
+          "FIN",
+          "AGI"
+        ],
+        "prerequisites": [
+          "*"
+        ],
+        "derived": [
+          "pillar_profile",
+          "layer_profile",
+          "leapfrog",
+          "matrix",
+          "prerequisites",
+          "constraints",
+          "evidence_ledger"
+        ]
+      },
+      "note": "This chapter is the diagnostic. Every figure must reconcile with the diagnostic report generated for the same assessment."
+    },
+    {
+      "n": "3",
+      "title": "Vision, targeting and beneficiaries",
+      "kind": "prescriptive",
+      "content": "Priority value chains, regions and farmer segments; which use cases are worth pursuing first, and for whom.",
+      "binding": {
+        "pillars": [
+          "A1",
+          "O1"
+        ],
+        "indicators": [
+          "5.12"
+        ],
+        "use_cases": [
+          "ADV",
+          "SMF",
+          "MKT",
+          "SCM",
+          "FIN",
+          "AGI"
+        ],
+        "prerequisites": [],
+        "derived": [
+          "matrix",
+          "foresight.preferred_future",
+          "foresight.milestones"
+        ]
+      },
+      "note": "Targeting rests on the readiness matrix; beneficiary claims rest on A1 need and O1 equity rows. The vision itself comes from the foresight stage, not from the model."
+    },
+    {
+      "n": "4",
+      "title": "The investment program",
+      "kind": "prescriptive",
+      "content": "Sequenced candidates with dependencies and implementation owners; what has to be built before what.",
+      "binding": {
+        "pillars": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "E1"
+        ],
+        "indicators": [],
+        "use_cases": [
+          "ADV",
+          "SMF",
+          "MKT",
+          "SCM",
+          "FIN",
+          "AGI"
+        ],
+        "prerequisites": [
+          "*"
+        ],
+        "derived": [
+          "matrix",
+          "prerequisites",
+          "constraints",
+          "foresight.milestones"
+        ]
+      },
+      "note": "Sequencing follows the prerequisites: a Blocked column names what must be built. A blocked use case is an argument FOR investment, never against it."
+    },
+    {
+      "n": "5",
+      "title": "Costs and financing",
+      "kind": "prescriptive",
+      "content": "Costed program under envelope scenarios; instrument routing; financing sources.",
+      "binding": {
+        "pillars": [],
+        "indicators": [
+          "1.7",
+          "6.14"
+        ],
+        "use_cases": [
+          "FIN"
+        ],
+        "prerequisites": [
+          "6.14"
+        ],
+        "derived": [
+          "register"
+        ]
+      },
+      "note": "DAMM CARRIES NO COST, BUDGET OR FINANCING DATA OF ANY KIND. No figure in this chapter may be presented as derived from the model or the assessment. The only quantities available are scale figures as reported by initiatives in the register, which are the initiatives' own claims and are tier-badged as such."
+    },
+    {
+      "n": "6",
+      "title": "Policy and regulatory actions",
+      "kind": "prescriptive",
+      "content": "Reform actions arising from the policy and safeguards pillar; legal drafting needs.",
+      "binding": {
+        "pillars": [
+          "C3"
+        ],
+        "indicators": [],
+        "use_cases": [],
+        "prerequisites": [
+          "4.1",
+          "4.5",
+          "3.11",
+          "7.12"
+        ],
+        "derived": [
+          "prerequisites"
+        ]
+      },
+      "note": "An Absent prerequisite here is a named legal or regulatory instrument that does not exist; say which, and cite the row."
+    },
+    {
+      "n": "7",
+      "title": "Delivery and governance",
+      "kind": "prescriptive",
+      "content": "Mandate and ownership; steering arrangements; the institutional home and its capacity.",
+      "binding": {
+        "pillars": [
+          "C4"
+        ],
+        "indicators": [],
+        "use_cases": [],
+        "prerequisites": [
+          "4.9",
+          "5.7"
+        ],
+        "derived": [
+          "prerequisites",
+          "register"
+        ]
+      },
+      "note": "4.9 and 5.7 are DELIVERY-risk flags: they are reported and they block nothing. Do not render them as gating anything."
+    },
+    {
+      "n": "8",
+      "title": "Climate alignment",
+      "kind": "prescriptive",
+      "content": "Climate-smart practice, advisory reach and the weather and climate data base the roadmap can build on.",
+      "binding": {
+        "pillars": [],
+        "indicators": [
+          "1.8",
+          "3.6",
+          "8.17"
+        ],
+        "use_cases": [
+          "ADV"
+        ],
+        "prerequisites": [],
+        "derived": []
+      },
+      "note": "The model holds no NDC or CCDR crosswalk and no climate-finance taxonomy. Alignment claims against those instruments are external and must be marked as such."
+    },
+    {
+      "n": "9",
+      "title": "Results and learning",
+      "kind": "prescriptive",
+      "content": "Results chains with baselines; the measurement gap register; what will be watched and how often.",
+      "binding": {
+        "pillars": [
+          "O1"
+        ],
+        "indicators": [],
+        "use_cases": [],
+        "prerequisites": [],
+        "derived": [
+          "kpi_baseline",
+          "evidence_ledger",
+          "foresight.milestones"
+        ]
+      },
+      "note": "Baselines come from Measured A1/O1 rows only. Recorded gaps, held levels and stale readings ARE the measurement gap register — carry them, do not summarise them away."
+    },
+    {
+      "n": "10",
+      "title": "Risks and safeguards",
+      "kind": "prescriptive",
+      "content": "Data rights, consent and redress; evidence-quality risk; political-economy risk and mitigations.",
+      "binding": {
+        "pillars": [
+          "C3"
+        ],
+        "indicators": [],
+        "use_cases": [],
+        "prerequisites": [
+          "4.1",
+          "4.5",
+          "7.12"
+        ],
+        "derived": [
+          "evidence_ledger"
+        ]
+      },
+      "note": "Evidence quality is itself a risk and belongs here: how much of the assessment rests on withheld levels, recorded gaps, stale readings and unratified definitions."
+    },
+    {
+      "n": "A",
+      "title": "Annexes",
+      "kind": "diagnostic",
+      "content": "The full indicator evidence base; the source and tier record; the open-decision register; the version and configuration record.",
+      "binding": {
+        "pillars": [
+          "A1",
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "E1",
+          "O1"
+        ],
+        "indicators": [
+          "*"
+        ],
+        "use_cases": [
+          "ADV",
+          "SMF",
+          "MKT",
+          "SCM",
+          "FIN",
+          "AGI"
+        ],
+        "prerequisites": [
+          "*"
+        ],
+        "derived": [
+          "pillar_profile",
+          "layer_profile",
+          "leapfrog",
+          "matrix",
+          "prerequisites",
+          "constraints",
+          "kpi_baseline",
+          "register",
+          "evidence_ledger",
+          "foresight.scenarios",
+          "foresight.preferred_future",
+          "foresight.milestones"
+        ]
+      },
+      "note": "The annex is the audit trail. Nothing is summarised here; rows appear in full."
+    }
+  ],
+  "foresight": {
+    "method": "scenarios -> preferred future -> backcasting to milestones",
+    "ratified": false,
+    "settled_by": "design interview, 24 August 2026",
+    "steps": [
+      {
+        "id": "scenarios",
+        "name": "Scenarios",
+        "purpose": "Bound the uncertainty: plausible futures for the sector, not forecasts."
+      },
+      {
+        "id": "preferred_future",
+        "name": "Preferred future",
+        "purpose": "The normative selection — what the country would choose to bring about. A claim about values, not evidence, and marked as such."
+      },
+      {
+        "id": "backcasting",
+        "name": "Backcasting to milestones",
+        "purpose": "Work back from the preferred future to dated, measurable milestones."
+      }
+    ],
+    "milestone_binding": {
+      "rule": "Each milestone binds to one or more indicators or prerequisites with a target level and a target year, so progress is measurable against the same instrument that produced the diagnostic.",
+      "fields": [
+        "indicator_id",
+        "target_level",
+        "target_year"
+      ],
+      "fallback": "Where no indicator in the model fits, the milestone proposes a CANDIDATE indicator (see candidate_indicators) and binds to that instead.",
+      "provisionality": "A target level standing on an unratified threshold inherits that provisionality and carries the marking of the open decision governing it."
+    },
+    "note": "Where a foresight document is supplied it is ingested and this exercise is skipped. A machine-run preferred future is a facilitation input, never a finding."
+  },
+  "candidate_indicators": {
+    "purpose": "Let a metric be recorded and carried without silently expanding the scored model.",
+    "id_pattern": "^(A1|C1|C2|C3|C4|E1|O1)-CAND-[A-Z0-9-]+$",
+    "required_fields": [
+      "id",
+      "name",
+      "proposed_pillar",
+      "rationale",
+      "proposed_by"
+    ],
+    "may_be_proposed_by": [
+      "foresight backcasting (F4)",
+      "assessor proposal",
+      "indicator audit"
+    ],
+    "never": [
+      "enters a pillar mean",
+      "enters a layer mean",
+      "enters a use-case mean",
+      "carries or gates a prerequisite",
+      "appears in the readiness matrix"
+    ],
+    "disposition": "Recorded, carried beside the assessment, flagged as a ratification item. Promotion to a scored indicator is a versioned model change, never automatic."
+  },
   "open_decisions": [
     {
       "id": "13.1",

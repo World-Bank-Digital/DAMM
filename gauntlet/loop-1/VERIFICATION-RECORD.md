@@ -1,6 +1,6 @@
 # DAMM v1.7 — end-to-end build and verification record
 
-Run 23 August 2026, 17:00. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
+Run 24 August 2026, 05:20. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
 
 **Result: ALL CHECKS PASS**
 
@@ -98,7 +98,7 @@ Run 23 August 2026, 17:00. Every artifact below was regenerated from the sources
 
 ## 8. Canonical model — the export DAR Studio consumes
 
-- PASS — model exports from the engine ·   57 indicators · 44 carrying an open definition question · 12 open decisions
+- PASS — model exports from the engine ·   11 DAR chapters (8 prescriptive) · foresight: scenarios -> preferred future -> backcasti
 - PASS — model file alone reproduces every engine figure · DAMM-v1.7-model.json is canonical: every derived figure reproduces from the model alone.
 - PASS — model is versioned and flagged unratified · v1.7 rev1 ratified=False
 - PASS — every open decision names the fields it governs · 12 decisions
