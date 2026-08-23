@@ -1,0 +1,21 @@
+{
+ "4.1": {"level": 4, "reason": "Law in force with active enforcement (1,368 notices, GAID) = Operating+quality; scale rung has no meaning for a legal instrument - D2 logged"},
+ "2.11": {"level": 3, "reason": "Commercial telco device plans operating; pro-poor/rural targeting is pilot-stage (GSMA $40 coalition) - quality rung not met on targeting"},
+ "3.5": {"level": 4, "reason": "NBS Microdata Catalog genuinely operating (107 studies incl. ag) = Operating+quality; open/AI-ready and ag-specific scale not demonstrated"},
+ "3.6": {"level": 4, "reason": "NiMet SCP + DCAS operating and institutionalized; farmer-reach evidence absent (8.17 gap) - scale rung unmet"},
+ "5.5": {"level": 3, "reason": "NAERLS operates digital channels but quality rung weak: operational budgets documented inadequate, reach unquantified, extension ratio 1:6,446"},
+ "5.8": {"level": 3, "reason": "Generic national pipeline (3MTT), agtech-specific bridging unproven - same convention as Egypt DEBI"},
+ "6.4": {"level": 4, "reason": "Named ventures with documented funding depth; sector share and independent scale evidence thin"},
+ "6.14": {"level": 4, "reason": "Rails present and operating; smallholder reach figures are vendor-reported - scale rung cannot rest on them"},
+ "3.9": {"level": 4, "reason": "GSMA-carried platform counts remain self-reported at origin; L4 not L5"},
+ "3.10": {"level": 3, "reason": "Platforms operating; scale evidence stale (2022) or vendor-reported"},
+ "8.12": {"level": 3, "reason": "Independent peer-reviewed evidence exists (2021) = one completed evaluation = Adopted on the evidence-ladder mapping used for Egypt"},
+ "2.1": {"level": 3, "reason": "Rural 4G 48% (GSMA 2024) against H thresholds 20/40/60/80 = L3; 3G-inclusive figure would read higher - conservative 4G basis noted"},
+ "4.7": {"level": 3, "reason": "NIN 117.5M = 49-57% of population depending on denominator; either reading is L3"},
+ "1.5": {"level": 3, "reason": "APHLIS cereals 9.5-17.4% (2022, T1): weighted reading =L3; cereals-only labelled, all-crop rate unpublished"},
+ "1.6": {"level": 1, "reason": "LSMS-ISA 2012/13: formal-channel participation ~0% - L1 robust; very stale, routed to refresh"},
+ "1.7": {"level": 1, "reason": "7% smallholder credit beneficiaries (2013) below the 10% floor; stale, routed to refresh"},
+ "1.8": {"level": null, "reason": "87.2% adopted-any-resilient-trait (2-zone survey) is a different construct from CSA practice share - unrated Documented; construct mismatch logged D2"},
+ "3.3": {"level": 2, "reason": "Operating pilot at <1% of farm households: presence real but narrow - treating it as a Present rail would repeat the leniency defect"},
+ "8.5": {"level": 3, "reason": "SDG 5.a.1(b) 31.6% women among owners/rights-bearers (2019, T1) against H thresholds 10/25/40/50 = L3"}
+}

@@ -1,0 +1,23 @@
+{
+ "2.1": {
+  "cls": "Gap",
+  "level": null,
+  "tier": "",
+  "url": "",
+  "value": "DATA GAP — no rural-specific mobile broadband coverage is published for Egypt by ITU, NTRA or MCIT. Context (not scored): national population coverage at least 3G = 99.8% (ITU DataHub, 2025)",
+  "src": "Structured source search, 22 August 2026",
+  "note": "[CORRECTION] The indicator names RURAL coverage; the only admissible figure is national. Recording the national value as Measured scored a rural prerequisite at level 5 on evidence that does not measure it. Recorded as the gap it is; the national figure is retained above as context. Ruling required: should 2.1 mean rural, national, or both?"
+ },
+ "5.3": {
+  "level": null,
+  "note": "[CORRECTION] Level withdrawn. The indicator names tertiary STEM enrolment; the recorded series (WDI SE.TER.ENRR) is TOTAL tertiary enrolment, and the level turns on that difference. Value and source retained. Ruling required: rename to total tertiary, or source a STEM split (UNESCO UIS, patchy)?"
+ },
+ "5.7": {
+  "level": null,
+  "note": "[CORRECTION] Level withdrawn. The indicator names a standing digital/AI unit inside the ministry; the evidence is a joint MALR-MCIT programme, and the row's own note records that the named unit could not be confirmed. Delivery flag now reads Unverified, which is what the evidence supports. Ruling required: does a standing programme satisfy the indicator, or is a gazetted unit required?"
+ },
+ "8.5": {
+  "level": null,
+  "note": "[CORRECTION] Level withdrawn. The indicator name conflates two statistics — women who OWN land, and women as a share of HOLDERS. Egypt records holders (FAOSTAT WCA 2009/10); Nigeria records owners (SDG 5.a.1). The level turns on which construct is meant. Ruling required: pick one construct and rename."
+ }
+}

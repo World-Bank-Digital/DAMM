@@ -1,0 +1,62 @@
+{
+ "5.5": {
+  "value": "Government digital-extension channels are operating: El-Mufeed (FAO/MALR digital advisory app, launched 2020, content produced with ARC, presented to extension agents from all governorates) and Hudhud AI farmer assistant",
+  "cls": "Documented",
+  "level": 4,
+  "year": 2025,
+  "src": "IFPRI Policy Note Dec 2025 (Digital Services Portfolio/El-Mufeed operating); UN Egypt/FAO-MALR programme page",
+  "url": "https://cgspace.cgiar.org/server/api/core/bitstreams/d4a33acc-564a-4e4c-a413-81ba3ebd4d90/content",
+  "tier": "T2",
+  "note": "DIVERGENCES FROM PRIOR: (1) prior presented 7,421 extension staff as a current GFRAS figure; the GFRAS page reproduces 2011 Worldwide Extens [G2: re-anchored on 2025 artefact; 2021 release could not carry a 2025 observation]"
+ },
+ "4.9": {
+  "value": "No gazetted standing inter-ministerial committee for digital agriculture identified; what exists and is documented is a continuous de facto coordination mechanism between MALR and MCIT: recurring joint ministerial review",
+  "cls": "Documented",
+  "level": 4,
+  "year": 2021,
+  "src": "MCIT press release, 9 June 2021 \u2014 ICT and Agriculture Ministers follow up on joint digital transformation projects (portfolio listed; MALR digital transformation unit created)",
+  "url": "https://mcit.gov.eg/en/Media_Center/Press_Room/Press_Releases/63422",
+  "tier": "T3",
+  "note": "Prior desk pass recorded 'MALR-MCIT joint project reviews (SIS, Zawya)' at level 4 and prerequisite status Present. Verified: the cooperatio [G2: year re-set to the verifiable 2021 anchor; stale flag applies honestly; 2025 continuation evidence to re-anchor at refresh]"
+ },
+ "3.4": {
+  "value": "Digital land registration is ADOPTED but not yet a comprehensive operating digital cadastre. New: Law No. 88 of 2025 (signed 18 June 2025; Official Gazette issue 24-bis, 17 June 2025) establishes a unified national elect",
+  "cls": "Documented",
+  "level": 3,
+  "year": 2025,
+  "src": "SIS: 'President El-Sisi Signs Law Establishing National Real Estate Identification Number Database' (Law 88/2025), June 2025",
+  "url": "https://sis.gov.eg/Story/209329/President-El--Sisi-Signs-Law-Establishing-National-Real-Estate-Identification-Number-Database?lang=en-us",
+  "tier": "T3",
+  "note": "DIVERGENCE from prior desk pass: prior cited 'Ministry of Justice / ESA cadastre modernization; Ahram Online' and a 'Nationwide Title Cadastre System  [G2: primary SIS link 404s with no archive - re-anchor at refresh; Law 88/2025 substance corroborated]"
+ },
+ "4.2": {
+  "value": 100,
+  "cls": "Measured",
+  "level": 5,
+  "year": 2024,
+  "src": "ITU Global Cybersecurity Index 2024 (5th edition) \u2014 Egypt in Tier 1 'Role-modelling' (score band 95-100); exact score 100/100 per NTRA announcement",
+  "url": "https://www.itu.int/dms_pub/itu-d/opb/hdb/D-HDB-GCI.01-2024-PDF-E.pdf",
+  "tier": "T1",
+  "note": "Value expressed on the indicator's 0-1 scale: GCI 2024 score 100/100 = 1.00 (prior 2020 edition: 95.48). Verifies the prior desk pass (100,  [G2: recorded on GCI 0-100 basis per NTRA; 0-1 normalization D2 open]"
+ },
+ "1.8": {
+  "value": "No all-practice national CSA rate. Practice-specific (labelled): raised-bed wheat cultivation tripled 113,500 ha (2013/14) to 334,000 ha (2016/17) ~46% of wheat area; laser levelling and deficit-irrigation adoption documented",
+  "cls": "Documented",
+  "level": null,
+  "year": 2017,
+  "src": "USDA GAIN Egypt grain report (primary PDF); FAO/WB corroboration",
+  "url": "https://apps.fas.usda.gov/newgainapi/api/report/downloadreportbyfilename?filename=Grain%20and%20Feed%20Annual_Cairo_Egypt_3-15-2017.pdf",
+  "tier": "T4",
+  "note": "[G2 gap-refutation: practice-specific evidence exists; all-practice rate remains unmeasured - unrated; stale]"
+ },
+ "8.9": {
+  "value": "No national share with provenance. Regional (labelled, single-source): IFPRI RCT baseline, Minya & Beni Suef - digital ag service use among surveyed smallholders far below 10%",
+  "cls": "Documented",
+  "level": 1,
+  "year": 2023,
+  "src": "IFPRI DP 2359 / RCT baseline (CGSpace)",
+  "url": "https://cgspace.cgiar.org/server/api/core/bitstreams/a95d7429-19f8-4a76-8152-06c",
+  "tier": "T2",
+  "note": "[G2 gap-refutation: internal-consistency - same-grade regional evidence already levels 1.6/1.7; L1 robust below floor]"
+ }
+}

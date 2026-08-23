@@ -1,0 +1,14 @@
+{
+  "country": "SmokeTest",
+  "period": "(2025–2035)",
+  "assessment": "renderer smoke test on prior data",
+  "data_path": "../../v1.6-test-run/nigeria_v16.json",
+  "register_path": "../../v1.6-report-template/register_nigeria.json",
+  "refs": {"1.2": "world ≈ 4,100 kg/ha · FAOSTAT 2023", "8.1": "world 9.1% · FAO SOFI 2024"},
+  "narrative_problem": ["Smoke-test narrative paragraph one."],
+  "narrative_register": [],
+  "precedents": {"3.11": ["India's AgriStack established national standards on digital ID rails.", "T3"]},
+  "authored_questions": [],
+  "gates": {"G1": "smoke", "G2": "smoke", "G3": "smoke"},
+  "gloss_extra": ""
+}

@@ -1,0 +1,1663 @@
+{
+ "country": "Egypt",
+ "indicators": {
+  "1.1": {
+   "value": 8390.6,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2023,
+   "src": "World Bank WDI (NV.AGR.EMPL.KD)",
+   "note": "Latest confirmed annual WDI observation for Egypt is 2023 ($8,390.60); later WDI 2024/2025 figures are nowcasted/modeled.",
+   "subs": [],
+   "stale": false,
+   "name": "Agriculture value added per worker (USD)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.2": {
+   "value": 7402.2,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2023,
+   "src": "World Bank WDI (AG.YLD.CREL.KG)",
+   "note": "Egypt has among the highest cereal yields globally due to intensive irrigated agriculture.",
+   "subs": [],
+   "stale": false,
+   "name": "Cereal yield (kg/ha)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.3": {
+   "value": 17.52,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2023,
+   "src": "World Bank WDI (SL.AGR.EMPL.ZS)",
+   "note": "WDI series continues to publish nowcasted 2024/2025 values (~17.5%); using confirmed recent-year band as best estimate.",
+   "subs": [],
+   "stale": false,
+   "name": "Employment in agriculture (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.4": {
+   "value": 109.07,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2022,
+   "src": "World Bank WDI (AG.PRD.FOOD.XD)",
+   "note": "Most recent published FAO-sourced food production index value via WDI.",
+   "subs": [],
+   "stale": true,
+   "name": "Food production index (2014-16=100)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.5": {
+   "value": "10-15% of agricultural income; up to 30% for fruit/vegetables",
+   "cls": "Documented",
+   "level": null,
+   "year": 2020,
+   "src": "FAO/MALR, Sustainable Agricultural Development Strategy towards 2030",
+   "note": "SADS 2030 strategy document (MALR/FAO) states pre/post-harvest losses exceed 30% in vegetables and fruit, 20% in legumes/tubers, 10% in cereals, equat",
+   "subs": [],
+   "stale": true,
+   "name": "Post-harvest loss rate (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.6": {
+   "value": "~12% (Upper Egypt)",
+   "cls": "Documented",
+   "level": null,
+   "year": 2025,
+   "src": "IFAD Executive Board Seminar Document EB-2025-OR-16",
+   "note": "IFAD reports only about 12% of farmers in Upper Egypt have direct links to formal buyers; no comprehensive national figure found, so this is a regiona",
+   "subs": [],
+   "stale": false,
+   "name": "Smallholder access to formal markets (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.7": {
+   "value": "<25% financially included; ag sector receives ~1% of institutional lending",
+   "cls": "Documented",
+   "level": null,
+   "year": 2021,
+   "src": "World Bank / MDPI 2024 citing WB 2021 Findex",
+   "note": "Less than 25% of Egypt's rural population is financially included per bank account ownership (World Bank 2021, cited in 2024 MDPI study); older World ",
+   "subs": [],
+   "stale": true,
+   "name": "Agricultural credit access (% farmers)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "FIN"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.8": {
+   "value": "SADS 2030 (qualitative; no adoption-rate survey found)",
+   "cls": "Documented",
+   "level": null,
+   "year": 2020,
+   "src": "SADS 2030 (qualitative; no adoption-rate survey found)",
+   "note": "SADS 2030 sets climate-smart and water-efficiency ambitions but does not publish a measured adoption rate among farmers; assessed level 2 (aspirationa",
+   "subs": [],
+   "stale": true,
+   "name": "Farmers using climate-smart practices (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.1": {
+   "value": 9.4,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2023,
+   "src": "World Bank WDI (SN.ITK.DEFC.ZS)",
+   "note": "Most recent WDI undernourishment prevalence figure for Egypt.",
+   "subs": [],
+   "stale": false,
+   "name": "Prevalence of undernourishment (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.5": {
+   "value": 5.2,
+   "cls": "Measured",
+   "level": 1,
+   "year": 2015,
+   "src": "FAO Gender and Land Rights Database / FAO Country Gender Assessment Egypt",
+   "note": "FAO data (2015, still the most commonly cited figure as of recent FAO/GIZ reporting) show only 5.2% of Egypt's total agricultural land area is owned b",
+   "subs": [],
+   "stale": true,
+   "name": "Women who own land (% holders)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.1": {
+   "value": 99.8,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2024,
+   "src": "ITU DataHub / ITU IDI Dataset",
+   "note": "CORE GATE. ITU DataHub IDI dataset population-covered-by-3G figure for Egypt is near-universal (~99.8%), consistent with ITU DDD Egypt profile showing",
+   "subs": [
+    [
+     "2.2",
+     5
+    ]
+   ],
+   "stale": false,
+   "name": "Rural mobile broadband coverage (3G/4G)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "t"
+  },
+  "2.4": {
+   "value": 74.65,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2024,
+   "src": "World Bank WDI (IT.NET.USER.ZS), ITU source",
+   "note": "WDI figure (ITU-sourced) for internet users. Note DataReportal's Digital 2025 Egypt report gives a higher figure (81.9%, Jan 2025) using a different s",
+   "subs": [
+    [
+     "2.3",
+     4
+    ]
+   ],
+   "stale": false,
+   "name": "Individuals using the Internet (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.5": {
+   "value": 1.2,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2024,
+   "src": "ITU DataHub / ENCC Egypt",
+   "note": "CORE GATE. ITU IDI mobile data+voice basket price for Egypt is in the 1.1-1.4% of GNI per capita range, well under the UN Broadband Commission 2% affo",
+   "subs": [],
+   "stale": false,
+   "name": "Mobile broadband price (% GNI pc)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.7": {
+   "value": 13.9,
+   "cls": "Measured",
+   "level": 1,
+   "year": 2015,
+   "src": "CAPMAS 2015 household survey (via Ahram Online)",
+   "note": "Only figure located is dated (CAPMAS 2015): 13.9% smartphone ownership in rural households vs 31.7% urban; exceeds MaxAge, likely understates 2025-26 ",
+   "subs": [
+    [
+     "2.6",
+     5
+    ]
+   ],
+   "stale": true,
+   "name": "Rural smartphone ownership (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.9": {
+   "value": 100,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2024,
+   "src": "World Bank WDI (EG.ELC.ACCS.RU.ZS)",
+   "note": "CORE GATE. Egypt has achieved universal (100%) rural electricity access per WDI.",
+   "subs": [],
+   "stale": false,
+   "name": "Rural electricity access (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "t"
+  },
+  "2.11": {
+   "value": "Sector review (no dedicated scheme identified)",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review (no dedicated scheme identified)",
+   "note": "No dedicated national device-financing/subsidy scheme specifically for farmers was identified; general consumer device financing exists in the broader",
+   "subs": [],
+   "stale": false,
+   "name": "Device financing/subsidy schemes",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.1": {
+   "value": 0.6699,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2024,
+   "src": "UN E-Government Survey 2024",
+   "note": "Egypt EGDI rose to 0.6699 (rank 95/193, rating H3) in the 2024 UN E-Government Survey, up from 0.5895 (rank 103) in 2022.",
+   "subs": [],
+   "stale": false,
+   "name": "UN E-Government Development Index",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "3.3": {
+   "value": "MALR Farmer Card / Meeza Farmer Card system",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "MALR Farmer Card / Meeza Farmer Card system",
+   "note": "CORE GATE. Egypt operates a national 'Farmer Card' smart-card registry (since 2016) recording landholding, quota, and subsidy data, digitally linked s",
+   "subs": [],
+   "stale": false,
+   "name": "National farmer registry",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "AGI",
+    "ADV"
+   ],
+   "prereq": "UC:FIN,AGI",
+   "kind": "l"
+  },
+  "3.4": {
+   "value": "Ministry of Justice / ESA cadastre modernization; Ahram Online",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2026,
+   "src": "Ministry of Justice / ESA cadastre modernization; Ahram Online",
+   "note": "Egypt has a long-running but incomplete land registration digitization effort (Nationwide Title Cadastre System since ~2005); a new digital platform f",
+   "subs": [],
+   "stale": false,
+   "name": "Digital land/plot registration",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.5": {
+   "value": "Sector review",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review",
+   "note": "No single comprehensive national agricultural open-data portal was identified; MALR/MCIT projects (Digital Egypt integration, crop-mapping) suggest da",
+   "subs": [
+    [
+     "3.13",
+     1
+    ],
+    [
+     "3.12",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "Open agricultural data (machine-readable, AI-ready)",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ADV",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.6": {
+   "value": "DAIRS climate early-warning system (per CGIAR/ICARDA review)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "DAIRS climate early-warning system (per CGIAR/ICARDA review)",
+   "note": "Government-led DAIRS climate early-warning system is under development/limited rollout per ICARDA 2025 review; functioning but not yet at full nationa",
+   "subs": [],
+   "stale": false,
+   "name": "Weather/climate data infrastructure",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "ADV",
+    "SMF",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.7": {
+   "value": "SIS.gov.eg MALR/MCIT crop-mapping project review",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "SIS.gov.eg MALR/MCIT crop-mapping project review",
+   "note": "Egypt has an active MALR-MCIT project using AI and satellite imagery to map agricultural land, forecast crop yields, and monitor pests (reviewed Septe",
+   "subs": [],
+   "stale": false,
+   "name": "Satellite/EO data integration",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.8": {
+   "value": "Sector review",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review",
+   "note": "No verified evidence of a comprehensive, publicly accessible digital national soil map/database for Egypt was located in this search; historical soil ",
+   "subs": [],
+   "stale": false,
+   "name": "National soil map/database",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "ADV",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.11": {
+   "value": "Sector review",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review",
+   "note": "No dedicated agricultural-data interoperability standard was identified; broader Digital Egypt platform integration efforts exist across MALR/MCIT/ABE",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural data interoperability standards",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "UC:AGI",
+   "kind": "l"
+  },
+  "4.1": {
+   "value": "Personal Data Protection Law No. 151/2020",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2020,
+   "src": "Personal Data Protection Law No. 151/2020",
+   "note": "CORE GATE. Egypt's PDPL (Law 151/2020) is in force, covering electronic processing of personal data with carve-outs for national security/judicial/med",
+   "subs": [],
+   "stale": true,
+   "name": "Data protection/privacy law",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "l"
+  },
+  "4.2": {
+   "value": 100,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2024,
+   "src": "ITU Global Cybersecurity Index 2024",
+   "note": "CORE GATE. Egypt scored a perfect 100/100 in the ITU GCI 2024, Tier 1 'Role-Modelling' status, with 20/20 across all five pillars including the legal-",
+   "subs": [],
+   "stale": false,
+   "name": "Cybersecurity framework (ITU GCI)",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "4.3": {
+   "value": 57.5,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2025,
+   "src": "Oxford Insights Government AI Readiness Index 2025",
+   "note": "Egypt scored 57.5 and ranked 51st globally (1st in Africa, 4th in MENA) in the 2025 Oxford Insights Government AI Readiness Index, up 14 places from 6",
+   "subs": [],
+   "stale": false,
+   "name": "Government AI Readiness Index",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "4.4": {
+   "value": "Sustainable Agricultural Development Strategy towards 2030 (SADS 2030)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2020,
+   "src": "Sustainable Agricultural Development Strategy towards 2030 (SADS 2030)",
+   "note": "SADS 2030 (originally 2009, updated executive summary Dec 2020, with MALR-FAO protocol for further update) addresses digital agriculture themes within",
+   "subs": [],
+   "stale": true,
+   "name": "National digital agriculture strategy",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "4.5": {
+   "value": "Sector review",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review",
+   "note": "CORE GATE. No dedicated agricultural data governance framework was identified beyond the general PDPL (Law 151/2020); MALR's institutional data practi",
+   "subs": [
+    [
+     "4.8",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "Agricultural data governance framework",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "FIN"
+   ],
+   "prereq": "UC:AGI",
+   "kind": "l"
+  },
+  "4.6": {
+   "value": "Egypt National AI Strategy, 2nd edition (2025-2030)",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "Egypt National AI Strategy, 2nd edition (2025-2030)",
+   "note": "Egypt's National AI Strategy (1st edition 2021, 2nd edition 2025-2030) explicitly names agriculture as a Phase 1 priority sector, overseen by the Nati",
+   "subs": [
+    [
+     "4.13",
+     3
+    ]
+   ],
+   "stale": false,
+   "name": "National AI strategy with agriculture component",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "4.7": {
+   "value": 97.2,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2021,
+   "src": "World Bank ID4D Global Dataset",
+   "note": "World Bank ID4D dataset reports 97.2% adult (16+) ownership of Egypt's National ID Card (\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0642\u0648\u0645\u064a), among the highest coverage rates globall",
+   "subs": [],
+   "stale": true,
+   "name": "Digital ID coverage (%)",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "ALL"
+   ],
+   "prereq": "UC:FIN",
+   "kind": "t"
+  },
+  "4.9": {
+   "value": "MALR-MCIT joint project reviews (SIS.gov.eg, Zawya)",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "MALR-MCIT joint project reviews (SIS.gov.eg, Zawya)",
+   "note": "CORE GATE. Regular joint MALR-MCIT reviews of digital transformation projects in the agricultural sector are documented (e.g., Sept 2025 SIS report, 2",
+   "subs": [],
+   "stale": false,
+   "name": "Inter-ministerial coordination mechanism",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "DELIVERY",
+   "kind": "l"
+  },
+  "5.2": {
+   "value": 79.45,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2022,
+   "src": "World Bank WDI (SE.ADT.LITR.ZS)",
+   "note": "Most recent WDI adult literacy rate for Egypt.",
+   "subs": [],
+   "stale": true,
+   "name": "Adult literacy rate (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.3": {
+   "value": 38.04,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2023,
+   "src": "World Bank WDI (SE.TER.ENRR, overall tertiary enrollment)",
+   "note": "WDI provides overall gross tertiary enrollment (38.04%), not STEM-specific; no disaggregated STEM tertiary enrollment figure for Egypt was located, so",
+   "subs": [],
+   "stale": false,
+   "name": "Tertiary STEM enrollment (% gross)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.4": {
+   "value": "~46-48% face awareness/literacy barriers (i.e., roughly half of farmers report low digital literacy as a key adoption barrier)",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2024,
+   "src": "CGIAR digital literacy training study (IFPRI, Minya/Beni Suef)",
+   "note": "CGIAR/IFPRI baseline survey of Egyptian smallholders found 52% cited general digital literacy as a key adoption challenge and 54% cited lack of awaren",
+   "subs": [],
+   "stale": false,
+   "name": "Digital literacy among farmers (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.5": {
+   "value": "GFRAS Egypt country profile; GIZ Morshed Zaki pilot",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "GFRAS Egypt country profile; GIZ Morshed Zaki pilot",
+   "note": "CORE GATE. Egypt has ~7,421 public extension staff nationally (GFRAS); digital-tool training is occurring through specific donor-backed pilots (e.g., ",
+   "subs": [
+    [
+     "1.9",
+     4
+    ]
+   ],
+   "stale": false,
+   "name": "Digital extension capability",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "UC:ADV",
+   "kind": "l"
+  },
+  "5.7": {
+   "value": "Zawya 2021 / SIS.gov.eg 2025 - MALR Digital Transformation Unit",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2021,
+   "src": "Zawya 2021 / SIS.gov.eg 2025 - MALR Digital Transformation Unit",
+   "note": "CORE GATE. MALR has an established Digital Transformation Unit (referenced in 2021 reporting, still active per Sept 2025 SIS review) coordinating join",
+   "subs": [
+    [
+     "5.11",
+     3
+    ]
+   ],
+   "stale": true,
+   "name": "MoAg digital/AI unit",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "DELIVERY",
+   "kind": "l"
+  },
+  "5.8": {
+   "value": "Sector review",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review",
+   "note": "No dedicated university degree/certificate program specifically in agtech/digital agriculture was identified for Egypt in this search; general agricul",
+   "subs": [
+    [
+     "5.9",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "Agtech/data-science training pipeline",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "5.12": {
+   "value": 3.9,
+   "cls": "Measured",
+   "level": 1,
+   "year": 2018,
+   "src": "JICA Gender Profile Egypt 2018 / CAWTAR Gender Assessment",
+   "note": "Female agricultural extension officers make up only ~3.9% of total extension staff per JICA (2018, citing 2011 administrative data) and CAWTAR gender ",
+   "subs": [
+    [
+     "5.13",
+     1
+    ]
+   ],
+   "stale": true,
+   "name": "Gender balance in digital-ag workforce (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "EQ",
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.1": {
+   "value": 23.7,
+   "cls": "Measured",
+   "level": 1,
+   "year": 2024,
+   "src": "WIPO Global Innovation Index 2024",
+   "note": "Egypt scored 23.7 (down from 24.2 in 2023) and ranked 86th of 133 economies in the WIPO GII 2024; Innovation Inputs rank 95th, Innovation Outputs rank",
+   "subs": [],
+   "stale": false,
+   "name": "Global Innovation Index",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.3": {
+   "value": "World Bank B-READY (Egypt not in initial 50-economy cohort; regional MENA context used)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2024,
+   "src": "World Bank B-READY (Egypt not in initial 50-economy cohort; regional MENA contex",
+   "note": "The World Bank's B-READY 2024 report initially covered only 50 economies, and no populated overall B-READY score specifically for Egypt could be confi",
+   "subs": [],
+   "stale": false,
+   "name": "Business Ready (B-READY)",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.4": {
+   "value": "Dozens (e.g., Mozare3, AgriCash, Mahsoly-adjacent ventures, plus F6S-listed cohort)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2026,
+   "src": "F6S AgriTech Egypt directory; sector market maps",
+   "note": "F6S lists a cohort of agtech companies in Egypt (12+ notable ones as of August 2026); combined with Mozare3, AgriCash, Mahsoly and others identified i",
+   "subs": [
+    [
+     "6.6",
+     4
+    ],
+    [
+     "6.10",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "Agtech venture ecosystem",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.9": {
+   "value": "MALR-e-finance 'Agri Egypt' network; ABE-fintech partnerships",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2021,
+   "src": "MALR-e-finance 'Agri Egypt' network; ABE-fintech partnerships",
+   "note": "Multiple active PPPs identified: MALR + e-finance 'Agri Egypt' AI-powered digital network (2021); Agricultural Bank of Egypt links with Mozare3 and ot",
+   "subs": [],
+   "stale": true,
+   "name": "Public-private partnerships in digital ag",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV",
+    "AGI",
+    "SCM"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.12": {
+   "value": "El Mufeed (FAO/MALR); Hudhud",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "El Mufeed (FAO/MALR); Hudhud",
+   "note": "El Mufeed (FAO/MALR digital advisory tool) and Hudhud (AI pest-ID app) function as quasi-public digital goods for farmers and extension agents, though",
+   "subs": [],
+   "stale": false,
+   "name": "Digital public goods adopted",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.13": {
+   "value": "Sector review (no SME-specific percentage located)",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review (no SME-specific percentage located)",
+   "note": "No percentage figure for SME (as distinct from smallholder/individual farmer) access to digital agriculture tools/platforms was located; assessed leve",
+   "subs": [
+    [
+     "6.7",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "SME/agribusiness adoption of digital tools (%)",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "SMF",
+    "SCM",
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.14": {
+   "value": "Mozare3, AgriCash, Meeza Farmer Card, CBE 2023 regulation, GSMA Mobile Money Regulatory In",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "Mozare3, AgriCash, Meeza Farmer Card, CBE 2023 regulation, GSMA Mobile Money Reg",
+   "note": "CORE GATE (new indicator). Egypt has multiple operating agri-fintech rails: Mozare3 (contract farming + digital payments, ~6,300 smallholders financed",
+   "subs": [
+    [
+     "6.11",
+     4
+    ]
+   ],
+   "stale": false,
+   "name": "Agri-fintech rails for smallholders",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "FIN"
+   ],
+   "prereq": "UC:FIN",
+   "kind": "l"
+  },
+  "3.9": {
+   "value": "100,000+ users (Mahsoly, AlMorshed Poultry); 10,000+ (several other advisory platforms)",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "CGIAR/ICARDA digital agriculture review",
+   "note": "ICARDA 2025 review reports Mahsoly and AlMorshed Poultry each reaching 100,000+ users, with several other advisory platforms (El-Mufeed, Mazra3ty, Fil",
+   "subs": [],
+   "stale": false,
+   "name": "Digital advisory platforms at scale",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.10": {
+   "value": "Sector review (Mozare3, AgriCash, Mahsoly)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "Sector review (Mozare3, AgriCash, Mahsoly)",
+   "note": "Mozare3 reports financing ~6,300 smallholder farmers (below the 5,000-active-user threshold but close), and platforms like Mahsoly report 100,000+ use",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural e-commerce platforms",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "7.2": {
+   "value": "Hudhud AI pest-ID app; MALR-MCIT satellite/AI crop-mapping project",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "Hudhud AI pest-ID app; MALR-MCIT satellite/AI crop-mapping project",
+   "note": "Egypt has at least two operating public-sector AI deployments in agriculture: Hudhud (AI pest/disease identification via smartphone photo, launched De",
+   "subs": [
+    [
+     "7.3",
+     1
+    ],
+    [
+     "7.4",
+     4
+    ],
+    [
+     "7.5",
+     4
+    ],
+    [
+     "7.6",
+     2
+    ],
+    [
+     "7.7",
+     3
+    ]
+   ],
+   "stale": false,
+   "name": "AI-enabled agricultural solutions deployed",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV",
+    "FIN",
+    "SCM",
+    "SMF",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "7.12": {
+   "value": "PDPL Law 151/2020 (general legal basis, not AI/ag-specific)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2020,
+   "src": "PDPL Law 151/2020 (general legal basis, not AI/ag-specific)",
+   "note": "CORE GATE. PDPL 151/2020 establishes a general legal basis for consent and data-subject rights that would apply to farmer data collected by AI systems",
+   "subs": [
+    [
+     "7.10",
+     2
+    ],
+    [
+     "7.11",
+     2
+    ]
+   ],
+   "stale": true,
+   "name": "Responsible-AI safeguards (consent, rights)",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "AI"
+   ],
+   "prereq": "UC:AI",
+   "kind": "l"
+  },
+  "8.2": {
+   "value": 40.21,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "World Bank WDI / Global Findex (FX.OWN.TOTL.FE.ZS)",
+   "note": "Global Findex 2024 data via WDI.",
+   "subs": [
+    [
+     "8.3",
+     4
+    ]
+   ],
+   "stale": false,
+   "name": "Account ownership, female (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "FIN",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.4": {
+   "value": 15.6,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2024,
+   "src": "World Bank Global Findex (via FinStatGlobe compilation)",
+   "note": "Global Findex 2024 data show mobile money account ownership rising sharply to 15.6% of adults, up from 2.9% in 2021 \u2014 a 12.7 percentage-point jump; Eg",
+   "subs": [],
+   "stale": false,
+   "name": "Mobile money account (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "FIN"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.6": {
+   "value": -2,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2022,
+   "src": "GSMA Mobile Gender Gap Report 2023 (2022 survey data)",
+   "note": "GSMA's Mobile Gender Gap Report 2023 (based on 2022 consumer survey data) finds Egypt is one of only two surveyed countries (with Mexico) where women'",
+   "subs": [],
+   "stale": true,
+   "name": "Gender gap in phone ownership (pp)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.9": {
+   "value": "Composite from platform user counts vs. ~4M ag holdings (2020 census)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "Composite from platform user counts vs. ~4M ag holdings (2020 census)",
+   "note": "Individual platforms report meaningful user bases (Mahsoly and AlMorshed Poultry each 100,000+; Mozare3 ~6,300 financed farmers) against an estimated ",
+   "subs": [
+    [
+     "8.7",
+     2
+    ],
+    [
+     "8.8",
+     3
+    ],
+    [
+     "8.16",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "Smallholders reached by digital services (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ALL",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.11": {
+   "value": "High \u2014 most major platforms (Hudhud, El Mufeed, Mazra3ty, Fila7a) are Arabic-language",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "Multiple platform reviews (ICARDA, FAO, SIS.gov.eg)",
+   "note": "All major identified digital agriculture platforms in Egypt (Hudhud, El Mufeed, Mazra3ty, Fila7a) are delivered in Arabic, the dominant local language",
+   "subs": [],
+   "stale": false,
+   "name": "Services in local languages (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ADV",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.12": {
+   "value": "Sector review (utilization gains documented, yield gains not isolated)",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "Sector review (utilization gains documented, yield gains not isolated)",
+   "note": "CGIAR/IFPRI digital-literacy-training research documents a 20-26 percentage-point increase in digital tool uptake/utilization from training interventi",
+   "subs": [
+    [
+     "8.13",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "Documented impact evidence (yield/income)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "8.17": {
+   "value": "Sector review (DAIRS under development; no reach statistics found)",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "Sector review (DAIRS under development; no reach statistics found)",
+   "note": "New quantitative indicator (thresholds L2=20, L3=40, L4=60, L5=80). No percentage figure for the share of Egyptian farmers receiving actionable season",
+   "subs": [
+    [
+     "8.14",
+     2
+    ]
+   ],
+   "stale": false,
+   "name": "Climate advisory reach (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  }
+ },
+ "pillars": {
+  "A1": {
+   "n": 10,
+   "mean": 3.17,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 6,
+    "Documented": 4,
+    "Judged": 0,
+    "Gap": 0
+   },
+   "stale": 5
+  },
+  "C1": {
+   "n": 6,
+   "mean": 3.5,
+   "band": "Advanced",
+   "weak": false,
+   "comp": {
+    "Measured": 5,
+    "Documented": 1,
+    "Judged": 0,
+    "Gap": 0
+   },
+   "stale": 1
+  },
+  "C2": {
+   "n": 8,
+   "mean": 3.0,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 1,
+    "Documented": 7,
+    "Judged": 0,
+    "Gap": 0
+   },
+   "stale": 0
+  },
+  "C3": {
+   "n": 8,
+   "mean": 3.75,
+   "band": "Advanced",
+   "weak": false,
+   "comp": {
+    "Measured": 3,
+    "Documented": 5,
+    "Judged": 0,
+    "Gap": 0
+   },
+   "stale": 3
+  },
+  "C4": {
+   "n": 7,
+   "mean": 2.57,
+   "band": "Emerging",
+   "weak": false,
+   "comp": {
+    "Measured": 3,
+    "Documented": 4,
+    "Judged": 0,
+    "Gap": 0
+   },
+   "stale": 3
+  },
+  "E1": {
+   "n": 11,
+   "mean": 3.09,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 1,
+    "Documented": 10,
+    "Judged": 0,
+    "Gap": 0
+   },
+   "stale": 2
+  },
+  "O1": {
+   "n": 7,
+   "mean": 2.43,
+   "band": "Emerging",
+   "weak": false,
+   "comp": {
+    "Measured": 3,
+    "Documented": 4,
+    "Judged": 0,
+    "Gap": 0
+   },
+   "stale": 1
+  }
+ },
+ "layers": {
+  "Foundation": 3.33,
+  "Enablers": 3.04,
+  "Transformation": 3.38,
+  "Outcomes": 2.43
+ },
+ "prereq": {
+  "2.1": {
+   "name": "Rural mobile broadband coverage (3G/4G)",
+   "kind": "UNIVERSAL",
+   "status": "Present"
+  },
+  "2.9": {
+   "name": "Rural electricity access (%)",
+   "kind": "UNIVERSAL",
+   "status": "Present"
+  },
+  "3.3": {
+   "name": "National farmer registry",
+   "kind": "UC:FIN,AGI",
+   "status": "Present"
+  },
+  "3.11": {
+   "name": "Agricultural data interoperability standards",
+   "kind": "UC:AGI",
+   "status": "Present (narrow)"
+  },
+  "4.1": {
+   "name": "Data protection/privacy law",
+   "kind": "UNIVERSAL",
+   "status": "Present"
+  },
+  "4.5": {
+   "name": "Agricultural data governance framework",
+   "kind": "UC:AGI",
+   "status": "Present (narrow)"
+  },
+  "4.7": {
+   "name": "Digital ID coverage (%)",
+   "kind": "UC:FIN",
+   "status": "Present"
+  },
+  "4.9": {
+   "name": "Inter-ministerial coordination mechanism",
+   "kind": "DELIVERY",
+   "status": "Present"
+  },
+  "5.5": {
+   "name": "Digital extension capability",
+   "kind": "UC:ADV",
+   "status": "Present"
+  },
+  "5.7": {
+   "name": "MoAg digital/AI unit",
+   "kind": "DELIVERY",
+   "status": "Present"
+  },
+  "6.14": {
+   "name": "Agri-fintech rails for smallholders",
+   "kind": "UC:FIN",
+   "status": "Present"
+  },
+  "7.12": {
+   "name": "Responsible-AI safeguards (consent, rights)",
+   "kind": "UC:AI",
+   "status": "Present"
+  }
+ },
+ "matrix": {
+  "ADV": {
+   "status": "Ready",
+   "why": "",
+   "mean": 3.05,
+   "prereqs": [
+    [
+     "5.5",
+     "Present"
+    ]
+   ]
+  },
+  "SMF": {
+   "status": "Ready",
+   "why": "",
+   "mean": 3.16,
+   "prereqs": []
+  },
+  "MKT": {
+   "status": "Ready",
+   "why": "",
+   "mean": 3.18,
+   "prereqs": []
+  },
+  "SCM": {
+   "status": "Ready",
+   "why": "",
+   "mean": 3.24,
+   "prereqs": []
+  },
+  "FIN": {
+   "status": "Ready",
+   "why": "",
+   "mean": 3.21,
+   "prereqs": [
+    [
+     "3.3",
+     "Present"
+    ],
+    [
+     "4.7",
+     "Present"
+    ],
+    [
+     "6.14",
+     "Present"
+    ]
+   ]
+  },
+  "AGI": {
+   "status": "Partial",
+   "why": "3.11, 4.5",
+   "mean": 3.24,
+   "prereqs": [
+    [
+     "3.3",
+     "Present"
+    ],
+    [
+     "3.11",
+     "Present (narrow)"
+    ],
+    [
+     "4.5",
+     "Present (narrow)"
+    ]
+   ]
+  }
+ },
+ "leapfrog": {
+  "gap": -0.05,
+  "flag": false,
+  "reading": "No structural flag"
+ },
+ "constraints": [
+  {
+   "id": "2.7",
+   "name": "Rural smartphone ownership (%)",
+   "level": 1,
+   "pillar": "C1",
+   "prereq": false
+  },
+  {
+   "id": "5.12",
+   "name": "Gender balance in digital-ag workforce (%)",
+   "level": 1,
+   "pillar": "C4",
+   "prereq": false
+  },
+  {
+   "id": "5.4",
+   "name": "Digital literacy among farmers (%)",
+   "level": 1,
+   "pillar": "C4",
+   "prereq": false
+  },
+  {
+   "id": "6.1",
+   "name": "Global Innovation Index",
+   "level": 1,
+   "pillar": "E1",
+   "prereq": false
+  },
+  {
+   "id": "8.11",
+   "name": "Services in local languages (%)",
+   "level": 1,
+   "pillar": "O1",
+   "prereq": false
+  },
+  {
+   "id": "8.17",
+   "name": "Climate advisory reach (%)",
+   "level": 1,
+   "pillar": "O1",
+   "prereq": false
+  },
+  {
+   "id": "8.5",
+   "name": "Women who own land (% holders)",
+   "level": 1,
+   "pillar": "A1",
+   "prereq": false
+  },
+  {
+   "id": "2.11",
+   "name": "Device financing/subsidy schemes",
+   "level": 2,
+   "pillar": "C1",
+   "prereq": false
+  },
+  {
+   "id": "3.11",
+   "name": "Agricultural data interoperability standards",
+   "level": 2,
+   "pillar": "C2",
+   "prereq": true
+  },
+  {
+   "id": "3.5",
+   "name": "Open agricultural data (machine-readable, AI-ready)",
+   "level": 2,
+   "pillar": "C2",
+   "prereq": false
+  },
+  {
+   "id": "3.8",
+   "name": "National soil map/database",
+   "level": 2,
+   "pillar": "C2",
+   "prereq": false
+  },
+  {
+   "id": "4.5",
+   "name": "Agricultural data governance framework",
+   "level": 2,
+   "pillar": "C3",
+   "prereq": true
+  }
+ ],
+ "kpi": [
+  {
+   "id": "1.1",
+   "name": "Agriculture value added per worker (USD)",
+   "value": 8390.6,
+   "year": 2023,
+   "src": "World Bank WDI (NV.AGR.EMPL.KD)"
+  },
+  {
+   "id": "1.2",
+   "name": "Cereal yield (kg/ha)",
+   "value": 7402.2,
+   "year": 2023,
+   "src": "World Bank WDI (AG.YLD.CREL.KG)"
+  },
+  {
+   "id": "1.3",
+   "name": "Employment in agriculture (%)",
+   "value": 17.52,
+   "year": 2023,
+   "src": "World Bank WDI (SL.AGR.EMPL.ZS)"
+  },
+  {
+   "id": "1.4",
+   "name": "Food production index (2014-16=100)",
+   "value": 109.07,
+   "year": 2022,
+   "src": "World Bank WDI (AG.PRD.FOOD.XD)"
+  },
+  {
+   "id": "8.1",
+   "name": "Prevalence of undernourishment (%)",
+   "value": 9.4,
+   "year": 2023,
+   "src": "World Bank WDI (SN.ITK.DEFC.ZS)"
+  },
+  {
+   "id": "8.5",
+   "name": "Women who own land (% holders)",
+   "value": 5.2,
+   "year": 2015,
+   "src": "FAO Gender and Land Rights Database / FAO Country Gender Assessment Egypt"
+  },
+  {
+   "id": "8.2",
+   "name": "Account ownership, female (%)",
+   "value": 40.21,
+   "year": 2024,
+   "src": "World Bank WDI / Global Findex (FX.OWN.TOTL.FE.ZS)"
+  },
+  {
+   "id": "8.4",
+   "name": "Mobile money account (%)",
+   "value": 15.6,
+   "year": 2024,
+   "src": "World Bank Global Findex (via FinStatGlobe compilation)"
+  },
+  {
+   "id": "8.6",
+   "name": "Gender gap in phone ownership (pp)",
+   "value": -2,
+   "year": 2022,
+   "src": "GSMA Mobile Gender Gap Report 2023 (2022 survey data)"
+  }
+ ],
+ "verify": [],
+ "refresh": [
+  {
+   "id": "1.4",
+   "name": "Food production index (2014-16=100)",
+   "year": 2022
+  },
+  {
+   "id": "1.5",
+   "name": "Post-harvest loss rate (%)",
+   "year": 2020
+  },
+  {
+   "id": "1.7",
+   "name": "Agricultural credit access (% farmers)",
+   "year": 2021
+  },
+  {
+   "id": "1.8",
+   "name": "Farmers using climate-smart practices (%)",
+   "year": 2020
+  },
+  {
+   "id": "8.5",
+   "name": "Women who own land (% holders)",
+   "year": 2015
+  },
+  {
+   "id": "2.7",
+   "name": "Rural smartphone ownership (%)",
+   "year": 2015
+  },
+  {
+   "id": "4.1",
+   "name": "Data protection/privacy law",
+   "year": 2020
+  },
+  {
+   "id": "4.4",
+   "name": "National digital agriculture strategy",
+   "year": 2020
+  },
+  {
+   "id": "4.7",
+   "name": "Digital ID coverage (%)",
+   "year": 2021
+  },
+  {
+   "id": "5.2",
+   "name": "Adult literacy rate (%)",
+   "year": 2022
+  },
+  {
+   "id": "5.7",
+   "name": "MoAg digital/AI unit",
+   "year": 2021
+  },
+  {
+   "id": "5.12",
+   "name": "Gender balance in digital-ag workforce (%)",
+   "year": 2018
+  },
+  {
+   "id": "6.9",
+   "name": "Public-private partnerships in digital ag",
+   "year": 2021
+  },
+  {
+   "id": "7.12",
+   "name": "Responsible-AI safeguards (consent, rights)",
+   "year": 2020
+  },
+  {
+   "id": "8.6",
+   "name": "Gender gap in phone ownership (pp)",
+   "year": 2022
+  }
+ ],
+ "counts": {
+  "Measured": 22,
+  "Documented": 35,
+  "Judged": 0,
+  "Gap": 0
+ }
+}

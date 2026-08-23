@@ -1,0 +1,47 @@
+{
+  "country": "Egypt",
+  "period": "(2026–2036)",
+  "assessment": "machine-assisted desk assessment",
+  "refs": {
+    "1.2": "world ≈ 4,100 kg/ha · FAOSTAT 2023",
+    "8.1": "world 9.1% · FAO SOFI 2024"
+  },
+  "narrative_problem": [
+    "Egypt's need profile inverts the usual reading: productivity is not the binding constraint. Cereal yields of 7,402&#8202;kg/ha (<b>1.2</b>) run at close to twice the world average, on land where 94.2% of the cultivated area is equipped for irrigation (proposed indicator, not scored), and agriculture value added per worker stands at $8,942 (<b>1.1</b>). The need concentrates instead in exposure and inclusion: cereal import dependency of 42.8% (proposed indicator, not scored) leaves the food system exposed to world markets, and the smallholder interface is thin — 6% contract-farming participation (<b>1.6</b>) and 2.3% rural formal borrowing (<b>1.7</b>), both below the lowest band the model defines.",
+    "What Egypt measures, it measures well: 20 indicators carry national statistics and 32 more rest on citable artifacts, with no row resting on unevidenced judgment. Five are recorded gaps — the gender balance of the digital-agriculture workforce (<b>5.12</b>), digital adoption among agribusiness SMEs (<b>6.13</b>), climate-advisory reach (<b>8.17</b>), a business-environment score for which Egypt's assessment cohort has not yet published (<b>6.3</b>), and rural mobile broadband coverage (<b>2.1</b>). That last one governs this report. No rural-specific coverage figure is published for Egypt by the regulator, the ministry or the ITU; the national figure is 99.8%, but a national figure does not evidence a rural prerequisite. Five indicators more carry evidence but no level, because what was found measures a different construct from what the indicator names — those are listed in the ledger and flagged for ratification."
+  ],
+  "narrative_register": [
+    "Egypt's landscape is state-anchored: the Farmer Card is its spine — the mandatory channel for subsidised fertiliser, converted into a Meeza payment instrument — with FAO-linked digital extension (El-Mufeed), a state AI pest advisor (Hudhud) still at pilot reach, and a private cohort (Mozare3, FreshSource, Zr3i) that is real but thinly capitalised after the 2023 funding contraction."
+  ],
+  "precedents": {
+    "3.11": [
+      "India's AgriStack published national agricultural data standards and registry schemas on digital ID rails — the standards mandate preceded the analytics ambition.",
+      "T3"
+    ],
+    "4.5": [
+      "The EU Code of Conduct on agricultural data sharing (2018) shows a sector-specific governance instrument distinct from the general data-protection law.",
+      "T4"
+    ]
+  },
+  "authored_questions": [
+    {
+      "tag": "Universal prerequisite 2.1",
+      "q": "No rural mobile broadband coverage figure is published for Egypt at any admissible tier, so five use-case columns cannot be resolved either way. Is commissioning that single statistic — a rural split the regulator could publish from data it already holds — the cheapest unlock in this diagnostic?"
+    },
+    {
+      "tag": "Step 2 sequencing",
+      "q": "Setting the unverified prerequisite aside, the enabling profile is strong across the board and agricultural intelligence is the only column with named blockers. Which two use cases carry Vision 2030's food-security exposure — a 42.8% cereal import dependency — most directly?"
+    },
+    {
+      "tag": "Evidence ledger",
+      "q": "Five indicators carry evidence but no level because the evidence measures a different construct from the indicator name, and five more are recorded gaps concentrated in outcome and inclusion metrics. Which does the mission commission first, and which does the model need to redefine?"
+    }
+  ],
+  "gates": {
+    "G1": "executed 22 August 2026, 18 derivations adjusted with recorded reasons",
+    "G2": "executed 22 August 2026, all 12 prerequisite rows re-verified and confirmed",
+    "G3": "pending"
+  },
+  "register_note": "Register compiled to the Source-Tier Protocol (22 August 2026); every entry carries a deep link, and Tier 5 rows evidence existence only.",
+  "gloss_extra": " <b>ARC</b> Agricultural Research Center · <b>CAPMAS</b> Central Agency for Public Mobilization and Statistics · <b>CLAC</b> Central Laboratory for Agricultural Climate · <b>DEBI</b> Digital Egypt Builders Initiative · <b>EMA</b> Egyptian Meteorological Authority · <b>MALR</b> Ministry of Agriculture and Land Reclamation · <b>MCIT</b> Ministry of Communications and Information Technology · <b>Meeza</b> Egypt's national payment card scheme · <b>NARSS</b> National Authority for Remote Sensing and Space Sciences · <b>NCAI</b> National Council for Artificial Intelligence · <b>NTRA</b> National Telecom Regulatory Authority · <b>PDPL</b> Personal Data Protection Law 151/2020 · <b>PDPC</b> Personal Data Protection Center · <b>SADS</b> Sustainable Agricultural Development Strategy 2030 · <b>SIS</b> State Information Service."
+}

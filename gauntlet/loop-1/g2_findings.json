@@ -1,0 +1,499 @@
+{
+ "EGY-prereq": {
+  "findings": [
+   {
+    "id": "2.1",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Independently re-verified live on ITU DataHub (rendered page, since the URL 403s plain fetchers): Egypt, population coverage at least 3G = 99.8%, year 2025 \u2014 exact match on value, year, source and T1 tier. Class Measured correctly derived from numeric value; 99.8% sits in the top band so level 5 holds. The national-figure-with-rural-caveat substitution is honestly flagged in the note; no rural-specific series is published by ITU/NTRA, which I could not refute.",
+    "evidence_url": "https://datahub.itu.int/data/?e=EGY&i=100095&s=430"
+   },
+   {
+    "id": "2.9",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Re-fetched the WDI API directly: EG.ELC.ACCS.RU.ZS most recent value = 100, year 2024 \u2014 exact match. T1, Measured, level 5 all correctly derived. Source resolves.",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/EG.ELC.ACCS.RU.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "4.7",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Re-fetched the ID4D API (source 89): ID.OWN.TOTL.ZS Egypt 2024 = 98.7781785562663, matching the recorded 98.8/2024 exactly; 2021 = 97.3153634, corroborating the row's correction of the prior's 97.2 misread. T1, Measured, level 5 correct.",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/ID.OWN.TOTL.ZS?format=json&source=89"
+   },
+   {
+    "id": "4.1",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Cited Shalakany PDF resolves (downloaded and text-extracted): it states the ER of PDPL 151/2020 were issued 1 Nov 2025 by Decree 816/2025, published in the Official Gazette 1 Nov 2025, effective the next day, with a 1-year grace period to 1 Nov 2026 and the PDPC as licensing/supervisory authority \u2014 matching the row. Independently triangulated via Al Tamimi, Baker McKenzie, Kennedys and Access Partnership analyses. T4 for an established law-firm analysis is defensible under 'established industry analyses', with the T3 Gazette anchor honestly noted as lacking a public deep link. Level 3 (adopted/in-force but compliance grace period running to Oct 2026) is conservative and supportable; class Documented and year 2025 correct. One provenance gap: Source-Tier rule 3 requires a Wayback archive for T4 links at capture \u2014 none is recorded; add one.",
+    "evidence_url": "https://www.tamimi.com/our-knowledge/publications/general/Articles/from-policy-to-practice-egypt-issues-executive-regulations-of-the-personal-data-protection-law/"
+   },
+   {
+    "id": "3.3",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "The SIS article is real and correctly characterized: dated 28 Mar 2026, MALR spokesperson Dr. Khaled Gad, ~5 million Farmer Cards through which subsidized fertilizer is disbursed; same-day corroboration by Youm7, and the system has issued ~5.2M electronic holdings over a database of 7M+ feddans \u2014 the registry EXISTS and is OPERATING as claimed. Fresher ministerial counts (4.8M farmers registered, Youm7 8 Jan 2026) corroborate trajectory. T3 (sis.gov.eg) per domain lookup, class Documented, year 2026 match the artefact. Level 4 with L5 withheld pending unit reconciliation (cards vs farmers vs holdings) is the right conservative call \u2014 my search surfaced 4.2M cards / 4.8M farmers / 5.2M electronic holdings / 5.6M holdings across 2025-26 carriers, confirming units are genuinely non-comparable. Note: sis.gov.eg serves an incomplete TLS chain, so automated A10 spot-resolution fails even though the page is live; capture an archive copy.",
+    "evidence_url": "https://www.youm7.com/story/2026/3/28/%D9%88%D8%B2%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B2%D8%B1%D8%A7%D8%B9%D8%A9-%D8%AA%D9%88%D8%A7%D8%AC%D8%AF-%D9%85%D9%8A%D8%AF%D8%A7%D9%86%D9%89-%D9%85%D9%83%D8%AB%D9%81-%D9%88%D9%83%D8%A7%D8%B1%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D8%A7%D8%AD-%D9%8A%D8%B6%D9%85%D9%86-%D9%88%D8%B5%D9%88%D9%84-%D8%A7%D9%84%D8%AF%D8%B9%D9%85/7355949"
+   },
+   {
+    "id": "3.11",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Absence finding survives attack. The cited Open Data Policy PDF resolves (downloaded, text-extracted): issued by the National Council for Artificial Intelligence, 2025, establishes an Interagency Data Release Board and cross-government release machinery, and mentions agriculture only once (as a predictive-analytics use case) \u2014 no agricultural interoperability standard/schema. My independent refutation search found no Egyptian ag-data interoperability instrument. Documented-absence at level 1 with a cited nearest-instrument follows the same pattern G1 accepted on 3.8 and 4.5; T3 (ai.gov.eg) correct; year 2026 as-of date consistent with sibling absence rows.",
+    "evidence_url": "https://ai.gov.eg/SynchedFiles/en/Resources/Open%20Data%20Policy.pdf"
+   },
+   {
+    "id": "4.5",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Absence finding survives. My refutation search for any Egyptian agricultural data governance framework (data sharing/ownership/use rules) found nothing \u2014 only the general PDPL regime and non-data instruments. The OECD deep link is genuine (exact title indexed; oecd.org returns 403 to automated fetchers \u2014 a bot-block, not a dead link, but it will fail A10 automated spot-resolution; record an archive or an alternate resolvable anchor). T2 for an OECD analytical review is correct per tier definitions; Documented, level 1, as-of year 2026 all consistent. The row's caveat that PDPL ER (Nov 2025) now gives general coverage is accurate per the verified ER content.",
+    "evidence_url": "https://www.oecd.org/en/publications/policies-for-the-future-of-farming-and-food-in-egypt_cab0cefd-en/full-report/trends-and-evaluation-of-agricultural-policy-in-egypt_416e1bd0.html"
+   },
+   {
+    "id": "5.5",
+    "verdict": "adjust",
+    "severity": "low",
+    "proposed_level": 4,
+    "reason": "Substance confirmed, vintage/provenance defect: the recorded year is 2025 but the recorded src/url is the 6 Dec 2021 MCIT-MALR press release (verified: it announces Hudhud and the e-portal but does NOT mention El-Mufeed, and cannot carry a 2025 observation). A 2021-anchored row would be stale-flagged; recording 2025 against a 2021 artefact evades A4. The fix is available in-evidence: IFPRI Policy Note Dec 2025 (verified full text) lists the Digital Services Portfolio (El-Mufeed) among operating platforms, and the UN Egypt/FAO-MALR programme page documents extension-agent rollout \u2014 re-anchor src on the 2025 artefact (T2/T3) and keep year 2025, or keep the 2021 src and honestly set year 2021 with the staleness flag. Level 4 itself is justified either way: presence + quality (ARC-produced content, all-governorate extension-agent engagement) with the scale rung correctly withheld per the G1 note.",
+    "evidence_url": "https://cgspace.cgiar.org/server/api/core/bitstreams/d4a33acc-564a-4e4c-a413-81ba3ebd4d90/content"
+   },
+   {
+    "id": "5.7",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "MCIT press release 64824 resolves and says what is claimed (verified: 6 Dec 2021 soft launch; Hudhud AI assistant; twenty services included for trial operation on the agricultural e-portal; satellite/AI crop mapping) \u2014 the presence rung is established by the cited artefact. Year 2021 honestly matches the source (staleness will flag correctly under A4). Level 3 is conservative and supported; T3 (mcit.gov.eg) and Documented class correct. The row's removal of the prior's inadmissible Zawya T5 source was proper \u2014 and note the MALR digital transformation unit IS independently confirmable in MCIT release 63422 (T3) if the assessor wants it back.",
+    "evidence_url": "https://mcit.gov.eg/en/Media_Center/Press_Room/Press_Releases/64824"
+   },
+   {
+    "id": "6.14",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Survives, and the G1-requested scale verification is done. IFPRI Dec 2025 note verified verbatim from extracted text: 'facilitating access to interest-free harvest-linked finance' and 'an active user base of 5,000 to 6,000 farmers per month' \u2014 the T2 anchor and its facts are exact. The ministerial scale figure is real and conservative: 4.2M smart farmer cards (Minister Alaa Farouk, with 20 automated services and 5,830 cooperatives equipped with tablets/POS), superseded by 4.8M farmers registered (Youm7, 8 Jan 2026) and ~5M via SIS 28 Mar 2026 \u2014 the latter is a T3 carrier that should replace the flagged T5 press carrier in tier_detail. However L5 should NOT be granted: the counts are units-ambiguous (cards vs farmers vs holdings), T3 government statements are admissible for program facts but not outcome-grade scale statistics, and no T1/T2 measurement of active fintech usage at national scale exists (IFPRI's measured platform reach is 5-6K/month). L4 with the scale rung withheld is the correct instrument-consistent reading; Documented, T2, year 2025 all correct.",
+    "evidence_url": "https://sis.gov.eg/ar/%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2-%D8%A7%D9%84%D8%A5%D8%B9%D9%84%D8%A7%D9%85%D9%8A/%D8%A7%D9%84%D8%A3%D8%AE%D8%A8%D8%A7%D8%B1/%D9%85%D8%AA%D8%AD%D8%AF%D8%AB-%D8%A7%D9%84%D8%B2%D8%B1%D8%A7%D8%B9%D8%A9-%D8%AC%D9%87%D9%88%D8%AF-%D9%85%D8%B3%D8%AA%D9%85%D8%B1%D8%A9-%D9%84%D8%B6%D9%85%D8%A7%D9%86-%D9%88%D8%B5%D9%88%D9%84-%D8%A7%D9%84%D8%AF%D8%B9%D9%85-%D9%84%D9%84%D9%85%D8%B2%D8%A7%D8%B1%D8%B9%D9%8A%D9%86-%D9%85%D9%86-%D8%AE%D9%84%D8%A7%D9%84-%D9%83%D8%A7%D8%B1%D8%AA-%D8%A7%D9%84%D9%81%D9%84%D8%A7%D8%AD/"
+   },
+   {
+    "id": "7.12",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Absence-beyond-general-regime finding survives. The cited Egyptian Charter for Responsible AI PDF resolves (downloaded, full text extracted): 2023 v1.0, and a grep for agriculture/farmer/farm returns zero hits \u2014 exactly as the row claims. The general-regime facts are independently triangulated (PDPL ER Decree 816/2025 issued 1 Nov 2025, PDPC operational, AI-training-data protections in the ER per the verified Shalakany text). Level 1, Documented, T3 (ai.gov.eg) all correct. Cosmetic only: sibling absence rows (3.11, 4.5) record the as-of search year 2026 while this row records 2025 (the ER milestone) \u2014 harmless but worth harmonizing.",
+    "evidence_url": "https://ai.gov.eg/SynchedFiles/en/Resources/Egyptian%20Charter%20For%20Responsible%20AI.pdf"
+   },
+   {
+    "id": "4.9",
+    "verdict": "adjust",
+    "severity": "medium",
+    "proposed_level": 4,
+    "reason": "Right substance, wrong vintage/anchoring as recorded. The recorded src/url is solely the 9 Jun 2021 MCIT press release (verified: it does confirm the joint project portfolio and the newly created MALR digital transformation unit) but the recorded year is 2025 \u2014 a single 2021 artefact cannot evidence a 2025 observation of an 'operating, recurring' mechanism, and recording 2025 evades the A4 staleness flag that a 2021 anchor would trigger. Recurrence itself is real and multi-year (MCIT PR 50862 in 2019; Jun and Dec 2021 releases; AgriTech Meet Egypt May 2022 co-organized by MCIT, MALR and IFAD per MCIT news 66242; a 2025 AgriTech ministerial review is referenced in row 6.9's evidence base), so the fix is to add a dated 2024-2025 artefact as the anchoring src and keep year 2025/level 4; failing that, set year 2021, accept the staleness flag, and reconsider whether level 4 'operating' still holds on a stale anchor. Separately, the honest core finding \u2014 no gazetted standing inter-ministerial body, only a de facto mechanism \u2014 leaves the D2 definitional question open; if the indicator is read as requiring a formal standing body, the prerequisite presence reading could flip, so D2 must be adjudicated before this row's Present status is relied on (that contingency, not this vintage fix, is what could become high-severity).",
+    "evidence_url": "https://mcit.gov.eg/en/Media_Center/Latest_News/News/66242"
+   }
+  ],
+  "protocol_issues": "Cross-cutting issues found during G2: (1) Resolvability automation gaps \u2014 sis.gov.eg serves an incomplete TLS certificate chain and oecd.org and datahub.itu.int return 403 to non-browser fetchers, so three otherwise-live citations (rows 3.3, 4.5, 2.1) will fail automated A10 spot-resolution; capture Wayback archives for these anchors even where the tier does not mandate it, and have A10 use the ITU DataHub export API or a rendered-browser check. (2) Source-Tier rule 3 non-compliance on row 4.1: the T4 Shalakany deep link carries no recorded archive copy (T4-T5 links must be archived at capture). (3) A systematic vintage pattern: rows 5.5 and 4.9 record year 2025 while their recorded src is a 2021 MCIT press release \u2014 recorded year must derive from the recorded anchoring artefact or the staleness rule (A4) is silently evaded; the workbook should validate year-vs-src consistency mechanically. (4) The input JSON truncates value and note fields mid-sentence (e.g. 3.3, 4.9, 5.5, 2.11, 6.14 '7 ...'), so multi-source values could only be reviewed against the single recorded src/url; G2 review of the full evidence stack needs untruncated exports. (5) Minor harmonization: absence rows inconsistently record the as-of year (2026 for 3.11/4.5, 2025 for 7.12)."
+ },
+ "EGY-sample": {
+  "findings": [
+   {
+    "id": "2.1",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Survives attack. GSMA SSA 2024 Year in Review PDF resolves (4MB) and states verbatim: '4G coverage improved from 41% in 2019 to 84% in 2024. However, it is much lower in rural areas, at 48%.' Secondary NCC national figures independently verified: NCC 2024 Year-End Performance Report (ncc.gov.ng) carries exactly 2G 95.31%, 3G 89.42%, 4G LTE 84.60%, 5G 13.28% as at Dec 2024. Tier T4 correct per lookup (gsma.com); class Documented correct (citation with artefact); 48% against 20/40/60/80 thresholds = L3; year 2024 is the data year. Residual defect: no archived copy recorded for this T4 link as rule 3/A10 requires \u2014 gsma.com 403s non-browser fetchers, so the citation's resolvability is fragile.",
+    "evidence_url": "https://ncc.gov.ng/sites/default/files/2025-11/2024-Year-End-Performance-Report.pdf"
+   },
+   {
+    "id": "2.9",
+    "verdict": "confirmed",
+    "reason": "Survives attack. WDI API URL resolves and returns exactly value 23.5, year 2024, 'Access to electricity, rural (% of rural population)'. Measured/T1 correctly derived (machine-fetched numeric from data.worldbank.org API); 23.5 in the 20-40 band = L2; not stale.",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/EG.ELC.ACCS.RU.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "4.1",
+    "verdict": "adjust",
+    "severity": "low",
+    "reason": "Substance right, G1 rationale carries a refuted figure. NDPC Annual Report 2025 resolves (70pp, June 2026) and records 2025: 146 investigations (series 2022-117, 2023-177, 2024-213, 2025-146), 306 DPCOs, N4.99B compliance revenue, and 'transitioning into a phase of full enforcement of the NDP Act - GAID'. I grepped the full report: '1,368' appears nowhere \u2014 consistent with the row's own value text refuting the prior Jones Day figure. Yet the G1 note still justifies L4 as 'Operating+quality (1,368 notices, GAID)'. Fix: rewrite the G1 rationale to rest on the verified enforcement record (146 investigations, 306 DPCOs, GAID full enforcement). L4, Documented, T3, year 2025 all stand on the verified evidence \u2014 no scoring change.",
+    "proposed_value": "G1 note rationale: 'Law in force with active enforcement (146 investigations and 306 DPCOs in 2025 per NDPC Annual Report 2025; GAID full-enforcement phase) = Operating+quality'",
+    "evidence_url": "https://ndpc.gov.ng/wp-content/uploads/2026/06/NDPC-Annual-Report-2025-1.pdf"
+   },
+   {
+    "id": "3.3",
+    "verdict": "adjust",
+    "severity": "low",
+    "reason": "Substance right, vintage wrong. The NIMC press release deep link resolves (JS-rendered SPA \u2014 verified by rendering in a browser; plain HTTP returns only an app shell, so an archived copy should be captured): dated January 16, 2025, it describes exactly the FMAFS/NIMC NIN-enabled farmer registry + G2P biometric card project, and contains NO farmer count anywhere \u2014 the assessor's refutation of the prior '279k farmers' claim is verified. L2 (announced/pilot) is conservative and justified; T3 and Documented correct. But year=2026 is unsupported: the newest cited artefacts are 16 Jan 2025 (launch) and 20 Nov 2025 (workshop/registry launch, verified at agriculture.gov.ng). A positive status claim should carry the artefact year, 2025 \u2014 recording 2026 overstates freshness under the A4 staleness rule.",
+    "proposed_value": "year: 2025 (latest supporting artefact 20 Nov 2025)",
+    "evidence_url": "https://nimc.gov.ng/press-releases/fmafs-nimc-nin-enabled-farmer-registry--g2p-card-project"
+   },
+   {
+    "id": "3.11",
+    "verdict": "confirmed",
+    "reason": "Absence survives attack. Ne-GIF PDF resolves (54pp, NITDA v1.2 Aug 2019) and is confirmed government-wide only \u2014 zero occurrences of 'agricult' in the full text. My independent refutation search found no adopted agricultural data interoperability standard or schema for Nigeria; the only additional adjacent artefact is NITDA's general-purpose Data Interoperability Standards 2016 (nitda.gov.ng/wp-content/uploads/2020/11/DATA-INTEROPERABILITY-STANDARDS11.pdf), worth adding to the search trail. L1 Absent, T3, Documented (citation to the nearest adjacent artefact with named negative checks) all correct; year 2026 as search date is coherent for an absence finding.",
+    "evidence_url": "https://nitda.gov.ng/wp-content/uploads/2020/11/Ne-GIFFinal1.pdf"
+   },
+   {
+    "id": "4.5",
+    "verdict": "confirmed",
+    "reason": "Absence survives attack. NASIP 2026 PDF resolves (156pp) and I independently re-ran the negative check on the extracted full text: zero occurrences of 'data governance', 'data sharing', 'data policy', 'data protection', 'data ownership' or 'farmer registry' (extraction sound \u2014 50 'data' hits, Program 3 'Digital and Climate Smart Agriculture' present). Refutation search found nothing in force; the closest new fact is an Aug 2026 NADF-NBS MoU on collecting/validating/sharing agricultural data (T5 news, agrifocusafrica.com 2026-08-03) \u2014 a bilateral statistics-collaboration instrument, not sector rules on ag data sharing/ownership/access, so Absent stands. Log the MoU as a loop-2 lead. L1, T3, Documented correct.",
+    "evidence_url": "https://agrifocusafrica.com/2026/08/03/nigeria-strengthens-agricultural-data-systems-through-nadf-and-nbs-partnership/"
+   },
+   {
+    "id": "4.7",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Survives attack. The ISR resolves (via documents1.worldbank.org redirect; Seq 11, archived 11-Aug-2026) and states verbatim: 'As of June 30, 2026, 117,493,554 ... persons had been issued a NIN (out of 134,553,120 ... NINs enrolled), up from a baseline of 36,894,074 ... against the target of 180 million by December 2026.' Value verified exactly; 49-57% under any credible denominator (206-240M) sits in the 40-60 band = L3 robustly; Documented correct. Tier: T4 is defensible under the protocol's donor-project-report judgement call (an ISR is task-team self-reporting of NIMC admin data, not an IO database or independently evaluated product), but note the starter lookup literally maps worldbank.org -> T1 \u2014 this subdomain ambiguity (documents.worldbank.org project documents vs data.worldbank.org databases) needs a spec 13.6 ruling; flagged in protocol_issues, no row change proposed.",
+    "evidence_url": "http://documents1.worldbank.org/curated/en/099081126161526352/pdf/P167183-e7cea03a-8864-4dd8-984f-cca80474fd7c.pdf"
+   },
+   {
+    "id": "5.5",
+    "verdict": "adjust",
+    "severity": "low",
+    "reason": "Substance right, single citation covers only part of a multi-claim value. The cited FMINO release resolves (4 Jun 2026) and verifies the DPAE half: '20,000 farmers across eight northern states' in the dry-season trial, Hausa voice advisories, World Bank/ACReSAL transition to government \u2014 this alone establishes Operating (L3), so the prerequisite presence is safe. But the release never mentions NAERLS, the e-Extension department, or the National Farmers Helpline, which lead the value. Those claims are true and independently verifiable (naerls.gov.ng/e-extension and naerls.gov.ng/nfhl exist; helpline 0813 989 0090, NAERLS ABU Zaria, zonal offices) \u2014 add the NAERLS pages as second citation or trim the value to the cited artefact. L3, T3, Documented, year 2026 otherwise correct.",
+    "proposed_value": "Add citations: https://naerls.gov.ng/e-extension/ and https://naerls.gov.ng/nfhl/ for the NAERLS e-Extension department and National Farmers Helpline claims",
+    "evidence_url": "https://naerls.gov.ng/nfhl/"
+   },
+   {
+    "id": "6.14",
+    "verdict": "adjust",
+    "severity": "medium",
+    "proposed_level": 3,
+    "reason": "Level 4 is not justified by admissible evidence \u2014 the row's own G1 note concedes it: 'smallholder reach figures are vendor-reported - scale rung cannot rest on them.' I verified the cited GSMA blog (live URL 403s to non-browser fetchers; Wayback snapshot retrieved): it says 'Crop2Cash has reached over 500,000 smallholder farmers and unlocked $2.8 million in credit' \u2014 GSMA carrying Crop2Cash's self-reported numbers. Under the Source-Tier Protocol, T4 is admissible for presence facts and narrative, not statistics; a vendor-originated reach statistic cannot carry the quality/scale rung above 3. Rails present and operating = L3. Prerequisite presence (Present) is unaffected \u2014 hence medium, not high. Also: no archived copy recorded for this T4 link as rule 3/A10 requires, and the live URL's 403 makes that omission material; a Wayback snapshot exists and should be recorded. Note the same GSMA-carried figure supports L4 on row 3.9 \u2014 whichever way G2 resolution goes, the two rows should be scored consistently.",
+    "evidence_url": "https://web.archive.org/web/2025/https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-for-development/blog/ensuring-food-security-by-solving-the-agricultural-information-gap/"
+   },
+   {
+    "id": "7.12",
+    "verdict": "confirmed",
+    "reason": "Survives attack. The GAID 2025 PDF resolves (117pp) and I verified in extracted text: DPIA triggers include 'Automated decision-making with legal or similar significant effects'; a guidance list covers 'Automated Decision Making' and 'Deployment of Artificial Intelligence'; substantive ET provisions require controllers deploying 'Emerging Technologies (ETs) such as Artificial Intelligence, Internet of Things and Blockchain' to consider the NDP Act, and to benchmark against 'the United Nations Resolution on Artificial Intelligence', refraining from ET systems incompatible with international human rights law; signed by DR. VINCENT O. OLATUNJI. NDPC Annual Report 2025 confirms GAID moving to full enforcement \u2014 'in force' holds. Nothing agriculture-specific found, matching the value. L3, T3 (regulator domain), Documented, year 2025 all correct.",
+    "evidence_url": "https://ndpc.gov.ng/wp-content/uploads/2025/07/NDP-ACT-GAID-2025-MARCH-20TH.pdf"
+   },
+   {
+    "id": "4.9",
+    "verdict": "confirmed",
+    "reason": "Absence survives attack. The cited FMAFS release resolves (20 Nov 2025) and describes the registry workshop and Multi-Stakeholder Knowledge-Sharing Platform under the FG-IFAD Digital Innovation Action Plan with FMAFS, NIMC, ONSA, IFAD, Heifer \u2014 no standing inter-ministerial body mentioned. My independent refutation search found only project-based coordination: FMCIDE's AgriConnect pilot (with Huawei/MTN, Ogun State), the FG-IFAD DIAP, and the RH-CRRP Ministerial Technical Committee (cooperatives, not digital agriculture). No standing FMAFS+FMCIDE/NITDA digital-agriculture coordination mechanism exists on the record. L1 Absent, T3, Documented correct; year 2026 as search date coherent for an absence finding.",
+    "evidence_url": "https://agriculture.gov.ng/nigeria-launches-national-digital-farmers-registry-to-strengthen-food-security/"
+   },
+   {
+    "id": "5.7",
+    "verdict": "confirmed",
+    "reason": "Absence survives attack \u2014 this is the cleanest Documented-absence of the set, directly readable from the artefact. The official FMAFS structure page resolves and lists 11 service departments (incl. 'Information' \u2014 press/communications, not ICT), 12 named technical departments, and 3 units (Project Coordinating Unit, PPP, Survey and Mapping) \u2014 matching the row's counts exactly \u2014 with no department or unit containing ICT, digital, data, e-agriculture, or innovation in its name. This also substantiates the row's point that digital-agriculture delivery is project-hosted (DPAE under ACReSAL/World Bank, registry under FG-IFAD DIAP). L1, T3, Documented, year 2026 (search/access date on a live organogram) all correct.",
+    "evidence_url": "https://agriculture.gov.ng/structure/"
+   }
+  ],
+  "protocol_issues": "1) Domain->tier lookup granularity: the starter lookup maps worldbank.org -> T1, but documents.worldbank.org hosts self-reported project documents (ISRs, PADs) that fit the 'donor project reports -> T4 unless independently evaluated' judgement call the assessor applied on 4.7. Needs a spec 13.6 ruling splitting data.worldbank.org/api.worldbank.org (T1) from documents.worldbank.org (T4, or T2 for evaluated products like IEG reviews). 2) A10/T4-archive enforcement: neither T4 GSMA citation in the prerequisite set (2.1 PDF, 6.14 blog) carries an archived copy; gsma.com returns 403 to non-browser fetchers, so 6.14's citation is already unresolvable by machine \u2014 the archive-at-capture rule should be emit-blocking for T4-T5, and a Wayback snapshot of the 6.14 blog exists and should be recorded now. 3) JS-gated T3 citations: nimc.gov.ng is a client-side SPA whose deep links return an empty app shell over plain HTTP (row 3.3); resolvability spot-checks (A10) will falsely fail such links unless the protocol either requires an archived copy for client-rendered government sites or defines resolvability as browser-rendered. 4) Vintage convention is inconsistent between absence rows (year = search date, e.g. 3.11/4.5/4.9/5.7 all 2026 \u2014 coherent) and positive-status rows (3.3 records 2026 with newest artefact Nov 2025) \u2014 the spec should state that positive Documented claims carry the artefact year and absence findings carry the search year. 5) Cross-row consistency is not covered by any automated check: 3.9 (L4) and 6.14 rest the >3 rung on the identical GSMA-carried vendor statistic while 6.14's own G1 note rules that basis out \u2014 an A-layer check flagging rows that share a citation but score different rungs on it would catch this class. 6) The gauntlet input JSON truncates value fields at ~250 characters (several rows end mid-word), which forced re-derivation of claims from sources during review; G2 should receive untruncated rows."
+ },
+ "EGY-gap": {
+  "findings": [
+   {
+    "id": "1.8",
+    "verdict": "refuted",
+    "severity": "medium",
+    "proposed_value": "No all-practice national CSA adoption rate exists. Practice-specific (labelled, admissible): raised-bed wheat cultivation \u2014 named a 'widely adopted CSA practice' in FAO's Towards Climate-Smart Agriculture in Egypt (CA report, sec. 3.1.5) \u2014 tripled from 113,500 ha (MY2013/14) to 334,000 ha (MY2016/17) across the four major wheat governorates (Sharqia, Beheira, Kafr El Sheikh, Dakahlia), ~26% of the 1.26M-ha national wheat area (USDA FAS GAIN, Mar 2017); MALR/ARC target 420,000 ha by MY2020/21 (USDA GAIN, Mar 2020). T2 corroboration, divergent estimates: ~125,000 ha / 10% of national wheat area by 2017 (Gamal et al., Food Security 2018, doi:10.1007/s12571-018-0794-3); 19.3% of wheat area under raised beds in a three-province survey (Agric. Water Mgmt 2021, S0378377421000676).",
+    "proposed_tier": "T4",
+    "proposed_level": null,
+    "evidence_url": "https://apps.fas.usda.gov/newgainapi/api/report/downloadreportbyfilename?filename=Grain+and+Feed+Annual_Cairo_Egypt_3-15-2017.pdf",
+    "reason": "The gap is refutable with labelled practice-specific evidence the assessor missed by searching only 'CSA adoption' phrasings. I verified verbatim in the USDA GAIN 2017 primary PDF: 'Raised bed cultivation has about tripled from 113,500 ha in MY2013/14 to 334,000 ha in MY 2016/17' against a 1.26M-ha national wheat area stated in the same report (~26%). Raised-bed/wide-ridge cultivation is explicitly a CSA practice per FAO's own Egypt CSA report (which I full-text scanned \u2014 confirming the assessor's correct claim that THAT report has no adoption statistic; the only 'adoption rate' sentence there is a Kenya/Tanzania study). Row 1.5 sets the workbook's own precedent that commodity-specific labelled figures are admissible as Documented when no single national rate exists; the same rule fills this cell. Caveats for the assessor: single practice, single crop, vintage 2017 (stale-flag mandatory), and the T2 (10%) vs T4-carried MALR/ARC (26%) estimates diverge \u2014 record as a labelled Documented value, not a single number; level derivation left to the ladder. GAIN is a US-government analytical report on Egypt, so T4 (reputable grey) is the honest anchor tier, with T2 corroboration; year 2017."
+   },
+   {
+    "id": "5.12",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Gap survives my attack. Tier-ordered attempts beyond the assessor's trail: (1) IFPRI Dec 2025 app-developer policy note (T2) \u2014 downloaded full text, grepped gender/women/female: qualitative inclusion language only, no workforce gender composition; (2) ASTI/IFPRI (T1, protocol-listed) \u2014 no current published female share of agricultural researchers for Egypt (gender portal is SSA-focused; WANA 2015 report is 2012/13 R&D-workforce data and a construct switch anyway); (3) MCIT/CAPMAS ICT-gender search \u2014 economy-wide female workforce share (15.3%, Q3 2023) exists but no ICT-sector or digital-agriculture breakdown with provenance; (4) ETF/ERF/A2K4D grey literature \u2014 advocacy and informal-digital-economy pieces, no digital-ag workforce share. Every locatable figure (extension staff, ag researchers, ICT sector, total workforce) is a different construct from women's share of the digital-agriculture workforce; the assessor's rejection of the JICA 3.9% on construct grounds was correct and the same logic bars all candidates I found. Gap legitimate."
+   },
+   {
+    "id": "6.3",
+    "verdict": "confirmed",
+    "severity": "low",
+    "evidence_url": "https://www.worldbank.org/en/businessready/about-us/covered-economies",
+    "reason": "Gap survives and the search trail is accurate. Independently verified on the World Bank B-READY covered-economies page: Egypt, Arab Rep. is NOT in B-READY 2024 or B-READY 2025; it is listed in the B-READY 2026 cohort (MENA, lower middle income). The Methodology Handbook Third Edition (Jan 2026) confirms the 2026 rollout is in progress; no B-READY 2026 country data for Egypt is published as of 2026-08-22. Nothing to fill \u2014 this is a coverage gap in the source instrument itself. The row's own re-check note (on B-READY 2026 release, expected ~Q4 2026) is the right routing."
+   },
+   {
+    "id": "6.13",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Gap survives a genuine attempt. Beyond the assessor's trail I tried: (1) WB Enterprise Survey Egypt 2020 (T1) \u2014 downloaded the country profile: the survey has a Food stratum (n=493 firms) but the published profile carries no sector-level website/email/digital-adoption breakout, and no food-sector profile PDF exists (404); a food-sector digital-adoption share is computable from public microdata (and from the new ES Egypt 2025, microdata catalog 8255), but that would be a constructed estimate with no published provenance \u2014 exactly the class the assessor rightly refused in 8.9's prior; (2) ITC SME Competitiveness Outlook 2025 / SME Competitiveness Survey \u2014 global aggregates only, no Egypt agribusiness adoption figure; (3) re-checked the OECD SME Digitalisation in Egypt chapter route already in the trail. The UNDP 2025 regional farm-level range (3-15%) remains a construct mismatch (farm-level, not SME/firm-level), as the assessor recorded. Suggest the note flag ES 2020/2025 food-stratum microdata as a commissionable T1 route for the roadmap."
+   },
+   {
+    "id": "8.9",
+    "verdict": "refuted",
+    "severity": "medium",
+    "proposed_value": "No national share with provenance exists. Regional (labelled, single-source): IFPRI RCT baseline phone survey, Minya & Beni Suef governorates, Jul-Sep 2023, n=3,332 farmers: 2.2% of the sample (T1 arm at baseline) reported using an agricultural app at least monthly; control-group baseline download rates 3.0% (Mahsoly) and 0.2% (Cropsa); enabling context 97% own a mobile phone, 72% a smartphone, 47% have mobile data access.",
+    "proposed_tier": "T2",
+    "proposed_level": 1,
+    "evidence_url": "https://cgspace.cgiar.org/server/api/core/bitstreams/a95d7429-19f8-4a76-8152-06c499fce4a0/content",
+    "reason": "Internal-consistency refutation: the assessor's own trail names IFPRI DP 2359 and dismisses it as 'two-governorate survey data only', but the workbook's own rows 1.6 (Upper Egypt 6% contract farming, seven governorates), 1.7 (rural 2.3% formal borrowing) and 5.4 (this very same Minya/Beni Suef survey) all admit regional labelled survey constructs as Documented when no national figure exists \u2014 1.6 and 1.7 even assign level 1 on them. I verified the figures in the DP 2359 full text: 'the percentage of the T1 sample who reported to have used an agricultural app at least monthly increased from 2.2 percent at baseline to 22 percent post-interventions' and control-group baseline app-download means of 0.030/0.002. The assessor was right to refute the prior's constructed composite (platform counts / holdings denominator) \u2014 but replacing a bad composite with a Gap when an admissible labelled T2 survey statistic exists is inconsistent with the instrument's own precedent. Either 8.9 becomes Documented/T2/2023/level 1 (2-3% is far below any plausible L2 floor, parallel to 1.6/1.7), or 1.6/1.7 must revert to Gap; the disagreement should be resolved the first way. Single-source flag applies."
+   },
+   {
+    "id": "8.17",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Gap survives my attack. Attempts beyond the assessor's trail: (1) IFPRI DP 2359 full text (downloaded) \u2014 grepped weather/climate/advisory: app feature descriptions only, no share of farmers receiving weather or climate advisories at baseline or follow-up; (2) FAO 'Towards Climate-Smart Agriculture in Egypt' full text (downloaded, 92pp) \u2014 describes the MALR/IFAD-SAIL early-warning system (5 ARC met stations, SMS guidance on irrigation/fertilizer/pesticide ahead of extreme weather, onward diffusion via WhatsApp) but attaches no reach numbers ('personal communication with IFAD/SAIL project'); (3) targeted CLAC/Fahim/Bashaer searches including ISHS/Acta Hort records of the CLAC agro-climate SMS system \u2014 system descriptions, no percentages; (4) the Nile Delta two-governorate study (MDPI Sustainability 2019, 792 farmers) measures climate-change AWARENESS (51.9% unaware), which is a different construct from advisory receipt, so it could not fill this row even if admitted regionally; (5) ICARDA digital-ag review (hdl 10568/138425) re-checked \u2014 still limited access, abstract carries no reach figures. No percentage of Egyptian farmers receiving actionable climate advisories exists with provenance. The presence facts the assessor logged in the note (CCIC daily warnings, Bashaer) are correctly kept out of the value. Gap legitimate."
+   }
+  ],
+  "protocol_issues": "Cross-row consistency is the main G2 issue surfaced by this pass: the instrument's treatment of regional labelled survey constructs is inconsistent \u2014 admitted as Documented (with levels) in 1.6, 1.7 and 5.4, but treated as grounds for Gap in 8.9 despite the identical evidence class (same IFPRI survey as 5.4). A written rule on when a regional labelled construct fills a national indicator (vs. records as Gap) would remove this class of disagreement. Second, gap-search phrasing sensitivity: the 1.8 miss arose because searches used indicator-object phrasing ('CSA adoption rate') and never practice-level phrasing ('raised bed', 'laser levelling', 'deficit irrigation') \u2014 the protocol's search-trail requirement could usefully mandate at least one decomposed practice/component-level phrasing per gap. Third, tier-lookup edge case: foreign-government analytical reports on the assessed country (USDA FAS GAIN) fit neither 'T3 government artefacts' (they are not Egyptian instruments) nor cleanly the T4 examples list \u2014 I treated them as T4; worth adding to the domain lookup (fas.usda.gov \u2192 T4). Fourth, minor: openknowledge.fao.org and icarda.org bitstream/page URLs return 403 to non-browser fetchers, so A10 spot-resolution of those deep links needs a browser UA \u2014 the links themselves are live (verified by download)."
+ },
+ "NGA-prereq": {
+  "findings": [
+   {
+    "id": "5.4",
+    "verdict": "refuted",
+    "severity": "medium",
+    "reason": "Gap is fillable with a resolvable measured artefact the search trail missed. The World Bank-Mastercard Foundation report 'Digital Skills in Nigeria' (De Simone & Manolio, 2024) quantifies basic digital skills from MICS 2021 (NBS/UNICEF) with rural/urban and gender splits: used a computer in last 3 months - national 9% (men 12%, women 6%); RURAL women 1.7%, rural men 4%; rural internet use last 3 months - women 8.4%, men 21.5%; rural mobile ownership - women 41.6%, men 64%. This is a rural-population proxy, not farmer-specific, but the instrument already accepts labelled proxies with a logged construct defect (row 5.3 PROXY convention). Additionally I verified the trail's loop-2 lead exists and is on-construct: Amolegbe, Dedehouanou, Muhammad-Lawal & Daudu, 'Digital technology knowledge and farmer's e-commerce valuation in Nigeria', Journal of Integrative Agriculture (doi 10.1016/j.jia.2025.12.056), which administers a digital technology knowledge test to farming household heads using GHS-Panel data (full text 403 to both ScienceDirect and the CAASS mirror this run; abstract metadata confirmed via Semantic Scholar). Proposed fill is the MICS-based rural proxy now, superseded by the JIA farmer-specific figure when retrievable.",
+    "proposed_value": "PROXY (rural population, not farmers - log construct defect per 5.3 convention): MICS 2021 measured digital-skill tasks - used a computer in last 3 months: rural women 1.7%, rural men 4% (national 9%); used internet in last 3 months: rural women 8.4%, rural men 21.5%. Source: World Bank / Mastercard Foundation, 'Digital Skills in Nigeria' (2024), Figs. 5 and 8; observation year 2021 (stale, route to refresh). On-construct loop-2 source: Amolegbe et al., J. Integrative Agriculture, doi 10.1016/j.jia.2025.12.056 (GHS-Panel digital knowledge test among farming households).",
+    "proposed_tier": "T2",
+    "proposed_level": null,
+    "evidence_url": "https://thedocs.worldbank.org/en/doc/a607bb6e3b76d2be0f3db8db34dcf73e-0140022025/original/1Nigeria-TF0C2441-Digital-Skills-Report-final.pdf"
+   },
+   {
+    "id": "5.12",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Gap survives a genuine refutation attempt. Tried: (1) GSMA AgriTech gender-disaggregated last-mile data - Nigeria datum is 'women are 20% of farmers profiled on a partner agritech database', i.e. user-side registration, not workforce composition; (2) Disrupt Africa 'Diversity Dividend' 2026 - Nigeria female share of founding teams 22% (from 20.7% in 2024, 16.5% in 2023), female CEOs 13.1%, and agritech noted as second-highest female-CEO sector continentally - but this measures founders not workforce, is tech-wide not digital-agriculture, is not Nigeria-agritech-specific, and disruptafrica.com is T5-pending-review so cannot fill a gap; (3) WBES Nigeria 2025 gender indicators (14.3% of firms with female top manager, 31.1% female share of permanent full-time workers) - economy-wide, excludes agriculture sector. No NBS or ILO series for digital-agriculture workforce gender composition exists. The row's PROVISIONAL flag can be lifted to a plain confirmed gap; the loop-2 leads worth keeping are the Disrupt Africa report (needs tier ruling) and GSMA AgriTech publications when gsma.com is reachable.",
+    "evidence_url": "https://disruptafrica.com/2026/07/31/africas-startup-space-is-moving-in-right-direction-when-it-comes-to-gender-diversity/"
+   },
+   {
+    "id": "6.3",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Structural coverage gap verified on the primary source. The World Bank B-READY covered-economies page lists Nigeria only in the 2026 cohort (Sub-Saharan Africa, lower-middle income); the latest published edition as of 2026-08-22 is B-READY 2025, and the third edition (B-READY 2026, >160 economies; Methodology Handbook dated January 2026) is not yet released, so no Nigeria score exists at any tier. The gap is not a search failure. Refresh trigger: B-READY 2026 release (historically Q4). Fallback only if the construct is a broader business-enabling-environment reading rather than B-READY per se: the discontinued World Bank Enabling the Business of Agriculture 2019 covered Nigeria, but it is 7 years stale and methodologically superseded - I do not propose it as a fill.",
+    "evidence_url": "https://www.worldbank.org/en/businessready/about-us/covered-economies"
+   },
+   {
+    "id": "6.13",
+    "verdict": "refuted",
+    "severity": "medium",
+    "reason": "The trail's premise is factually wrong and the gap is fillable. The trail states 'no post-2014 Nigeria wave surfaced' - in fact the World Bank Enterprise Surveys released a NEW Nigeria baseline survey in October 2025 (fieldwork February-September 2025, 1,043 firms, business owners and top managers) and a follow-up AI-module survey for Nigeria in May 2026 (WBES data-updates page: October 2025 entry 'new Enterprise Survey data for Burundi, Malawi, and Nigeria'; May 2026 entry lists Nigeria among 8 follow-up economies). The Nigeria 2025 Country Profile PDF resolves and documents the wave (evidence_url; PDF authored 3 Oct 2025); its appendix carries innovation/technology indicators (15.0% of firms spend on R&D, 20.3% introduced a new product/service, 19.8% process innovation). The standard WBES website/email digital-use indicators for the 2025 wave sit in the JS-gated portal/microdata - pull the exact figures in loop 2 (T1). Interim admissible T4 fill with concrete percentages: PwC MSME Survey 2024 (July 2024, p.47): 88% of Nigerian MSMEs use smartphones in business operations, 57% desktop/laptop computers, 19% cloud computing, 14% specialised software, 5% digital payment platforms (https://www.pwc.com/ng/en/assets/pdf/pwc-msme-survey-report-2024.pdf). Caveats to log: both sources are economy-wide MSMEs, not agribusinesses (WBES excludes primary agriculture but includes food manufacturing, 97 of 1,043 firms) - proxy ruling needed, as the trail itself contemplated; PwC sample methodology should be checked before the number becomes load-bearing.",
+    "proposed_value": "Interim (T4, 2024): 88% of Nigerian MSMEs use smartphones in business operations; 57% use desktop/laptop computers; 19% cloud computing; 14% specialised software; 5% digital payment platforms (PwC MSME Survey 2024, p.47). Definitive route (T1, 2025): WBES Nigeria 2025 (N=1,043, fieldwork Feb-Sep 2025, released Oct 2025) technology-module indicators (% firms with website / using email), retrievable from the WBES data download or microdata; AI-use follow-up module released May 2026. ECONOMY-WIDE PROXY, not agribusiness-specific - log construct defect.",
+    "proposed_tier": "T4",
+    "proposed_level": null,
+    "evidence_url": "https://www.enterprisesurveys.org/content/dam/enterprisesurveys/documents/country/Nigeria-2025.pdf"
+   },
+   {
+    "id": "8.11",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Gap survives. Additional refutation attempts this review: web searches across new phrasings (local-language share of digital agriculture services; Hausa/Yoruba/Igbo digital-ag platform coverage; service-language audits) surfaced only NLP dataset projects (African Next Voices, LINGUA Africa), translation vendors, and commentary - no registry, audit, or statistic of the language coverage of Nigerian digital-agriculture services exists at T1-T4. The construct is one nobody measures: platform-level language support is documented only in vendor materials (T5, existence facts only). The assessor's reversal of the prior 'Judged L2' (qualitative plausibility cannot set a level) is correct under the narrative firewall. Suggested loop-2 route if the row must be filled: derive a labelled count (not a share) of named major platforms with documented Hausa/Yoruba/Igbo support from T4 artefacts, which would still not be a percentage.",
+    "evidence_url": ""
+   },
+   {
+    "id": "8.17",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Gap survives a genuine tier-ordered attempt, now with a deeper trail than the assessor's. T1: no WDI/FAOSTAT/ITU series for climate-advisory reach. T2: only sub-national studies exist - e.g. Balogun et al., Climate (MDPI) 2023, Ebonyi State: 89% of 405 surveyed farmers accessed climate information (state-level, not admissible as a national figure); systematic reviews contain no Nigeria national estimate. T3: I retrieved the FULL NAERLS APS 2024 national report (320 pp) via the productivity.gov.ng mirror and grepped it end-to-end: the Weather Situation chapter is meteorological (rainfall records), the e-Extension section (17.6) is qualitative (state counts of ICT-compliance challenges), and no percentage of farmers receiving weather/climate advisories is reported; the 2025 Wet Season APS on agriculture.gov.ng is a 27-pp executive summary, also without a reach figure. CORRECTION to the trail (provenance polish): full APS PDFs ARE retrievable - 2024 national report at productivity.gov.ng and 2025 wet-season at agriculture.gov.ng - the trail's 'full APS PDF is not linked' claim is out of date. T4: CGAP National Survey of Smallholder Households in Nigeria (2016, nationally representative, n=2,773, with NBS) measures only the share who 'currently have the ability to access weather information on a mobile phone' (single-digit, Fig. 124) - construct mismatch (mobile-only ability, not advisory receipt via any channel incl. radio/extension) and 10 years stale; not a fill. The service-presence side remains documented at 3.6; the reach percentage genuinely does not exist.",
+    "evidence_url": "https://productivity.gov.ng/wp-content/uploads/2025/07/Year-2024-Agricultural-Productivity-Survey-APS-National-Report_.pdf"
+   }
+  ],
+  "protocol_issues": "Two of the six gap trails treated fetch failures as evidence of absence, and in one case (6.13) this produced a false factual premise: 'enterprisesurveys.org is JS-gated' became 'no post-2014 Nigeria wave surfaced', when a Nigeria 2025 wave had been released ten months earlier with a resolvable static country-profile PDF. Similarly, 5.4's trail recorded two HTTP 403s (ScienceDirect, basis.ucdavis.edu) alongside genuine negative findings, and missed a directly relevant World Bank report findable under a different phrasing ('digital skills Nigeria' rather than 'farmer digital literacy'). Suggested protocol addition for A3/G2: a gap row whose trail rests on any fetch failure (403/JS-gate/timeout) is not sign-off-ready until a second channel has been tried (static PDF mirrors, API, microdata catalog, archived copy), and trail entries must distinguish 'source unreachable this run' from 'measurement does not exist'. Also note for spec 13.6: Disrupt Africa (paid research reports on African tech) needs a tier ruling - currently T5 by default, which blocks its use even as a labelled lead-quality artefact."
+ },
+ "NGA-sample": {
+  "findings": [
+   {
+    "id": "1.1",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "SAMPLE STATEMENT: no rows with cls 'Judged' exist in EGY_v17_input.json (part (a) empty); deterministic sample resolved to 1.1, 1.2, 2.4, 2.5, 3.1, 3.4, 4.2, 4.3, 5.2, 5.3, 6.1, 6.4, 7.2 (pillar 7 has only one non-prerequisite Documented/Measured row), 8.1, 8.2. ROW VERDICT: API deep link resolves live; returns NV.AGR.EMPL.KD Egypt = 8942.41826869151, date 2025 \u2014 exact match on value and year. Class Measured (numeric) correct; tier T1 correct per lookup (api.worldbank.org); level 4 mechanically correct against thresholds [1000,2500,5000,10000] H (8942 < 10000).",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/NV.AGR.EMPL.KD?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "1.2",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "API resolves: AG.YLD.CREL.KG Egypt = 7402.2, date 2023 \u2014 exact match. Class Measured, tier T1, level 5 correct (>=6000 on [1500,3000,4500,6000] H). Watch item only: 2023 observation sits exactly at the 3-year staleness boundary in 2026 \u2014 renderer A4 must apply the rule consistently.",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/AG.YLD.CREL.KG?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "2.4",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "API resolves: IT.NET.USER.ZS Egypt = 74.64839935, date 2024 \u2014 exact match. Class Measured, tier T1, level 4 correct (60 <= 74.65 < 80 on [20,40,60,80] H).",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/IT.NET.USER.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "2.5",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Verified in a live browser session (datahub.itu.int serves 403/202 to non-browser fetchers \u2014 the deep link itself is live and loads the exact selection): 'Data-only mobile-broadband basket (2GB) (2021-2024)', Egypt = 0.90%, year 2025 (World 1.07%). Value, year, basket definition in the note, class Measured, tier T1 (itu.int), and level 5 (0.9 <= 1 on [10,5,2,1] L) all correct. A10 spot-resolution of ITU links requires a real browser \u2014 logged in protocol issues.",
+    "evidence_url": "https://datahub.itu.int/data/?e=EGY&i=100123&s=34593"
+   },
+   {
+    "id": "3.1",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "Page resolves (curl with browser UA; the WebFetch header-parse failure is fetcher-side): shows EGDI 0.66994, 'Rank 95 of 193', and prior 0.5895 \u2014 all three figures in the row and note verified verbatim. Class Measured, tier T1, year 2024, level 4 correct (0.6 <= 0.6699 < 0.8 on [0.2,0.4,0.6,0.8] H).",
+    "evidence_url": "https://publicadministration.un.org/egovkb/en-us/Data/Country-Information/id/53-Egypt"
+   },
+   {
+    "id": "3.4",
+    "verdict": "adjust",
+    "severity": "medium",
+    "proposed_tier": "T4",
+    "proposed_level": 3,
+    "evidence_url": "https://adsero.me/egypt-introduces-comprehensive-national-real-estate-identification-law/",
+    "reason": "Citation fails resolvability: the SIS deep link returns a genuine 404 ('No umbraco document matches the url') under every variant tested (with/without ?lang=, www, new /en/ scheme), and archive.org holds NO snapshot \u2014 under Source-Tier rule 3 this is not a citation, and Documented class survives only if the URL is replaced. Substance is RIGHT and independently corroborated: Law No. 88 of 2025 signed 18 June 2025, published Official Gazette issue 24-bis of 17 June 2025, establishing the unified national real-estate ID database \u2014 confirmed by ADSERO and riad-riad law-firm full-text analyses and Arabic press (youm7, elwatannews). Ladder rung Adopted -> level 3 stands. Proposal: replace URL with the resolving ADSERO analysis (tier drops T3->T4, Gazette 24-bis as unresolvable T3 anchor, mirroring the 4.1 pattern), or locate + immediately Wayback-archive a live official page. Not a prerequisite; level and C2 band unchanged \u2014 severity medium (tier/provenance)."
+   },
+   {
+    "id": "4.2",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "The ITU GCI 2024 PDF deep link is live (serves the file in a browser; blocks non-browser fetchers). Egypt in Tier 1 'role-modelling' (band 95-100) with a perfect 100 \u2014 one of 12 countries \u2014 corroborated by NTRA (tra.gov.eg) and EG-CERT official pages. Value 1.0 on the 0-1 scale: the exact 100 rides the NTRA T3 carrier and the row discloses this in tier_detail \u2014 acceptable because level 5 is robust across the entire Tier-1 band (0.95-1.00 >= 0.8). Class Measured, tier T1 (itu.int), level 5 correct.",
+    "evidence_url": "https://www.tra.gov.eg/en/egypt-classified-in-tier-1-according-to-itu-global-cybersecurity-index/"
+   },
+   {
+    "id": "4.3",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "PDF resolves (4.2MB); extracted rankings annex shows Egypt exactly as recorded: total 55.63, Government 68.98, Technology Sector 42.13, Data & Infrastructure 55.77. Class Measured, year 2024, level 3 correct (40 <= 55.63 < 60 on [20,40,60,80] H). Tier T4 is the right reviewed placement for Oxford Insights (established industry analysis; default lookup would say T5-until-reviewed). Note for next pass: the 2025 edition full PDF is now openly retrievable (Egypt rank 51, reported score 57.5) \u2014 refresh available but level is unchanged at L3 either way, so the 2024-edition vintage choice is defensible.",
+    "evidence_url": "https://oxfordinsights.com/wp-content/uploads/2024/12/2024-Government-AI-Readiness-Index.pdf"
+   },
+   {
+    "id": "5.2",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "API resolves: SE.ADT.LITR.ZS Egypt = 79.4531619498685, date 2022 \u2014 exact match. Class Measured, tier T1, level 3 correct and edge-checked (79.45 < 80, so NOT L4, on [50,65,80,90] H). 2022 observation is 4 years old \u2014 the renderer MUST show the staleness flag for this row (A4); the level sits 0.55pp under the L4 edge, so a refresh could plausibly move it.",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/SE.ADT.LITR.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "5.3",
+    "verdict": "adjust",
+    "severity": "medium",
+    "proposed_level": null,
+    "reason": "The API value is genuine (SE.TER.ENRR Egypt = 38.0398, 2025, resolves exactly) and the arithmetic to L4 is mechanical \u2014 but the census indicator is 'Tertiary enrollment in STEM fields (% gross)' and this series is TOTAL tertiary GER. The proxy is disclosed (note + D3 logged), yet it sets a level the construct cannot support: no country has a STEM-specific GER near 38 (Egypt's STEM share of tertiary students would put a true STEM GER at roughly 6-10, i.e. L1, not L4). G2 disagreement for the issues log: either (a) the census redefines 5.3 as total tertiary GER \u2014 then value, L4 and thresholds [10,20,30,40] stand as calibrated, or (b) the indicator stays STEM-specific \u2014 then the honest record is a Gap for the indicator (searched: no WDI/UIS STEM-specific GER series exists) with the total-GER figure kept as a labelled sub-reading, level unset. Level 4 should not ship on the proxy while D3 is unresolved; C4 band impact is material (one of only 3-4 scored C4 rows).",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/SE.TER.ENRR?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "6.1",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "WIPO GII 2025 full-report PDF resolves (28.5MB). Verified inside it: Egypt rank 86 (rankings list and Table 1, lower-middle-income #8), 139 economies in the edition, and score 24.7 (rankings-table triplet 24.7 / income-group rank 8 / region rank 15 \u2014 the income-group rank 8 cross-check pins the alignment; Rwanda rank 104 = income rank 1 confirms the column mapping). Level 1 correct and edge-checked (24.7 < 25 on [25,35,45,55] H). Tier T2 right for a WIPO flagship (IO analytical report). Year 2025 correct.",
+    "evidence_url": "https://www.wipo.int/web-publications/global-innovation-index-2025/assets/89507/global-innovation-index-2025-en.pdf"
+   },
+   {
+    "id": "6.4",
+    "verdict": "adjust",
+    "severity": "low",
+    "reason": "Facts verified inside the resolving PDF (21MB, 84pp): p.49 table shows Egypt $26M, +2775%, 22 deals (2024); pp.53-54 'Africa's big three \u2014 Kenya, Nigeria, and Egypt' with named Egyptian rounds (Cartona $6M Series A, Seafood Factory $180K seed) \u2014 value, year 2024, class Documented, tier T4 all correct; ladder level 3 (Operating, quality rung honestly withheld after the 2023 funding collapse) is right. Adjustment is provenance-only: the URL is a third-party mirror (omnivore.vc) of the AgFunder report, and Source-Tier rule 3 requires T4 links to carry a Wayback archive at capture \u2014 none is recorded. Propose: archive the current URL (or the AgFunder original) and record the archive link beside it; no change to value, level, tier, or year.",
+    "evidence_url": "https://omnivore.vc/uploads/developing_markets_agrifoodtech_investment_report_2025_4_61f213a206.pdf"
+   },
+   {
+    "id": "7.2",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "PDF resolves (2MB) and is the named artefact (A2K4D/AUC, MENA AI Observatory, 'AI Applications for Food Security in Egypt', Nagla Rizk, March 2025). Verified verbatim: Hudhud (MALR x MCIT AI assistant, chatbot + advisory) 'is currently accessible to a select group of farmers... with plans for broader deployment pending further infrastructure development' \u2014 exactly the pilot-bounded picture the row records. Ladder level 3 correct: Operating (base 3) with the quality/scale uplifts rightly refused for pilot-cohort deployments; the prior's L4 downgrade is justified by this source. Tier T4 (university-center grey literature) with T2 IFPRI corroboration is right. Provenance care: the hash-named storage-blob URL is fragile \u2014 archive it (see protocol issues).",
+    "evidence_url": "https://menaobservatory.ai/storage/CHOmuyRvzMEC5LmRtmNQMZHpjlZbEM-metaQTJLNEQgLSBNRU5BIEFJIC0gRm9vZCBTZWN1cml0eSAtIEVneXB0IC0gVjIucGRm-.pdf"
+   },
+   {
+    "id": "8.1",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "API resolves: SN.ITK.DEFC.ZS Egypt = 9.4, date 2023 \u2014 exact match. Class Measured, tier T1, level 3 correct (7.5 < 9.4 <= 15 on [25,15,7.5,2.5] L). Consistent with the config reference (world 9.1%, FAO SOFI).",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/SN.ITK.DEFC.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "8.2",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "API resolves: FX.OWN.TOTL.FE.ZS Egypt = 40.2142182329493, date 2024 (Findex 2025 wave) \u2014 exact match. Class Measured, tier T1, level 3 correct but EDGE-SENSITIVE: 40.21 clears the L3 floor by 0.21pp on [20,40,60,80] H \u2014 worth a marginal-value note in the evidence panel so a future revision is not misread as a regression.",
+    "evidence_url": "https://api.worldbank.org/v2/country/EGY/indicator/FX.OWN.TOTL.FE.ZS?format=json&mrnev=1&per_page=5"
+   }
+  ],
+  "protocol_issues": "1) EMPTY JUDGED BUCKET: EGY_v17_input.json contains zero cls='Judged' rows, so the G2 mandate's '100% of Judged rows' set is empty by construction \u2014 build_inputs.py derives Documented whenever a citation carries a URL. The evidentiary mass that v1.5 would have called Judged now sits in Documented rows whose values are news-agency-carried official claims (e.g. 3.3, 3.6 via sis.gov.eg); G2 sampling design should acknowledge that Documented is now the class where judgement hides. 2) PILLAR 7 SAMPLE DEGENERATE: only one non-prerequisite Documented/Measured row exists (7.2), so the two-per-pillar rule resolves to one. 3) SIS.GOV.EG LINK ROT IS SYSTEMIC: SIS has restructured to /en/... paths; the 3.4 story 404s with no Wayback snapshot, and other rows (3.3, 3.6 \u2014 other reviewer's assignment) also cite sis.gov.eg story URLs. Recommend immediate Wayback archiving of every sis.gov.eg deep link in the workbook (A10), and re-location checks at G3. 4) ITU BLOCKS NON-BROWSER FETCHERS: datahub.itu.int (403/202) and itu.int dms_pub PDFs ('Request Rejected') refuse curl/server-side fetchers but resolve in a real browser \u2014 A10's '>=10 links spot-resolved' procedure needs a browser-grade check or it will file false dead-link findings against live ITU citations. 5) FRAGILE T4 URLS WITHOUT ARCHIVES: 6.4 (omnivore.vc mirror of the AgFunder report) and 7.2 (menaobservatory.ai hash-named storage blob) carry no archived copies despite Source-Tier rule 3 requiring them for T4-T5 \u2014 archive both at capture. 6) STALENESS EDGES FOR A4: 5.2 (2022) must render stale under the 3-year rule and sits 0.55pp under its L4 edge; 1.2 (2023) is exactly at the boundary \u2014 the renderer's convention (strict > vs >=) should be stated once in the footer."
+ },
+ "NGA-gap": {
+  "findings": [
+   {
+    "id": "7.2",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "SAMPLE RESOLUTION (per assignment): P1=1.1,1.2; P2=2.4,2.5; P3=3.1,3.4; P4=4.2,4.3; P5=5.2,5.3; P6=6.1,6.4; P7=none (pillar 7 contains only Judged 7.2 and prerequisite 7.12, reviewed elsewhere); P8=8.1,8.2. VERDICT ON 7.2: survives attack. The cited Space in Africa article resolves and says what the row claims: MoU signed (17 Jul 2026, UM6P Ben Guerir; Dep. Chief of Staff Hadejia for FGN, with OCP Africa and Ground Truth Analytics via PFSCU); three-phase deployment PLANNED (pilot 1 state, then 3, then 15); '13 states/250k farmers' prior pilots are claims in the article, not evidence of operation. Refutation attempted and failed: searches for a T3 artefact (nasrda.gov.ng, statehouse.gov.ng, agriculture.gov.ng) return only T5 press (Guardian, Vanguard, Blueprint, The Sun, Ecofin), several with misleading 'launches/deploys' headlines that G1 correctly rejected. The Documented\u2192Judged downgrade is protocol-faithful (T5 admissible for existence facts only, so no admissible artefact carries the value), tier blank with tier_detail T5 satisfies A7, and Announced\u2192L2 is the right ladder rung. Loop-2 lead stands: a PFSCU/FMAFS official artefact would restore Documented.",
+    "evidence_url": "https://spaceinafrica.com/2026/07/21/nigeria-to-deploy-ai-and-satellite-powered-crop-monitoring-system/"
+   },
+   {
+    "id": "1.1",
+    "verdict": "confirmed",
+    "reason": "API re-fetched this session: NV.AGR.EMPL.KD NGA returns value 3494.89275307711, date 2025 \u2014 exact match. Class Measured (numeric) correct; tier T1 correct per lookup (worldbank.org); level re-derived: 3494.89 vs H[1000,2500,5000,10000] \u2192 L3 as recorded. Not stale (2025).",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/NV.AGR.EMPL.KD?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "1.2",
+    "verdict": "confirmed",
+    "reason": "API re-fetched: AG.YLD.CREL.KG NGA = 1558, date 2024 \u2014 exact match. Measured/T1 correct; level re-derived: 1558 vs H[1500,3000,4500,6000] \u2192 L2 as recorded.",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/AG.YLD.CREL.KG?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "2.4",
+    "verdict": "confirmed",
+    "reason": "API re-fetched: IT.NET.USER.ZS NGA = 41.21139908, date 2024 \u2014 exact match. Measured/T1 correct; level re-derived: 41.21 vs H[20,40,60,80] \u2192 L3 as recorded.",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/IT.NET.USER.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "2.5",
+    "verdict": "adjust",
+    "severity": "low",
+    "reason": "Substance stands, citation does not resolve as recorded. Attacked the deep link in a live browser session: https://datahub.itu.int/data/?e=NGA&i=34617 loads the Data Explorer with economy=Nigeria but indicator 34617 never populates (page API returns 403; retried with waits), so the URL fails Source-Tier rule 3 this pass \u2014 the observation 1.56%/2025 could not be re-read from the cited artefact. Supporting checks pass: the note's refutation of the prior 4.2% is verified (ITU's own affordability publications give 4.2% as the 2024 AFRICA regional median for the 2GB basket, not a Nigeria figure), and 1.56% is arithmetically plausible against Nigeria data prices/GNI pc. Class Measured, tier T1, level L4 (1.56 vs L-dir [10,5,2,1], not \u22641 so correctly not L5) all correct. Proposal: re-verify/correct the DataHub link or indicator id, or cite the ITU 2025 country price-basket release (country data published Nov 2025; affordability brief linked) and archive at capture; log to issues sheet under A10 spot-resolution.",
+    "evidence_url": "https://www.itu.int/itu-d/reports/statistics/2025/10/15/ff25-affordability-of-ict-services/"
+   },
+   {
+    "id": "3.1",
+    "verdict": "confirmed",
+    "reason": "Source page re-fetched: UN E-Gov KB Nigeria shows EGDI 2024 = 0.4815 (0.48146 at 5dp), Rank 144 of 193 \u2014 exact match to value and note. Measured (numeric) correct; T1 correct (UN official IO database; suggest adding publicadministration.un.org to the \u00a713.6 domain lookup, which currently omits it); level re-derived: 0.4815 vs H[0.2,0.4,0.6,0.8] \u2192 L3 as recorded.",
+    "evidence_url": "https://publicadministration.un.org/egovkb/en-us/Data/Country-Information/id/125-Nigeria"
+   },
+   {
+    "id": "3.4",
+    "verdict": "confirmed",
+    "severity": "low",
+    "reason": "URL resolves (HTTP 200) but is a JS-rendered SPA \u2014 curl returns only the app shell; the article's existence and title ('FG Partners World Bank To Develop National Land Digital System', fmhud.gov.ng/read/3387) verified via search index, and the programme is corroborated on other FMHUD pages (read/3298, read/3330, read/3473) and independent coverage (NLRDTP/Land4Growth, WB partnership, NDLIS planned, registration target 10%\u219250%). Status 'Announced, not operating' \u2192 L2 is the correct ladder rung; Documented and T3 (gov.ng) correct. Minor: recommend an archived copy since the T3 host is JS-gated (not required by rule 3 but A10 spot-resolution will keep tripping on it); year 2025 against a Nov-2024 source is acceptable as a 2025 status-check vintage.",
+    "evidence_url": "https://fmhud.gov.ng/read/3387"
+   },
+   {
+    "id": "4.2",
+    "verdict": "adjust",
+    "severity": "medium",
+    "reason": "Pillar scores verified to the decimal against the GCI 2024 PDF, Nigeria profile printed p.45 (PDF p.54): Legal 19.52, Technical 18.88, Organizational 16.57, Capacity Dev 13.15, Cooperation 14.28; sum 82.4. BUT the recorded value 0.824 appears nowhere in the source: GCIv5 deliberately publishes no overall score, and the row's number is an assessor-derived sum-then-normalize reconstruction of a discontinued statistic. ITU's own published reading for Nigeria is Tier 3 'Establishing' (55\u201385) \u2014 the middle of five tiers \u2014 whose natural level mapping is L3, and that equally protocol-faithful resolution would move C3 from Established (mean 2.75) to Emerging (2.50), i.e. a pillar-band change hinges on an unlogged methods choice. Proposal: keep Measured/T1/0.824/L5 only with (a) a defect-log entry for the derived value (the same convention 8.6's derived subtraction already received), (b) 'GCI 2024 Tier 3: Establishing' recorded as a sub-reading beneath the level, and (c) the threshold-basis question (v5 tiers vs the old 0\u20131 score the [0.2,0.4,0.6,0.8] thresholds presuppose) routed to spec \u00a713/G3 for an explicit ruling.",
+    "evidence_url": "https://www.itu.int/dms_pub/itu-d/opb/hdb/d-hdb-gci.01-2024-pdf-e.pdf",
+    "proposed_level": null
+   },
+   {
+    "id": "4.3",
+    "verdict": "confirmed",
+    "reason": "PDF re-fetched; rankings table row verified exactly: 'Nigeria 43.33 59.88 27.11 42.99' (Total / Government / Technology Sector / Data & Infrastructure), matching value and note. Measured correct; level re-derived: 43.33 vs H[20,40,60,80] \u2192 L3 as recorded; 2024 not stale, and the note discloses why the 2024 edition is used. Tier T4 is defensible (established industry analysis) but oxfordinsights.com is absent from the starter domain lookup (strictly 'T5 until reviewed') \u2014 record the T4 ruling in \u00a713.6 so it is a reviewed assignment rather than an ad-hoc one.",
+    "evidence_url": "https://oxfordinsights.com/wp-content/uploads/2024/12/2024-Government-AI-Readiness-Index-2.pdf"
+   },
+   {
+    "id": "5.2",
+    "verdict": "confirmed",
+    "reason": "API re-fetched: SE.ADT.LITR.ZS NGA = 70.4100036621094, date 2024 \u2014 exact match. Measured/T1 correct; level re-derived: 70.41 vs H[50,65,80,90] \u2192 L3 as recorded.",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/SE.ADT.LITR.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "5.3",
+    "verdict": "confirmed",
+    "reason": "API re-fetched: SE.TER.ENRR NGA = 9.74153350922586, date 2011 \u2014 exact match and genuinely the most recent observation in the series (mrnev=1). Level re-derived: 9.74 vs H[10,20,30,40] \u2192 L1 as recorded. The construct mismatch (total tertiary GER as proxy for STEM-specific enrollment) is already disclosed in the note and logged as census defect D3; staleness (2011) correctly derives. Nothing further to attack.",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/SE.TER.ENRR?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "6.1",
+    "verdict": "confirmed",
+    "reason": "WIPO GII 2025 exec PDF re-fetched; rankings table row verified exactly: '105 Nigeria 21.1 18 11' (score 21.1, rank 105/139, 18th of lower-middle-income, 11th in SSA) \u2014 matches value and note. Measured correct; level re-derived: 21.1 vs H[25,35,45,55] \u2192 L1 as recorded; year 2025 correct. Tier T1 acceptable for a WIPO official index release (IO database), though wipo.int is absent from the starter lookup \u2014 add the ruling to \u00a713.6.",
+    "evidence_url": "https://www.wipo.int/edocs/pubdocs/en/wipo-pub-2000-2025-exec-en-global-innovation-index-2025.pdf"
+   },
+   {
+    "id": "6.4",
+    "verdict": "adjust",
+    "severity": "medium",
+    "reason": "The single cited artefact does not carry the claims that justify the level. The AgFunderNews summary (of the AgFunder Developing Markets AgriFoodTech Investment Report 2025, 2024 data) resolves and verifies an operating, funded Nigerian cohort \u2014 Nigeria among Africa's top-funded at $26M in 2024 \u2014 but it names NONE of ThriveAgric, Crop2Cash, or Hello Tractor, whose named-venture/GSMA-grantee status is what carries the quality rung for L4 (census: startups=presence, support=quality, capital=scale). Strictly as-cited the row supports Operating without a quality artefact \u2192 L3. Proposal (keeps substance): add the GSMA M4D citation already used on rows 3.9/6.14 (which does document Crop2Cash/Hello Tractor grantee status and reach) as a second URL so L4 stands as recorded, and cite the AgFunder report itself rather than only its news arm. Tier: T4 defensible for AgFunder as an established industry analyst, but agfundernews.com is 'T5 until reviewed' under the lookup \u2014 and this ruling is currently inconsistent with 7.2, where the same class of specialist trade press (Space in Africa) was ruled T5-pending and the row downgraded to Judged. Log both to \u00a713.6 for one consistent ruling; also confirm the T4 link is archived per rule 3.",
+    "evidence_url": "https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-for-development/blog/ensuring-food-security-by-solving-the-agricultural-information-gap/",
+    "proposed_level": 4,
+    "proposed_tier": "T4"
+   },
+   {
+    "id": "8.1",
+    "verdict": "confirmed",
+    "reason": "API re-fetched: SN.ITK.DEFC.ZS NGA = 19.9, date 2023 \u2014 exact match. Measured/T1 correct; level re-derived: 19.9 vs L-dir [25,15,7.5,2.5] \u2192 \u226425 only \u2192 L2 as recorded.",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/SN.ITK.DEFC.ZS?format=json&mrnev=1&per_page=5"
+   },
+   {
+    "id": "8.2",
+    "verdict": "confirmed",
+    "reason": "API re-fetched: FX.OWN.TOTL.FE.ZS NGA = 52.2155914465012, date 2024 \u2014 exact match (Findex 2025 wave, as noted). Measured/T1 correct; level re-derived: 52.22 vs H[20,40,60,80] \u2192 L3 as recorded.",
+    "evidence_url": "https://api.worldbank.org/v2/country/NGA/indicator/FX.OWN.TOTL.FE.ZS?format=json&mrnev=1&per_page=5"
+   }
+  ],
+  "protocol_issues": "Five systemic observations for the issues log. (1) Sampling: the deterministic G2 sample yields zero rows for pillar 7 \u2014 the pillar contains only one non-prerequisite row (7.2, Judged) \u2014 so P7's Documented/Measured coverage is structurally nil; fine this loop since 7.2 is reviewed under the Judged rule, but the sampling rule should say what to do when a pillar has no eligible rows. (2) Tier lookup gaps: wipo.int, publicadministration.un.org, unstats.un.org, oxfordinsights.com, agfundernews.com and spaceinafrica.com are all absent from the starter domain lookup, forcing ad-hoc rulings that came out inconsistent within this one assessment (AgFunderNews ruled T4 on 6.4; Space in Africa ruled T5-pending on 7.2 \u2014 same specialist-trade-press class, opposite treatment, and the difference decided one row's evidence class). \u00a713.6 should rule on the class 'specialist trade analysts / news arms of research houses' once. (3) Derived values on Measured rows: 8.6 (subtraction) was flagged to the defect log but 4.2 (sum-then-normalize of five pillar scores into a statistic ITU discontinued) was not; one stated rule is needed for assessor-computed numbers, because in 4.2 the choice silently decides a C3 band boundary (L5 vs the tier-mapped L3 = Established vs Emerging). (4) Resolvability of SPA/JS-gated citations: fmhud.gov.ng and datahub.itu.int both return HTTP 200 shells that a fresh session cannot read (the DataHub deep link never restores indicator i=34617 at all); A10 spot-resolution should test content-level resolution, and archived copies should be taken for SPA-hosted citations regardless of tier. (5) The loop-1 input JSON truncates every prose value at ~220 characters (rows 1.5, 1.6, 1.7, 8.5, 6.4 etc. end mid-sentence); if the truncation exists in the workbook and not just this export, A1's value-recorded guarantee is weakened and G2 review is partially blind to what the value actually asserts."
+ }
+}

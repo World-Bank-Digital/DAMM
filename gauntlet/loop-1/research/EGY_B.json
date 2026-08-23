@@ -1,0 +1,69 @@
+{
+  "cells": [
+    {
+      "id": "2.1",
+      "value_type": "number",
+      "value": 99.8,
+      "source_title": "ITU DataHub — Population coverage, by mobile network technology: At least 3G — Egypt (accessed 2026-08-22)",
+      "source_url": "https://datahub.itu.int/data/?e=EGY&i=100095&s=430",
+      "second_source_url": "https://datahub.itu.int/data/?e=EGY&i=100095&s=19306",
+      "year": 2025,
+      "tier": "T1",
+      "presence_rung": null,
+      "search_trail": "ITU DataHub i=100095 (read via live browser session 2026-08-22; scripted curl/WebFetch is bot-blocked with 403/202) -> WebSearch for NTRA (tra.gov.eg) and MCIT rural-coverage reports (NTRA QoS reports and MCIT bulletins publish no rural coverage %) -> ITU Facts and Figures 2024/2025 (urban/rural splits published for regions only, not per country) -> GSMA (no public Egypt rural coverage figure).",
+      "quality_evidence": "",
+      "scale_evidence": "",
+      "notes": "NATIONAL figure with rural caveat — a rural-specific % is NOT published for Egypt by ITU, NTRA or MCIT public artefacts; per indicator guidance this is the second-best form and is flagged as such. ITU DataHub, Egypt 2025 observation: at least 3G = 99.8% of population; at least LTE/WiMAX = 98.0% (same page, category s=19306); at least 2G = 99.9%. Egypt's population is concentrated in the Nile valley/delta, which compresses the urban-rural coverage gap, but remote desert/Sinai communities are the plausible residual. Context: the Haya Karima (Decent Life) initiative targets connectivity upgrades in ~4,500 villages (ITU Digital Impact story: https://www.itu.int/itu-d/sites/digital-impact-unlocked/from-pledges-to-action-egypts-decent-life-initiative/). PRIOR: desk pass recorded 99.8% (2024, ITU) — verified against the primary source; observation now updates to 2025, same value. Single-source (ITU/regulator-reported); no independent T1-T2 confirmation located, ships flagged single-source.",
+      "protocol_issues": "Indicator asks for rural population covered but no rural-specific figure exists in any admissible tier for Egypt — spec should say whether the national figure scores or the cell should gap. Also: ITU DataHub cannot be machine-fetched (bot protection); the '19 of 57 machine-fetchable' assumption fails for this row without a browser."
+    },
+    {
+      "id": "2.5",
+      "value_type": "number",
+      "value": 0.9,
+      "source_title": "ITU DataHub — Other ICT price baskets: Data-only mobile-broadband basket (2GB) (2021-2024 definition), % of GNI p.c. — Egypt (accessed 2026-08-22)",
+      "source_url": "https://datahub.itu.int/data/?e=EGY&i=100123&s=34593",
+      "second_source_url": "https://datahub.itu.int/data/?e=EGY&i=100122&s=36056",
+      "year": 2025,
+      "tier": "T1",
+      "presence_rung": null,
+      "search_trail": "ITU DataHub 'Other ICT price baskets' i=100123 s=34593 (2GB legacy basket) and 'Current ICT price baskets' i=100122 s=36056 (5GB basket), read via live browser session 2026-08-22 -> ITU 'Affordability of ICT services 2024' PDF (itu.int download returned a 245-byte stub, not retrievable by script) -> A4AI/GSMA not needed (T1 found, tier-order stop).",
+      "quality_evidence": "",
+      "scale_evidence": "",
+      "notes": "Basket used: ITU data-only mobile-broadband basket, 2GB/month definition (the basket this indicator names), Egypt 2025 = 0.90% of GNI per capita. IMPORTANT: ITU's 2025 basket revision moved the headline data-only basket to 5GB/month; Egypt 2025 on the new 5GB basket = 1.58% of GNI p.c. (second_source_url — same publisher, so not independent triangulation). Both values clear the UN Broadband Commission 2% affordability target. PRIOR: desk pass recorded 1.2% (2024, 'ITU DataHub / ENCC', range 1.1-1.4%) — consistent trajectory and plausible for the 2024 observation, updated here to the 2025 T1 observation; the prior's 'ENCC' source label did not resolve to anything. Single-source (ITU only publishes this statistic); flagged single-source.",
+      "protocol_issues": "Indicator definition pegs the 2GB basket, which ITU retired to a legacy series ('Other ICT price baskets', labelled 2021-2024) in its 2025 revision while still publishing a 2025 value for it. Spec must choose: keep scoring the legacy 2GB series while it lasts, or move to the 5GB basket (values differ: 0.90 vs 1.58; both inside the same threshold band today, L thresholds 10/5/2/1 put 2GB below 1 = best band, 5GB in the 1-2 band)."
+    },
+    {
+      "id": "2.7",
+      "value_type": "number",
+      "value": 67.4,
+      "source_title": "MCIT ICT Indicators Quarterly Bulletin, June 2022 (Q2 2022), p.6 — 'Households with Smartphone according to (Urban/Rural)', reporting the MCIT/CAPMAS 'ICT usage in household and individuals' survey 2021-2022",
+      "source_url": "https://mcit.gov.eg/Upcont/Documents/Publications_2482022000_ICT_Indicators_Quarterly_Bulletin_Q2_2022_24082022.pdf",
+      "second_source_url": "http://web.archive.org/web/20240615185734/https://mcit.gov.eg/Upcont/Documents/Publications_2482022000_ICT_Indicators_Quarterly_Bulletin_Q2_2022_24082022.pdf",
+      "year": 2022,
+      "tier": "T3 (government bulletin carrying an MCIT/CAPMAS national survey statistic; CAPMAS is the NSO, so the underlying figure is T1-grade)",
+      "presence_rung": null,
+      "search_trail": "ITU DataHub (no rural smartphone-ownership indicator) -> WDI (none) -> MCIT ICT Indicators in Brief Apr 2024 and Apr 2025 PDFs (cite the 2022/2023 survey but publish no smartphone urban/rural split) -> MCIT Quarterly Bulletins Q1 2023 and Q4 2023 PDFs (no smartphone split update) -> MCIT Quarterly Bulletin Q2 2022 PDF (FOUND: rural 67.4%, urban 80.4%) -> GSMA Consumer Survey not needed (national-survey figure found, tier-order stop).",
+      "quality_evidence": "",
+      "scale_evidence": "",
+      "notes": "DEFINITION CAVEAT: this is a HOUSEHOLD-level measure — 67.4% of rural households have a smartphone (urban 80.4%, national 74.9%), survey year 2021-2022. The individual-level national figures from the same survey: 63.1% of individuals (15-74) own a smartphone, 66% use one; no rural split is published at individual level. Later MCIT bulletins (through Apr 2025) still cite the 2022/2023 survey round but have not published an updated smartphone urban/rural split, so 2021-2022 is the latest published observation. PRIOR: desk pass recorded 13.9% (CAPMAS 2015 via Ahram Online, T5, stale, level 1) — REFUTED as the best available figure: same household-type measure, seven years older, inadmissible tier. The updated figure moves this cell across three threshold bands (H 20/40/60/80: 13.9 -> band 1; 67.4 -> band 4); the v1.6 constraint listing of 2.7 as a binding level-1 constraint does not survive verification.",
+      "protocol_issues": "Indicator says 'rural smartphone ownership (%)' without fixing household vs individual as the unit; the only rural-split statistic Egypt publishes is household-level. Flag for spec: define the unit, and whether a household figure is admissible for the threshold. Also: egyptictindicators.gov.eg (the household-indicator portal) is unreachable (connection refused), and MCIT publishes survey results only scattered through bulletin PDFs."
+    },
+    {
+      "id": "2.11",
+      "value_type": "citation",
+      "value": "No government or telco device-financing/subsidy scheme targeting low-income or rural users found for Egypt (searched 2026-08-22). What exists instead: (1) commercial telco handset installments — Telecom Egypt 'WE Gold' postpaid tiers offer 0%-interest handset installments with 20%/50% down payment, but eligibility starts at premium tariff tiers (WE Gold 300+), i.e. not a low-income instrument; (2) NTRA + Customs Authority installment service (launched 6 April 2026, valU first provider, later Fawry) — installments apply to the import fees/taxes due on phones brought from abroad, not to device purchase; (3) NTRA ended the traveller duty-exemption on imported phones on 21 Jan 2026, citing competitive local manufacturing — a measure that raises, not lowers, effective device cost for the unexempted; (4) Egypt is NOT among the six pilot countries (DRC, Ethiopia, Nigeria, Rwanda, Tanzania, Uganda) of the GSMA Handset Affordability Coalition's $30-40 4G smartphone pilots announced March 2026.",
+      "source_title": "NTRA (tra.gov.eg) — 'Start of the installment service for fees due on mobile phones imported from abroad through consumer finance companies' (Arabic, 6 April 2026); NTRA — 'End of exceptional exemption on imported mobile phones' (21 Jan 2026)",
+      "source_url": "https://www.tra.gov.eg/ar/%D8%A8%D8%AF%D8%A1-%D8%AA%D8%B7%D8%A8%D9%8A%D9%82-%D8%AE%D8%AF%D9%85%D8%A9-%D8%AA%D9%82%D8%B3%D9%8A%D8%B7-%D8%A7%D9%84%D8%B1%D8%B3%D9%88%D9%85-%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AD%D9%82%D8%A9-%D8%B9/",
+      "second_source_url": "https://www.gsma.com/newsroom/press-release/pioneering-affordable-access-in-africa-gsma-and-handset-affordability-coalition-members-identify-six-african-countries-to-pilot-affordable-40-smartphones/",
+      "year": 2026,
+      "tier": "T3 (NTRA official pages for presence facts); GSMA newsroom T4 (archived 2026-08-07: http://web.archive.org/web/20260807202338/); Telecom Egypt WE Gold page T5-existence-only (https://www.te.eg/en/web/guest/personal/mobile/we-gold, archived 2026-06-12: http://web.archive.org/web/20260612200756/)",
+      "presence_rung": "Absent",
+      "search_trail": "MCIT/Digital Egypt program pages (no device scheme) -> NTRA tra.gov.eg official announcements (import-fee installments Apr 2026; exemption ended Jan 2026; both fee-side, not device financing) -> GSMA newsroom Handset Affordability Coalition (Egypt not a pilot country) -> telco official pages (te.eg WE Gold handset installments — premium tiers only) -> Arabic-language search for government device-installment initiatives for low-income citizens (none found; May 2026 minister statements concern low-cost SERVICE packages, not devices).",
+      "quality_evidence": "",
+      "scale_evidence": "",
+      "notes": "Rung facts, no level assigned. Presence of a scheme AS DEFINED (device financing/subsidy for low-income/rural users): Absent — nothing found at gov or telco level that targets low-income or rural users. Adjacent facts that are NOT the indicator but exist and operate: commercial WE Gold handset installments (premium postpaid only); consumer BNPL market (valU, MobileMasr etc.) reaching devices for the credit-approved urban market; NTRA/Customs fee-installment scheme (government-led, operating, but finances regulatory fees the state itself levies); Ministry of Education student tablet programme (education devices, not a connectivity affordability scheme). Direction of policy is currently affordability-NEGATIVE on the device side (import duty exemption ended Jan 2026). PRIOR: desk pass said 'no dedicated scheme identified; general consumer device financing exists' (level 2) — presence finding CONFIRMED and sharpened with 2026 NTRA artefacts; the level-2 read is the caller's judgment, not supported by any 'Announced' artefact for a targeted scheme.",
+      "protocol_issues": "Ladder rung-1 definition is ambiguous for this indicator: generic commercial device financing exists and operates in Egypt, but nothing targets low-income/rural users. Whether rung 1 requires targeting decides Absent vs Operating — spec should state it. Telco program pages (te.eg) are T5 by the domain lookup yet are the primary artefact for a telco-led scheme's existence; suggest treating operator official program pages as T4-equivalent for presence facts of their own schemes."
+    }
+  ],
+  "bundle_issues": "(1) ITU DataHub is bot-protected (curl/WebFetch get 403/202 empty responses); values for 2.1 and 2.5 required a live browser session. Any pipeline counting these rows as machine-fetchable T1 needs a browser-based fetcher or the ITU bulk-download files. (2) ITU's 2025 price-basket revision retired the 2GB data-only basket to a legacy series and made 5GB the current basket — indicator 2.5's definition needs a spec decision before the next refresh. (3) Egypt publishes no rural-specific connectivity statistics in any admissible tier: rural coverage (2.1) exists only as a national figure, rural smartphone ownership (2.7) only as a household-level figure from a 2021-2022 survey — a systematic limitation for the C1 bundle that should be recorded once, not per cell. (4) egyptictindicators.gov.eg, the MCIT household-indicator portal, is unreachable (connection refused on 443), leaving scattered bulletin PDFs as the only route to national survey statistics. (5) The v1.6 desk pass's C1 picture changes materially on verification: 2.7 moves from 13.9% (2015, T5) to 67.4% (2021/22, T3/T1-grade), removing it from the binding-constraints list; 2.1 and 2.5 verify cleanly; 2.11's absence finding is confirmed and strengthened by 2026 NTRA artefacts."
+}

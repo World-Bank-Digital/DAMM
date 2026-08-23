@@ -1,0 +1,1572 @@
+{
+ "country": "Nigeria",
+ "indicators": {
+  "1.1": {
+   "value": 3494.9,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2025,
+   "src": "World Bank WDI NV.AGR.EMPL.KD",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Agriculture value added per worker (USD)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.2": {
+   "value": 1558,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2024,
+   "src": "World Bank WDI AG.YLD.CREL.KG",
+   "note": "Yield less than half of Egypt-scale systems",
+   "subs": [],
+   "stale": false,
+   "name": "Cereal yield (kg/ha)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.3": {
+   "value": 33.5,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2025,
+   "src": "World Bank WDI SL.AGR.EMPL.ZS (ILO model)",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Employment in agriculture (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.4": {
+   "value": 119.85,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2022,
+   "src": "World Bank WDI AG.PRD.FOOD.XD",
+   "note": "Stale: 2022",
+   "subs": [],
+   "stale": true,
+   "name": "Food production index (2014-16=100)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.5": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "No verified national post-harvest loss rate; APHLIS/FMAFS to confirm",
+   "subs": [],
+   "stale": false,
+   "name": "Post-harvest loss rate (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.6": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "RNR-style market access survey not found",
+   "subs": [],
+   "stale": false,
+   "name": "Smallholder access to formal markets (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.7": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "EFInA/CBN smallholder credit share to verify",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural credit access (% farmers)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "FIN"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.8": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "CSA adoption share unverified",
+   "subs": [],
+   "stale": false,
+   "name": "Farmers using climate-smart practices (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.1": {
+   "value": 19.9,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2023,
+   "src": "World Bank WDI SN.ITK.DEFC.ZS",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Prevalence of undernourishment (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.5": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "FAO gender & land rights figure to verify",
+   "subs": [],
+   "stale": false,
+   "name": "Women who own land (% holders)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.1": {
+   "value": "~90% pop. 3G; 4G expansion toward 94% target; rural share unpublished",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "NCC 2024 Year-End Performance Report; GSMA",
+   "note": "Rural-specific coverage not published \u2014 level judged from national data",
+   "subs": [],
+   "stale": false,
+   "name": "Rural mobile broadband coverage (3G/4G)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "t"
+  },
+  "2.4": {
+   "value": 41.2,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "World Bank WDI IT.NET.USER.ZS",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Individuals using the Internet (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.5": {
+   "value": 4.2,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "ITU/A4AI via GSMA: 2GB basket % GNI pc",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Mobile broadband price (% GNI pc)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.7": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "GSMA rural smartphone ownership to verify",
+   "subs": [],
+   "stale": false,
+   "name": "Rural smartphone ownership (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.9": {
+   "value": 23.5,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2024,
+   "src": "World Bank WDI EG.ELC.ACCS.RU.ZS",
+   "note": "Near the universal-gate floor \u2014 rural power is the fragile foundation",
+   "subs": [],
+   "stale": false,
+   "name": "Rural electricity access (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "t"
+  },
+  "2.11": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "Device financing schemes not verified",
+   "subs": [],
+   "stale": false,
+   "name": "Device financing/subsidy schemes",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.1": {
+   "value": 0.4815,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "UN E-Government Survey 2024 (rank 144/193)",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "UN E-Government Development Index",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "3.3": {
+   "value": "NIN-enabled National Digital Farmers Registry launched; 279k farmers supported 2024/25 season",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "FMAFS & NIMC press releases; TheCable",
+   "note": "Operating pilot, <1% of farm households \u2014 narrow coverage",
+   "subs": [],
+   "stale": false,
+   "name": "National farmer registry",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "AGI",
+    "ADV"
+   ],
+   "prereq": "UC:FIN,AGI",
+   "kind": "l"
+  },
+  "3.4": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "State-level land registries fragmented; national digital cadastre unverified",
+   "subs": [],
+   "stale": false,
+   "name": "Digital land/plot registration",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.5": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 2,
+   "year": 2026,
+   "src": "NBS ag statistics exist; no open ag-data portal found",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Open agricultural data (machine-readable, AI-ready)",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ADV",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.6": {
+   "value": "NiMet Seasonal Climate Prediction, annual national service",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2026,
+   "src": "NiMet SCP 2026",
+   "note": "Operational; ag-tailored downscaling partial",
+   "subs": [],
+   "stale": false,
+   "name": "Weather/climate data infrastructure",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "ADV",
+    "SMF",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.7": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 2,
+   "year": 2026,
+   "src": "NASRDA EO assets; ag integration ad hoc",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Satellite/EO data integration",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.8": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "National digital soil information service unverified",
+   "subs": [],
+   "stale": false,
+   "name": "National soil map/database",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "ADV",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.11": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 1,
+   "year": 2026,
+   "src": "No ag-data interoperability standards found",
+   "note": "PREREQUISITE ABSENT for AGI",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural data interoperability standards",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "UC:AGI",
+   "kind": "l"
+  },
+  "4.1": {
+   "value": "NDPA 2023 in force; NDPC enforcing (1,368 compliance notices, GAID 2025)",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2025,
+   "src": "NDPC; Jones Day Aug 2025",
+   "note": "Operating with active enforcement",
+   "subs": [],
+   "stale": false,
+   "name": "Data protection/privacy law",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "l"
+  },
+  "4.2": {
+   "value": 0.824,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2024,
+   "src": "ITU Global Cybersecurity Index 2024",
+   "note": "ITU places Nigeria Tier 3 despite 82.4 score \u2014 threshold read with caution",
+   "subs": [],
+   "stale": false,
+   "name": "Cybersecurity framework (ITU GCI)",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "4.3": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "Oxford Insights AI Readiness score not verified this run",
+   "subs": [],
+   "stale": false,
+   "name": "Government AI Readiness Index",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "4.4": {
+   "value": "NDAS 2020-2030 remains a DRAFT; NATIP 2022-27 carries the digital-ag budget line",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2020,
+   "src": "NITDA draft NDAS; FMAFS NATIP",
+   "note": "Announced, never adopted \u2014 stale and unowned",
+   "subs": [],
+   "stale": true,
+   "name": "National digital agriculture strategy",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "4.5": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 1,
+   "year": 2026,
+   "src": "No agricultural data governance framework found",
+   "note": "PREREQUISITE ABSENT for AGI",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural data governance framework",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "FIN"
+   ],
+   "prereq": "UC:AGI",
+   "kind": "l"
+  },
+  "4.6": {
+   "value": "NAIS 2024 adopted; agriculture a named priority sector",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2024,
+   "src": "NAIS 2024; OECD.AI",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "National AI strategy with agriculture component",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "4.7": {
+   "value": 57.2,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2026,
+   "src": "NIMC: 137.4M NIN Jul 2026 / ~240M pop.",
+   "note": "Ward-level drive underway; 2026 full-coverage directive",
+   "subs": [],
+   "stale": false,
+   "name": "Digital ID coverage (%)",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "ALL"
+   ],
+   "prereq": "UC:FIN",
+   "kind": "t"
+  },
+  "4.9": {
+   "value": "FMAFS-NIMC registry partnership; NITDA-FMARD NDAS collaboration; no standing mechanism",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2025,
+   "src": "NIMC/FMAFS G2P project",
+   "note": "DELIVERY RISK: coordination is project-based",
+   "subs": [],
+   "stale": false,
+   "name": "Inter-ministerial coordination mechanism",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "DELIVERY",
+   "kind": "l"
+  },
+  "5.2": {
+   "value": 70.4,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "World Bank WDI SE.ADT.LITR.ZS",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Adult literacy rate (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.3": {
+   "value": 9.7,
+   "cls": "Measured",
+   "level": 1,
+   "year": 2011,
+   "src": "World Bank WDI SE.TER.ENRR",
+   "note": "Stale: last national observation 2011",
+   "subs": [],
+   "stale": true,
+   "name": "Tertiary STEM enrollment (% gross)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.4": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "Farmer digital literacy survey not found",
+   "subs": [],
+   "stale": false,
+   "name": "Digital literacy among farmers (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.5": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 2,
+   "year": 2026,
+   "src": "NAERLS + e-extension pilots; reach unquantified",
+   "note": "ADV prerequisite: present but narrow",
+   "subs": [],
+   "stale": false,
+   "name": "Digital extension capability",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "UC:ADV",
+   "kind": "l"
+  },
+  "5.7": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "FMAFS digital/AI unit not verified \u2014 DELIVERY flag Unverified",
+   "subs": [],
+   "stale": false,
+   "name": "MoAg digital/AI unit",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "DELIVERY",
+   "kind": "l"
+  },
+  "5.8": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 2,
+   "year": 2026,
+   "src": "University agtech programmes present; scale unverified",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Agtech/data-science training pipeline",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "5.12": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "Gender balance in digital-ag workforce unmeasured",
+   "subs": [],
+   "stale": false,
+   "name": "Gender balance in digital-ag workforce (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "EQ",
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.1": {
+   "value": 21.1,
+   "cls": "Measured",
+   "level": 1,
+   "year": 2025,
+   "src": "WIPO GII 2025 (rank 105/139; top climber)",
+   "note": "Score below L2 floor despite momentum",
+   "subs": [],
+   "stale": false,
+   "name": "Global Innovation Index",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.3": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "B-READY coverage of Nigeria unverified",
+   "subs": [],
+   "stale": false,
+   "name": "Business Ready (B-READY)",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.4": {
+   "value": "Dense agtech cohort: ThriveAgric, Crop2Cash, Hello Tractor, Releaf ...; $865M digital lending 2025 (all sectors)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "AgFunder 2025; CBN Fintech Report 2026",
+   "note": "Operating and funded; ag-specific capital thin",
+   "subs": [],
+   "stale": false,
+   "name": "Agtech venture ecosystem",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.9": {
+   "value": "BoA-Cellulant; FMAFS-NIMC G2P; LIFE-ND platforms",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "BoA; NIMC; LIFE-ND",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Public-private partnerships in digital ag",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV",
+    "AGI",
+    "SCM"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.12": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "DPG adoption in agriculture unverified",
+   "subs": [],
+   "stale": false,
+   "name": "Digital public goods adopted",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.13": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "SME digital adoption share unmeasured",
+   "subs": [],
+   "stale": false,
+   "name": "SME/agribusiness adoption of digital tools (%)",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "SMF",
+    "SCM",
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.14": {
+   "value": "PSBs (MoMo, SmartCash) + agri-fintech rails (Crop2Cash, ThriveAgric); smallholder reach unquantified",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "CBN Fintech Report 2026; AgFunder",
+   "note": "FIN prerequisite present; scale rung unverified",
+   "subs": [],
+   "stale": false,
+   "name": "Agri-fintech rails for smallholders",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "FIN"
+   ],
+   "prereq": "UC:FIN",
+   "kind": "l"
+  },
+  "3.9": {
+   "value": "Multiple advisory platforms with >10k users (AgFunder-listed cohort)",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "AgFunder 2025",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Digital advisory platforms at scale",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.10": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 2,
+   "year": 2026,
+   "src": "Ag marketplaces present; verified scale thin",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural e-commerce platforms",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "7.2": {
+   "value": "AI-powered national agro-productivity system launched 2026; isolated private AI deployments",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2026,
+   "src": "FMAFS launch (African Sustainability Matters)",
+   "note": "Early: announced-to-pilot",
+   "subs": [],
+   "stale": false,
+   "name": "AI-enabled agricultural solutions deployed",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV",
+    "FIN",
+    "SCM",
+    "SMF",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "7.12": {
+   "value": "NDPA general consent basis; no ag/AI-specific provisions",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2023,
+   "src": "NDPA 2023",
+   "note": "AI prerequisite: general law only \u2014 Partial",
+   "subs": [],
+   "stale": false,
+   "name": "Responsible-AI safeguards (consent, rights)",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "AI"
+   ],
+   "prereq": "UC:AI",
+   "kind": "l"
+  },
+  "8.2": {
+   "value": 52.2,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "World Bank WDI FX.OWN.TOTL.FE.ZS (Findex 2025 wave)",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Account ownership, female (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "FIN",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.4": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "Findex 2025 mobile-money split not retrievable via API this run",
+   "subs": [],
+   "stale": false,
+   "name": "Mobile money account (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "FIN"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.6": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "GSMA gender gap figure to verify",
+   "subs": [],
+   "stale": false,
+   "name": "Gender gap in phone ownership (pp)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.9": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "No national figure for smallholder digital reach",
+   "subs": [],
+   "stale": false,
+   "name": "Smallholders reached by digital services (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ALL",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.11": {
+   "value": "(assessor judgement)",
+   "cls": "Judged",
+   "level": 2,
+   "year": 2026,
+   "src": "Major platforms partially in Hausa/Yoruba/Igbo (e.g. USSD advisory)",
+   "note": "",
+   "subs": [],
+   "stale": false,
+   "name": "Services in local languages (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ADV",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.12": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "No verified impact evaluation retrieved; platform yield claims unaudited",
+   "subs": [],
+   "stale": false,
+   "name": "Documented impact evidence (yield/income)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "8.17": {
+   "value": "DATA GAP \u2014 searched, not verified this run",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Machine pass 2026-08-21",
+   "note": "Climate advisory reach unmeasured",
+   "subs": [],
+   "stale": false,
+   "name": "Climate advisory reach (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  }
+ },
+ "pillars": {
+  "A1": {
+   "n": 10,
+   "mean": 2.6,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 5,
+    "Documented": 0,
+    "Judged": 0,
+    "Gap": 5
+   },
+   "stale": 1
+  },
+  "C1": {
+   "n": 6,
+   "mean": 2.75,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 3,
+    "Documented": 1,
+    "Judged": 0,
+    "Gap": 2
+   },
+   "stale": 0
+  },
+  "C2": {
+   "n": 8,
+   "mean": 2.17,
+   "band": "Emerging",
+   "weak": true,
+   "comp": {
+    "Measured": 1,
+    "Documented": 2,
+    "Judged": 3,
+    "Gap": 2
+   },
+   "stale": 0
+  },
+  "C3": {
+   "n": 8,
+   "mean": 2.86,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 2,
+    "Documented": 4,
+    "Judged": 1,
+    "Gap": 1
+   },
+   "stale": 1
+  },
+  "C4": {
+   "n": 7,
+   "mean": 2.0,
+   "band": "Emerging",
+   "weak": true,
+   "comp": {
+    "Measured": 2,
+    "Documented": 0,
+    "Judged": 2,
+    "Gap": 3
+   },
+   "stale": 1
+  },
+  "E1": {
+   "n": 11,
+   "mean": 2.38,
+   "band": "Emerging",
+   "weak": false,
+   "comp": {
+    "Measured": 1,
+    "Documented": 6,
+    "Judged": 1,
+    "Gap": 3
+   },
+   "stale": 0
+  },
+  "O1": {
+   "n": 7,
+   "mean": 2.5,
+   "band": "Emerging",
+   "weak": true,
+   "comp": {
+    "Measured": 1,
+    "Documented": 0,
+    "Judged": 1,
+    "Gap": 5
+   },
+   "stale": 0
+  }
+ },
+ "layers": {
+  "Foundation": 2.67,
+  "Enablers": 2.32,
+  "Transformation": 2.67,
+  "Outcomes": 2.5
+ },
+ "prereq": {
+  "2.1": {
+   "name": "Rural mobile broadband coverage (3G/4G)",
+   "kind": "UNIVERSAL",
+   "status": "Present"
+  },
+  "2.9": {
+   "name": "Rural electricity access (%)",
+   "kind": "UNIVERSAL",
+   "status": "Present (narrow)"
+  },
+  "3.3": {
+   "name": "National farmer registry",
+   "kind": "UC:FIN,AGI",
+   "status": "Present (narrow)"
+  },
+  "3.11": {
+   "name": "Agricultural data interoperability standards",
+   "kind": "UC:AGI",
+   "status": "Absent"
+  },
+  "4.1": {
+   "name": "Data protection/privacy law",
+   "kind": "UNIVERSAL",
+   "status": "Present"
+  },
+  "4.5": {
+   "name": "Agricultural data governance framework",
+   "kind": "UC:AGI",
+   "status": "Absent"
+  },
+  "4.7": {
+   "name": "Digital ID coverage (%)",
+   "kind": "UC:FIN",
+   "status": "Present"
+  },
+  "4.9": {
+   "name": "Inter-ministerial coordination mechanism",
+   "kind": "DELIVERY",
+   "status": "Present (narrow)"
+  },
+  "5.5": {
+   "name": "Digital extension capability",
+   "kind": "UC:ADV",
+   "status": "Present (narrow)"
+  },
+  "5.7": {
+   "name": "MoAg digital/AI unit",
+   "kind": "DELIVERY",
+   "status": "Unverified"
+  },
+  "6.14": {
+   "name": "Agri-fintech rails for smallholders",
+   "kind": "UC:FIN",
+   "status": "Present"
+  },
+  "7.12": {
+   "name": "Responsible-AI safeguards (consent, rights)",
+   "kind": "UC:AI",
+   "status": "Present (narrow)"
+  }
+ },
+ "matrix": {
+  "ADV": {
+   "status": "Partial",
+   "why": "5.5",
+   "mean": 2.52,
+   "prereqs": [
+    [
+     "5.5",
+     "Present (narrow)"
+    ]
+   ]
+  },
+  "SMF": {
+   "status": "Partial",
+   "why": "thin enablers",
+   "mean": 2.52,
+   "prereqs": []
+  },
+  "MKT": {
+   "status": "Partial",
+   "why": "thin enablers",
+   "mean": 2.56,
+   "prereqs": []
+  },
+  "SCM": {
+   "status": "Partial",
+   "why": "thin enablers",
+   "mean": 2.58,
+   "prereqs": []
+  },
+  "FIN": {
+   "status": "Partial",
+   "why": "3.3",
+   "mean": 2.5,
+   "prereqs": [
+    [
+     "3.3",
+     "Present (narrow)"
+    ],
+    [
+     "4.7",
+     "Present"
+    ],
+    [
+     "6.14",
+     "Present"
+    ]
+   ]
+  },
+  "AGI": {
+   "status": "Blocked",
+   "why": "3.11, 4.5",
+   "mean": 2.46,
+   "prereqs": [
+    [
+     "3.3",
+     "Present (narrow)"
+    ],
+    [
+     "3.11",
+     "Absent"
+    ],
+    [
+     "4.5",
+     "Absent"
+    ]
+   ]
+  }
+ },
+ "leapfrog": {
+  "gap": 0.0,
+  "flag": false,
+  "reading": "No structural flag"
+ },
+ "constraints": [
+  {
+   "id": "3.11",
+   "name": "Agricultural data interoperability standards",
+   "level": 1,
+   "pillar": "C2",
+   "prereq": true
+  },
+  {
+   "id": "4.5",
+   "name": "Agricultural data governance framework",
+   "level": 1,
+   "pillar": "C3",
+   "prereq": true
+  },
+  {
+   "id": "5.3",
+   "name": "Tertiary STEM enrollment (% gross)",
+   "level": 1,
+   "pillar": "C4",
+   "prereq": false
+  },
+  {
+   "id": "6.1",
+   "name": "Global Innovation Index",
+   "level": 1,
+   "pillar": "E1",
+   "prereq": false
+  },
+  {
+   "id": "1.2",
+   "name": "Cereal yield (kg/ha)",
+   "level": 2,
+   "pillar": "A1",
+   "prereq": false
+  },
+  {
+   "id": "1.3",
+   "name": "Employment in agriculture (%)",
+   "level": 2,
+   "pillar": "A1",
+   "prereq": false
+  },
+  {
+   "id": "2.9",
+   "name": "Rural electricity access (%)",
+   "level": 2,
+   "pillar": "C1",
+   "prereq": true
+  },
+  {
+   "id": "3.10",
+   "name": "Agricultural e-commerce platforms",
+   "level": 2,
+   "pillar": "E1",
+   "prereq": false
+  },
+  {
+   "id": "3.3",
+   "name": "National farmer registry",
+   "level": 2,
+   "pillar": "C2",
+   "prereq": true
+  },
+  {
+   "id": "3.5",
+   "name": "Open agricultural data (machine-readable, AI-ready)",
+   "level": 2,
+   "pillar": "C2",
+   "prereq": false
+  },
+  {
+   "id": "3.7",
+   "name": "Satellite/EO data integration",
+   "level": 2,
+   "pillar": "C2",
+   "prereq": false
+  },
+  {
+   "id": "4.4",
+   "name": "National digital agriculture strategy",
+   "level": 2,
+   "pillar": "C3",
+   "prereq": false
+  }
+ ],
+ "kpi": [
+  {
+   "id": "1.1",
+   "name": "Agriculture value added per worker (USD)",
+   "value": 3494.9,
+   "year": 2025,
+   "src": "World Bank WDI NV.AGR.EMPL.KD"
+  },
+  {
+   "id": "1.2",
+   "name": "Cereal yield (kg/ha)",
+   "value": 1558,
+   "year": 2024,
+   "src": "World Bank WDI AG.YLD.CREL.KG"
+  },
+  {
+   "id": "1.3",
+   "name": "Employment in agriculture (%)",
+   "value": 33.5,
+   "year": 2025,
+   "src": "World Bank WDI SL.AGR.EMPL.ZS (ILO model)"
+  },
+  {
+   "id": "1.4",
+   "name": "Food production index (2014-16=100)",
+   "value": 119.85,
+   "year": 2022,
+   "src": "World Bank WDI AG.PRD.FOOD.XD"
+  },
+  {
+   "id": "8.1",
+   "name": "Prevalence of undernourishment (%)",
+   "value": 19.9,
+   "year": 2023,
+   "src": "World Bank WDI SN.ITK.DEFC.ZS"
+  },
+  {
+   "id": "8.2",
+   "name": "Account ownership, female (%)",
+   "value": 52.2,
+   "year": 2024,
+   "src": "World Bank WDI FX.OWN.TOTL.FE.ZS (Findex 2025 wave)"
+  }
+ ],
+ "verify": [
+  {
+   "id": "1.5",
+   "name": "Post-harvest loss rate (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "1.6",
+   "name": "Smallholder access to formal markets (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "1.7",
+   "name": "Agricultural credit access (% farmers)",
+   "cls": "Gap"
+  },
+  {
+   "id": "1.8",
+   "name": "Farmers using climate-smart practices (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.5",
+   "name": "Women who own land (% holders)",
+   "cls": "Gap"
+  },
+  {
+   "id": "2.7",
+   "name": "Rural smartphone ownership (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "2.11",
+   "name": "Device financing/subsidy schemes",
+   "cls": "Gap"
+  },
+  {
+   "id": "3.4",
+   "name": "Digital land/plot registration",
+   "cls": "Gap"
+  },
+  {
+   "id": "3.8",
+   "name": "National soil map/database",
+   "cls": "Gap"
+  },
+  {
+   "id": "3.11",
+   "name": "Agricultural data interoperability standards",
+   "cls": "Judged"
+  },
+  {
+   "id": "4.3",
+   "name": "Government AI Readiness Index",
+   "cls": "Gap"
+  },
+  {
+   "id": "4.5",
+   "name": "Agricultural data governance framework",
+   "cls": "Judged"
+  },
+  {
+   "id": "5.4",
+   "name": "Digital literacy among farmers (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "5.5",
+   "name": "Digital extension capability",
+   "cls": "Judged"
+  },
+  {
+   "id": "5.7",
+   "name": "MoAg digital/AI unit",
+   "cls": "Gap"
+  },
+  {
+   "id": "5.12",
+   "name": "Gender balance in digital-ag workforce (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "6.3",
+   "name": "Business Ready (B-READY)",
+   "cls": "Gap"
+  },
+  {
+   "id": "6.12",
+   "name": "Digital public goods adopted",
+   "cls": "Gap"
+  },
+  {
+   "id": "6.13",
+   "name": "SME/agribusiness adoption of digital tools (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.4",
+   "name": "Mobile money account (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.6",
+   "name": "Gender gap in phone ownership (pp)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.9",
+   "name": "Smallholders reached by digital services (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.12",
+   "name": "Documented impact evidence (yield/income)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.17",
+   "name": "Climate advisory reach (%)",
+   "cls": "Gap"
+  }
+ ],
+ "refresh": [
+  {
+   "id": "1.4",
+   "name": "Food production index (2014-16=100)",
+   "year": 2022
+  },
+  {
+   "id": "4.4",
+   "name": "National digital agriculture strategy",
+   "year": 2020
+  },
+  {
+   "id": "5.3",
+   "name": "Tertiary STEM enrollment (% gross)",
+   "year": 2011
+  }
+ ],
+ "counts": {
+  "Measured": 15,
+  "Documented": 13,
+  "Judged": 8,
+  "Gap": 21
+ }
+}

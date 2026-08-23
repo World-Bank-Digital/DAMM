@@ -1,0 +1,91 @@
+{
+ "4.1": {
+  "value": "NDPA 2023 in force (assented 12 June 2023, per official Act text); NDPC operational and enforcing: GAID 2025 issued 20 March 2025 (signed by National Commissioner Olatunji); NDPC Annual Report 2025 records 146 investigat",
+  "cls": "Documented",
+  "level": 4,
+  "year": 2025,
+  "src": "NDPA 2023 (Act text); NDPC Annual Report 2025 (146 investigations, 306 DPCOs); GAID 2025",
+  "url": "https://ndpc.gov.ng/wp-content/uploads/2026/06/NDPC-Annual-Report-2025-1.pdf",
+  "tier": "T3",
+  "note": "DIVERGENCE from prior desk pass: prior cited '1,368 compliance notices (NDPC; Jones Day Aug 2025)' - that figure could not be found in any N [G2: enforcement figures corrected to NDPC Annual Report 2025; L4 stands on verified active enforcement]"
+ },
+ "3.3": {
+  "value": "National Digital Farmers Registry: NIN-anchored FMAFS-NIMC farmer registry + G2P biometric card project launched 16 Jan 2025; National Stakeholder Workshop on registry best practices / farmer-data harmonisation held 20 N",
+  "cls": "Documented",
+  "level": 2,
+  "year": 2025,
+  "src": "NIMC press release: FMAFS/NIMC NIN-Enabled Farmer Registry & G2P Card Project (16 Jan 2025)",
+  "url": "https://nimc.gov.ng/press-releases/fmafs-nimc-nin-enabled-farmer-registry--g2p-card-project",
+  "tier": "T3",
+  "note": "DIVERGENCE FROM PRIOR: the prior desk pass recorded '279k farmers supported 2024/25 season' citing FMAFS & NIMC press releases and TheCable. [G2: year aligned to latest supporting artefact (NIMC, 20 Nov 2025); JS-rendered page - archive at refresh]"
+ },
+ "5.5": {
+  "value": "Operating \u2014 NAERLS (federal extension agency under FMAFS, at ABU Zaria) has run a dedicated e-Extension department since January 2017, operating the National Farmers Helpline call centre (Hausa/Igbo/Yoruba/English, natio",
+  "cls": "Documented",
+  "level": 3,
+  "year": 2026,
+  "src": "FMINO official release: FMAFS and ACReSAL Partner with World Bank to Transition ; NAERLS e-Extension & NFHL pages",
+  "url": "https://fmino.gov.ng/fmafs-and-acresal-partner-with-world-bank-to-transition-digital-precision-agricultural-extension-platform-dpae-for-enhanced-climate-resilience/",
+  "tier": "T3",
+  "note": "Divergence from prior: prior was assessor-judged 'present but narrow, reach unquantified' \u2014 this run upgrades the record to Documented/T3 wi [G2: second anchor added for the NAERLS half of the multi-claim value (naerls.gov.ng/e-extension, /nfhl)]"
+ },
+ "6.14": {
+  "value": "Agri-fintech rails present and operating with quantified smallholder reach on one rail: Crop2Cash (USSD CashCard \u2014 digital identity, input finance, payments for unbanked farmers) 'has reached over 500,000 smallholder far",
+  "cls": "Documented",
+  "level": 3,
+  "year": 2024,
+  "src": "GSMA M4D blog: 'Ensuring food security by solving the agricultural information gap' (29 Aug 2024; Crop2Cash figures)",
+  "url": "https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-for-development/blog/ensuring-food-security-by-solving-the-agricultural-information-gap/",
+  "tier": "T4",
+  "note": "FIN-prerequisite reading: Present (rails operating; reach narrow relative to smallholder population). DIVERGENCE from prior: 'CBN Fintech Re [G2: L4 not justified - reach figures vendor-reported and blog anchor 403s; L3 = Operating on presence facts]"
+ },
+ "6.4": {
+  "value": "Operating, funded agtech cohort with named ventures: ThriveAgric (named in AgFunder H1-2024 Africa report coverage), Crop2Cash (GSMA Innovation Fund grantee; 500,000+ smallholders reached), Hello Tractor (GSMA grantee, N",
+  "cls": "Documented",
+  "level": 3,
+  "year": 2024,
+  "src": "AgFunder Developing Markets AgriFoodTech Investment Report 2025 (via AgFunderNews report summary, 2024 data)",
+  "url": "https://agfundernews.com/new-report-agrifoodtech-funding-in-developing-markets-surges-63-bucking-global-decline",
+  "tier": "T4",
+  "note": "DIVERGENCE from prior desk pass: prior cited '$865M digital lending 2025 (all sectors)' from a 'CBN Fintech Report 2026' \u2014 that report could [G2: single cited artefact does not carry the quality-rung claims; L3 pending report-grade anchor]"
+ },
+ "2.5": {
+  "value": 1.56,
+  "cls": "Measured",
+  "level": 4,
+  "year": 2025,
+  "src": "ITU DataHub \u2014 Data-only mobile broadband basket (2GB/month), Nigeria, % of GNI per capita, 2025 observation (price data collected 2025)",
+  "url": "https://datahub.itu.int/data/?e=NGA&i=34617",
+  "tier": "T1",
+  "note": "Basket used: ITU data-only mobile-broadband basket, 2GB/month, as % of monthly GNI per capita. REFUTES PRIOR: the desk pass recorded 4.2 (2024, 'ITU/A [G2: ITU deep link does not populate indicator - re-anchor at refresh]"
+ },
+ "5.4": {
+  "value": "PROXY (rural population, not farmers - construct defect logged): MICS 2021 measured basic digital-skill tasks with rural/gender splits; rural shares in single digits to low teens",
+  "cls": "Documented",
+  "level": null,
+  "year": 2021,
+  "src": "World Bank-Mastercard Foundation 'Digital Skills in Nigeria' (MICS 2021/NBS-UNICEF)",
+  "url": "https://thedocs.worldbank.org/en/doc/a607bb6e3b76d2be0f3db8db34dcf73e-0140022025",
+  "tier": "T2",
+  "note": "[G2 gap-refutation: measured proxy exists; farmer-specific rate still unmeasured - unrated; stale]"
+ },
+ "6.13": {
+  "value": "Interim (2024): 88% of Nigerian MSMEs use smartphones in business operations; 57% desktop/laptop; construct does not map to 'digital tools adoption %'. World Bank Enterprise Surveys NEW Nigeria baseline (fieldwork Feb-Sep 2025, 1,043 firms) released Oct 2025 - digital module to be pulled at refresh",
+  "cls": "Documented",
+  "level": null,
+  "year": 2024,
+  "src": "GSMA/industry MSME survey (interim); WB Enterprise Surveys Nigeria 2025",
+  "url": "https://www.enterprisesurveys.org/content/dam/enterprisesurveys/documents/country",
+  "tier": "T4",
+  "note": "[G2 gap-refutation: trail premise wrong - ES 2025 Nigeria wave exists; unrated pending construct mapping]"
+ },
+ "7.2": {
+  "value": "National Agro-Productivity System (NAPS) \u2014 billed as Nigeria's first national crop-monitoring platform powered by satellite imagery and AI (5-day-refresh imagery, automatic farm identification, real-time yield/land-use/f",
+  "level": 2,
+  "year": 2026,
+  "src": "Space in Africa: 'Nigeria to Deploy AI and Satellite-Powered Crop Monitoring System' (21 Jul 2026)",
+  "url": "https://spaceinafrica.com/2026/07/21/nigeria-to-deploy-ai-and-satellite-powered-crop-monitoring-system/",
+  "tier": "T5",
+  "note": "[G1: sole source is specialist trade press (Tier 5), inadmissible for a scored value under the Source-Tier Protocol; class derives to Judged. Tier ruling on specialist analysts pending review]"
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "3.3": {"level": 4, "reason": "Scale figures in non-comparable units (cards/farmers/holdings); current 5M via news-agency-carried T3; L5 pending unit reconciliation"},
+ "3.5": {"level": 2, "reason": "Indicator object is the data, not the policy: instrument adopted but portal not live (DNS dead), zero ag datasets published - Announced"},
+ "3.6": {"level": 4, "reason": "Quality strong (EMA statutory, CLAC); scale evidence explicitly absent - derivation heuristic wrongly granted +scale on negative text"},
+ "3.7": {"level": 4, "reason": "Scale claims dated (2021 T3), use-evidence thin"},
+ "4.6": {"level": 4, "reason": "Strategy operating with governance; agriculture-specific implementation evidence thin (select-group Hudhud)"},
+ "4.9": {"level": 4, "reason": "Recurring documented mechanism, not a gazetted standing body; D2 open on which reading governs"},
+ "5.5": {"level": 4, "reason": "Tens-of-thousands reach in a 5M+ farmer country does not meet the scale rung"},
+ "6.4": {"level": 3, "reason": "Funding collapsed 2023, partial recovery ($26M/22 deals 2024); boundary ventures not farmer-facing; quality rung (sustained capital) not demonstrated"},
+ "6.9": {"level": 4, "reason": "Formal partnerships with delivered products; no reach figures - scale rung unmet"},
+ "6.12": {"level": 4, "reason": "One DPG operating via FAO-MALR; dissemination documented, scale thin (148 agents onboarded)"},
+ "6.14": {"level": 4, "reason": "Rails genuinely national (Meeza, POS at cooperatives) but 4.2M scale figure rides a T5 carrier; L5 pending G2 scale verification"},
+ "3.9": {"level": 4, "reason": "All user counts platform-self-reported; scale rung cannot rest on vendor claims"},
+ "3.10": {"level": 4, "reason": "Same self-reported-count rule; boundary ventures excluded from scale reading"},
+ "7.2": {"level": 3, "reason": "Deployments pilot-bounded (Hudhud select-group, no verified reach); institutional frame is not deployment quality"},
+ "1.5": {"level": 4, "reason": "Cereals-only ~10% (labelled) sits at the L4 threshold; commodity-specific and stale - honest vintage routes to refresh"},
+ "1.6": {"level": 1, "reason": "All available constructs (6% contract farming, 12% direct links) sit far below the 20% L2 floor - level robust to construct choice"},
+ "1.7": {"level": 1, "reason": "2.3% rural formal borrowing (2018 proxy) far below the 10% L2 floor - robust to proxy choice"},
+ "8.11": {"level": 5, "reason": "Arabic delivery of all identified flagship services effectively universal, documented; indicator-design defect for monolingual countries logged"}
+}

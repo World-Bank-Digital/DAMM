@@ -1,0 +1,24 @@
+{
+ "3.5": {
+  "level": null,
+  "note": "[CORRECTION] Level withdrawn. The indicator names open, machine-readable, AI-ready agricultural data; the evidence is a registration-gated statistical microdata catalogue that is neither openly licensed nor AI-ready, while the national open-data portals are offline. Ruling required: split the conjunction into gated rungs, or rename to data availability."
+ },
+ "4.7": {
+  "value": 79.0803710088225,
+  "cls": "Measured",
+  "level": 4,
+  "year": 2024,
+  "tier": "T1",
+  "src": "World Bank Identification for Development (ID4D) — ID ownership, total (% of population ages 15+), Nigeria",
+  "url": "https://api.worldbank.org/v2/country/NGA/indicator/ID.OWN.TOTL.ZS?format=json&source=89",
+  "note": "[CORRECTION] Re-sourced onto the same ID4D series and denominator as Egypt. Previously recorded as NIN registrations over TOTAL population (49-57%), a different denominator from Egypt's adults-15+ basis, which made the two rows non-comparable within one instrument. Open question (not a correction): the indicator names a DIGITAL ID while both countries record foundational ID ownership."
+ },
+ "5.3": {
+  "level": null,
+  "note": "[CORRECTION] Level withdrawn — same construct mismatch as Egypt: the recorded series is total tertiary enrolment, not the STEM subset."
+ },
+ "8.5": {
+  "level": null,
+  "note": "[CORRECTION] Level withdrawn — same construct conflation as Egypt: Nigeria records owners/rights-bearers (SDG 5.a.1), Egypt records holders. One name, two statistics."
+ }
+}

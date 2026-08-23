@@ -1,0 +1,8 @@
+# Build scratch and OS cruft — never source of record.
+__pycache__/
+*.pyc
+.DS_Store
+.~lock*#
+
+# LibreOffice recalc leftovers
+.~lock.*

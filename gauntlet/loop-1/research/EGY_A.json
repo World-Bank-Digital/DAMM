@@ -1,0 +1,103 @@
+{
+  "cells": [
+    {
+      "id": "1.5",
+      "value_type": "citation",
+      "value": "No single national post-harvest loss rate exists. Cereals (labelled, admissible): ~10% pre- and post-harvest losses (SADS 2030, estimate c.2009); wheat losses in traditional shona storage 10-20% (FAO 2019). Horticulture: >30% vegetables and fruit (SADS 2030); grapes 25-35% and tomatoes >50% incl. quality loss (FAO 2019, preliminary project estimates). Total agricultural losses put at 10-15% of agricultural income (SADS 2030).",
+      "source_title": "FAO (2019), Food loss and waste in Egypt, CA4310EN, FAO Representation in Egypt",
+      "source_url": "https://openknowledge.fao.org/server/api/core/bitstreams/3d94597d-cc5c-420a-8faa-0fe284d5c921/content",
+      "second_source_url": "https://faolex.fao.org/docs/pdf/egy141040E.pdf",
+      "year": 2019,
+      "tier": "T2 (FAO brief) + T3 (SADS 2030 via FAOLEX)",
+      "presence_rung": null,
+      "search_trail": "APHLIS (T1; covers sub-Saharan Africa only, Egypt out of scope) -> FAOSTAT FS domain bulk file (no post-harvest loss item for Egypt) -> FAO Food Loss and Waste database (interactive JS app; two API endpoints probed 2026-08-22, not machine-queryable) -> FAO Egypt FLW brief CA4310EN (commodity figures found, PDF full text read) -> SADS 2030 full text via FAOLEX deep link (figures verified in section 1.7.1.7). Accessed 2026-08-22.",
+      "notes": "DIVERGENCE from prior: prior recorded the SADS figures with year 2020; the loss estimates sit in the original SADS 2030 text (MALR, 2009), so honest vintage is c.2009, not 2020. Substance of prior confirmed ('pre- and post-harvest losses exceed 30% in vegetables and fruit, 20% in legumes and tubers, and 10% in cereals... agricultural losses constitute 10-15% of agricultural income'). Added FAO 2019 commodity-level figures with resolvable deep links. Threshold L at 30/20/12/5: the labelled cereals figure (~10%, wheat storage 10-20%) and the fruit/veg figure (>30%) fall in different bands.",
+      "protocol_issues": "Threshold indicator expects one national number; only commodity-specific ranges of mixed vintage exist. Spec should state whether scoring uses the labelled cereals-only figure (guidance hints yes) or a weighted all-commodity rate that no source publishes. Both key sources predate 2020 -> staleness flag regardless."
+    },
+    {
+      "id": "1.6",
+      "value_type": "citation",
+      "value": "No national figure. Upper Egypt (regional, labelled): 6% of surveyed smallholder households participate in contract farming (farm household survey Apr-May 2018, seven Upper Egypt governorates, n=2,237 households; IFPRI). 12% of farmers in Upper Egypt have direct links to formal buyers, with intermediaries capturing up to 70% of profits (Adaptation Fund 2020, as cited in IFAD EB-2025-OR-16 footnote 5).",
+      "source_title": "Tabe-Ojong, M.P. Jr. & Abay, K.A. (2023), Smallholder farmers' participation in profitable value chains and contract farming: Evidence from irrigated agriculture in Egypt, IFPRI MENA Working Paper 42",
+      "source_url": "https://cgspace.cgiar.org/items/b1bc85c0-7505-4fb7-9957-d7588eea9756",
+      "second_source_url": "https://webapps.ifad.org/members/eb-seminars/2025-11-25-EB-Consultations/docs/EB-2025-OR-16.pdf",
+      "year": 2018,
+      "tier": "T2",
+      "presence_rung": null,
+      "search_trail": "LSMS / World Bank microdata (no recent Egypt agriculture module) -> CAPMAS agricultural census (no market-participation statistic published) -> IFPRI Egypt SSP (MENA WP42 located on CGSpace; PDF full text read: 6% contract farming, survey described pp. 3.2) -> IFAD EB-2025-OR-16 (PDF full text read; 12% claim verified verbatim; footnote traces it to Adaptation Fund, 2020). Accessed 2026-08-22.",
+      "notes": "DIVERGENCE from prior: prior recorded the IFAD 12% with year 2025; the IFAD document footnotes Adaptation Fund 2020 as origin, so observation vintage is c.2020, not 2025. Added the survey-based IFPRI 6% contract-farming participation rate (2018), which is the methodologically stronger figure. Both figures are Upper Egypt only; the national value remains unmeasured. Threshold H 20/40/60/80: both regional readings sit far below the lowest threshold.",
+      "protocol_issues": "(1) 'Access to formal markets' is undefined in the spec: contract-farming participation (6%) vs direct-links-to-formal-buyers (12%) are different constructs giving different readings. (2) Domain lookup maps ifad.org to T1, but an Executive Board seminar paper is an analytical document whose statistic is second-hand (Adaptation Fund 2020); assigned T2 by document type - the lookup-vs-document-type rule needs a ruling (spec 13.6)."
+    },
+    {
+      "id": "1.7",
+      "value_type": "citation",
+      "value": "No direct '% of farmers with agricultural credit' figure exists for Egypt. Nearest labelled figures: only 2.3% of rural individuals aged 15+ had loans from formal financial institutions (ELMPS 2018, CAPMAS national panel, rural sample n=24,465 individuals / 9,693 households); less than 25% of Egypt's rural population is financially included as indicated by bank account ownership (World Bank 2021, as cited in the same paper).",
+      "source_title": "Mansour, S., Samak, N. & Gad, N. (2024), Credit Choices in Rural Egypt: A Comparative Study of Formal and Informal Borrowing, Journal of Risk and Financial Management 17(11): 487",
+      "source_url": "https://doi.org/10.3390/jrfm17110487",
+      "second_source_url": "https://www.mdpi.com/1911-8074/17/11/487",
+      "year": 2018,
+      "tier": "T2 (peer-reviewed, built on CAPMAS ELMPS 2018 T1 microdata)",
+      "presence_rung": null,
+      "search_trail": "Global Findex 2021/2025 (T1; no farmer or agriculture split published) -> CBE financial-inclusion releases (headline adult inclusion rate only; no farmer-share statistic located) -> CAPMAS (ELMPS microdata exists but no published farmer-credit tabulation found) -> IFPRI Egypt SSP incl. MENA WP42 (no national credit percentage) -> peer-reviewed literature: MDPI JRFM 2024 paper located and full text read via browser 2026-08-22.",
+      "notes": "DIVERGENCE from prior: prior's '<25% of rural population financially included (World Bank 2021)' is verified verbatim in this paper - the real source is Mansour et al. 2024 citing World Bank 2021, not 'World Bank/MDPI 2024' loosely. Prior's second claim ('ag sector receives ~1% of institutional lending') could NOT be located in any admissible source in this pass - treat as unsubstantiated until sourced. New: the 2.3% formal-borrowing rate among rural individuals (ELMPS 2018) is the only nationally representative, survey-based figure found; it measures rural adults, not farmers per se - labelled proxy only. Threshold H 10/25/40/60: both readings sit below the lowest threshold.",
+      "protocol_issues": "Indicator as specified ('% farmers') has no Egyptian source at any tier. A ruling is needed on whether rural-adult formal borrowing (2.3%, 2018) is an admissible labelled proxy or whether this cell should score as a gap. Findex 'ag splits' named in guidance do not exist as published series."
+    },
+    {
+      "id": "1.8",
+      "value_type": "gap",
+      "value": "DATA GAP — searched FAOSTAT and WDI (no CSA-adoption series exists); FAO-CIAT/World Bank CSA country-profile series (33 profiles since 2014, none for Egypt); FAO 'Towards Climate-Smart Agriculture in Egypt' (Cairo, 2022, 92 pp; full-text scan found no adoption-rate statistic); IFPRI/CGIAR 'Climate-smart agriculture and development practices in Egypt' policy note (Dec 2025; no adoption rate); SADS 2030 via FAOLEX (aspirational targets only, no measured adoption); academic literature search (only sub-national studies located, e.g. Nile Delta survey of 792 farmers in two governorates (publ. 2019) reporting climate-change awareness — 51.9% unaware — and practice types, but no CSA adoption share). Searched 2026-08-22.",
+      "source_title": "n/a — no admissible source names a national CSA adoption rate; nearest checked: FAO (2022), Towards Climate-Smart Agriculture in Egypt",
+      "source_url": "https://openknowledge.fao.org/server/api/core/bitstreams/8327142e-2479-4035-ad46-718396257db3/content",
+      "second_source_url": "https://cgspace.cgiar.org/server/api/core/bitstreams/9f1186fd-5c82-45e6-8e73-c66e2997c9a0/content",
+      "year": null,
+      "tier": "n/a (gap)",
+      "presence_rung": null,
+      "search_trail": "FAOSTAT/WDI (no series) -> FAO-CIAT/World Bank CSA country profiles (Egypt not covered) -> FAO Towards CSA in Egypt 2022 (PDF downloaded, full-text scanned for adoption/uptake percentages: none) -> CGIAR/IFPRI BEP policy note Dec 2025 (PDF read: no rates) -> SADS 2030 (qualitative ambitions only) -> academic search (sub-national/awareness studies only). Accessed 2026-08-22.",
+      "notes": "CONSISTENT with prior: prior also found no adoption-rate survey ('SADS 2030 qualitative; no adoption-rate survey found'). Prior additionally assigned level 2 by judgement - out of scope for this pass; the evidential position is a clean gap. Context only (not a value): the MDPI Sustainability 2019 Delta survey suggests low awareness, and the Dec 2025 IFPRI/CGIAR note describes adoption as constrained by finance, extension and irrigation costs.",
+      "protocol_issues": "Guidance points to 'FAO/CIAT CSA country profiles (T2)' as likely carrier, but that series never covered Egypt - spec guidance should be corrected. If the indicator is retained for Egypt, it will remain a structural gap until a national survey (e.g. a CAPMAS or CGIAR module) measures CSA practice adoption."
+    },
+    {
+      "id": "8.5",
+      "value_type": "number",
+      "value": 3.94,
+      "source_title": "FAOSTAT, World Census of Agriculture domain — Egypt, item 'Civil holders, female', element 'Percent of total persons (holders)', Agricultural Census 2009/10 (CAPMAS)",
+      "source_url": "https://bulks-faostat.fao.org/production/World_Census_Agriculture_E_All_Data.zip",
+      "second_source_url": "https://www.fao.org/faostat/en/#data/WCA",
+      "year": 2010,
+      "tier": "T1",
+      "presence_rung": null,
+      "search_trail": "FAO Gender and Land Rights Database (spec's canonical source; country-profile URLs now return 404 - database has been folded into the Land Portal) -> FAO SDG 5.a.1 data portal (no Egypt values displayed) -> FAOSTAT World Census of Agriculture bulk file (downloaded and parsed 2026-08-22; Egypt series extracted: 8.23% (1990 census), 5.22% (1999/2000), 3.94% (2009/10); female holders 212,779 of 5,404,395 total holdings in 2009/10).",
+      "notes": "REFUTES prior on value and vintage: prior recorded 5.2% with year 2015. 5.22% is the 1999/2000 census figure; the LATEST census (2009/10) shows 3.94% - the share has been falling across censuses (8.23 -> 5.22 -> 3.94). The much-recycled '5.2%' is a two-censuses-old number. Note the WFP Egypt CSP 2023-28 cites 'only 2% of Egyptian women own land' (2014 data via UN Women 2018) - a different definition (share of women who own land, not share of holders who are women); FAO Gender-Water-Agriculture Egypt report (2023) carries the same 2% claim. Observation is 16 years old - stale; route to ledger for refresh. No newer Egyptian census round appears in FAOSTAT WCA. Single-source flag technically applies, though the figure IS the national census as disseminated by FAO.",
+      "protocol_issues": "(1) Indicator title says 'Women who OWN land (% of agricultural holders)' but the canonical statistic measures holders (operators), who may rent rather than own - definitional mismatch worth fixing in spec. (2) The spec names FAO GLRD as canonical T1, but GLRD is effectively retired (404s); canonical pointer should move to FAOSTAT WCA / SDG 5.a.1. (3) Staleness: 2009/10 census is the latest published sex-disaggregated holder count."
+    },
+    {
+      "id": "A1-CAND-IMP",
+      "value_type": "number",
+      "value": 42.8,
+      "source_title": "FAOSTAT, Suite of Food Security Indicators (FS domain), item 21035 'Cereal import dependency ratio (percent) (3-year average)', Egypt, period 2021-2023",
+      "source_url": "https://bulks-faostat.fao.org/production/Food_Security_Data_E_Africa.zip",
+      "second_source_url": "https://data.un.org/Data.aspx?d=FAO&f=itemCode%3a21035%3bcountryCode%3a59",
+      "year": 2023,
+      "tier": "T1",
+      "presence_rung": null,
+      "search_trail": "FAOSTAT API (faostatservices.fao.org now returns 'Missing Authorization Header' - machine route blocked) -> UNdata FAO mirror (resolves; Egypt series but only to 2018-2020) -> FAOSTAT official bulk download (Food_Security_Data_E_Africa.zip, file dated 2026-07-21, downloaded and parsed 2026-08-22: full series to 2021-2023 extracted). Accessed 2026-08-22.",
+      "notes": "Latest FAOSTAT value: 42.8% for 2021-2023 (recent series: 2018-20: 49.7; 2019-21: 44.0; 2020-22: 43.4; 2021-23: 42.8 - declining as domestic wheat production and stocks policy shifted). Triangulation: OECD 'Policies for the Future of Farming and Food in Egypt' (2025) cites ~43% for 2021-23 from FAOSTAT (page blocked 403 for direct fetch; figure seen in search snippet only - both readings derive from FAOSTAT so not fully independent). NEW indicator - no prior desk-pass entry to compare. Definition: imports/(production+imports-exports), 3-year average.",
+      "protocol_issues": "(1) FAOSTAT's interactive API now sits behind an authorization wall - the '19 of 57 machine-fetchable' assumption in the spec breaks for FAOSTAT domains; recommend standardizing on the open bulk-file route (bulks-faostat.fao.org). (2) UNdata mirror lags and carries a superseded revision (shows 47.4 for 2018-20 vs 49.7 in the current FAOSTAT vintage) - mirrors should be second-source only, never primary."
+    },
+    {
+      "id": "A1-CAND-IRR",
+      "value_type": "number",
+      "value": 94.21,
+      "source_title": "FAO AQUASTAT Dissemination System — Egypt, variable 4331 '% of the cultivated area equipped for irrigation', 2023 (flag E = estimate); companion variable 4313 'Area equipped for irrigation: total' = 3,823,000 ha (2023, flag I = imputed)",
+      "source_url": "https://api.data.apps.fao.org/api/v2/bigquery?sql_url=https://data.apps.fao.org/catalog/dataset/945666e6-7803-4621-b8ef-cfd885a84596/resource/4a000a1b-24f0-4328-aab6-b9b525892090/download/query_en.sql&area=Egypt&variable=4331,4313&year=2023&type=country",
+      "second_source_url": "https://bulks-faostat.fao.org/production/Inputs_LandUse_E_Africa.zip",
+      "year": 2023,
+      "tier": "T1",
+      "presence_rung": null,
+      "search_trail": "WDI AG.LND.IRIG.AG.ZS (queried via API 2026-08-22: all 66 Egypt observations null - confirmed empty as guidance expected) -> AQUASTAT dissemination platform (JS app; data retrieved via its public BigQuery API using the platform's own published SQL template from the FAO data catalog; Egypt 2023 value extracted) -> cross-check FAOSTAT Land Use (RL) domain bulk file. Accessed 2026-08-22.",
+      "notes": "Cross-check (FAOSTAT RL domain): 'Land area equipped for irrigation - Share in Cropland' = 94.91% (2024), area equipped 4,013.71 thousand ha. The two FAO T1 sources differ ~5% on area equipped (AQUASTAT 3,823 kha, flag I, carried flat since 2018 vs FAOSTAT 4,013.7 kha) but agree that ~94-95% of Egypt's cultivated land is equipped for irrigation. AQUASTAT recorded as primary per candidate guidance. NEW indicator - no prior desk-pass entry. The source_url is a resolvable API deep link that returns the CSV naming the value; the human-readable explorer is https://data.apps.fao.org/aquastat/ (JS, no stable deep link).",
+      "protocol_issues": "Candidate spec says '% of agricultural/arable land equipped'. Denominator matters enormously for Egypt: share of CULTIVATED land equipped = 94.2-94.9%, while FAOSTAT's 'agriculture area actually irrigated as share of agricultural land' = 100%. Spec should fix the denominator (recommend: cultivated land/cropland, the AQUASTAT 4331 definition) before this candidate is scored across countries."
+    }
+  ],
+  "bundle_issues": "(1) FAOSTAT's interactive API now requires an authorization header, breaking the spec's 'machine-fetchable T1' route for every FAOSTAT-backed row; the open bulk-download service (bulks-faostat.fao.org) works and should become the standard route in spec 13.6. (2) The A1 'need' cells that require farm-household surveys (1.6, 1.7, 1.8) have no national instrument in Egypt: no recent LSMS ag module, no published CAPMAS tabulations for market participation or farmer credit, and no CSA adoption survey - available evidence is regional (Upper Egypt) or rural-adult proxies; the bundle needs a ruling on labelled-proxy admissibility vs recording gaps. (3) The FAO Gender and Land Rights Database - named canonical for 8.5 - is effectively retired (country-profile URLs 404; content folded into the Land Portal); canonical pointer should move to FAOSTAT WCA / SDG 5.a.1. (4) Prior desk pass has a systematic vintage problem: the IFAD '12%' is an Adaptation Fund 2020 figure (not 2025), the '5.2%' women-holders figure is the 1999/2000 census (not 2015; latest census says 3.94%), and the SADS 2030 loss figures date to 2009 (not 2020) - publication year was repeatedly recorded instead of observation year. (5) APHLIS covers sub-Saharan Africa only and can never serve Egypt for 1.5; guidance text should be region-conditional. (6) Egypt's structural-data backbone (agricultural census 2009/10) is 16 years old, so holder-level indicators will stay stale regardless of search effort."
+}

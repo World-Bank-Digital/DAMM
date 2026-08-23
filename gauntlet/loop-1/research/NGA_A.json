@@ -1,0 +1,94 @@
+{
+  "cells": [
+    {
+      "id": "1.5",
+      "value_type": "citation",
+      "value": "Cereals only, APHLIS dry-weight postharvest loss estimates 2022 (cumulative harvest, drying, handling, storage, transport, market): maize 17.4%, sorghum 12.3%, rice 11.7%, millet 9.5% (range 9.5-17.4%). No all-crop national rate is published.",
+      "source_title": "APHLIS - Postharvest losses in Nigeria 2022, dry weight losses (%)",
+      "source_url": "https://www.aphlis.net/en/data/tables/dry-weight-losses/NG/all-crops/2022?metric=prc",
+      "year": 2022,
+      "tier": "T1",
+      "search_trail": "APHLIS country tables NG (T1 for SSA cereals per guidance) - found per-crop 2021 and 2022 values, series 2013-2022; stop per tier order. Cross-checked NBS GHS-Panel Wave 5 2023/24 survey report for a national PHL rate - narrative statement ('low post-harvest losses') only, no rate. Accessed 2026-08-22.",
+      "notes": "Prior desk pass recorded a gap ('APHLIS/FMAFS to confirm') - now resolved with APHLIS values; divergence from prior noted. SINGLE-SOURCE: APHLIS figures are model-based estimates and no independent T1/T2 national confirmation was found. Threshold L 30/20/12/5 must be read against a labelled cereals-only range, per indicator guidance.",
+      "protocol_issues": "Indicator expects one national PHL rate; APHLIS provides per-crop, cereals-only estimates with no aggregation rule (unweighted vs production-weighted average moves the value across the 12 threshold). Ruling needed on how to collapse per-crop values to a scoreable number."
+    },
+    {
+      "id": "1.6",
+      "value_type": "citation",
+      "value": "No national 'formal market access' share exists. FAO Smallholder Data Portrait (LSMS-ISA 2012/13): 100% of crop-selling smallholder households sold through informal channels (formal-channel participation ~0%); 94% sold in local markets; only 26% of agricultural production was sold (87% of crop output consumed by the household). NBS GHS-Panel Wave 5 (2023/24) confirms the pattern - most harvest consumed or stored; the largest immediate-sale share is cassava at 36.1% sold unprocessed - but publishes no formal-channel share.",
+      "source_title": "FAO Small Family Farms Country Factsheet - Nigeria (Smallholder Data Portrait, LSMS survey 2013), FAO 2018, I9930EN",
+      "source_url": "https://openknowledge.fao.org/server/api/core/bitstreams/8ce31a78-2848-4388-87a9-a3b1abb73e40/content",
+      "second_source_url": "https://www.nigerianstat.gov.ng/pdfuploads/GHS-Panel%20Wave%205%20-%20Survey%20Report.pdf",
+      "year": 2013,
+      "tier": "T2",
+      "search_trail": "LSMS/GHS route: World Bank microdata catalog + NBS GHS-Panel Wave 5 2023/24 survey report (crop disposition tables ch.6, no formal-market share) -> FAO Smallholder Data Portrait factsheet (T2, based on LSMS-ISA 2012/13) found with marketing-channel and commercialization figures; no national agricultural census market-access statistic exists. Accessed 2026-08-22.",
+      "notes": "Prior desk pass recorded a gap ('RNR-style market access survey not found') - updated: the construct that exists is commercialization/channel data, not an access %. Headline observation is stale (2012/13); GHS-Panel W5 (2023/24, T1) is the refresh route but measures crop disposition, not formal-market access.",
+      "protocol_issues": "'Smallholder access to formal markets' is undefined in the spec (access vs participation; 'formal' undefined in a marketing system that is ~100% informal channels). On participation Nigeria would read ~0%; the indicator cannot be honestly scored against threshold H 20/40/60/80 without a definition ruling."
+    },
+    {
+      "id": "1.7",
+      "value_type": "citation",
+      "value": "7% of smallholder households were credit beneficiaries (FAO Smallholder Data Portrait, LSMS-ISA 2012/13; 'other farms' 6%). Fresher national survey (EFInA A2F 2023): ~2% of farmers borrowed from formal providers in the past 12 months (bank 1% + other formal non-bank 1%); 38% of farmers borrowed from any source (family & friends 27%, informal 9%); 51% of farmers formally financially served overall (36% banked + 15% other formal); 29% of farmers fully financially excluded.",
+      "source_title": "FAO Small Family Farms Country Factsheet - Nigeria (Smallholder Data Portrait, LSMS survey 2013), FAO 2018, I9930EN",
+      "source_url": "https://openknowledge.fao.org/server/api/core/bitstreams/8ce31a78-2848-4388-87a9-a3b1abb73e40/content",
+      "second_source_url": "https://efina.org.ng/wp-content/uploads/2024/03/A2F-2023-Event-Day-Presentation-Version4-1.pdf",
+      "year": 2013,
+      "tier": "T2 (primary); EFInA A2F 2023 second source treated as T4",
+      "search_trail": "Global Findex - no published farmer split for Nigeria. EFInA A2F 2023 key-highlights deck (farmer financial-access strand and source-of-borrowing charts, read from PDF) - found. FAO Smallholder Data Portrait factsheet (T2, LSMS 2012/13) - found 7% credit-beneficiary figure. CBN/NIBSS route not needed. Accessed 2026-08-22.",
+      "notes": "Prior desk pass recorded a gap ('EFInA/CBN smallholder credit share to verify') - verified via the A2F 2023 deck. Scored row keeps the T2 figure with its staleness per protocol rule 6 (vintage beats tier at the margin for narrative only); EFInA 2023 is the refresh evidence. Both sources agree agricultural credit access sits at or below the 10% threshold floor unless any-source borrowing (38%) is admitted.",
+      "protocol_issues": "Definition ambiguity: 'credit access' vs 'credit use', and formal-only vs any-source moves the value from ~2-7% to 38% (two threshold levels apart). Tier ruling needed (spec 13.6): EFInA A2F is an established national demand-side survey underpinning CBN financial-inclusion targets - the domain lookup would default it to T5; treated here as T4 reputable grey."
+    },
+    {
+      "id": "1.8",
+      "value_type": "citation",
+      "value": "No national estimate. Regional T2 evidence: survey of smallholder farmers in Nigeria's North Central and Northwest zones (CABI Agriculture and Bioscience, Sept 2023; fieldwork 2022) - 87.2% had adopted at least one climate-resilient trait in crops. The 'at least one resilient trait' definition is generous; adoption of knowledge-intensive composite CSA packages is reported substantially lower in the same literature.",
+      "source_title": "State of climate smart agriculture (CSA) practices in the North Central and Northwest zones Nigeria - CABI Agriculture and Bioscience (2023)",
+      "source_url": "https://doi.org/10.1186/s43170-023-00156-4",
+      "year": 2022,
+      "tier": "T2",
+      "search_trail": "T1: none (no FAOSTAT/WDI CSA adoption series). FAO/CIAT CSA country profiles (guidance source): no national Nigeria profile exists - only state-level profiles (Adamawa, Borno, Yobe by FAO/ICRISAT/CIAT). T2 journal search -> CABI Agriculture and Bioscience 2023 regional survey; 87.2% figure verified against the abstract via the Crossref API (Springer page blocks fetching). Accessed 2026-08-22.",
+      "notes": "Prior desk pass recorded a gap ('CSA adoption share unverified') - updated to a labelled regional citation; a national figure remains a genuine measurement gap. SINGLE-SOURCE and REGIONAL-ONLY - not a national value. Practice-level splits reported for this paper in search snippets (early-maturing 84.1%, pest/disease-resistant 74.7%, drought-tolerant 67.2%, n=384, fieldwork Mar-May 2022) could not be independently verified from the full text and are recorded here as unverified detail only.",
+      "protocol_issues": "Indicator guidance points to FAO/CIAT CSA country profiles, but Nigeria has no national profile - guidance mis-specifies the source for this country. 'CSA adoption' lacks a standard definition; '>=1 practice/trait' vs composite adoption spans tens of percentage points against threshold H 20/40/60/80."
+    },
+    {
+      "id": "8.5",
+      "value_type": "citation",
+      "value": "SDG 5.a.1(b): women are 31.6% of owners or rights-bearers of agricultural land (Nigeria GHS-Panel Wave 4, 2018/19; earlier waves 24.0% in 2013, 23.4% in 2016). SDG 5.a.1(a): 23.5% of the female agricultural population holds ownership or secure rights vs 56.1% of men (2019). The canonical FAO GLRD figure ('10% of Nigeria's 15.7m agricultural holders were women', 2007) circulates second-hand, but the GLRD has been retired and the statistic could not be verified on any resolvable FAO artefact.",
+      "source_title": "UN SDG Global Database - indicator 5.a.1, Nigeria (series SP_GNP_WNOWNS and SP_LGL_LNDAGSEC; source: NBS General Household Survey Panel)",
+      "source_url": "https://unstats.un.org/sdgapi/v1/sdg/Indicator/Data?indicator=5.a.1&areaCode=566",
+      "second_source_url": "https://www.fao.org/sustainable-development-goals-data-portal/data/indicators/5a1-women-ownership-of-agricultural-land/en",
+      "year": 2019,
+      "tier": "T1",
+      "search_trail": "FAO Gender and Land Rights Database (canonical per guidance): live pages 404 (fao.org/gender-landrights-database/... retired); Wayback snapshot of the Nigeria general-introduction page (2023-07-01) retrieved - carries no holders statistic; the 10%/2007 figure appears only in second-hand quotes (Action4Justice, T5 - inadmissible). Fallback in tier order: UN SDG Global Database 5.a.1 via UNSD SDG API (T1) - Nigeria values found for 2013/2016/2019; FAO SDG data portal as mirror. Accessed 2026-08-22.",
+      "notes": "Prior desk pass recorded a gap ('FAO gender & land rights figure to verify') - the canonical GLRD lead could NOT be verified to a resolvable artefact; substituted UN SDG 5.a.1 (T1, national GHS-Panel source). Construct differs from the indicator title: owners/rights-bearers of agricultural land is not the same population as agricultural holders (holding managers). Against threshold H 10/25/40/50 the 31.6% (2019) reading and the legacy 10% (2007) reading fall in different bands - the definition ruling decides the level.",
+      "protocol_issues": "Indicator guidance names FAO GLRD as canonical, but the database is retired (pages 404, Wayback coverage partial, statistics tab was an interactive app that did not archive). Re-point guidance to SDG 5.a.1 or the next WCA round. Holders-vs-owners construct mismatch changes the threshold band and must be resolved in spec-13.2."
+    },
+    {
+      "id": "A1-CAND-IMP",
+      "value_type": "number",
+      "value": 16.3,
+      "source_title": "FAOSTAT - Suite of Food Security Indicators (FS), item 21035 'Cereal import dependency ratio (percent) (3-year average)', Nigeria, 2021-2023",
+      "source_url": "https://bulks-faostat.fao.org/production/Food_Security_Data_E_All_Data_(Normalized).zip",
+      "second_source_url": "https://data.un.org/Data.aspx?d=FAO&f=itemCode%3a21035%3bcountryCode%3a159",
+      "year": 2022,
+      "tier": "T1",
+      "search_trail": "FAOSTAT FS via API (faostatservices.fao.org) - returns 401 'Missing Authorization Header'; switched to the unauthenticated FAOSTAT bulk download (July 2026 release), extracted Nigeria item 21035 rows; cross-checked the UNdata FAO mirror (Nigeria-filtered page) - mirror holds a pre-revision series. Accessed 2026-08-22.",
+      "notes": "IDR = (imports - exports)/(production + imports - exports). Value 16.3% is the 3-year average 2021-2023 (FAOSTAT flag E, estimated); year field records the window midpoint 2022. Recent series: 17.8 (2019-21), 17.0 (2020-22), 16.3 (2021-23). UNdata mirror diverges for overlapping windows (shows 17.6% for 2018-2020 vs revised FAOSTAT 16.9%) - revision lag; FAOSTAT is authoritative. Effectively single-origin (all series are FAO-derived); definitional T1 statistic. Provisional spec-13.2 candidate - no prior-pass cell existed.",
+      "protocol_issues": "Machine-fetch assumption broken: the FAOSTAT API now requires authorization; bulk downloads remain open - the spec 13 machine pass should switch routes. Mirrors (UNdata) must not be used as triangulation for FAO-origin numbers: same origin plus revision lag."
+    },
+    {
+      "id": "A1-CAND-IRR",
+      "value_type": "number",
+      "value": 0.74,
+      "source_title": "FAOSTAT Land Use domain (RL) - Land area equipped for irrigation, share in cropland, Nigeria (AQUASTAT-derived), 2024",
+      "source_url": "https://bulks-faostat.fao.org/production/Inputs_LandUse_E_All_Data_(Normalized).zip",
+      "second_source_url": "https://storage.googleapis.com/fao-aquastat.appspot.com/countries_regions/factsheets/irrigation_area/en/NGA-IRR.pdf",
+      "year": 2024,
+      "tier": "T1",
+      "search_trail": "AQUASTAT dissemination portal (data.apps.fao.org/aquastat) - JS application, no open query API found; AQUASTAT country artefacts retrieved instead (irrigation areas sheet PDF; AQUASTAT Country Profile Nigeria 2016). FAOSTAT RL bulk download (unauthenticated) - Nigeria 'Land area equipped for irrigation' series extracted. WDI API (AG.LND.IRIG.AG.ZS) cross-check. Accessed 2026-08-22.",
+      "notes": "0.74 = % of CROPLAND equipped for irrigation (2024, flag E). Area equipped for irrigation = 331,200 ha, flat 2019-2024 (flags X then I - international source, then imputed); the last genuine AQUASTAT national observation is 325,100 ha (2010, AQUASTAT irrigation areas sheet; AQUASTAT Country Profile - Nigeria 2016 at https://openknowledge.fao.org/server/api/core/bitstreams/0a4ad920-8167-4cbd-b34f-c3211c8d5bfe/content gives context). WDI AG.LND.IRIG.AG.ZS (share of AGRICULTURAL land incl. pastures) = 0.32% (2017, latest; confirmed via World Bank API) - the ~2.3x difference between 0.74 and 0.32 is denominator choice, not measurement change. 'Fresher than WDI' achieved only nominally: the 2024 row is a carry-forward, not a new measurement. Provisional spec-13.2 candidate - no prior-pass cell existed.",
+      "protocol_issues": "Spec-13.2 must fix the denominator (cropland vs arable vs total agricultural land) before scoring; and rule on how to treat carried-forward T1 series whose true observation vintage is 2010 while the row is labelled 2024."
+    }
+  ],
+  "bundle_issues": "(1) FAOSTAT API now requires an Authorization header (401 'Missing Authorization Header' on faostatservices.fao.org) - the spec's machine-fetchable-T1 assumption breaks for FAO rows; unauthenticated bulk downloads (bulks-faostat.fao.org) still work and were used for A1-CAND-IMP and A1-CAND-IRR. (2) The FAO Gender and Land Rights Database - named canonical for 8.5 - is retired (live pages 404, Wayback coverage partial); guidance should re-point to UN SDG 5.a.1 (UNSD API is open and carries Nigeria GHS-Panel values). (3) Three need metrics (1.5, 1.6, 1.8) have no national construct matching the indicator title - cereals-only per-crop PHL, commercialization-not-access, regional-only CSA adoption; spec-13.2 should tighten definitions (aggregation rule for 1.5, definition of 'formal market' for 1.6, CSA practice definition for 1.8) before these are scored against thresholds. (4) Tier rulings needed for spec 13.6: EFInA A2F (treated T4, lookup default would say T5) and mirrors (UNdata shows 17.6% where revised FAOSTAT shows 16.9% for the same 2018-2020 window - mirrors are same-origin and lag revisions, so they are not valid triangulation for FAO-origin numbers). (5) Access notes: openknowledge.fao.org and Springer block WebFetch (403) - curl with a browser user-agent and the Crossref API were the workarounds; APHLIS, UNdata, UNSD SDG API and the World Bank API are open. (6) All five prior-pass gaps in this bundle (1.5, 1.6, 1.7, 1.8, 8.5) were converted to documented values or labelled citations; none of the prior leads was refuted, but the 8.5 canonical-source lead proved unverifiable and was substituted."
+}

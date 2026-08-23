@@ -1,0 +1,42 @@
+{
+  "country": "Nigeria",
+  "period": "(2025–2035)",
+  "assessment": "machine-assisted desk assessment",
+  "refs": {
+    "1.2": "world ≈ 4,100 kg/ha · FAOSTAT 2023",
+    "8.1": "world 9.1% · FAO SOFI 2024"
+  },
+  "narrative_problem": [
+    "Nigeria's need profile is a productivity story before it is a technology story: a third of the workforce (<b>1.3</b>) produces cereal yields of 1,558&#8202;kg/ha (<b>1.2</b>), under two-fifths of the world average, while one person in five is undernourished (<b>8.1</b>). Two proposed context indicators sharpen the picture in opposite directions. Cereal import dependency is 16.3% (proposed indicator, not scored) because the staple basket is domestic — the wheat exposure that dominates the headlines is real but commodity-specific. Irrigation, meanwhile, equips 0.3% of agricultural land, leaving those yields hostage to rainfall.",
+    "The evidence base is deeper than the country's reputation for data scarcity suggests: post-harvest losses carry APHLIS cereal estimates of 9.5–17.4% (<b>1.5</b>), women's land rights the SDG 5.a.1 statistic of 31.6% (<b>8.5</b>), mobile money the 2025 Findex wave at 32.8% (<b>8.4</b>), foundational ID coverage 79.1% of adults (<b>4.7</b>), and rural connectivity a genuine rural figure of 48% 4G coverage (<b>2.1</b>). What remains unmeasured is farmer-facing: the gender balance of the digital-agriculture workforce (<b>5.12</b>), language coverage of digital services (<b>8.11</b>) and climate-advisory reach (<b>8.17</b>) are recorded gaps, and seven further indicators carry evidence but no level because what was found measures a different construct from what the indicator names. Nigeria measures its systems better than it measures their users. The binding constraint, though, is not evidence but the last mile: rural electricity reaches 23.5% of rural residents (<b>2.9</b>), and that single universal prerequisite caps every use-case column at Partial, however strong the rails above it."
+  ],
+  "narrative_register": [
+    "The landscape is crowded and discontinuous: the two largest farmer-facing programmes (GES, ABP) are closed, NAGS-AP has taken over input support with the same registration-in-a-silo pattern, the national digital agriculture strategy has waited unadopted since 2020, and NIDAP — the vehicle meant to harmonise them — is early in rollout."
+  ],
+  "precedents": {
+    "3.11": [
+      "India's AgriStack published national agricultural data standards and registry schemas on digital ID rails — the standards mandate preceded the analytics ambition.",
+      "T3"
+    ],
+    "3.3": [
+      "Rwanda's Smart Nkunganire consolidated input-subsidy registration onto one national platform.",
+      "T4"
+    ],
+    "2.9": [
+      "Pay-as-you-go solar bundled with agricultural services is documented at scale across East and West Africa.",
+      "T4"
+    ],
+    "5.7": [
+      "Kenya's Ministry of Agriculture stood up a dedicated digital unit ahead of its e-voucher scale-up — the delivery capacity preceded the program.",
+      "T4"
+    ]
+  },
+  "authored_questions": [],
+  "gates": {
+    "G1": "executed 22 August 2026, 19 derivations adjusted and 1 class downgraded with recorded reasons",
+    "G2": "executed 22 August 2026, all 12 prerequisite rows re-verified and confirmed",
+    "G3": "pending"
+  },
+  "register_note": "Register verified entry by entry to the Source-Tier Protocol (22 August 2026); every entry carries a deep link, and Tier 5 rows evidence existence only.",
+  "gloss_extra": " <b>3MTT</b> Three Million Technical Talent programme · <b>APHLIS</b> African Postharvest Losses Information System · <b>NAGS-AP</b> National Agricultural Growth Scheme — Agro-Pocket · <b>NAPS</b> National Agro-Productivity System · <b>NFSHS</b> Nigerian Farmers Soil Health Scheme."
+}

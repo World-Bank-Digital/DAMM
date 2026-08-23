@@ -1,0 +1,73 @@
+{
+  "country": "Nigeria",
+  "bundle": "B (C1 connectivity)",
+  "loop": 1,
+  "access_date": "2026-08-22",
+  "cells": [
+    {
+      "id": "2.1",
+      "value_type": "citation",
+      "value": "Rural 4G population coverage: 48% (2024, GSMA geospatial coverage modelling). National population coverage as at Dec 2024 (NCC Table 3): 2G 95.31%, 3G 89.42%, 4G LTE 84.60%, 5G 13.28%. A rural 3G-or-above figure is not published by NCC or ITU, so 48% (4G-only) is a lower bound for rural mobile broadband (3G/4G) coverage. Rural-specific figure found (4G only, T4); national figures carry a rural caveat.",
+      "source_title": "GSMA, Sub-Saharan Africa 2024 Year in Review (Jan 2025), p.9 — geospatial analysis: Nigeria 4G coverage 41% (2019) to 84% (2024), rural 48%",
+      "source_url": "https://www.gsma.com/about-us/regions/sub-saharan-africa/wp-content/uploads/2025/01/GSMA-Sub-Saharan-Africa-2024-Year-In-Review.pdf",
+      "second_source_url": "https://ncc.gov.ng/sites/default/files/2025-11/2024-Year-End-Performance-Report.pdf",
+      "year": 2024,
+      "tier": "T4 (rural figure); T3/T1 (national: NCC 2024 Year-End Performance Report, mirrored in ITU DataHub)",
+      "presence_rung": null,
+      "quality_evidence": "",
+      "scale_evidence": "",
+      "search_trail": "ITU DataHub (T1) via World Bank Data360 mirror API (ITU_DH MOB_COV_3G / MOB_COV_4G, REF_AREA=NGA, pulled 2026-08-22): national only — 3G 89.42%, 4G 84.6% (2024); URBANISATION dimension empty for Nigeria, no rural split -> NCC 2024 Subscriber/Network Performance Report (T3), Table 3 p.5: national coverage only, no rural breakdown -> GSMA SSA 2024 Year in Review (T4), p.9: rural 4G 48% (geospatial analysis). Stopped at T4 for the rural-specific figure.",
+      "protocol_issues": "(1) Indicator asks rural 3G/4G coverage but only a 4G-only rural figure exists (48%); rural 'at least 3G' would be higher but is unpublished — recorded as citation with lower-bound caveat rather than a single number. (2) Tier-order 'stop when found' is ambiguous when T1/T3 answer only the national half of the indicator and the rural-specific figure exists only at T4. (3) ITU DataHub blocks automated access (HTTP 403/202); values verified via the World Bank Data360 mirror.",
+      "notes": "DIVERGENCE FROM PRIOR: prior recorded '~90% pop. 3G; 4G expansion toward 94% target; rural share unpublished' and judged level from national data. This run verifies the nationals precisely (NCC Dec 2024: 3G 89.42%, 4G 84.60%) and ADDS a rural-specific figure the prior lacked: rural 4G 48% (GSMA 2024). Same GSMA report puts the investment gap to 98% 4G coverage at ~$360m. Universal-prerequisite reading: rural 4G 48% sits between the 40 and 60 thresholds (H 20/40/60/80); rural 3G+ plausibly higher but uncited. Wayback save of GSMA PDF triggered 2026-08-22."
+    },
+    {
+      "id": "2.5",
+      "value_type": "number",
+      "value": 1.56,
+      "source_title": "ITU DataHub — Data-only mobile broadband basket (2GB/month), Nigeria, % of GNI per capita, 2025 observation (price data collected 2025)",
+      "source_url": "https://datahub.itu.int/data/?e=NGA&i=34617",
+      "second_source_url": "https://data360.worldbank.org/en/indicator/ITU_DH_PRI_DO_MOB",
+      "year": 2025,
+      "tier": "T1",
+      "presence_rung": null,
+      "quality_evidence": "",
+      "scale_evidence": "",
+      "search_trail": "ITU DataHub (T1) — indicator 'Data-only mobile broadband basket' (i=34617), Nigeria, pulled 2026-08-22 via World Bank Data360 mirror API (ITU_DH PRI_DO_MOB, REF_AREA=NGA) because datahub.itu.int returns 403 to automated clients: 2025 = 1.56% GNI pc (USD 0.99/month); 2024 = 1.75% (USD 1.07); 2023 = 1.61%. Found at T1 — stopped.",
+      "protocol_issues": "(1) Basket definition: the ITU data-only mobile-broadband basket has a 2GB/month minimum allowance for recent years (definition aligned to the 2GB basket from 2021); pre-2016 observations in the same series use older, smaller baskets — do not splice. (2) Single-source in the strict sense: ITU is the sole primary compiler of this basket; Data360 is a mirror, not an independent confirmation — flag 'single-source' if this number becomes load-bearing. (3) DataHub deep link resolves in a browser but 403s for bots; verified via mirror.",
+      "notes": "Basket used: ITU data-only mobile-broadband basket, 2GB/month, as % of monthly GNI per capita. REFUTES PRIOR: the desk pass recorded 4.2 (2024, 'ITU/A4AI via GSMA') — 4.2% is the ITU AFRICA REGIONAL MEDIAN for the 2GB basket in 2024 (ITU Facts & Figures 2024), not Nigeria. Nigeria's own basket was 1.75% in 2024 and 1.56% in 2025 — already below the 2% Broadband Commission target and near the top L-threshold band (L 10/5/2/1). Corroborating context (different basket, not a confirmation): GSMA (Nov 2025) puts Nigeria's 1GB cost at <2% of monthly income per capita."
+    },
+    {
+      "id": "2.7",
+      "value_type": "number",
+      "value": 28.9,
+      "source_title": "NBS / World Bank LSMS, Nigeria General Household Survey–Panel Wave 5 (2023/24) Survey Report, Table 3.15 'Household Assets by place of residence' (p.102): smartphone — rural 28.9%, urban 57.1%, national 37.8% (share of households)",
+      "source_url": "https://www.nigerianstat.gov.ng/pdfuploads/GHS-Panel%20Wave%205%20-%20Survey%20Report.pdf",
+      "second_source_url": "https://microdata.worldbank.org/index.php/catalog/6410",
+      "year": 2024,
+      "tier": "T1",
+      "presence_rung": null,
+      "quality_evidence": "",
+      "scale_evidence": "",
+      "search_trail": "T1 first: NBS GHS-Panel Wave 5 2023/24 (NBS + World Bank LSMS-ISA, nationally representative ~5,000 households; fieldwork Jul–Sep 2023 and Jan–Mar 2024) — found rural smartphone ownership in Table 3.15 — stopped. Cross-checked GSMA Mobile Gender Gap Report 2025 (T4): national, gender-split only, no rural/urban smartphone ownership split for Nigeria.",
+      "protocol_issues": "Indicator definition ambiguity: '2.7 Rural smartphone ownership (%)' does not specify individual vs household ownership. The T1 figure recorded (28.9%) is the share of rural HOUSEHOLDS owning at least one smartphone; individual-level rural adult ownership (GSMA consumer-survey style) is not published for Nigeria with a rural split and would be lower than the household figure. Single-source at T1 — no second independent rural estimate found.",
+      "notes": "FILLS PRIOR GAP (prior: 'DATA GAP — GSMA rural smartphone ownership to verify'). The verified figure comes from a national statistical survey (T1), not GSMA. Definition: household asset ownership, 2023/24 wave. Rural 28.9% vs urban 57.1% — a 28pp urban-rural divide; national 37.8%. Wave-4-to-Wave-5 change: rural smartphone ownership up 9.8pp (Table 3.16). Against threshold H 20/40/60/80 the value sits between 20 and 40. GSMA 'Accelerating Smartphone Adoption in Africa' (Nov 2025) reports 64% 'smartphone adoption' for Nigeria — that is smartphone share of mobile CONNECTIONS (end-2024), a different metric; do not treat as conflicting."
+    },
+    {
+      "id": "2.11",
+      "value_type": "citation",
+      "value": "Device financing schemes EXIST and multiple are operating. (a) Telco-led/commercial (operating): MTN Nigeria + Intelligra BNPL smartphone financing (launched Oct 2022; 6–12-month instalments, bundled data/airtime); Globacom 'Buy Now, Pay Small Small' (Aug 2024; up to 6 months + 18GB data); fintech BNPL device financing (Easybuy, CDcare, Klump); retailer schemes (Jumia, Slot); PAYG solar + smartphone bundling (Izili, 2022). (b) Government (pilot operating): CREDICORP C.L.I.C.K.D. — 'Credit for Laptops, Internet, Connectivity & Knowledge Devices' — device credit for working Nigerians by the FGN's consumer-credit DFI; first national pilot run with the 3MTT programme of the Federal Ministry of Communications, Innovation & Digital Economy. (c) Announced (not yet operating): Nigeria selected as one of six countries for the GSMA Handset Affordability Coalition $30–40 entry-level 4G smartphone pilots (MoU GSMA + G6 African operators + OEMs, announced 3 March 2026 at MWC Barcelona; pilots during 2026).",
+      "source_title": "CREDICORP (FGN) — C.L.I.C.K.D. programme page (official, undated; accessed 2026-08-22); GSMA, Accelerating Smartphone Adoption in Africa (Nov 2025), Nigeria chapter p.60",
+      "source_url": "https://credicorp.ng/clickd",
+      "second_source_url": "https://www.gsma.com/about-us/regions/africa/wp-content/uploads/2025/11/GSMA-SmartPhone_Adoption_Report_sm.pdf",
+      "year": 2026,
+      "tier": "T3 (government programme page) + T4 (GSMA report and press release)",
+      "presence_rung": "Operating",
+      "quality_evidence": "Governance/institutionalisation: CLICKD sits inside CREDICORP, a statutory FGN development finance institution, with FMCIDE (3MTT) as delivery partner — a standing institution, not a one-off project; but the public page names no budget, lender list, interest terms or eligibility thresholds. Telco schemes are purely commercial with published terms (MTN-Intelligra: 6–12 months, low/no deposit, screen/theft replacement; Glo: up to 6 months + 18GB). The coalition pilot has an MoU (GSMA + G6 operators incl. MTN and Airtel + OEMs; World Bank/IFC/ITU in the coalition) and defined device specs, but no Nigeria launch yet. None of the operating schemes is a subsidy: all are credit; no government device subsidy for low-income/rural users was found.",
+      "scale_evidence": "No verified reach numbers for any scheme: CREDICORP publishes no CLICKD applicant/device counts; MTN/Glo publish no financed-device volumes. GSMA consumer-survey evidence (Nov 2025) indicates limited effective scale: cash remains the predominant way smartphones are bought in Nigeria; financing offers mostly attract existing smartphone users switching providers rather than new adopters; rural respondents report eligibility barriers (stable income, bank account) and few access points outside urban centres; >40% of respondents express interest in device financing.",
+      "search_trail": "T3: CREDICORP official CLICKD page (credicorp.ng/clickd, accessed 2026-08-22) — programme exists, national pilot with 3MTT/FMCIDE; no NCC/FMCIDE gazette or budget line located for a device SUBSIDY -> T4: GSMA Accelerating Smartphone Adoption in Africa (Nov 2025) pp.60–63 — telco/fintech/retailer schemes documented; GSMA newsroom press release 2026-03-03 — Nigeria among six countries for $40 4G smartphone pilots. T5 news (Tribune, Nairametrics) used only as pointers, not cited for facts.",
+      "protocol_issues": "(1) Ladder rung ambiguity: commercial telco-led schemes are Operating (since 2022/2024), the government scheme is a pilot (early Operating), and the coalition pilot is only Announced — a single presence rung compresses three different scheme types; recorded Operating on the strength of telco-led schemes, per the indicator's 'gov or telco-led' definition. (2) The CREDICORP page is undated — launch timing cannot be dated from the T3 source alone. (3) Indicator says 'financing/subsidy': only financing (credit) schemes exist; no subsidy scheme found — worth clarifying whether subsidy-absence should be recorded separately.",
+      "notes": "FILLS PRIOR GAP (prior: 'Device financing schemes not verified'). LEAD CHECK: the prior lead 'GSMA Handset Affordability Coalition $40 4G pilot' is VERIFIED but UPDATED — it is a six-country pilot programme (DRC, Ethiopia, Nigeria, Rwanda, Tanzania, Uganda) announced 3 March 2026, Announced-stage only in Nigeria; the operating reality in Nigeria is older commercial BNPL schemes plus the CREDICORP CLICKD pilot. Coalition press release deep link: https://www.gsma.com/newsroom/press-release/pioneering-affordable-access-in-africa-gsma-and-handset-affordability-coalition-members-identify-six-african-countries-to-pilot-affordable-40-smartphones/ . Wayback saves triggered 2026-08-22 for the CREDICORP page, both GSMA PDFs and the press release (per protocol rule 3 for T3/T4 links)."
+    }
+  ],
+  "bundle_issues": "(1) WebSearch session budget hit its 200-call cap mid-bundle (shared across parallel assessors); final CREDICORP verification was completed via direct WebFetch of official pages — no recorded value rests on an unverified search. (2) ITU DataHub systematically blocks automated clients (403/202 challenge); all ITU values were verified through the World Bank Data360 mirror API (dataset ITU_DH) — cited DataHub deep links resolve in a browser but not for bots; suggest listing Data360 as an approved T1 access path in the protocol. (3) Defect-log candidate: the prior desk pass's 2.5 value (4.2, 2024) matches the ITU Africa REGIONAL median for the 2GB basket, not Nigeria (1.75 in 2024) — a region/country conflation failure mode the protocol should name explicitly. (4) Pattern across the bundle: Nigerian T1/T3 sources publish national connectivity figures only; rural disaggregation exists only in GSMA analyses (T4) or household surveys (T1 GHS-Panel), so 'rural' indicators structurally pull the assessor down-tier or into definitional substitutions (household vs individual ownership). (5) Wayback archives triggered 2026-08-22 for all T3/T4 cited links (HTTP 302 to snapshots)."
+}

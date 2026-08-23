@@ -1,0 +1,84 @@
+{
+  "cells": [
+    {
+      "id": "8.4",
+      "value_type": "number",
+      "value": 32.8,
+      "source_title": "World Bank Global Findex Database 2025 — Mobile money account (% age 15+), Nigeria, 2024",
+      "source_url": "https://api.worldbank.org/v2/country/NGA/indicator/mobileaccount.t.d?source=28&format=json",
+      "second_source_url": "https://api.worldbank.org/v2/country/NGA/indicator/mobileaccount.t.d?source=14&format=json",
+      "year": 2024,
+      "tier": "T1",
+      "search_trail": "T1 first per protocol: World Bank API, source 28 (Global Findex database, lastupdated 2025-10-06) -> mobileaccount.t.d for NGA = 32.79 (survey year 2024, Findex 2025 wave). Cross-rendered identically in WB Gender Statistics database (source 14). Stopped at T1. Accessed 2026-08-22.",
+      "notes": "Prior desk pass recorded a gap ('Findex 2025 mobile-money split not retrievable via API this run') — now RESOLVED at T1. Full series: 2.3% (2014), 5.6% (2017), 8.7% (2021), 32.8% (2024) — a near-quadrupling since 2021, consistent with PSB expansion (MoMo PSB, SmartCash) noted at 6.14 in the prior pass. Caveat: the two cited databases are renderings of the same Gallup/Findex survey, so this ships flagged single-source (single-survey) under protocol rule 2.",
+      "protocol_issues": "Triangulation rule 2 is unsatisfiable for Findex-only constructs: no second independent T1-T2 survey of mobile-money account ownership exists (EFInA A2F is T4 and uses a different definition). Protocol should distinguish survey-level from database-level independence."
+    },
+    {
+      "id": "8.6",
+      "value_type": "number",
+      "value": 4.1,
+      "source_title": "World Bank Global Findex Database 2025 — Own a mobile phone (% age 15+), Nigeria 2024: women 81.70 (con1.1), men 85.84 (con1.2); gap = 4.1 pp (derived by subtraction)",
+      "source_url": "https://api.worldbank.org/v2/country/NGA/indicator/con1.1?source=28&format=json",
+      "second_source_url": "https://api.worldbank.org/v2/country/NGA/indicator/con1.2?source=28&format=json",
+      "year": 2024,
+      "tier": "T1",
+      "search_trail": "T1 first: Findex database (source 28) con1.1 (women 81.70%) and con1.2 (men 85.84%), Nigeria, 2024 -> gap 4.14 pp, recorded 4.1. GSMA Mobile Gender Gap Report 2025 (T4) attempted for corroboration: gsma.com returned 404/403 on all known report paths and on the landing page 2026-08-22 — not retrieved. ITU DataHub not consulted (T1 already answered; stop-when-found). Accessed 2026-08-22.",
+      "notes": "The 4.1 pp value is a transparent arithmetic difference of two published T1 series, not a figure named as such by any single source — flagged for the defect log. Definitional trap: GSMA reports the gender gap as a RELATIVE gap ((men-women)/men), which on these Findex numbers would be ~4.8%, not 4.1 pp; the DAMM threshold (L 20/10/5/2) is denominated in percentage points, so the pp reading is used. Prior desk pass: gap — now RESOLVED. Note this is ownership of ANY mobile phone; the smartphone and mobile-internet gender gaps in Nigeria are known to be much wider (GSMA), so this cell alone understates digital gender exclusion.",
+      "protocol_issues": "(a) Does subtraction of two sourced series satisfy rule 1 ('a source that names that number')? Recommend the protocol explicitly bless simple derived differences with both components cited. (b) Indicator definition ambiguity: pp gap (Findex-style) vs relative % gap (GSMA-style) can differ materially; the instrument should fix the formula on the indicator sheet."
+    },
+    {
+      "id": "8.9",
+      "value_type": "citation",
+      "value": "No national percentage measured. Closest datum with real provenance (stale, 2018-19): CTA/Dalberg 'Digitalisation of African Agriculture Report 2018-2019', Nigeria annex — ~0.5 million users of D4Ag solutions headquartered in Nigeria, plus ~7 million legacy registrations in the Cellulant database from the ended GES e-wallet scheme (17M farmers registered 2012-2017, ~7M of whom received subsidy payments); 46 solutions headquartered in-country (83 with a presence); ~20% of users women; only one Nigeria-HQ solution exceeded 50,000 users (Hello Tractor, 250,000 registered). No post-2019 national estimate of the share of smallholders reached was found this run.",
+      "source_title": "CTA/Dalberg, The Digitalisation of African Agriculture Report 2018-2019, Nigeria annex pp. 181-184 and endnote 172 (verified in full text)",
+      "source_url": "https://cgspace.cgiar.org/bitstreams/510cad0e-2b82-4a00-9be3-38a5bf346280/download",
+      "second_source_url": "https://cgspace.cgiar.org/handle/10568/101498",
+      "year": 2019,
+      "tier": "T4",
+      "search_trail": "T1: no such series exists (WDI/FAOSTAT/Findex; NBS publishes no smallholder digital-reach statistic). T2: no peer-reviewed national estimate located this run. T3: FMAFS National Digital Farmers Registry reports only absolute enrolment counts, and only via press releases (T5 — inadmissible for values). T4: CTA/Dalberg D4Ag 2019 PDF downloaded from CGSpace and read directly (Nigeria annex + endnotes). Session web-search budget was exhausted; discovery beyond these named sources was limited. Accessed 2026-08-22.",
+      "notes": "DIVERGENCE from prior desk pass: prior recorded a bare gap; this run upgrades to a T4 citation with a stale (2019) order-of-magnitude figure rather than inventing a percentage. Registered users are NOT the same as smallholders actively reached — the 7M/17M Cellulant figures are legacy registrations from a subsidy scheme that ended in 2017. Assessor derivation (NOT a sourced number, do not score from it): 0.5M active-era users against the same report's ~26M agricultural workers (>80% smallholders) implies low-single-digit percent reach as of 2019. FMAFS registry (279k supported, 2024/25, per prior pass 3.3) is consistent with reach remaining far below the 10% threshold floor, but no admissible source names a current %.",
+      "protocol_issues": "Indicator underdefined: 'reached' (registered vs active vs transacting) and the denominator (number of smallholders — itself unmeasured in Nigeria) are both unspecified. Vintage: 2019 observation in a 2026 assessment — routes to refresh ledger. Rule 3 requires an archived copy for T4 links; web.archive.org is unreachable from this environment, so no Wayback capture was made this run."
+    },
+    {
+      "id": "8.11",
+      "value_type": "gap",
+      "value": "DATA GAP — searched: T1 ITU/NBS/Findex (no statistic on language coverage of digital agriculture services exists); T2 none located; T3 FMAFS/NAERLS (no service-language audit or registry published); T4 GSMA (gsma.com 403/404 to all fetches 2026-08-22), CTA/Dalberg D4Ag 2019 full text grepped for local-language evidence (mentions are Ghana/India examples — Farmerline, Esoko IVR, MyAgriGuru — no Nigeria share or count). No source names a percentage of Nigerian digital-ag services available in local languages.",
+      "source_title": "n/a — gap recorded; most substantive source checked: CTA/Dalberg D4Ag 2018-2019 full text",
+      "source_url": "https://cgspace.cgiar.org/bitstreams/510cad0e-2b82-4a00-9be3-38a5bf346280/download",
+      "year": null,
+      "tier": "n/a (gap)",
+      "search_trail": "ITU/NBS/Findex (no such series) -> T2 (none found) -> T3 FMAFS/NAERLS (no audit) -> T4 GSMA blocked, D4Ag 2019 full-text search negative for Nigeria language shares. Session web-search budget exhausted; targeted deep-links only. Accessed 2026-08-22.",
+      "notes": "DIVERGENCE from prior desk pass, which recorded 'Judged L2' on the basis that major platforms are partially available in Hausa/Yoruba/Igbo (USSD advisory). That qualitative claim is plausible and platform-level examples exist, but no resolvable admissible source names a share, and a t-kind cell needs a number — so this run records an honest gap and does not reproduce the judgement. Answer to the protocol question posed in the bundle guidance (the Egypt/Arabic analog): near-universal local-language availability without a published share is at best Documented narrative — it is citable qualitative evidence, never 'Measured'; for a threshold cell it remains a Gap until someone audits a defined service registry and publishes a proportion.",
+      "protocol_issues": "(a) Template defect: the indicator guidance for this NIGERIA bundle embeds Egypt-specific text ('Arabic is near-universal in Egypt digital services'). (b) Structural defect: 8.11 is a t-kind (%) indicator for a construct nobody measures; candidates — redefine as a ladder (Absent/some major languages/all major languages) or specify a service-registry audit method with a fixed denominator."
+    },
+    {
+      "id": "8.12",
+      "value_type": "citation",
+      "value": "Independent, peer-reviewed impact evidence EXISTS for digital agriculture in Nigeria. Anchor study (content verified this run): Arouna, Michler, Yergo & Saito (2021), 'One size fits all? Experimental evidence on the digital delivery of personalized extension advice in Nigeria', American Journal of Agricultural Economics 103(2): 596-619 — clustered RCT in Kano State (35 villages, ~700 rice-farming households) of RiceAdvice digital decision-support advice: information-only arm raised rice yield ~250 kg/ha (~7%) and profit ~US$120/ha (~10%); advice-plus-subsidy arm raised yield ~20% and profit ~23%, without increasing total fertilizer use.",
+      "source_title": "Arouna, Michler, Yergo & Saito (2021), American Journal of Agricultural Economics 103(2): 596-619, doi:10.1111/ajae.12151",
+      "source_url": "https://doi.org/10.1111/ajae.12151",
+      "second_source_url": "https://ideas.repec.org/a/wly/ajagec/v103y2021i2p596-619.html",
+      "year": 2021,
+      "tier": "T2",
+      "presence_rung": "Operating",
+      "quality_evidence": "Design: clustered randomized controlled trial, three arms (control/blanket advice, personalized advice, personalized advice + fertilizer subsidy); published in a top-2 field journal (AJAE); effect sizes verified against the publisher page 2026-08-22. Independence caveat: RiceAdvice was developed by AfricaRice and co-authors are AfricaRice researchers — peer review is independent but the evaluator is not fully arm's-length from the tool.",
+      "scale_evidence": "Thin: one major in-country RCT located this run; no Nigeria-specific systematic review found. The largest digital-ag programme in Nigeria's history (GES e-wallet, 17M farmers registered 2012-17 per CTA/Dalberg D4Ag endnote 172) has no comparable independent impact evaluation located this run — quasi-experimental e-wallet papers exist in the literature (Uduji & Okolo-Obasi, Taylor & Francis) but the publisher blocked automated fetch (403) so their content is NOT verified and no figures from them are recorded. Commercial platform yield claims (e.g. ThriveAgric) remain unaudited (carried from prior pass).",
+      "search_trail": "T2 direct per guidance: doi.org/10.1111/ajae.12151 -> Wiley AJAE page fetched and read 2026-08-22 (design, sample, effect sizes verified). Second resolvable record: RePEc (HTTP 200). Candidate secondary studies (Uduji & Okolo-Obasi GES e-wallet evaluations) 403-blocked, cited title-level only. IFPRI/J-PAL Nigeria digital-ag search not completed — session web-search budget exhausted.",
+      "notes": "DIVERGENCE from prior desk pass: prior recorded a gap ('no verified impact evaluation retrieved') — REFUTED: a first-rank T2 RCT exists and its numbers are verified. The 'Egypt lead (Abay et al. digital literacy RCT)' in the bundle guidance is out of scope for Nigeria — template artifact, flagged. Facts only per rung recorded; no level assigned.",
+      "protocol_issues": "Ladder rung vocabulary (Absent/Announced/Adopted/Operating) is built for institutions and fits an evidence-stock indicator awkwardly; assessor mapped 'peer-reviewed evidence exists' to Operating. Protocol should define rungs for evidence indicators (e.g. none / grey-only / >=1 peer-reviewed eval / multiple evals or review)."
+    },
+    {
+      "id": "8.17",
+      "value_type": "gap",
+      "value": "DATA GAP — searched: T1 WDI/FAOSTAT (no climate-advisory-reach series); T3 NiMet: website unreachable 2026-08-22 (nimet.gov.ng returns a 307 redirect loop; www.nimet.gov.ng refuses connections), so SCP 2026 dissemination documentation could not be checked for a reach figure; T3 NAERLS: 2025 Agricultural Performance Survey release read — reports production, prices and climate risks but no percentage of farmers receiving weather/climate advisories, and the full APS PDF is not linked; T2: no national peer-reviewed reach estimate located this run.",
+      "source_title": "n/a — gap recorded; most substantive source checked: NAERLS 2025 Agricultural Performance Survey release (21 Oct 2025)",
+      "source_url": "https://naerls.gov.ng/2025/10/naerls-releases-2025-agricultural-performance-survey-report-growth-in-crop-production-lower-food-prices-and-rising-climate-risks/",
+      "year": null,
+      "tier": "n/a (gap)",
+      "search_trail": "WDI/FAOSTAT (no series) -> T2 (none found; CGSpace search UI is JS-only and returned no parseable results) -> T3 NiMet (site down), NAERLS homepage + APS search + APS 2025 release (no reach %) -> T4 not reached with an admissible figure. Session web-search budget exhausted. Accessed 2026-08-22.",
+      "notes": "Consistent with prior desk pass (gap) — CONFIRMED, now with a real trail. Presence of the service is not in doubt: prior pass 3.6 documents NiMet's Seasonal Climate Prediction as an operating annual national service; what does not exist is a sourced % of farmers reached. NiMet press/MOU claims about 'reaching millions of farmers' via telco partnerships are announcements (T5) — inadmissible for a value. Practical route to close the gap: the NAERLS APS covers 36 states + FCT across thirteen thematic domains — the country team should request the APS 2025 full report/microdata, which is the most likely home of an agromet-advisory-access percentage; second route: NiMet SCP dissemination annex once the site is back up.",
+      "protocol_issues": "T3 infrastructure fragility: a national regulator/agency site (nimet.gov.ng) can be down at assessment time, making otherwise-public documents unciteable; protocol rule 3's archived-copy requirement should extend to T3, and Wayback capture was impossible from this environment (web.archive.org unreachable)."
+    }
+  ],
+  "bundle_issues": "(1) SEARCH BUDGET: the session's WebSearch quota was exhausted before this bundle began; all research was done via direct T1 API calls (World Bank API sources 28/14) and targeted deep-link fetches (doi.org/Wiley, CGSpace full-text PDF, NAERLS). T1/T2 cells (8.4, 8.6, 8.12) are unaffected — they resolved at authoritative endpoints — but T2/T4 discovery breadth for 8.9, 8.11 and 8.17 was materially limited, so those gaps/stale citations may be closable in a normal-search rerun. (2) ARCHIVING: web.archive.org is unreachable from this environment, so the rule-3 archived copies for T4 links (CGSpace PDF) could not be created at capture time. (3) GSMA (T4) blocks automated fetching entirely (403/404) — the Mobile Gender Gap Report could not corroborate 8.6; note GSMA's gap metric is relative ((M-W)/M) while DAMM's 8.6 threshold is in percentage points — the instrument should pin the formula. (4) TEMPLATE DEFECT: the bundle guidance for 8.11 and 8.12 embeds Egypt-specific text (Arabic-language services; Abay et al. lead) inside the NIGERIA bundle — copy-paste artefact for the defect log. (5) TRIANGULATION: Findex-derived cells (8.4, 8.6) cannot meet rule 2's 'two independent T1-T2 confirmations' because only one survey measures the construct; both ship flagged single-source (single-survey). (6) SCORING NOTE for the instrument owner: 8.4 (32.8%) shows a step-change from the 2021 wave (8.7%) — real (PSB licensing) but worth a vintage annotation so trend users do not read it as measurement error."
+}

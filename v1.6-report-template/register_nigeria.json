@@ -1,0 +1,203 @@
+{
+  "country": "Nigeria",
+  "status_note": "Starter register — illustrative desk pass (22 Aug 2026). Entries are real initiatives; every row is to be verified to the Source-Tier Protocol before circulation. T5 rows evidence existence only.",
+  "entries": [
+    {
+      "name": "NIDAP — National Integrated Digital Agriculture Platform",
+      "lead": "FMAFS — Federal Ministry of Agriculture and Food Security",
+      "uc": [
+        "ADV",
+        "MKT",
+        "AGI"
+      ],
+      "status": "Adopted",
+      "scale": "Early rollout; aims to harmonize value chains and farmer registries",
+      "funding": "Government",
+      "results": "None published yet",
+      "results_tier": "",
+      "overlap": [
+        "Farmer registration (3.3)",
+        "Advisory content"
+      ],
+      "tier": "T3",
+      "src": "FMAFS program communications, 2024–2026"
+    },
+    {
+      "name": "National Digital Agriculture Strategy 2020–2030 (NDAS)",
+      "lead": "FMAFS, with FAO (Food and Agriculture Organization) and ITU (International Telecommunication Union) support",
+      "uc": [
+        "ADV",
+        "SMF",
+        "MKT",
+        "SCM",
+        "FIN",
+        "AGI"
+      ],
+      "status": "Announced",
+      "scale": "Policy blueprint — drafted 2020, not formally adopted",
+      "funding": "—",
+      "results": "Unadopted draft; implementation not started",
+      "results_tier": "T3",
+      "overlap": [],
+      "tier": "T3",
+      "src": "FMARD/FAO draft strategy document, 2020"
+    },
+    {
+      "name": "Growth Enhancement Support / e-Wallet (GES)",
+      "lead": "FMARD (Federal Ministry of Agriculture and Rural Development, predecessor ministry) + Cellulant",
+      "uc": [
+        "FIN",
+        "SMF"
+      ],
+      "status": "Closed",
+      "scale": "4.5M+ farmers registered (program-reported), 2012–2017",
+      "funding": "Government",
+      "results": "Independent studies report input-access and yield gains; network failures and elite capture also documented",
+      "results_tier": "T2",
+      "overlap": [
+        "Farmer registration (3.3)"
+      ],
+      "tier": "T2",
+      "src": "Peer-reviewed evaluations of GES; program records"
+    },
+    {
+      "name": "Anchor Borrowers' Programme (ABP)",
+      "lead": "Central Bank of Nigeria",
+      "uc": [
+        "FIN"
+      ],
+      "status": "Closed",
+      "scale": "4M+ farmers reached (CBN-reported), ₦1tn+ disbursed, 2015–2023 (suspended)",
+      "funding": "CBN",
+      "results": "Rice output gains claimed by CBN; low repayment rates documented",
+      "results_tier": "T3",
+      "overlap": [
+        "Farmer registration (3.3)",
+        "Input financing"
+      ],
+      "tier": "T3",
+      "src": "CBN programme records and statements"
+    },
+    {
+      "name": "NIRSAL — Nigeria Incentive-Based Risk Sharing System for Agricultural Lending",
+      "lead": "Central Bank of Nigeria",
+      "uc": [
+        "FIN"
+      ],
+      "status": "Operating",
+      "scale": "₦200bn+ in facilitated agricultural lending (institution-reported)",
+      "funding": "CBN endowment",
+      "results": "Credit risk-sharing operational; smallholder awareness reported low",
+      "results_tier": "T3",
+      "overlap": [
+        "Input financing"
+      ],
+      "tier": "T3",
+      "src": "NIRSAL corporate reporting"
+    },
+    {
+      "name": "FADAMA III (floodplain agriculture program)",
+      "lead": "World Bank / FMARD",
+      "uc": [
+        "MKT",
+        "SMF"
+      ],
+      "status": "Closed",
+      "scale": "60k+ user groups over project life (closed 2019)",
+      "funding": "World Bank IDA credit",
+      "results": "Income gains documented in project completion reporting",
+      "results_tier": "T2",
+      "overlap": [],
+      "tier": "T2",
+      "src": "World Bank project completion reporting (ICR)"
+    },
+    {
+      "name": "SAPZ — Special Agro-Industrial Processing Zones",
+      "lead": "AfDB (African Development Bank) + federal and state governments",
+      "uc": [
+        "SCM",
+        "MKT"
+      ],
+      "status": "Adopted",
+      "scale": "Phase 1 in implementation across participating states",
+      "funding": "AfDB-led co-financing",
+      "results": "Early implementation; no outcome evidence yet",
+      "results_tier": "",
+      "overlap": [],
+      "tier": "T4",
+      "src": "AfDB project documentation"
+    },
+    {
+      "name": "NiMet climate advisories / DCAS (Digital Climate Advisory Services)",
+      "lead": "NiMet — Nigerian Meteorological Agency",
+      "uc": [
+        "ADV",
+        "AGI"
+      ],
+      "status": "Operating",
+      "scale": "National seasonal predictions; rural penetration reported limited",
+      "funding": "Government",
+      "results": "Annual Seasonal Climate Prediction (SCP) institutionalized; last-mile reach is the gap",
+      "results_tier": "T3",
+      "overlap": [
+        "Advisory content"
+      ],
+      "tier": "T3",
+      "src": "NiMet Seasonal Climate Prediction releases"
+    },
+    {
+      "name": "ThriveAgric",
+      "lead": "Private",
+      "uc": [
+        "FIN",
+        "MKT",
+        "ADV"
+      ],
+      "status": "Operating",
+      "scale": "Claims 1M+ farmers — vendor-reported, unverified",
+      "funding": "Venture capital / debt",
+      "results": "No independent evaluation located",
+      "results_tier": "",
+      "overlap": [
+        "Farmer registration (3.3)",
+        "Input financing"
+      ],
+      "tier": "T5",
+      "src": "Company communications (existence only)"
+    },
+    {
+      "name": "Crop2Cash",
+      "lead": "Private",
+      "uc": [
+        "FIN",
+        "SMF"
+      ],
+      "status": "Operating",
+      "scale": "500k+ farmers — vendor-reported, unverified",
+      "funding": "Venture capital / grants",
+      "results": "No independent evaluation located",
+      "results_tier": "",
+      "overlap": [
+        "Farmer registration (3.3)"
+      ],
+      "tier": "T5",
+      "src": "Company communications (existence only)"
+    },
+    {
+      "name": "Hello Tractor",
+      "lead": "Private",
+      "uc": [
+        "SMF"
+      ],
+      "status": "Operating",
+      "scale": "Tractor-booking marketplace; deployments documented by GSMA (the mobile-industry association)",
+      "funding": "Venture capital / partnerships",
+      "results": "GSMA case documentation of booking model",
+      "results_tier": "T4",
+      "overlap": [],
+      "tier": "T4",
+      "src": "GSMA AgriTech case documentation"
+    }
+  ],
+  "overlap_finding": "Farmer registration is the register's structural overlap: GES (closed) enrolled 4.5M+, ABP (closed) 4M+, and private platforms report millions more — yet the national registry (indicator 3.3) records ~279k farmers, under 1% of farming households. Enrollment has happened repeatedly in program silos; a registry has not."
+}

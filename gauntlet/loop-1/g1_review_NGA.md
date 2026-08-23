@@ -1,0 +1,153 @@
+# G1 review queue — NGA (loop 1)
+
+Proposed derivations needing assessor confirmation; set g1_overrides_nga.json to adjust.
+
+- **1.5 Post-harvest loss rate (%)** — t-kind citation -> G1 must set level
+  - quality: Cereals only, APHLIS dry-weight postharvest loss estimates 2022 (cumulative harvest, drying, handling, storage, transport, market): maize 17.4%, sorghum 12.3%, 
+  - scale: 
+- **1.6 Smallholder access to formal markets (%)** — t-kind citation -> G1 must set level
+  - quality: No national 'formal market access' share exists. FAO Smallholder Data Portrait (LSMS-ISA 2012/13): 100% of crop-selling smallholder households sold through info
+  - scale: 
+- **1.7 Agricultural credit access (% farmers)** — t-kind citation -> G1 must set level
+  - quality: 7% of smallholder households were credit beneficiaries (FAO Smallholder Data Portrait, LSMS-ISA 2012/13; 'other farms' 6%). Fresher national survey (EFInA A2F 2
+  - scale: 
+- **1.8 Farmers using climate-smart practices (%)** — t-kind citation -> G1 must set level
+  - quality: No national estimate. Regional T2 evidence: survey of smallholder farmers in Nigeria's North Central and Northwest zones (CABI Agriculture and Bioscience, Sept 
+  - scale: 
+- **8.5 Women who own land (% holders)** — t-kind citation -> G1 must set level
+  - quality: SDG 5.a.1(b): women are 31.6% of owners or rights-bearers of agricultural land (Nigeria GHS-Panel Wave 4, 2018/19; earlier waves 24.0% in 2013, 23.4% in 2016). 
+  - scale: 
+- **2.1 Rural mobile broadband coverage (3G/4G)** — t-kind citation -> G1 must set level
+  - quality: Rural 4G population coverage: 48% (2024, GSMA geospatial coverage modelling). National population coverage as at Dec 2024 (NCC Table 3): 2G 95.31%, 3G 89.42%, 4
+  - scale: 
+- **2.11 Device financing/subsidy schemes** — ladder Operating+quality -> L4
+  - quality: Governance/institutionalisation: CLICKD sits inside CREDICORP, a statutory FGN development finance institution, with FMCIDE (3MTT) as delivery partner — a stand
+  - scale: No verified reach numbers for any scheme: CREDICORP publishes no CLICKD applicant/device counts; MTN/Glo publish no financed-device volumes. GSMA consumer-surve
+- **3.3 National farmer registry** — ladder Adopted -> L3
+  - quality: Institutional anchoring: presidential circular mandating NIN use by all MDAs; FMAFS owns registry and card scheme, NIMC provides foundational ID (NIMC press rel
+  - scale: No verified registration count. Denominator context: NASC 2022 (NBS/World Bank/FAO census, 767/774 LGAs) — NBS announced 40.2m agricultural households at the ce
+- **3.4 Digital land/plot registration** — ladder Announced -> L2
+  - quality: Official commitment: FMHUD article (14 Nov 2024, T3) — Minister Dangiwa announced the World Bank partnership for the NLDS, target to raise formal land transacti
+  - scale: None — system not yet built. Baseline figures from official statements: <10% of land parcels registered, >90% untitled (est. $300bn dormant capital). Phase-1 ta
+- **3.5 Open agricultural data (machine-readable, AI-ready)** — ladder Operating+quality+scale -> L5
+  - quality: Institutionalised statistical channel: NBS runs a standards-based (DDI) microdata catalog with documented access regimes; NASC 2022 produced with World Bank, FA
+  - scale: 107 datasets in catalog; agriculture holdings include NASC 2022, NASS 2023, and legacy agricultural export commodity surveys. Counter-evidence on openness: the 
+- **3.6 Weather/climate data infrastructure** — ladder Operating+quality+scale -> L5
+  - quality: Institutionalisation: SCP is an annual statutory product presented by the supervising Minister (Aviation and Aerospace Development) with high-level multi-sector
+  - scale: DCAS: 100,000-farmer target across six geopolitical zones (target, not verified delivery; SMS first, voice later). SCP: disseminated nationally through states/A
+- **3.7 Satellite/EO data integration** — ladder Adopted -> L3
+  - quality: Governance/institutions: statutory space agency (NASRDA) with dedicated applications department; formal NASRDA-FMAFS MoU; NiMet-NASRDA EO partnership; multi-yea
+  - scale: NAPS: pilot-stage (1 state at launch; 15-state expansion is a plan). No published hectare/farmer coverage for CropWatch or NAPS. Context from workshop framing: 
+- **3.8 National soil map/database** — ladder Adopted -> L3
+  - quality: Presidential launch; institutional home in FMAFS; funded partnerships: GIZ + Gates Foundation ('Soil Matters' initiative flagged off 29 Apr 2026), World Bank AC
+  - scale: Thin and partly conflicting: labs in 15 states (FMAFS Jul 2026) vs the portal's claim of labs 'across all 774 LGAs' vs the May 2026 readiness assessment which '
+- **3.11 Agricultural data interoperability standards** — ladder Absent -> L1
+  - quality: 
+  - scale: 
+- **4.1 Data protection/privacy law** — ladder Operating+quality+scale -> L5
+  - quality: GAID 2025 (117-pp directive with schedules, audit-fee tiers, complaint forms) operationalises the Act and replaces the NDPR 2019 regime; secondary legal analyse
+  - scale: Enforcement is live and current: NDPC news 12 Aug 2026 announces investigations of UNILAG, Lotus Bank and Hackerbella Ltd; sector cumulative revenue tracked by 
+- **4.4 National digital agriculture strategy** — ladder Announced -> L2
+  - quality: None for adoption: no gazetting, ownership, budget line or implementation structure attaches to NDAS. Digital-agriculture delivery instead proceeds programmatic
+  - scale: 
+- **4.5 Agricultural data governance framework** — ladder Absent -> L1
+  - quality: 
+  - scale: 
+- **4.6 National AI strategy with agriculture component** — ladder Adopted -> L3
+  - quality: Implementation vehicles exist: Nigeria AI Scaling Hub launched 3 June 2025 with the Gates Foundation (up to USD 7.5m over three years) explicitly to scale AI in
+  - scale: 
+- **4.7 Digital ID coverage (%)** — t-kind citation -> G1 must set level
+  - quality: NIN coverage ~49-57% of total population as of 30 June 2026: 117,493,554 persons issued a NIN, out of 134,553,120 NINs enrolled (World Bank ISR, Nigeria Digital
+  - scale: 
+- **4.9 Inter-ministerial coordination mechanism** — ladder Absent -> L1
+  - quality: NASIP 2026 institutionalises quarterly inter-ministerial meetings and a Community of Practice among agriculture-sector MDAs (budgeted in the NATIP implementatio
+  - scale: 
+- **5.5 Digital extension capability** — ladder Operating+quality+scale -> L5
+  - quality: Institutionalisation: standing e-Extension department inside NAERLS since Jan 2017 (naerls.gov.ng/e-extension); NFHL runs with published phone lines, four langu
+  - scale: DPAE: ~20,000 farmers reached, 8 states (Kano, Niger, Adamawa, Sokoto, Bauchi, Gombe, Kaduna, FCT), 6 value chains (maize, sorghum, tomato, groundnut, cowpea, r
+- **5.7 MoAg digital/AI unit** — ladder Absent -> L1
+  - quality: No unit exists to assess. Nearest institutional anchor: Department of Agricultural Extension Services is the named receiving department for DPAE (fmino.gov.ng, 
+  - scale: 
+- **5.8 Agtech/data-science training pipeline** — ladder Operating+quality+scale -> L5
+  - quality: 3MTT is a federal programme with phased cohort design and nationwide reach, institutionally owned by FMCIDE/NITDA (T3 programme page). NCAIR (NITDA's AI centre)
+  - scale: 3MTT: 30,000 Phase 1 fellows (T3); Phase 2 target 270,000 (60k/90k/120k cohorts) — a target, not delivery. DSN's reach claims ('8M+ learners', '14,000 community
+- **6.4 Agtech venture ecosystem** — ladder Operating+quality+scale -> L5
+  - quality: GSMA Innovation Fund grants to Crop2Cash and Hello Tractor (institutional donor backing); AFEX $100m 10-year Food Security Fund bond program (AgFunderNews, Jan 
+  - scale: US$26m Nigeria agrifoodtech funding 2024 (AgFunder); Africa context $192m/91 deals; decade total Africa $2.4bn. Startup-count census for Nigeria: no current adm
+- **6.9 Public-private partnerships in digital ag** — ladder Adopted -> L3
+  - quality: Agreements signed at Permanent-Secretary level with named private counterparty (Seamfix); governance design features documented (CVN, CoopID, credit-bureau inte
+  - scale: None published yet: cooperative revalidation exercise just launched (Aug 2026); NDFR release gives no registered-farmer counts.
+- **6.12 Digital public goods adopted** — ladder Absent -> L1
+  - quality: 
+  - scale: 
+- **6.14 Agri-fintech rails for smallholders** — ladder Operating+quality+scale -> L5
+  - quality: Crop2Cash is a GSMA Innovation Fund grantee (institutional vetting); government registry rails are NIN-anchored (NIMC partnership) with credit-bureau integratio
+  - scale: 500,000+ smallholders reached and US$2.8m credit unlocked via Crop2Cash (GSMA-published, grantee-reported, as of Aug 2024) — roughly 1.7% of the 30m+ smallholde
+- **3.9 Digital advisory platforms at scale** — ladder Operating+quality+scale -> L5
+  - quality: Both platforms are GSMA Innovation Fund grantees with published case documentation; Hello Tractor received Heifer International financing in 2022 for tractor lo
+  - scale: Counts and reporters: 500,000+ farmers (Crop2Cash; GSMA publishing grantee-reported data, Aug 2024); 3,500+ SMS-advisory farmers and 2,400+ ha serviced (Hello T
+- **3.10 Agricultural e-commerce platforms** — ladder Operating+quality+scale -> L5
+  - quality: AFEX operates under Nigerian capital-market regulation as a licensed commodities exchange (regulatory anchor not independently fetched this run — see protocol_i
+  - scale: 300,000+ farmers on AFEX platform (2022, self-reported via T4 outlet); no verified current GMV/user figures.
+- **7.2 AI-enabled agricultural solutions deployed** — ladder Announced -> L2
+  - quality: Signing at Deputy Chief-of-Staff level; NCAFS framework approval (Nov 2024) reported; named technical partners (OCP Africa; Ground Truth Analytics, geospatial f
+  - scale: Rollout targets only (1 -> 3 -> 15 states); pre-MoU pilot claim of 13 states / 250,000+ farmers is single-source press and NOT treated as verified scale.
+- **7.12 Responsible-AI safeguards (consent, rights)** — ladder Adopted -> L3
+  - quality: Legally operative directive issued by the statutory regulator (NDPC) under NDPA 2023; prior pass documents active NDPC enforcement of the parent Act (1,368 comp
+  - scale: No evidence yet of the AI-specific articles being enforced, and none in an agricultural context.
+- **8.9 Smallholders reached by digital services (%)** — t-kind citation -> G1 must set level
+  - quality: No national percentage measured. Closest datum with real provenance (stale, 2018-19): CTA/Dalberg 'Digitalisation of African Agriculture Report 2018-2019', Nige
+  - scale: 
+- **8.12 Documented impact evidence (yield/income)** — ladder Operating+quality+scale -> L5
+  - quality: Design: clustered randomized controlled trial, three arms (control/blanket advice, personalized advice, personalized advice + fertilizer subsidy); published in 
+  - scale: Thin: one major in-country RCT located this run; no Nigeria-specific systematic review found. The largest digital-ag programme in Nigeria's history (GES e-walle
+
+## Process log (D-candidates)
+
+- D2? 1.5: Indicator expects one national PHL rate; APHLIS provides per-crop, cereals-only estimates with no aggregation rule (unweighted vs production-weighted average moves the value across the 12 threshold). Ruling needed on how to collapse per-crop values to a scoreable number.
+- D2? 1.6: 'Smallholder access to formal markets' is undefined in the spec (access vs participation; 'formal' undefined in a marketing system that is ~100% informal channels). On participation Nigeria would read ~0%; the indicator cannot be honestly scored against threshold H 20/40/60/80 without a definition r
+- D2? 1.7: Definition ambiguity: 'credit access' vs 'credit use', and formal-only vs any-source moves the value from ~2-7% to 38% (two threshold levels apart). Tier ruling needed (spec 13.6): EFInA A2F is an established national demand-side survey underpinning CBN financial-inclusion targets - the domain looku
+- D2? 1.8: Indicator guidance points to FAO/CIAT CSA country profiles, but Nigeria has no national profile - guidance mis-specifies the source for this country. 'CSA adoption' lacks a standard definition; '>=1 practice/trait' vs composite adoption spans tens of percentage points against threshold H 20/40/60/80
+- D2? 8.5: Indicator guidance names FAO GLRD as canonical, but the database is retired (pages 404, Wayback coverage partial, statistics tab was an interactive app that did not archive). Re-point guidance to SDG 5.a.1 or the next WCA round. Holders-vs-owners construct mismatch changes the threshold band and mus
+- D2? 2.1: (1) Indicator asks rural 3G/4G coverage but only a 4G-only rural figure exists (48%); rural 'at least 3G' would be higher but is unpublished — recorded as citation with lower-bound caveat rather than a single number. (2) Tier-order 'stop when found' is ambiguous when T1/T3 answer only the national h
+- D2? 2.5: (1) Basket definition: the ITU data-only mobile-broadband basket has a 2GB/month minimum allowance for recent years (definition aligned to the 2GB basket from 2021); pre-2016 observations in the same series use older, smaller baskets — do not splice. (2) Single-source in the strict sense: ITU is the
+- D2? 2.7: Indicator definition ambiguity: '2.7 Rural smartphone ownership (%)' does not specify individual vs household ownership. The T1 figure recorded (28.9%) is the share of rural HOUSEHOLDS owning at least one smartphone; individual-level rural adult ownership (GSMA consumer-survey style) is not publishe
+- D2? 2.11: (1) Ladder rung ambiguity: commercial telco-led schemes are Operating (since 2022/2024), the government scheme is a pilot (early Operating), and the coalition pilot is only Announced — a single presence rung compresses three different scheme types; recorded Operating on the strength of telco-led sch
+- D2? 3.1: Triangulation rule 2: the second confirmation (UN Survey 2024 report) is the same publisher (UN DESA) as the eGovKB — no independent non-UN T1/T2 source names the exact value, so if this number is load-bearing it should ship flagged single-source(-family). Also: UN eGovKB blocks standard programmati
+- D2? 3.3: NIMC and FMAFS publish presence facts but no operational statistics anywhere findable — the scale rung for this PREREQUISITE (FIN+AGI) indicator is unmeasurable from public sources; recommend the ledger route this for country-office confirmation.
+- D2? 3.4: FMHUD site serves article content but redirects deep URLs to the homepage intermittently — citation resolvability is fragile; archived copy could not be captured (web.archive.org unreachable from this environment). Second source is T5 (Biometric Update) used for existence/status facts only.
+- D2? 3.5: Indicator definition ambiguity: 'open agricultural data (machine-readable)' — registration-gated public-use microdata is machine-readable but not 'open' by open-definition standards, and the open portal is dead. Rung assignment depends on whether the microdata channel qualifies; recorded Operating f
+- D2? 3.6: Tier call needed: Voice of Nigeria (von.gov.ng) and FRCN/Radio Nigeria are federal government broadcasters — news organs on .gov.ng domains. Used here for existence facts only and tiered as T5-equivalent; flag for spec 13.6 ruling. NiMet URLs sit behind a Sucuri JS challenge (curl returns 307) — res
+- D2? 3.7: Tier gap: NASRDA's own site could not be searched before the session's WebSearch cap was hit, so presence facts for CropWatch and NAPS lack a T3 anchor (Space in Africa treated as T4 established industry analysis; fundsforngos as T5 existence-only). Route for T3 confirmation next loop.
+- D2? 3.8: Conflicting official claims on laboratory coverage (774 LGAs on the portal vs 15 states in FMAFS's own July 2026 statement vs 'aims to establish' in May 2026) — portal figures may be aspirational copy; scale evidence should not be read off the portal without corroboration.
+- D2? 3.11: Absent-vs-Announced boundary: the Nov 2025 registry harmonisation workshop and the draft DPI standards could arguably support 'Announced' for ag-data standards work; recorded Absent because no agriculture-specific standard artefact exists or has been announced as such. Flag the boundary rule for the
+- D2? 4.1: None material. Law-firm client alerts (Jones Day) sit awkwardly between T4 and T5; recommend the defect log treat them as corroboration-only.
+- D2? 4.2: 1) Indicator is defined on a 0-1 overall score that ITU no longer publishes directly in the report; value derived by summing the five published pillar scores (arithmetic identity under GCI methodology, 20 pts/pillar). 2) ITU DataHub, the only source naming 82.4 as a single number, is unreachable pro
+- D2? 4.3: 1) The 2025 edition restructured pillars and dropped the published overall score, so the indicator as defined (0-100, threshold H 20/40/60/80) is only scoreable on the 2024 edition - vintage vs definition tension; ledger should route for refresh when Oxford Insights publishes 2025/2026 score data. 2
+- D2? 4.4: Ladder ambiguity: a 6-year-old unadopted draft plus active digital-ag programs without a strategy - 'Announced' fits the strategy object, but the rung understates programmatic activity; assessor should read notes.
+- D2? 4.5: Proving absence: trail lists the specific artefacts checked; a FAOLEX sweep was not possible after the session's search budget was exhausted - flag for loop 2.
+- D2? 4.6: Adoption evidence standard for strategies (official publication vs formal executive approval) is undefined in the indicator guidance - recurring issue across 4.4/4.6; needs a spec ruling.
+- D2? 4.7: 1) Indicator wants '% adults or population' - adult-share is unpublished; population basis used and labeled. 2) World Bank ISRs are official IO project reporting but task-team self-reported: per the protocol's open judgement call on donor project reports, tiered T4 here, not T2 - Katreyna to rule. 3
+- D2? 4.9: Ladder ambiguity: the indicator object is a 'standing body/committee'; operating project-level platforms do not clear that bar but are more than nothing - rung semantics (Absent vs Announced) need a spec ruling for partial/project-based coordination.
+- D2? 5.4: Indicator definition ambiguity: 'digital literacy among farmers' has no standard instrument (self-assessed device skill vs knowledge test vs ITU skills framework); any future value needs its definition recorded alongside the number. Session WebSearch budget exhausted mid-bundle limited a final sweep
+- D2? 5.5: (1) The bundle guidance embedded an unverifiable number — extension ratio '1:6446' could not be traced to any resolvable source; ICIR quotes a NAERLS-linked director saying Nigeria lacks reliable data on extension-worker numbers. Guidance numbers should carry citations. (2) Ladder ambiguity: does a 
+- D2? 5.7: Definition ambiguity: 'digital/AI unit' — a routine back-office ICT function may exist without appearing on the structure page, and structure-page silence is strong but not conclusive evidence of absence. Recorded Absent on the citable record; recommend a direct FMAFS interview question at country-e
+- D2? 5.8: T5 boundary case: DSN's own website is the only source for its programmes — admissible for existence only; its reach numbers are excluded. Search-budget exhaustion prevented verifying the prior's claim of university agtech programmes; that sub-claim remains open for loop 2 (candidates: FUNAAB, ABU, 
+- D2? 5.12: Trail integrity: the session's WebSearch budget (200) ran out before a dedicated 5.12 query; this gap is recorded on a thinner search than the protocol intends and should be re-run in loop 2 before being treated as confirmed. Also an indicator-design issue: 'digital-ag workforce gender balance' has 
+- D2? 6.1: Triangulation rule (two independent T1-T2 confirmations) is not meaningfully satisfiable for a proprietary index score — only the publisher states it. Suggest treating publisher-published index scores as exempt from the two-source rule or auto-flagging single-source.
+- D2? 6.4: Guidance asks for 'Nigeria: cohort + 2025 funding' — no admissible 2025 country figure exists yet (AgFunder Global 2026 report gives no Africa country split); recorded 2024 vintage honestly. AgFunderNews articles are the publisher's own report summaries — treated as T4 extensions of the T4 report; c
+- D2? 6.12: The current DPG registry platform is JS-only and its API is down — not machine-verifiable; verification rests on a 2024-archived official dataset. Also a definition point: indicator says 'adopted (agriculture)' — recorded as ladder Absence rather than a data gap since the evidence base was actually 
+- D2? 6.13: WBES explorer inaccessible to non-JS fetchers — flag for the machine-fetchable rows list; a WBES API key would close this class of trail.
+- D2? 6.14: gsma.com blocks automated fetch (Cloudflare) — citation verified via Wayback (web.archive.org/web/20251009200941/...); protocol's archived-copy rule satisfied for this cite.
+- D2? 3.9: User counts for African agritech are effectively grantee-self-reported even in T4 sources — the instrument may want a standing 'reporter=self' flag for this indicator.
+- D2? 3.10: AFEX's SEC-Nigeria licence (T3 anchor for presence) not fetched this session — SEC registry is search-portal only; flag as a cheap verification for loop 2.
+- D2? 7.2: Presence rung rests on trade press because T3 is silent (no gazette, statehouse or FMAFS release found) — tier call on Space in Africa (established space-industry analysis vs. news T5) needs §13.6 review; archived copy could not be created.
+- D2 7.2: T5-only citation -> Judged (inadmissible for a value)
+- D2? 7.12: Indicator definition ambiguity: 'Ag/AI-specific ... beyond the general DP law' — GAID is AI-specific but sector-general; recorded as Adopted with the ag-specific layer Absent. Effective-date (19 Sep 2025) is sourced from law-firm commentary (T5), not located in the GAID text itself.
+- D2? 8.4: Triangulation rule 2 is unsatisfiable for Findex-only constructs: no second independent T1-T2 survey of mobile-money account ownership exists (EFInA A2F is T4 and uses a different definition). Protocol should distinguish survey-level from database-level independence.
+- D2? 8.6: (a) Does subtraction of two sourced series satisfy rule 1 ('a source that names that number')? Recommend the protocol explicitly bless simple derived differences with both components cited. (b) Indicator definition ambiguity: pp gap (Findex-style) vs relative % gap (GSMA-style) can differ materially
+- D2? 8.9: Indicator underdefined: 'reached' (registered vs active vs transacting) and the denominator (number of smallholders — itself unmeasured in Nigeria) are both unspecified. Vintage: 2019 observation in a 2026 assessment — routes to refresh ledger. Rule 3 requires an archived copy for T4 links; web.arch
+- D2? 8.11: (a) Template defect: the indicator guidance for this NIGERIA bundle embeds Egypt-specific text ('Arabic is near-universal in Egypt digital services'). (b) Structural defect: 8.11 is a t-kind (%) indicator for a construct nobody measures; candidates — redefine as a ladder (Absent/some major languages
+- D2? 8.12: Ladder rung vocabulary (Absent/Announced/Adopted/Operating) is built for institutions and fits an evidence-stock indicator awkwardly; assessor mapped 'peer-reviewed evidence exists' to Operating. Protocol should define rungs for evidence indicators (e.g. none / grey-only / >=1 peer-reviewed eval / m
+- D2? 8.17: T3 infrastructure fragility: a national regulator/agency site (nimet.gov.ng) can be down at assessment time, making otherwise-public documents unciteable; protocol rule 3's archived-copy requirement should extend to T3, and Wayback capture was impossible from this environment (web.archive.org unreac
+- D2? A1-CAND-IMP: Machine-fetch assumption broken: the FAOSTAT API now requires authorization; bulk downloads remain open - the spec 13 machine pass should switch routes. Mirrors (UNdata) must not be used as triangulation for FAO-origin numbers: same origin plus revision lag.

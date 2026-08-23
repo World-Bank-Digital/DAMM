@@ -1,0 +1,144 @@
+# G1 review queue — EGY (loop 1)
+
+Proposed derivations needing assessor confirmation; set g1_overrides_egy.json to adjust.
+
+- **1.5 Post-harvest loss rate (%)** — t-kind citation -> G1 must set level
+  - quality: No single national post-harvest loss rate exists. Cereals (labelled, admissible): ~10% pre- and post-harvest losses (SADS 2030, estimate c.2009); wheat losses i
+  - scale: 
+- **1.6 Smallholder access to formal markets (%)** — t-kind citation -> G1 must set level
+  - quality: No national figure. Upper Egypt (regional, labelled): 6% of surveyed smallholder households participate in contract farming (farm household survey Apr-May 2018,
+  - scale: 
+- **1.7 Agricultural credit access (% farmers)** — t-kind citation -> G1 must set level
+  - quality: No direct '% of farmers with agricultural credit' figure exists for Egypt. Nearest labelled figures: only 2.3% of rural individuals aged 15+ had loans from form
+  - scale: 
+- **2.11 Device financing/subsidy schemes** — ladder Absent -> L1
+  - quality: 
+  - scale: 
+- **3.3 National farmer registry** — ladder Operating+quality+scale -> L5
+  - quality: Institutionalised: card is the mandatory channel for subsidised fertiliser nationwide (SIS 8 May 2026, T3: disbursement 'through the Farmer Card system' at all 
+  - scale: T3: ~5 million farmer beneficiaries (SIS, 28 Mar 2026, source MENA agency). T3 (dated): >3.5m cards printed / 2m distributed (MALR, 6 Dec 2021). T5-flagged: 5.6
+- **3.4 Digital land/plot registration** — ladder Adopted -> L3
+  - quality: Legal basis enacted (Law 88/2025, gazetted 17 June 2025) with a mandated central electronic database and geospatial linkage to the unified base map; excludes st
+  - scale: Agricultural land: only ~25% of parcels accurately recorded in the title registration system (WB Assessment of Land Governance in Egypt, 2022 — quote verified i
+- **3.5 Open agricultural data (machine-readable, AI-ready)** — ladder Adopted -> L3
+  - quality: Policy is a formal transitional instrument pending a Data Governance Law (explicitly 'forthcoming' in the text) and creation of an Egyptian Data Governance Auth
+  - scale: No dataset counts or portal usage statistics available for agricultural open data; data.gov.eg not yet live (DNS failure verified 2026-08-22, twice, both apex a
+- **3.6 Weather/climate data infrastructure** — ladder Operating+quality -> L4
+  - quality: Institutionalised: EMA is the statutory national meteorological authority (WMO member; own domain www.ema.gov.eg, HTTP 200 verified); CLAC and the Climate Chang
+  - scale: None found: no published figures for the share of farmers receiving agromet/climate advisories (consistent with prior gap on indicator 8.17). DAIRS (dedicated a
+- **3.7 Satellite/EO data integration** — ladder Operating+quality+scale -> L5
+  - quality: Multi-agency institutional base: MALR-MCIT joint programme (T3, 2021, verified page text); NARSS is the permanent national remote-sensing authority coordinating
+  - scale: National seasonal crop inventories claimed complete for summer season and recurring (T3, 2021; winter 2023/24 map presented 2024). Quantified pilot coverage: 25
+- **3.8 National soil map/database** — ladder Absent -> L1
+  - quality: Institutional home exists (ARC/SWERI) but no public digital soil information portal, national soil database service, or gazetted programme for one was located. 
+  - scale: Not applicable (no operating service).
+- **3.11 Agricultural data interoperability standards** — ladder Absent -> L1
+  - quality: Not applicable at rung Absent. Context: the 2025 Open Data Policy's metadata/format mandates would apply to any future released agricultural datasets, and the a
+  - scale: Not applicable.
+- **4.1 Data protection/privacy law** — ladder Adopted -> L3
+  - quality: Executive Regulations issued (Decree 816/2025, Gazette 1 Nov 2025) after a five-year gap — the enforcement machinery now exists: PDPC established under PDPL Art
+  - scale: 
+- **4.4 National digital agriculture strategy** — ladder Absent -> L1
+  - quality: Not applicable to a dedicated strategy (none exists). The embedded digital-ag agenda has institutional carriers: MALR Digital Transformation Unit (created 2021)
+  - scale: 
+- **4.5 Agricultural data governance framework** — ladder Absent -> L1
+  - quality: 
+  - scale: 
+- **4.6 National AI strategy with agriculture component** — ladder Operating+quality+scale -> L5
+  - quality: Governance: National Council for Artificial Intelligence (formed 2019) oversees the strategy; strategy structured on six pillars with named institutional owners
+  - scale: Agriculture-relevant deployments delivered under the strategy's first edition are recorded in bundle E1 cells (Hudhud, crop mapping); no agriculture-specific bu
+- **4.9 Inter-ministerial coordination mechanism** — ladder Operating+quality+scale -> L5
+  - quality: Continuity across five-plus years and across a change of agriculture minister (El Quseir 2020-21 meetings -> Farouk Dec 2025 statement on digital transformation
+  - scale: Joint outputs at national scale are documented in other cells (farmer card/Meeza registry, tenure automation, Hudhud). Press reporting citing MALR (agrinewz, Ju
+- **5.4 Digital literacy among farmers (%)** — t-kind citation -> G1 must set level
+  - quality: No national farmer-specific digital-literacy rate is published for Egypt. Best available evidence (regional, single-source): IFPRI RCT baseline phone survey, Mi
+  - scale: 
+- **5.5 Digital extension capability** — ladder Operating+quality+scale -> L5
+  - quality: Institutionalisation: FAO-MALR collaboration on El-Mufeed is formal - FAO converted ARC technical content to digital form and jointly rolled the app out to exte
+  - scale: IFPRI policy note (Abdallah, Abdelhadi & Karachiwalla, 'Digital Agricultural Technology in Egypt: Insights from App Developers', Dec 2025, T2): farm-management/
+- **5.7 MoAg digital/AI unit** — ladder Adopted -> L3
+  - quality: Program-level institutionalisation is documented at T3: joint ministerial launch with named deliverables (MCIT PR 64824; MALR mirror page moa.gov.eg/highlights/
+  - scale: At launch (Dec 2021, T3): 3.5m+ Farmer Cards printed, 2m distributed; 20 e-services in trial operation. Lead (T5, NOT admissible as value): 2024-25 Egyptian pre
+- **5.8 Agtech/data-science training pipeline** — ladder Adopted -> L3
+  - quality: DEBI is government-funded with an institutionalised annual cohort structure (1,000 scholarships/yr, international university partners, 100% tuition + stipend; T
+  - scale: DEBI: approx. 1,000 scholars/year since 2020 (T3). AgriTech4Egypt 2024: 20 teams + 5 CGIAR innovations in the bootcamp; launch event drew 100 participants from 
+- **6.4 Agtech venture ecosystem** — ladder Operating+quality+scale -> L5
+  - quality: Top Egyptian rounds 2024: OneOrder USD 16M Series A (eGrocery; 3rd-largest round in Africa), Cartona USD 6M Series A, one Egyptian midstream-technologies compan
+  - scale: 2024: USD 26M across 22 deals (AgFunder 2025 report p.49). 2022: USD 112M across 24 deals; H1 2023 collapse to ~USD 0.7M (AgFunder Africa data snapshot, Sept 20
+- **6.9 Public-private partnerships in digital ag** — ladder Operating+quality -> L4
+  - quality: IFPRI x MALR collaboration under the USAID EIBC project produced and publicly launched the Mahsoly price-monitoring tool on 5 Jun 2024 (IFPRI/USAID/MALR note 'D
+  - scale: No consolidated reach figures published for any named PPP. Agri Misr user numbers not published. Farmer Card scale (4.2M cards; see 6.14) is government-run with
+- **6.12 Digital public goods adopted** — ladder Operating+quality+scale -> L5
+  - quality: Institutionalisation: FAO x MALR joint dissemination — virtual onboarding of extension agents from all governorates (148 participants: extension agents, researc
+  - scale: Farm-management advisory platforms including 'the Digital Services Portfolio (El-Mufeed)' reach 'tens of thousands of users' (IFPRI policy note, Dec 2025, T2 — 
+- **6.14 Agri-fintech rails for smallholders** — ladder Operating+quality+scale -> L5
+  - quality: System architecture: Farmer Card (since 2016) records landholding/quota/subsidy data and was converted to a Meeza payment instrument (CBE national payment schem
+  - scale: 4.2 million smart farmer cards issued; 20 digitised agricultural services on the Digital Egypt portal; 5,827 POS machines and 5,752 tablets deployed at agricult
+- **3.9 Digital advisory platforms at scale** — ladder Operating+quality+scale -> L5
+  - quality: Ecosystem breadth: 26 active and inactive apps compiled by IFPRI; active platforms span marketplaces, comprehensive farm-management advisors (Mazra3ty, Fila7a, 
+  - scale: Counts and who reports them: 100K+ (Mahsoly), 100K+ (AlMorshed Poultry), 10K+ (several advisory platforms), tens of thousands (Mazra3ty/Fila7a/El-Mufeed) — all 
+- **3.10 Agricultural e-commerce platforms** — ladder Operating+quality+scale -> L5
+  - quality: Mahsoly gained a formal price-monitoring tool developed by IFPRI with MALR under the USAID EIBC project, publicly launched 5 Jun 2024 (IFPRI/USAID/MALR note, T2
+  - scale: Mahsoly: >100K users (platform-reported, via IFPRI note; also matches the IFPRI-interviewed 'App 1' marketplace exceeding 100,000 users facilitating crop and la
+- **7.2 AI-enabled agricultural solutions deployed** — ladder Operating+quality -> L4
+  - quality: Institutional frame: agriculture is a priority sector in the National AI Strategy (2nd edition 2025-2030, NCAI); MCIT Applied Innovation Center (est. 2020) work
+  - scale: No verified user counts for any government AI deployment. Hudhud reach explicitly limited: 'accessible to a select group of farmers participating in government-
+- **7.12 Responsible-AI safeguards (consent, rights)** — ladder Absent -> L1
+  - quality: General safeguards (not ag-specific): (1) PDPL 151/2020 in force since 2020; Executive Regulations (Decree 816/2025) issued 1 Nov 2025, in force 2 Nov 2025, tra
+  - scale: Not applicable at Absent rung for the ag-specific instrument. PDPC enforcement track record: none yet (grace period runs to ~Oct 2026).
+- **8.11 Services in local languages (%)** — t-kind citation -> G1 must set level
+  - quality: No quantified share published; qualitative evidence indicates local-language delivery of flagship services is effectively universal. All major identified digita
+  - scale: 
+- **8.12 Documented impact evidence (yield/income)** — ladder Adopted -> L3
+  - quality: Peer-reviewed publication (Food Policy, 2026); institutional anchoring in the IFPRI Egypt Strategy Support Program (CGIAR); pre-registered (AEA RCT Registry #12
+  - scale: Single intervention study, two governorates (Minya, Beni Suef), n=3,332 at baseline; outcomes limited to adoption, utilization and trust. No yield/income estima
+
+## Process log (D-candidates)
+
+- D2? 1.5: Threshold indicator expects one national number; only commodity-specific ranges of mixed vintage exist. Spec should state whether scoring uses the labelled cereals-only figure (guidance hints yes) or a weighted all-commodity rate that no source publishes. Both key sources predate 2020 -> staleness f
+- D2? 1.6: (1) 'Access to formal markets' is undefined in the spec: contract-farming participation (6%) vs direct-links-to-formal-buyers (12%) are different constructs giving different readings. (2) Domain lookup maps ifad.org to T1, but an Executive Board seminar paper is an analytical document whose statisti
+- D2? 1.7: Indicator as specified ('% farmers') has no Egyptian source at any tier. A ruling is needed on whether rural-adult formal borrowing (2.3%, 2018) is an admissible labelled proxy or whether this cell should score as a gap. Findex 'ag splits' named in guidance do not exist as published series.
+- D2? 1.8: Guidance points to 'FAO/CIAT CSA country profiles (T2)' as likely carrier, but that series never covered Egypt - spec guidance should be corrected. If the indicator is retained for Egypt, it will remain a structural gap until a national survey (e.g. a CAPMAS or CGIAR module) measures CSA practice ad
+- D2? 8.5: (1) Indicator title says 'Women who OWN land (% of agricultural holders)' but the canonical statistic measures holders (operators), who may rent rather than own - definitional mismatch worth fixing in spec. (2) The spec names FAO GLRD as canonical T1, but GLRD is effectively retired (404s); canonica
+- D2? 2.1: Indicator asks for rural population covered but no rural-specific figure exists in any admissible tier for Egypt — spec should say whether the national figure scores or the cell should gap. Also: ITU DataHub cannot be machine-fetched (bot protection); the '19 of 57 machine-fetchable' assumption fail
+- D2? 2.5: Indicator definition pegs the 2GB basket, which ITU retired to a legacy series ('Other ICT price baskets', labelled 2021-2024) in its 2025 revision while still publishing a 2025 value for it. Spec must choose: keep scoring the legacy 2GB series while it lasts, or move to the 5GB basket (values diffe
+- D2? 2.7: Indicator says 'rural smartphone ownership (%)' without fixing household vs individual as the unit; the only rural-split statistic Egypt publishes is household-level. Flag for spec: define the unit, and whether a household figure is admissible for the threshold. Also: egyptictindicators.gov.eg (the 
+- D2? 2.11: Ladder rung-1 definition is ambiguous for this indicator: generic commercial device financing exists and operates in Egypt, but nothing targets low-income/rural users. Whether rung 1 requires targeting decides Absent vs Operating — spec should state it. Telco program pages (te.eg) are T5 by the doma
+- D2? 3.1: egovkb page returns malformed HTTP headers ('Parse Error: Invalid header token') to WebFetch; content had to be verified via curl. Deep link resolves normally in browsers. Both primary and second source are the same institution (UN DESA); no independent second institution publishes EGDI.
+- D2? 3.3: Scale figures circulate in three non-comparable units (cards issued, farmers registered, holdings registered) with no official time series; the only T3-quoted current figure is 'about 5 million farmers benefited'. sis.gov.eg presents a TLS certificate WebFetch rejects ('unable to verify the first ce
+- D2? 3.4: The WB 25% figure's underlying observation predates the 2022 report (report synthesis; no primary survey year given) — recorded as 2022 report-year evidence. The <10% overall registration figure is attributed to the World Bank only via a T5 news carrier; primary WB 2026 source not located this pass.
+- D2? 3.5: Tier call: 'in force August 2025' comes from a T5 tech-news carrier (TechAfrica, 8 Sep 2025) quoting MCIT; the policy PDF itself (T3) is undated beyond '2025'. ODIN 2024 agriculture-category scores exist but the ODIN site is a JS application whose values could not be extracted — worth one manual pul
+- D2? 3.6: arc.sci.eg (ARC, home of CLAC) does not resolve from outside Egypt at capture time, so the CLAC institutional page is cited indirectly via SIS — a resolvability defect for T3 sourcing. DAIRS status evidence is from Dec 2023; anything newer is T5 only.
+- D2? 3.7: Prior's cited source ('SIS.gov.eg Sept 2025 MALR/MCIT crop-mapping project review') could not be located this pass — substituted with resolvable T3 (moa.gov.eg 2021) + T5-corroborated 2024 NARSS product; if the Sept-2025 SIS item exists it should be recaptured with a deep link. Esri/QSIT announcemen
+- D2? 3.8: Indicator definition ambiguity: legacy paper-era maps digitised by FAO arguably constitute a 'national soil map' at rung Announced/Adopted — recorded here as Absent for an operating *digital soil information service*, which is what the ladder measures; reviewer may re-anchor. arc.sci.eg unreachable 
+- D2? 3.11: PREREQUISITE UC:AGI cell — the v1.6 run graded this 'Present (narrow)' on the strength of general Digital-Egypt integration; on the facts there is no published ag-data standard, so the prerequisite call depends on whether cross-government policy instruments count. Flag for Katreyna: does the Open Da
+- D2? 4.1: T3 primary artefact (Official Gazette text of Decree 816/2025) has no stable public deep link; PDPC official site is a JavaScript SPA whose root resolves but exposes no citable document URLs — presence facts therefore rest on archived T4 full-text law-firm analyses. Flag for Katreyna: whether reputa
+- D2? 4.2: Two flags: (a) indicator is specified 0-1 but ITU publishes GCI on 0-100 — recorded 1.0 with the 100/100 basis stated; confirm the intended normalisation in the spec. (b) The GCI 2024 report itself publishes tier bands only (95-100 for Tier 1); the exact per-country score sits in ITU DataHub, which 
+- D2? 4.3: Latest-edition (2025) exact overall score is not resolvable to an open primary source (report prints ranks + pillar scores only; data file behind a form). Flag for the ledger: refresh this cell if Oxford Insights publishes the open 2025 data file, and decide whether rank+pillar scores from the prima
+- D2? 4.4: Indicator definition ambiguity: Egypt sits between rungs — a dedicated digital-ag strategy is Absent, while digital-ag components are adopted and operating inside SADS 2030 / Digital Egypt / NAIS-2. Recorded Absent (dedicated reading) with embedded components documented; the scoring convention for e
+- D2? 4.5: Recording convention: this is a verified absence (a valid finding), not a data gap — value_type 'citation' used with the refutation trail rather than 'gap', since the search was conclusive across tiers. Confirm this convention in the spec for prerequisite-absence cells.
+- D2? 4.7: Note the construct: ID4D measures ownership of the national ID card (foundational ID), not a digital/online ID; Egypt's ID4D digital-ID indicator ('have online digital ID') is a separate series. Indicator 4.7 as named ('Digital ID coverage') is satisfied here by foundational-ID coverage per the prio
+- D2? 4.9: Indicator definition ambiguity flagged for the defect log: 'standing body/committee' vs 'documented recurring coordination mechanism' — Egypt passes the second, not verifiably the first. The presence rung chosen (Operating) follows substance over form; the spec should state which reading governs the
+- D2? 5.4: Indicator construct undefined: 'digital literacy among farmers (%)' has no standard measurement instrument in Egypt; available evidence measures barrier-shares (share citing illiteracy) and device/internet access. Recording as citation rather than gap because a real, well-sourced quantitative anchor
+- D2? 5.5: Single tier field is awkward for ladder cells whose presence facts are T3 and scale facts T2 - recorded as a compound tier string. GFRAS profile pages carry no on-page date for the underlying data (2011); this is a recurring staleness trap for extension indicators.
+- D2? 5.7: Indicator ambiguity (DELIVERY flag): does an operating joint inter-ministerial program plus an ARC research lab satisfy 'a staffed, funded digital/AI unit inside MALR', or is a gazetted HQ unit required? Rung assignment depends on this definition - flagged for the defect log. Also: official ARC doma
+- D2? 5.8: Indicator definition ambiguity: does a general national data-science pipeline (DEBI) count toward an 'agtech/data-science training pipeline', or must programs be agtech-specific? Rung and any later level depend on this call - flagged for the defect log.
+- D2? 5.12: Construct ambiguity: 'digital-ag workforce' is undefined (extension staff? agtech-company employees? ICT-in-agriculture roles?). The H 20/35/45/50 thresholds presuppose a measured share no Egyptian source publishes at any tier. If the ladder team decides extension staff count as digital-ag workforce
+- D2? 6.1: Triangulation rule (two independent T1-T2 confirmations for load-bearing numbers) is unmeetable for composite index scores: WIPO is the sole originator; all secondary carriers (e.g., TheGlobalEconomy, T5) republish WIPO. Recorded as single-source-by-construction. Suggest protocol carve-out for index
+- D2? 6.4: Deep link for the AgFunder report resolves to a co-publisher mirror (omnivore.vc); AgFunder's own download page is email-gated. Press summaries cite 'Egypt: USD 317M across 159 deals over the decade' but this figure could not be located in the report PDF text — excluded as unverifiable.
+- D2? 6.9: Prior desk pass cited 'SIS.gov.eg Sept 2025' joint MALR-MCIT project reviews; this artefact could not be located in current searches — treat that specific citation as unverified. Agri Misr launch is only citable from corporate/press sources (T5-admissible existence fact); no T3 government page found
+- D2? 6.12: Rung ambiguity: the DPG (FAO Digital Services Portfolio) is registered globally, and its Egypt instance (El-Mufeed) is operating nationally — but Egypt has not itself adopted a DPG policy or registered a national product. Recorded as Operating for the deployed-DPG reading; flag for definition clarif
+- D2? 6.13: Nearest-available data mismatch the indicator population two ways: MCIT/CAPMAS enterprise survey = all-sector SMEs (not agribusiness); UNDP regional agri-tech adoption (3-15%) = farm-level (not SME/agribusiness firms). Neither can be recorded as the indicator value without redefining it. OECD page b
+- D2? 6.14: (1) The prior's '~6,300 smallholders financed by Mozare3' could not be verified in any T1-T4 source; a 2024-dated profile states 'over 35 contracted farms and more than 100 farmers' — figures conflict; Mozare3 scale left unrecorded. (2) The 4.2M farmer-card figure is a ministerial statement reachabl
+- D2? 3.9: All user counts are platform-self-reported; the T2 wrapper (IFPRI) compiles but does not independently verify them, and does not distinguish registered from active users. Prior desk pass attributed these figures to a 'CGIAR/ICARDA digital agriculture review 2025'; the locatable carrier is the IFPRI 
+- D2? 3.10: E-commerce scale beyond user counts (GMV, active buyers/sellers) is unpublished; user counts are platform-self-reported. Boundary question: OneOrder (restaurant supply e-grocery) and Cartona (general B2B FMCG) are food-value-chain rather than farmer-facing platforms — inclusion depends on indicator 
+- D2? 7.2: Prior's anchor source ('SIS.gov.eg MALR/MCIT crop-mapping project review, Sept 2025') could not be located — the satellite/AI crop-mapping claim survives only in weaker form (A2K4D: satellite imagery for Delta plot boundaries and irrigation recommendations; EgSA satellite programmes). A2K4D is a uni
+- D2? 7.12: Rung ambiguity flagged: the indicator demands ag/AI-specific provisions 'beyond the general DP law' — recorded Absent on that strict reading, while the general regime materially strengthened (exec regs + PDPC, Nov 2025). If the instrument intends general-safeguards-applicable-to-ag, the rung would b
+- D2? 8.4: Machine-fetch breakage: the 2025 restructure of the Findex databank (source 28) removed/renamed the headline mobile money account code, so the 'API/T1 first' route fails for this row; the PDF Little Data Book is the practical resolvable T1 artefact. Also: triangulation rule 2 cannot be satisfied for
+- D2? 8.6: (1) Indicator is defined in percentage points, but GSMA's headline metric is a relative gap ((M-W)/M) — unit ambiguity invites silent apples-to-oranges comparisons across passes (prior's -2 was GSMA's relative metric). (2) Same-vintage T1 vs T4 sources conflict far beyond sampling noise (14.4 pp vs 
+- D2? 8.9: Indicator has no measurement infrastructure in Egypt: no national survey instrument (CAPMAS agricultural census, Findex, LSMS-type) captures farmer-level use of digital agricultural services. Platform self-reported user counts are T5-adjacent (vendor claims routed through a T2 review) and lack denom
+- D2? 8.11: The protocol question posed by this cell: when a qualitative universal ('all major services are in Arabic') is well documented but no denominator exists, is the cell Measured, Documented, or Judged? Recorded here as Documented/citation. Deeper indicator-design defect: in a monolingual-majority count
+- D2? 8.12: Ladder-rung semantics are undefined for evidence-type indicators: Absent/Announced/Adopted/Operating map awkwardly onto 'impact evidence exists'. Proposed mapping used here — Absent: no independent evaluations; Announced: registered/underway; Adopted: >=1 completed independent evaluation of a digita
+- D2? 8.17: Reach ('% farmers receiving actionable advisories') is unmeasured by any Egyptian institution; what exists is supply-side presence (warnings issued, platforms live). The indicator conflates advisory production with farmer receipt — the FAO RNE 'two gaps' framing (warnings lack actionable advice; man
+- D2? A1-CAND-IMP: (1) FAOSTAT's interactive API now sits behind an authorization wall - the '19 of 57 machine-fetchable' assumption in the spec breaks for FAOSTAT domains; recommend standardizing on the open bulk-file route (bulks-faostat.fao.org). (2) UNdata mirror lags and carries a superseded revision (shows 47.4 
+- D2? A1-CAND-IRR: Candidate spec says '% of agricultural/arable land equipped'. Denominator matters enormously for Egypt: share of CULTIVATED land equipped = 94.2-94.9%, while FAOSTAT's 'agriculture area actually irrigated as share of agricultural land' = 100%. Spec should fix the denominator (recommend: cultivated l
