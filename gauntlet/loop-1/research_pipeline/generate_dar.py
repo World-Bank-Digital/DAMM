@@ -1,0 +1,571 @@
+#!/usr/bin/env python3
+"""Pass five: the draft Digital Agriculture Roadmap (design decisions E3, E4, E5).
+
+Eleven chapters of prose, and three defences against the failure that prose invites — a
+fluent paragraph carrying a number the evidence never produced.
+
+**Chapters see only what they may cite (E4).** Each chapter's binding lives in the model
+file: the pillars, indicators, use-case columns, prerequisites and derived sources it may
+draw on. The pack assembled for a chapter contains that and nothing else, so citing
+outside the binding is not something the writer is trusted to avoid. A financing chapter
+reaching for connectivity indicators reads perfectly fluently and is wrong, and this is
+the only mechanism that catches it before a reader does.
+
+**Every figure is checked against the engine (E3).** The writer returns its figures as
+data alongside the prose. Each is matched against the numbers the engine actually
+produced, and the prose is swept for numbers that are in neither the figure list nor the
+narrow set of things a sentence may legitimately count. The check is reported as a rate on
+the document's own face rather than kept in a log.
+
+**The gate blocks the emit (E5).** The diagnostic has one and it is much of why the
+diagnostic survived review. This one refuses to write a document when a chapter has no
+provenance banner, when a chapter cites outside its binding, when a prescriptive chapter
+is presented as evidenced, or when fidelity falls below the floor. The gates are the
+compensation for having removed the human from every step before final review.
+
+Chapters 3 to 10 are prescriptive. They are marked *proposed, not evidenced* on the page,
+in their own record, and in the gate — three statements of one fact, because this is the
+one a reader must not miss.
+
+    python3 generate_dar.py --country Egypt --iso EGY --out EGY_shadow [--ceiling 500] [--resume]
+"""
+
+import argparse, html, json, os, re, sys, time
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
+REPO = os.path.abspath(os.path.join(LOOP1, "..", ".."))
+sys.path.insert(0, HERE)
+sys.path.insert(0, LOOP1)
+
+import vendors as V
+from engine_v17 import MODEL, run as engine_run
+
+PASS = "generation"
+MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
+SPEC = json.load(open(MODEL_FILE))
+ASSESSMENT_YEAR = SPEC["config"]["assessment_year"]
+OUTLINE = SPEC["dar_outline"]
+PROHIBITIONS = SPEC.get("prohibitions", [])
+
+# Below this, the document is not emitted. A roadmap where one figure in twenty is
+# untraceable is not a roadmap with a small problem; it is a document a reader cannot use
+# without checking every number themselves, which is the work it was meant to do for them.
+FIDELITY_FLOOR = 0.95
+
+CHAPTER_WORKERS = 3
+
+SYSTEM = ("You draft chapters of a national Digital Agriculture Roadmap from an evidence "
+          "pack. You use only the figures in the pack, you never invent a number, and you "
+          "say plainly when something is proposed rather than evidenced. JSON only.")
+
+CHAPTER_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "prose": {"type": "string"},
+        "cites": {
+            "type": "object",
+            "properties": {
+                "pillars": {"type": "array", "items": {"type": "string"}},
+                "indicators": {"type": "array", "items": {"type": "string"}},
+                "use_cases": {"type": "array", "items": {"type": "string"}},
+                "prerequisites": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["pillars", "indicators", "use_cases", "prerequisites"],
+            "additionalProperties": False,
+        },
+        "figures": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "value": {"type": "string"},
+                    "what_it_is": {"type": "string"},
+                },
+                "required": ["value", "what_it_is"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    "required": ["prose", "cites", "figures"],
+    "additionalProperties": False,
+}
+
+
+# ------------------------------------------------------------------ the gates
+#
+# Pure, so the rules that decide whether a document may be written can be tested without
+# a key or a network.
+
+def binding_gate(cites, binding):
+    """What a chapter cited that its binding does not allow. Empty list when clean.
+
+    The pack already withholds everything outside the binding, so a violation here means
+    the writer produced an id from its own knowledge rather than from the evidence — which
+    is precisely the failure the binding exists to catch.
+    """
+    out = []
+    for kind in ("pillars", "indicators", "use_cases", "prerequisites"):
+        allowed = set(binding.get(kind) or [])
+        for cited in (cites.get(kind) or []):
+            c = str(cited).strip()
+            if c and c not in allowed:
+                out.append(f"{kind[:-1]} {c}")
+    return out
+
+
+def _numbers(text):
+    """Numbers as they appear in prose, without percent signs or thousands separators."""
+    return re.findall(r"\d+(?:,\d{3})*(?:\.\d+)?", text or "")
+
+
+def _norm_num(s):
+    try:
+        return round(float(str(s).replace(",", "").replace("%", "").strip()), 2)
+    except (TypeError, ValueError):
+        return None
+
+
+def allowed_figures(assessment, foresight=None):
+    """Every number the engine and the foresight exercise actually produced."""
+    ok = set()
+
+    def add(v):
+        n = _norm_num(v)
+        if n is not None:
+            ok.add(n)
+
+    for p in assessment["pillars"].values():
+        for k in ("n", "rated", "held", "mean", "margin", "comp", "stale"):
+            add(p.get(k))
+    for l in assessment.get("layers", {}).values():
+        if isinstance(l, dict):
+            for k in ("n", "rated", "mean"):
+                add(l.get(k))
+    for m in assessment["matrix"].values():
+        for k in ("n_bearing", "mean_readiness", "mean_need", "mean_outcome", "mean_driven"):
+            add(m.get(k))
+    for v in assessment["counts"].values():
+        add(v)
+    add(assessment.get("rated"))
+    add(assessment.get("held"))
+    for i in assessment["indicators"].values():
+        add(i.get("level"))
+        add(i.get("value"))
+        add(i.get("year"))
+    for m in ((foresight or {}).get("milestones") or []):
+        add(m.get("target_level"))
+        add(m.get("target_year"))
+    return ok
+
+
+def _ordinary(n):
+    """Numbers a sentence may carry without the engine having produced them.
+
+    Small counts ("three pillars", "the eleven chapters") and calendar years. Deliberately
+    narrow: anything wider would let a fabricated percentage through as ordinary prose.
+    """
+    if n is None:
+        return False
+    if n == int(n) and 0 <= n <= 12:
+        return True
+    if n == int(n) and 1900 <= n <= ASSESSMENT_YEAR + 30:
+        return True
+    return False
+
+
+def fidelity_check(prose, figures, allowed):
+    """Which claimed figures the engine supports, and what the prose says beyond them.
+
+    Returns (supported, unsupported, stray). `stray` is numbers in the prose that are
+    neither a claimed figure nor ordinary — a fabricated figure the writer did not even
+    declare, which is the shape this check most has to catch.
+    """
+    supported, unsupported = [], []
+    claimed = set()
+    for f in figures or []:
+        n = _norm_num(f.get("value"))
+        claimed.add(n)
+        if n is not None and n in allowed:
+            supported.append(f)
+        else:
+            unsupported.append(f)
+
+    stray = []
+    for raw in _numbers(prose):
+        n = _norm_num(raw)
+        if n is None or n in claimed or n in allowed or _ordinary(n):
+            continue
+        stray.append(raw)
+    return supported, unsupported, sorted(set(stray))
+
+
+def qc_checks(doc):
+    """The emit-blocking gate (E5). Returns [(name, ok, detail)]."""
+    chapters = doc["chapters"]
+    checks = []
+
+    def add(name, ok, detail=""):
+        checks.append((name, bool(ok), detail))
+
+    missing_banner = [c["n"] for c in chapters if not c.get("provenance")]
+    add("B1 every chapter carries a provenance banner", not missing_banner,
+        f"missing on {', '.join(missing_banner)}" if missing_banner else "")
+
+    outside = [f"{c['n']}: {', '.join(c['cited_outside_binding'])}"
+               for c in chapters if c.get("cited_outside_binding")]
+    add("B2 no chapter cites outside its binding", not outside, "; ".join(outside))
+
+    mislabelled = [c["n"] for c in chapters
+                   if c["kind"] == "prescriptive" and c.get("status") != "proposed, not evidenced"]
+    add("B3 no prescriptive chapter renders as evidenced", not mislabelled,
+        f"chapters {', '.join(mislabelled)}" if mislabelled else "")
+
+    rate = doc["fidelity"]["rate"]
+    add(f"B4 figure fidelity at or above {FIDELITY_FLOOR:.0%}", rate >= FIDELITY_FLOOR,
+        f"{rate:.1%} — {doc['fidelity']['unsupported']} unsupported of "
+        f"{doc['fidelity']['claimed']} claimed")
+
+    strays = [f"{c['n']}: {', '.join(c['stray_numbers'][:4])}"
+              for c in chapters if c.get("stray_numbers")]
+    add("B5 no undeclared numbers in the prose", not strays, "; ".join(strays))
+
+    add("B6 every chapter of the outline is present",
+        len(chapters) == len(OUTLINE),
+        f"{len(chapters)} of {len(OUTLINE)}")
+
+    return checks
+
+
+# ------------------------------------------------------------------ the pack
+
+def pack_for(chapter, assessment, scans, foresight):
+    """The evidence a chapter may see. Nothing outside its binding is included."""
+    b = chapter["binding"]
+    out = []
+
+    if b.get("pillars"):
+        out.append("PILLARS:")
+        for pid in b["pillars"]:
+            p = assessment["pillars"].get(pid)
+            if p:
+                out.append(f"  {pid}: mean {p['mean']} ({p['band']}), {p['rated']} of "
+                           f"{p['n']} rated, {p['held']} withheld, {p['stale']} stale")
+
+    if b.get("indicators"):
+        out.append("INDICATORS:")
+        for iid in b["indicators"]:
+            i = assessment["indicators"].get(iid)
+            if i:
+                out.append(f"  {iid} {MODEL.get(iid, {}).get('name', '')}: value {i['value']}, "
+                           f"level {i['level']}, {i['cls']}, {i['year']}, source {i['src']}")
+
+    if b.get("use_cases"):
+        out.append("USE-CASE READINESS:")
+        for uc in b["use_cases"]:
+            m = assessment["matrix"].get(uc)
+            if m:
+                out.append(f"  {uc}: {m['status']} — {m['why']} (readiness "
+                           f"{m['mean_readiness']}, need {m['mean_need']}, "
+                           f"{m['n_bearing']} bearing rows)")
+
+    if b.get("prerequisites"):
+        out.append("PREREQUISITES:")
+        for pid in b["prerequisites"]:
+            pr = assessment["prereq"].get(pid)
+            if pr:
+                out.append(f"  {pid} {pr['name']}: {pr['status']} ({pr['kind']})")
+
+    for d in (b.get("derived") or []):
+        if d == "constraints":
+            out.append(f"CONSTRAINTS: {json.dumps(assessment.get('constraints'))[:1200]}")
+        elif d == "leapfrog":
+            out.append(f"LEAPFROG: {json.dumps(assessment.get('leapfrog'))[:800]}")
+        elif d == "kpi_baseline":
+            out.append(f"KPI BASELINE: {json.dumps(assessment.get('kpi'))[:1200]}")
+        elif d == "pillar_profile":
+            out.append(f"PILLAR PROFILE: {json.dumps(assessment['pillars'])[:1500]}")
+        elif d == "layer_profile":
+            out.append(f"LAYER PROFILE: {json.dumps(assessment.get('layers'))[:800]}")
+        elif d == "matrix":
+            out.append(f"MATRIX: {json.dumps(assessment['matrix'])[:1500]}")
+        elif d == "prerequisites":
+            out.append(f"ALL PREREQUISITES: {json.dumps(assessment['prereq'])[:1200]}")
+        elif d == "evidence_ledger":
+            out.append(f"EVIDENCE COUNTS: {json.dumps(assessment['counts'])}, "
+                       f"{assessment['rated']} rated, {assessment['held']} withheld")
+        elif d == "register":
+            out.append("SOURCE REGISTER: available in the annexes")
+        elif d.startswith("foresight."):
+            key = d.split(".", 1)[1]
+            out.append(f"FORESIGHT {key.upper()}: "
+                       f"{json.dumps((foresight or {}).get(key))[:2000]}")
+
+    country_findings = [s for s in (scans or {}).get("country_findings", [])
+                        if str(s.get("chapter")) == str(chapter["n"])]
+    if country_findings:
+        out.append("WHAT THE COUNTRY HAS PUBLISHED:")
+        for s in country_findings:
+            out.append(f"  - {s['statement']} [{s['source_name']}, {s['tier']}]")
+
+    # International precedent reaches the DAR and nothing else (E2), and only the
+    # prescriptive chapters it was gathered for.
+    if chapter["kind"] == "prescriptive":
+        pointers = [s for s in (scans or {}).get("international_pointers", [])
+                    if str(s.get("chapter")) == str(chapter["n"])]
+        for s in pointers:
+            out.append(f"PRECEDENT ELSEWHERE (a pointer, never an endorsement and never a "
+                       f"comparison of countries) — {s['about_country']}: {s['statement']} "
+                       f"[{s['source_name']}, {s['tier']}]")
+
+    return "\n".join(out)
+
+
+def write_chapter(chapter, assessment, scans, foresight, country, llm, allowed):
+    prescriptive = chapter["kind"] == "prescriptive"
+    pack = pack_for(chapter, assessment, scans, foresight)
+
+    ans = llm.json_call(
+        SYSTEM,
+        f"COUNTRY: {country}\nASSESSMENT YEAR: {ASSESSMENT_YEAR}\n"
+        f"CHAPTER {chapter['n']}: {chapter['title']}\n"
+        f"WHAT IT COVERS: {chapter['content']}\n"
+        + (f"NOTE: {chapter['note']}\n" if chapter.get("note") else "")
+        + f"\nEVIDENCE PACK — this is everything you may cite:\n{pack}\n\n"
+        + ("This is a PRESCRIPTIVE chapter. What it proposes is not evidenced by the "
+           "assessment; it is a recommendation built on it. Write it as a proposal and do "
+           "not present any recommendation as a finding.\n\n"
+           if prescriptive else
+           "This is a DIAGNOSTIC chapter. Report what the assessment found and nothing "
+           "beyond it.\n\n")
+        + "Write the chapter as continuous prose, several paragraphs. Rules:\n"
+        "- Every number in your prose must come from the pack above. If the pack does "
+        "not carry a figure, write the sentence without one.\n"
+        "- List every figure you used in `figures`, exactly as it appears in your prose.\n"
+        "- List in `cites` only the ids that appear in the pack.\n"
+        "- Where the pack shows a row as withheld or unverified, say so rather than "
+        "treating it as a low score. A withheld level is not an absence.\n"
+        "- Never compare this country to another, and never rank countries.",
+        CHAPTER_SCHEMA, PASS, max_tokens=8000, detail=f"chapter {chapter['n']}")
+
+    outside = binding_gate(ans["cites"], chapter["binding"])
+    supported, unsupported, stray = fidelity_check(ans["prose"], ans["figures"], allowed)
+
+    return {
+        "n": chapter["n"],
+        "title": chapter["title"],
+        "kind": chapter["kind"],
+        "status": "proposed, not evidenced" if prescriptive else "evidenced by the assessment",
+        "prose": ans["prose"],
+        "cites": ans["cites"],
+        "figures": ans["figures"],
+        "supported_figures": len(supported),
+        "unsupported_figures": [f["value"] for f in unsupported],
+        "stray_numbers": stray,
+        "cited_outside_binding": outside,
+        "provenance": (
+            f"Chapter {chapter['n']} draws on "
+            + ", ".join(filter(None, [
+                f"pillars {', '.join(chapter['binding']['pillars'])}" if chapter["binding"]["pillars"] else "",
+                f"indicators {', '.join(chapter['binding']['indicators'])}" if chapter["binding"]["indicators"] else "",
+                f"use cases {', '.join(chapter['binding']['use_cases'])}" if chapter["binding"]["use_cases"] else "",
+                f"prerequisites {', '.join(chapter['binding']['prerequisites'])}" if chapter["binding"]["prerequisites"] else "",
+                f"derived: {', '.join(chapter['binding']['derived'])}" if chapter["binding"]["derived"] else "",
+            ]))
+            + ". "
+            + ("Prescriptive: proposed, not evidenced."
+               if prescriptive else "Diagnostic: reports what the assessment found.")),
+    }
+
+
+# ------------------------------------------------------------------ render
+
+def render_html(doc):
+    c = html.escape
+    parts = [
+        "<meta charset='utf-8'>",
+        f"<title>{c(doc['country'])} — Draft Digital Agriculture Roadmap</title>",
+        "<style>",
+        "body{font:16px/1.65 Georgia,serif;max-width:820px;margin:40px auto;padding:0 20px;color:#1a1a1a}",
+        "h1{font-size:2rem;margin-bottom:.2em}h2{margin-top:2.2em;border-bottom:1px solid #ddd;padding-bottom:.2em}",
+        ".banner{background:#f4f2ec;border-left:3px solid #9aa;padding:.6em .9em;font:13px/1.5 system-ui;margin:.6em 0 1.2em}",
+        ".proposed{background:#fff7e6;border-left:3px solid #d9a441}",
+        ".status{display:inline-block;font:600 11px system-ui;text-transform:uppercase;letter-spacing:.06em;padding:.2em .5em;border-radius:3px;background:#eee}",
+        ".status.proposed{background:#d9a441;color:#fff}",
+        ".fid{font:13px/1.6 system-ui;background:#f4f2ec;padding:1em;margin:1.5em 0}",
+        ".prohib{font:12px/1.6 system-ui;color:#666;border-top:1px solid #ddd;margin-top:3em;padding-top:1em}",
+        "</style>",
+        f"<h1>{c(doc['country'])} — Draft Digital Agriculture Roadmap</h1>",
+        f"<p><em>Pre-review draft. DAMM {c(doc['model_version'])}, assessment year "
+        f"{doc['assessment_year']}.</em></p>",
+        "<div class='fid'>",
+        f"<b>Figure fidelity: {doc['fidelity']['rate']:.1%}</b> — "
+        f"{doc['fidelity']['supported']} of {doc['fidelity']['claimed']} figures matched "
+        "against the engine's own output. ",
+        "Every chapter states what it was allowed to draw on. Chapters marked "
+        "<span class='status proposed'>proposed</span> are recommendations built on the "
+        "assessment, not findings from it.",
+        "</div>",
+    ]
+    for ch in doc["chapters"]:
+        prescriptive = ch["kind"] == "prescriptive"
+        parts.append(f"<h2>{c(str(ch['n']))}. {c(ch['title'])} "
+                     + (f"<span class='status proposed'>proposed, not evidenced</span>"
+                        if prescriptive else "<span class='status'>evidenced</span>")
+                     + "</h2>")
+        parts.append(f"<div class='banner{" proposed" if prescriptive else ""}'>"
+                     f"{c(ch['provenance'])}</div>")
+        for para in ch["prose"].split("\n\n"):
+            if para.strip():
+                parts.append(f"<p>{c(para.strip())}</p>")
+    parts.append("<div class='prohib'><b>Standing prohibitions.</b> "
+                 + c(" ".join(str(p) for p in PROHIBITIONS)) + "</div>")
+    return "\n".join(parts)
+
+
+# ------------------------------------------------------------------ main
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--country", required=True)
+    ap.add_argument("--iso", required=True)
+    ap.add_argument("--out", required=True, help="basename of the research pass")
+    ap.add_argument("--ceiling", type=float, default=500.0)
+    ap.add_argument("--vendor", default="anthropic/claude-opus-5")
+    ap.add_argument("--resume", action="store_true")
+    a = ap.parse_args()
+
+    inp = os.path.join(LOOP1, f"{a.out}_input.json")
+    if not os.path.exists(inp):
+        print(f"!! no engine input at {os.path.basename(inp)}")
+        print("   The roadmap is written from the assessment. Finish the research pass first.")
+        return 1
+
+    def load(name):
+        p = os.path.join(LOOP1, f"{a.out}_{name}.json")
+        return json.load(open(p)) if os.path.exists(p) else None
+
+    scans, foresight = load("scans"), load("foresight")
+    missing = [n for n, v in (("scans", scans), ("foresight", foresight)) if v is None]
+    if missing:
+        # Named rather than silently absent. Chapters 3, 4, 9 and the annexes bind to
+        # foresight, and a roadmap written without it is missing its milestones — the
+        # reader should learn that from the run, not by noticing later.
+        print(f"!! the {' and '.join(missing)} pass has not run; chapters bound to it will "
+              f"be written without it")
+
+    V.load_env()
+    vendor, _, mname = a.vendor.partition("/")
+    ledger = V.Ledger(ceiling=a.ceiling, label=f"{a.out}_generation")
+    llm = V.LLM(vendor, ledger, model=mname or None)
+
+    state_path = os.path.join(LOOP1, f"{a.out}_generation_state.json")
+    spend_path = os.path.join(LOOP1, f"{a.out}_generation_spend.json")
+
+    rows = json.load(open(inp))
+    assessment = engine_run(a.country, rows, refyear=ASSESSMENT_YEAR)
+    allowed = allowed_figures(assessment, foresight)
+
+    state = {"chapters": {}}
+    if a.resume and os.path.exists(state_path):
+        state = json.load(open(state_path))
+        carried = ledger.load(spend_path)
+        print(f"resuming — {len(state['chapters'])} chapters already written, {carried} "
+              f"earlier vendor calls carried (${ledger.spent():.2f} spent)")
+
+    total = len(OUTLINE)
+    print(f"{a.country} ({a.iso}) · {total} rows · vendor {a.vendor}")
+    print(f"budget ${a.ceiling:.0f}, generation allocation "
+          f"${a.ceiling * V.Ledger.ALLOCATION[PASS]:.0f} (decision G3)")
+    print()
+    sys.stdout.flush()
+
+    def save():
+        json.dump(state, open(state_path, "w"), indent=1, default=str)
+        ledger.save(spend_path)
+
+    stopped = None
+    for n, chapter in enumerate(OUTLINE, 1):
+        key = str(chapter["n"])
+        if key in state["chapters"]:
+            continue
+        t0 = time.time()
+        try:
+            rec = write_chapter(chapter, assessment, scans, foresight, a.country, llm, allowed)
+        except V.BudgetExhausted as e:
+            stopped = str(e)
+            break
+        except Exception as e:
+            print(f"!! chapter {key} failed: {str(e)[:120]}")
+            sys.stdout.flush()
+            continue
+        state["chapters"][key] = rec
+        save()
+        mark = "P" if rec["kind"] == "prescriptive" else " "
+        flags = []
+        if rec["cited_outside_binding"]:
+            flags.append(f"{len(rec['cited_outside_binding'])} outside binding")
+        if rec["unsupported_figures"]:
+            flags.append(f"{len(rec['unsupported_figures'])} unsupported")
+        if rec["stray_numbers"]:
+            flags.append(f"{len(rec['stray_numbers'])} stray")
+        print(f"{mark} [{n:2d}/{total}] {key:<12} written {rec['title'][:22]:<24} "
+              f"{('; '.join(flags) or 'clean'):<36} $ {ledger.spent():5.2f} "
+              f"{int(time.time() - t0):3d}s")
+        sys.stdout.flush()
+
+    if stopped:
+        print(f"\n!! {stopped}")
+        print("   Generation stopped where the budget ran out. Chapters never reached are "
+              "absent from the output, NOT written as empty.")
+        save()
+        return 0
+
+    chapters = [state["chapters"][str(c["n"])] for c in OUTLINE
+                if str(c["n"]) in state["chapters"]]
+    claimed = sum(len(c["figures"]) for c in chapters)
+    supported = sum(c["supported_figures"] for c in chapters)
+    doc = {
+        "country": a.country,
+        "iso3": a.iso,
+        "assessment_year": ASSESSMENT_YEAR,
+        "model_version": f"{SPEC['version']} rev{SPEC['revision']}",
+        "status": "Pre-review draft (A1). Review happens once, at the end, on the "
+                  "completed set.",
+        "chapters": chapters,
+        "fidelity": {
+            "claimed": claimed,
+            "supported": supported,
+            "unsupported": claimed - supported,
+            "rate": (supported / claimed) if claimed else 1.0,
+        },
+        "prohibitions": PROHIBITIONS,
+    }
+
+    checks = qc_checks(doc)
+    print()
+    for name, ok, detail in checks:
+        print(f"  {'PASS' if ok else 'FAIL'}  {name}" + (f" — {detail}" if detail else ""))
+    failed = [n for n, ok, _ in checks if not ok]
+    if failed:
+        # Emit-blocking, exactly as the diagnostic's gate is. A document that fails its
+        # own checks and is written anyway teaches everyone to ignore the checks.
+        print(f"\n!! QC FAIL — the roadmap was NOT written: {'; '.join(failed)}")
+        save()
+        return 1
+
+    json.dump(doc, open(os.path.join(LOOP1, f"{a.out}_dar.json"), "w"), indent=1, default=str)
+    open(os.path.join(LOOP1, f"{a.out}_dar.html"), "w").write(render_html(doc))
+    ledger.save(spend_path)
+
+    print()
+    print(f"wrote {a.out}_dar.json — {len(chapters)} chapters, fidelity "
+          f"{doc['fidelity']['rate']:.1%} ({supported}/{claimed} figures)")
+    s = ledger.summary()
+    print(f"spend ${s['total']:.2f} of ${a.ceiling * V.Ledger.ALLOCATION[PASS]:.0f} "
+          f"allocated (${a.ceiling:.0f} country ceiling), {s['calls']} vendor calls")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

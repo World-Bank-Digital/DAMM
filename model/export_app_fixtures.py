@@ -117,7 +117,8 @@ def main():
     # research budget under another pass's name.
     PASS_SCRIPTS = {"research": "research_orchestrator.py", "g2": "gate2.py",
                     "scans": "scans.py",
-                    "foresight": "foresight.py"}
+                    "foresight": "foresight.py",
+                    "generation": "generate_dar.py"}
     pass_defaults = {}
     for pass_name, script in PASS_SCRIPTS.items():
         src = open(os.path.join(LOOP1, "research_pipeline", script)).read()
