@@ -6,7 +6,8 @@ Changes from v1.6:
   * New "Tiers" reference sheet (tier definitions + starter domain lookup)
   * New "Issues" sheet (QC Protocol issues log)
   * Gate sign-off block on Read Me (QC Protocol G1/G2/G3)
-  * Matrix encodes the two loop-1 rulings: UC:AI (7.12) binds AGI; a universal
+  * Matrix encodes ruling 13.4: 7.12 binds every column using personal or farm-level
+    data, not AGI alone; a universal
     prerequisite at "Present (narrow)" caps every column at Partial
   * Loop-1 clean-slate data for both worked examples
 
@@ -68,7 +69,7 @@ PRQ = {pid: PQ0 + i for i, pid in enumerate(PREREQ_ORDER)}
 PREREQ_SCOPE = {"2.1": "Universal", "2.9": "Universal", "4.1": "Universal",
                 "3.3": "Use case: FIN, AGI", "3.11": "Use case: AGI", "4.5": "Use case: AGI",
                 "4.7": "Use case: FIN", "4.9": "Delivery flag", "5.5": "Use case: ADV",
-                "5.7": "Delivery flag", "6.14": "Use case: FIN", "7.12": "Use case: AI-enabled (binds AGI)"}
+                "5.7": "Delivery flag", "6.14": "Use case: FIN", "7.12": "Use case: personal or farm-level data (ADV, SMF, FIN, AGI)"}
 UNIVERSAL = ["2.1", "2.9", "4.1"]
 UC_ROWS = 102                             # matrix rows 102..107
 UCS = [("ADV", "Advisory & extension", []),
@@ -77,7 +78,11 @@ UCS = [("ADV", "Advisory & extension", []),
        ("SCM", "Supply chain", []),
        ("FIN", "Financial services", ["3.3", "4.7", "6.14"]),
        ("AGI", "Ag intelligence", ["3.3", "3.11", "4.5", "7.12"])]
-UC_SPECIFIC = {"ADV": ["5.5"], "SMF": [], "MKT": [], "SCM": [], "FIN": ["3.3", "4.7", "6.14"],
+# Ruling 13.4: 7.12 follows the use of personal or farm-level data rather than the
+# agricultural-intelligence column alone. WHICH columns those are is a mapping question
+# under decision 13.3, which is not ratified; this set is the proposal recorded there.
+UC_SPECIFIC = {"ADV": ["5.5", "7.12"], "SMF": ["7.12"], "MKT": [], "SCM": [],
+               "FIN": ["3.3", "4.7", "6.14", "7.12"],
                "AGI": ["3.3", "3.11", "4.5", "7.12"]}
 
 TIER_ROWS = [
@@ -239,7 +244,7 @@ def sheet_config(wb):
         ("Band: Transformative", "4.5 – 5.0", ""),
         ("Universal prerequisites", "2.1, 2.9, 4.1", "Absence blocks every use-case column. A universal prerequisite "
                                                      "at Present (narrow) caps every column at Partial."),
-        ("AI-enabled services", "7.12 binds AGI", "Ruling pending ratification: the consent-and-rights prerequisite "
+        ("AI-enabled services", "7.12 binds ADV, SMF, FIN, AGI", "Ruling 13.4: the consent-and-rights prerequisite "
                                                   "binds the agricultural-intelligence column."),
     ]
     r = 2

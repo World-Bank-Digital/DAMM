@@ -120,7 +120,7 @@ class Scorer:
         for uc in self.uc_ids:
             pres = [(i, v["status"]) for i, v in P.items()
                     if v["kind"].startswith("UC:")
-                    and (uc in v["kind"] or (v["kind"] == "UC:AI" and uc == "AGI"))]
+                    and uc in v["kind"].split(":", 1)[1].split(",")]
             bear = [i for i, d in self.ind.items()
                     if (uc in d["use_cases"] or "ALL" in d["tags"]) and rows[i]["level"] is not None]
             # Ruling 13.12: need, readiness and outcome are separated, and only the

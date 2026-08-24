@@ -1,6 +1,6 @@
 # DAMM v1.7 — end-to-end build and verification record
 
-Run 25 August 2026, 01:15. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
+Run 25 August 2026, 01:21. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
 
 **Result: ALL CHECKS PASS**
 
@@ -66,7 +66,7 @@ Run 25 August 2026, 01:15. Every artifact below was regenerated from the sources
 
 ## 4. Report render — automated QC blocks emission on failure
 
-- PASS — Egypt: renders (QC passed) · wrote /Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/Egypt-DAR-Diagnostic.html (138,7
+- PASS — Egypt: renders (QC passed) · wrote /Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/Egypt-DAR-Diagnostic.html (138,9
 - PASS — Egypt: QC line states all checks passed
 - PASS — Egypt: standalone (no process history, no internal cross-references) · []
 - PASS — Nigeria: renders (QC passed) · wrote /Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/Nigeria-DAR-Diagnostic.html (135

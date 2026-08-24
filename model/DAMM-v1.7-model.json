@@ -169,7 +169,7 @@
     },
     {
       "id": "ai-binds-agi",
-      "rule": "7.12 (consent and rights) binds the AGI column.",
+      "rule": "7.12 (consent and rights) binds every use case drawing on personal or farm-level data. The column set is a 13.3 mapping question and is not ratified.",
       "ratified": false,
       "decision": "13.4",
       "note": "The external review argues this should condition every use case touching personal or farm-level data rather than block one column."
@@ -413,7 +413,10 @@
         80
       ],
       "absorbs": [
-        "2.2"
+        {
+          "id": "2.2",
+          "name": "Rural population covered by at least 4G (%)"
+        }
       ],
       "ratification": {
         "open_question": "The name asserts RURAL coverage, but Egypt's row records the ITU national at-least-3G figure as a clean cls=\"Measured\" number that scores level 5 mechanically, while Nigeria records a rural-but-4G-only modelled estimate — so the register's only universal connectivity prerequisite carries a…",
@@ -440,7 +443,10 @@
         80
       ],
       "absorbs": [
-        "2.3"
+        {
+          "id": "2.3",
+          "name": "Active mobile broadband subscriptions per 100 inhabitants"
+        }
       ]
     },
     {
@@ -487,7 +493,10 @@
         80
       ],
       "absorbs": [
-        "2.6"
+        {
+          "id": "2.6",
+          "name": "Adults with mobile phone (% age 15+)"
+        }
       ],
       "ratification": {
         "open_question": "\"Ownership\" of a personal device implies individuals; both countries record the share of rural HOUSEHOLDS owning at least one smartphone, which reads systematically higher than the individual measure.",
@@ -616,8 +625,14 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "3.13",
-        "3.12"
+        {
+          "id": "3.13",
+          "name": "Machine-readable open agricultural data (share as open APIs)"
+        },
+        {
+          "id": "3.12",
+          "name": "AI-ready agricultural datasets"
+        }
       ],
       "ratification": {
         "open_question": "The name asserts three conjoined qualifiers — open, machine-readable, AI-ready — and Nigeria scores rung 4 ('Operating with quality') on a registration-gated statistical microdata catalogue that the cell's own text says is neither open nor AI-ready, while Nigeria's actual open-data portals are…",
@@ -853,7 +868,10 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "4.8"
+        {
+          "id": "4.8",
+          "name": "Data sovereignty provisions for agricultural data"
+        }
       ]
     },
     {
@@ -872,7 +890,10 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "4.13"
+        {
+          "id": "4.13",
+          "name": "Responsible AI principles/guidelines for agriculture"
+        }
       ],
       "ratification": {
         "open_question": "What evidence makes a strategy 'Adopted' — official publication, or formal executive/cabinet approval?",
@@ -1011,8 +1032,14 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "1.9",
-        "5.6"
+        {
+          "id": "1.9",
+          "name": "National innovation/extension programs with digital component"
+        },
+        {
+          "id": "5.6",
+          "name": "Farmer-to-digital-extension-worker ratio"
+        }
       ]
     },
     {
@@ -1029,7 +1056,10 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "5.11"
+        {
+          "id": "5.11",
+          "name": "Institutional digital maturity of key agricultural agencies"
+        }
       ],
       "ratification": {
         "open_question": "The name asserts a standing digital/AI unit inside the ministry of agriculture, but Egypt is scored level 3 on a joint MALR-MCIT programme while the row's own note records that the named unit could not be confirmed and that the prior evidence for it was ruled inadmissible — and because this row…",
@@ -1051,7 +1081,10 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "5.9"
+        {
+          "id": "5.9",
+          "name": "Data science/AI training programs for agriculture"
+        }
       ],
       "ratification": {
         "open_question": "The name's \"agtech\" half is unevidenced in both countries — each level 3 is carried entirely by a generic national ICT/data-talent programme with the agriculture bridging explicitly absent — and the slash never says whether the two halves are conjunctive or disjunctive.",
@@ -1080,7 +1113,10 @@
         50
       ],
       "absorbs": [
-        "5.13"
+        {
+          "id": "5.13",
+          "name": "Gender parity in extension services"
+        }
       ],
       "ratification": {
         "open_question": "Who counts as the 'digital-ag workforce' — extension staff, agtech-company employees, or ICT-in-agriculture roles generally — given the H 20/35/45/50 thresholds presuppose a share no source publishes?",
@@ -1142,9 +1178,18 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "6.5",
-        "6.6",
-        "6.10"
+        {
+          "id": "6.5",
+          "name": "Venture capital/investment in agtech"
+        },
+        {
+          "id": "6.6",
+          "name": "Agtech accelerators/incubators"
+        },
+        {
+          "id": "6.10",
+          "name": "Government grants/funding for agtech innovation"
+        }
       ],
       "ratification": {
         "open_question": "The scale evidence is AgFunder \"agrifoodtech\" deal flow, a category that includes downstream food-tech and non-farmer-facing ventures, standing in for an agtech venture ecosystem — a measurably broader denominator that inflates deal and funding counts.",
@@ -1215,7 +1260,10 @@
         75
       ],
       "absorbs": [
-        "6.7"
+        {
+          "id": "6.7",
+          "name": "Agribusiness firms using AI/ML in operations (%)"
+        }
       ],
       "ratification": {
         "open_question": "The name fixes neither the population (SMEs economy-wide or agribusiness firms specifically — the slash is undefined) nor what counts as a \"digital tool\", and the register itself records that the available evidence cannot be mapped onto it.",
@@ -1237,7 +1285,10 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "6.11"
+        {
+          "id": "6.11",
+          "name": "Digital financial services platforms for agriculture"
+        }
       ],
       "ratification": {
         "open_question": "The name asserts rails serving smallholders, but the scale evidence is instruments issued and vendor-reported farmers \"reached\" rather than active use, and Egypt's Farmer Card is a state-issued instrument for registered landholders generally rather than for smallholders specifically.",
@@ -1263,11 +1314,26 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "7.3",
-        "7.4",
-        "7.5",
-        "7.6",
-        "7.7"
+        {
+          "id": "7.3",
+          "name": "AI-enabled advisory services (farmer reach)"
+        },
+        {
+          "id": "7.4",
+          "name": "AI for crop/pest/disease detection and monitoring"
+        },
+        {
+          "id": "7.5",
+          "name": "AI in agricultural finance (credit scoring, insurance)"
+        },
+        {
+          "id": "7.6",
+          "name": "AI for supply chain optimization and traceability"
+        },
+        {
+          "id": "7.7",
+          "name": "AI for climate forecasting and agricultural risk management"
+        }
       ],
       "ratification": {
         "open_question": "The name asserts deployment, but Egypt's level 3 rests on a solution restricted to a pilot cohort with no verified reach and Nigeria's row is anchored on a future-tense announcement of an intent to deploy.",
@@ -1284,13 +1350,19 @@
       "tags": [
         "AI"
       ],
-      "prerequisite": "UC:AI",
+      "prerequisite": "UC:ADV,SMF,FIN,AGI",
       "method": "ladder",
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "7.10",
-        "7.11"
+        {
+          "id": "7.10",
+          "name": "Explainability and transparency of AI systems in ag"
+        },
+        {
+          "id": "7.11",
+          "name": "Bias monitoring and mitigation in agricultural AI"
+        }
       ],
       "ratification": {
         "open_question": "The name does not fix whether the safeguards must be agriculture- or farmer-specific or whether a cross-sector regime suffices, and the two countries resolve it in opposite directions on the same recorded fact pattern — each row states that nothing agriculture-specific exists, yet one is scored…",
@@ -1340,7 +1412,10 @@
         80
       ],
       "absorbs": [
-        "8.3"
+        {
+          "id": "8.3",
+          "name": "Gender gap in account ownership (male % minus female %)"
+        }
       ],
       "ratification": {
         "open_question": "\"Account\" is not defined in the name, and the chosen WDI series counts mobile-money accounts inside the total — the same construct scored separately at 8.4 — so mobile money is effectively double-weighted in the FIN use-case column and in the O1 mean.",
@@ -1440,9 +1515,18 @@
         75
       ],
       "absorbs": [
-        "8.7",
-        "8.8",
-        "8.16"
+        {
+          "id": "8.7",
+          "name": "Women using digital agricultural services"
+        },
+        {
+          "id": "8.8",
+          "name": "Youth using digital agricultural services"
+        },
+        {
+          "id": "8.16",
+          "name": "Gender-disaggregated adoption of digital advisories"
+        }
       ],
       "ratification": {
         "open_question": "The name asserts a national share of smallholders reached, but Egypt's scored level 1 is derived from a two-governorate RCT baseline explicitly labelled as having no national provenance, and \"reached\" is nowhere defined against registered, active, or benefiting users.",
@@ -1491,7 +1575,10 @@
       "direction": null,
       "thresholds": null,
       "absorbs": [
-        "8.13"
+        {
+          "id": "8.13",
+          "name": "Documented income improvement from digital tools"
+        }
       ],
       "ratification": {
         "open_question": "The name's parenthetical fixes the outcome as yield or income, but Egypt's level 3 rests on an evaluation whose measured outcome is diffusion and adoption of digital tools, not yield or income.",
@@ -1518,7 +1605,10 @@
         80
       ],
       "absorbs": [
-        "8.14"
+        {
+          "id": "8.14",
+          "name": "Farmers using digital climate services"
+        }
       ],
       "ratification": {
         "open_question": "Does the indicator measure farmer receipt of advisories, or supply-side issuance (warnings issued, platforms live), which is all either country publishes?",
@@ -1930,7 +2020,8 @@
       "title": "The three binding rules in force",
       "governs": [
         "binding_rules"
-      ]
+      ],
+      "ruled": "Approved, with one change: 7.12 follows the use of personal or farm-level data rather than the agricultural-intelligence column alone. Which columns those are is a mapping question under 13.3 and is not ratified."
     },
     {
       "id": "13.5",
@@ -1952,28 +2043,32 @@
       "title": "Sub-readings display",
       "governs": [
         "presentation only"
-      ]
+      ],
+      "ruled": "Nest beneath the parent row as unscored detail. Names for the 30 absorbed sub-readings were recovered from the v1.5 workbook; they carry no level and enter no mean."
     },
     {
       "id": "13.8",
       "title": "Source-tier lookup and register field set",
       "governs": [
         "source_tiers"
-      ]
+      ],
+      "ruled": "Approved subject to the qualifications: openknowledge.worldbank.org is T2 rather than T1; UN statistical hosts are T1 and the UN newswire is T5; a national statistical office with documented quality concerns is demoted row by row, never in bulk; a donor project completion report is T2 only if independently evaluated, otherwise T4."
     },
     {
       "id": "13.9",
       "title": "QC gate scope",
       "governs": [
         "process, not model"
-      ]
+      ],
+      "ruled": "Approved subject to the qualifications, including the section 14 amendment: peer review must ask whether the evidence answers THIS indicator, not only whether the source states the number. The vendor audition measured why: quote verification caught every fabrication and no construct substitution at all."
     },
     {
       "id": "13.10",
       "title": "Practice Library schema",
       "governs": [
         "companion schema"
-      ]
+      ],
+      "ruled": "Approved subject to the qualifications."
     },
     {
       "id": "13.11",

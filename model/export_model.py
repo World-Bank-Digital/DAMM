@@ -24,6 +24,8 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "gauntlet", "loop-1"))
 
 from engine_v17 import MODEL, ABSORB, BANDS  # the source of truth
+SUBREADINGS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                          '..', 'gauntlet', 'loop-1', 'subreadings.json')))
 
 PILLARS = {
     "A1": {"name": "Agriculture & need", "reading": "need",
@@ -83,7 +85,7 @@ BINDING_RULES = [
      "ratified": False, "decision": "13.4"},
     {"id": "uc-prerequisite",      "rule": "A per-use-case prerequisite Absent -> that column Blocked; Unverified -> that column Unverified.",
      "ratified": False, "decision": "13.3"},
-    {"id": "ai-binds-agi",         "rule": "7.12 (consent and rights) binds the AGI column.",
+    {"id": "ai-binds-agi",         "rule": "7.12 (consent and rights) binds every use case drawing on personal or farm-level data. The column set is a 13.3 mapping question and is not ratified.",
      "ratified": False, "decision": "13.4",
      "note": "The external review argues this should condition every use case touching personal or farm-level data rather than block one column."},
     {"id": "thin-enablers",        "rule": "Mean of bearing indicators below the readiness threshold -> Partial.",
@@ -280,15 +282,20 @@ OPEN_DECISIONS = [
     {"id": "13.2",  "title": "A1 additions (cereal import dependency, irrigation)", "governs": ["candidates"],
      "ruled": "Hold A1 at ten indicators. Both candidates stay carried and unscored, outside every mean, every prerequisite and the readiness matrix."},
     {"id": "13.3",  "title": "Per-use-case prerequisite mapping", "governs": ["indicators[].prerequisite", "binding_rules"]},
-    {"id": "13.4",  "title": "The three binding rules in force", "governs": ["binding_rules"]},
+    {"id": "13.4",  "title": "The three binding rules in force", "governs": ["binding_rules"],
+     "ruled": "Approved, with one change: 7.12 follows the use of personal or farm-level data rather than the agricultural-intelligence column alone. Which columns those are is a mapping question under 13.3 and is not ratified."},
     {"id": "13.5",  "title": "Indicator definitions — the largest item",
      "governs": ["indicators[].ratification"], "scope": "44 of 57 rows"},
     {"id": "13.6",  "title": "A1 thresholds (still test values)",
      "governs": ["indicators[].thresholds where pillar == A1"]},
-    {"id": "13.7",  "title": "Sub-readings display", "governs": ["presentation only"]},
-    {"id": "13.8",  "title": "Source-tier lookup and register field set", "governs": ["source_tiers"]},
-    {"id": "13.9",  "title": "QC gate scope", "governs": ["process, not model"]},
-    {"id": "13.10", "title": "Practice Library schema", "governs": ["companion schema"]},
+    {"id": "13.7",  "title": "Sub-readings display", "governs": ["presentation only"],
+     "ruled": "Nest beneath the parent row as unscored detail. Names for the 30 absorbed sub-readings were recovered from the v1.5 workbook; they carry no level and enter no mean."},
+    {"id": "13.8",  "title": "Source-tier lookup and register field set", "governs": ["source_tiers"],
+     "ruled": "Approved subject to the qualifications: openknowledge.worldbank.org is T2 rather than T1; UN statistical hosts are T1 and the UN newswire is T5; a national statistical office with documented quality concerns is demoted row by row, never in bulk; a donor project completion report is T2 only if independently evaluated, otherwise T4."},
+    {"id": "13.9",  "title": "QC gate scope", "governs": ["process, not model"],
+     "ruled": "Approved subject to the qualifications, including the section 14 amendment: peer review must ask whether the evidence answers THIS indicator, not only whether the source states the number. The vendor audition measured why: quote verification caught every fabrication and no construct substitution at all."},
+    {"id": "13.10", "title": "Practice Library schema", "governs": ["companion schema"],
+     "ruled": "Approved subject to the qualifications."},
     {"id": "13.11", "title": "Bhutan out of scope (statement)", "governs": [],
      "ruled": "Confirmed. Bhutan remains a design source and no assessment ships."},
     {"id": "13.12", "title": "Whether need and outcome indicators belong in a readiness mean",
@@ -313,7 +320,11 @@ def build(defnotes):
             "method": "threshold" if m["kind"] == "t" else "ladder",
             "direction": {"H": "higher-is-better", "L": "lower-is-better", "": None}[m["dir"]],
             "thresholds": m["th"] or None,
-            "absorbs": ABSORB.get(i, []),
+            # Ruling 13.7: sub-readings nest beneath their parent as unscored detail.
+            # The absorbed ids were bare references with no names anywhere in v1.7; the
+            # names are recovered from the v1.5 workbook so a reader can see what a row
+            # subsumes. They carry no level and enter no mean, by construction.
+            "absorbs": [{"id": a, "name": SUBREADINGS.get(a, "")} for a in ABSORB.get(i, [])],
         }
         if i in defnotes:
             row["ratification"] = {

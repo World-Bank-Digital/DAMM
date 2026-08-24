@@ -67,7 +67,7 @@ M = [
  ('3.9','Digital advisory platforms at scale','E1','Transformation',['ADV'],'','l','',[]),
  ('3.10','Agricultural e-commerce platforms','E1','Transformation',['MKT'],'','l','',[]),
  ('7.2','AI-enabled agricultural solutions deployed','E1','Transformation',['ADV','FIN','SCM','SMF','AGI'],'','l','',[]),
- ('7.12','Responsible-AI safeguards (consent, rights)','E1','Enablers',['AI'],'UC:AI','l','',[]),
+ ('7.12','Responsible-AI safeguards (consent, rights)','E1','Enablers',['AI'],'UC:ADV,SMF,FIN,AGI','l','',[]),
  ('8.2','Account ownership, female (%)','O1','Outcomes',['FIN','EQ'],'','t','H',[20,40,60,80]),
  ('8.4','Mobile money account (%)','O1','Outcomes',['FIN'],'','t','H',[10,25,50,75]),
  ('8.6','Gender gap in phone ownership (pp)','O1','Outcomes',['EQ'],'','t','L',[20,10,5,2]),
@@ -160,7 +160,15 @@ def run(country, D, refyear=2026):
     uni_narrow=[i for i,p in out['prereq'].items() if p['kind']=='UNIVERSAL' and p['status']=='Present (narrow)']  # narrow presence caps every column at Partial
     uni_unver=[i for i,p in out['prereq'].items() if p['kind']=='UNIVERSAL' and p['status']=='Unverified']  # spec 7: an unevidenced prerequisite 'cannot silently pass or fail'
     for uc in UCS:
-        pres=[(i,out['prereq'][i]['status']) for i in out['prereq'] if out['prereq'][i]['kind'].startswith('UC:') and (uc in out['prereq'][i]['kind'] or (out['prereq'][i]['kind']=='UC:AI' and uc=='AGI'))]  # loop-1 ruling: UC:AI binds AGI pending spec definition of 'all AI-enabled services' (D6)
+        # Ruling 13.4: 7.12 follows the USE OF PERSONAL OR FARM-LEVEL DATA rather than
+        # the agricultural-intelligence column alone, so the binding is read from the
+        # model like every other per-use-case prerequisite and there is no longer a
+        # special case for it. WHICH columns use such data is a mapping question and
+        # belongs to decision 13.3, which is not ratified; the set carried here is a
+        # proposal recorded in that decision's mapping table.
+        pres=[(i,out['prereq'][i]['status']) for i in out['prereq']
+              if out['prereq'][i]['kind'].startswith('UC:')
+              and uc in out['prereq'][i]['kind'].split(':',1)[1].split(',')]
         bearing=[i for i in MODEL if (uc in MODEL[i]['uc'] or 'ALL' in MODEL[i]['uc']) and out['indicators'][i]['level'] is not None]
         # The bearing set mixes three roles: A1 rows measure the SEVERITY OF THE PROBLEM, O1 rows
         # measure ACHIEVED OUTCOMES, and the rest measure ENABLING READINESS. Averaging all three

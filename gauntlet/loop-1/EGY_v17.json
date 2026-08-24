@@ -1139,7 +1139,7 @@
    "uc": [
     "AI"
    ],
-   "prereq": "UC:AI",
+   "prereq": "UC:ADV,SMF,FIN,AGI",
    "kind": "l"
   },
   "8.2": {
@@ -1480,18 +1480,22 @@
   },
   "7.12": {
    "name": "Responsible-AI safeguards (consent, rights)",
-   "kind": "UC:AI",
+   "kind": "UC:ADV,SMF,FIN,AGI",
    "status": "Absent"
   }
  },
  "matrix": {
   "ADV": {
-   "status": "Unverified",
-   "why": "universal unverified: 2.1",
+   "status": "Blocked",
+   "why": "7.12",
    "prereqs": [
     [
      "5.5",
      "Present"
+    ],
+    [
+     "7.12",
+     "Absent"
     ]
    ],
    "n_bearing": 30,
@@ -1506,9 +1510,14 @@
    "mean_driven": false
   },
   "SMF": {
-   "status": "Unverified",
-   "why": "universal unverified: 2.1",
-   "prereqs": [],
+   "status": "Blocked",
+   "why": "7.12",
+   "prereqs": [
+    [
+     "7.12",
+     "Absent"
+    ]
+   ],
    "n_bearing": 26,
    "basis": {
     "need": 0,
@@ -1551,8 +1560,8 @@
    "mean_driven": false
   },
   "FIN": {
-   "status": "Unverified",
-   "why": "universal unverified: 2.1",
+   "status": "Blocked",
+   "why": "7.12",
    "prereqs": [
     [
      "3.3",
@@ -1565,6 +1574,10 @@
     [
      "6.14",
      "Present"
+    ],
+    [
+     "7.12",
+     "Absent"
     ]
    ],
    "n_bearing": 29,
