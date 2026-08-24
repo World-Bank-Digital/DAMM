@@ -115,7 +115,8 @@ def main():
     # built — and the app must not queue a run for the other three, because a pass with
     # no script of its own would be handed to the research orchestrator and spend a full
     # research budget under another pass's name.
-    PASS_SCRIPTS = {"research": "research_orchestrator.py", "g2": "gate2.py"}
+    PASS_SCRIPTS = {"research": "research_orchestrator.py", "g2": "gate2.py",
+                    "scans": "scans.py"}
     pass_defaults = {}
     for pass_name, script in PASS_SCRIPTS.items():
         src = open(os.path.join(LOOP1, "research_pipeline", script)).read()

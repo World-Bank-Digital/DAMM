@@ -38,6 +38,19 @@ def _mentions(text, term):
                      re.I) is not None
 
 
+def names_country(text, country):
+    """Whether `text` names this country, by name or by its adjectival form.
+
+    "Egyptian" is not "Egypt" to a word-boundary match, and a check that misses the
+    adjectival form lets a passage about the assessed country pass as being about
+    somewhere else. foreign_attribution has always known this; it is public now because
+    the scans pass needs the same judgement in the opposite direction.
+    """
+    if not text:
+        return False
+    return any(_mentions(text, t) for t in [country] + _C["adjectivals"].get(country, []))
+
+
 def foreign_attribution(text, country):
     """Countries named in `text` other than `country`, when `country` is not named.
 
@@ -48,8 +61,7 @@ def foreign_attribution(text, country):
     """
     if not text:
         return []
-    own = [country] + _C["adjectivals"].get(country, [])
-    if any(_mentions(text, t) for t in own):
+    if names_country(text, country):
         return []
     hits, seen = [], set()
     for name, term in _ALL_TERMS:
@@ -274,3 +286,6 @@ def verdict_of(gates):
         if g.verdict == "hold":
             return "hold", g
     return "pass", gates[-1] if gates else None
+
+
+mentions = _mentions
