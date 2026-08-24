@@ -12,7 +12,7 @@ The pipeline is built, measured and run on both countries with an automated seco
 **Seven of the twelve section 13 rulings are applied**; three are open with their closing
 work specified, and two were confirmed unchanged. The model is at **revision 2**,
 verification is green at **75 checks**, parity at **320**, the pipeline's own rule tests at
-**75**, and DAR Studio is synced and green at **135 tests**. What remains before anything
+**75**, and DAR Studio is synced and green at **155 tests**. What remains before anything
 can be called production-validated is not engineering: three closing artifacts, a re-run
 from a frozen configuration, and one unseen country.
 
@@ -114,12 +114,29 @@ quoted was measured before the rulings landed, and the first-pass ledgers for bo
 countries were truncated by a resume defect since fixed, so the cost figures are stated as
 approximations rather than read from a file.
 
-### 3. The durable worker (app)
+### 3. The durable worker (app) — **started 25 August 2026**
 
-Thread 3's Task 3, not started. The job queue, run orchestration, progress display and
-live spend counter, so DAR Studio can run the pipeline instead of a terminal. Survey the
-chassis first: auth, BYOK, the engagement lifecycle and the audit trail survived the v1.5
-demolition, so there may be queue machinery worth building on.
+The job queue, run orchestration, progress display and live spend counter, so DAR Studio
+can run the pipeline instead of a terminal.
+
+**Done and green** (app at 155 tests): `migrations/0009_runs.sql` is a claimable queue,
+and `src/lib/damm-v17/runs.ts` carries the state machine, the claim lease and the budget
+as pure functions. Three properties are held by tests: exhaustion is a resumable
+non-terminal state that says its unreached rows are absent rather than gaps; the claim is
+a five-minute heartbeat lease so a dead worker cannot strand a run; and progress reports
+no fraction at all while the row total is unknown, rather than rendering 0 or 100 per
+cent. The budget is exported from `vendors.Ledger.ALLOCATION` into `src/data/run_budget.json`
+by `model/export_app_fixtures.py` rather than restated, and a test asserts the per-pass
+shares still exhaust the ceiling.
+
+**Still to do.** The worker loop itself: claim a run, spawn the pipeline with `--resume`,
+ingest its progress and spend into `run_events`, heartbeat, and surface exhaustion. Then
+the server functions and the workspace UI.
+
+*Two things to settle while doing it.* The worker must invoke the pipeline in the model
+repo under its `.venv`, which is a cross-repo path dependency — make it an environment
+variable with a sensible default rather than hard-coding it. And **the app repo has no
+git remote**, so every commit there is local only on a machine with no Time Machine.
 
 ### 4. One unseen, human-shadowed country
 

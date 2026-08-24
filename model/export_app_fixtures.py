@@ -84,6 +84,24 @@ def main():
         print(f"{name}-observations.json  <- {len(obs_rows)} scored rows "
               f"({len(rows) - len(obs_rows)} carried candidates excluded)")
 
+    # The per-pass budget allocation lives in vendors.Ledger and is enforced there. The
+    # app only displays and predicts against it, so it is exported rather than restated:
+    # two copies of an allocation would drift, and the app would show a ceiling the
+    # pipeline does not enforce.
+    sys.path.insert(0, os.path.join(LOOP1, "research_pipeline"))
+    import vendors as V  # noqa: E402
+    budget = {
+        "_source": "vendors.Ledger.ALLOCATION — exported, never restated. Regenerate with "
+                   "model/export_app_fixtures.py after changing it there.",
+        "default_ceiling_usd": 500.0,
+        "allocation": V.Ledger.ALLOCATION,
+    }
+    out = os.path.join(data, "run_budget.json")
+    json.dump(budget, open(out, "w"), indent=1)
+    passes = {k: v for k, v in V.Ledger.ALLOCATION.items() if k != "audition"}
+    print(f"run_budget.json  <- {len(V.Ledger.ALLOCATION)} passes, "
+          f"country passes sum to {sum(passes.values()):.2f} of the ceiling")
+
     print("\nNow run the app's test suite. The port must reproduce every figure above.")
 
 
