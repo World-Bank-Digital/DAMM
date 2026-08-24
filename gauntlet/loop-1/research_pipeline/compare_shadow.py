@@ -32,7 +32,24 @@ def load(name):
 
 
 def fmt_level(v):
-    return "—" if v is None else f"L{v}"
+    return "no level" if v is None else f"L{v}"
+
+
+def id_key(i):
+    """Sort indicator ids the way a reader reads them: 6.3 before 6.13."""
+    parts = str(i).split(".")
+    try:
+        return (0, int(parts[0]), int(parts[1]) if len(parts) > 1 else 0, "")
+    except ValueError:
+        return (1, 0, 0, str(i))
+
+
+def ids(seq):
+    return ", ".join(sorted(seq, key=id_key)) or "—"
+
+
+def plural(n, one, many=None):
+    return f"{n} {one if n == 1 else (many or one + 's')}"
 
 
 def fmt_value(v, n=40):
@@ -45,6 +62,11 @@ def main():
     ap.add_argument("--shadow", required=True)
     ap.add_argument("--oracle", required=True)
     ap.add_argument("--country", required=True)
+    ap.add_argument("--prior", default="",
+                    help="basename of an earlier independent run of the SAME country, "
+                         "to measure run-to-run variance. Every figure in this report "
+                         "carries that variance, and a reader who cannot see it will "
+                         "read a one-row difference as a finding.")
     ap.add_argument("--out", default="")
     args = ap.parse_args()
 
@@ -56,11 +78,11 @@ def main():
             (research if target == "research" else spend).update(json.load(open(p)))
 
     S, O = sh["indicators"], orc["indicators"]
-    ids = list(MODEL.keys())
+    row_ids = list(MODEL.keys())
 
     # ---------------------------------------------------------------- rows
     rows = []
-    for i in ids:
+    for i in row_ids:
         s, o = S[i], O[i]
         rec = research.get(i, {})
         rows.append(dict(
@@ -74,6 +96,15 @@ def main():
             gate=next((g["reason"] for g in rec.get("gates", [])
                        if g["verdict"] in ("hold", "reject")), ""),
             quote_verified=rec.get("quote_verified"),
+            # Why the shadow row is what it is, in one phrase. A gated row gives its
+            # gate's reason; a gap gives its search trail; a row that simply landed
+            # elsewhere gives what it recorded. Leaving the column blank on a
+            # divergence — which the first draft did for every gap — tells the reader
+            # that a difference exists and nothing whatever about it.
+            why=(next((g["reason"] for g in rec.get("gates", [])
+                       if g["verdict"] in ("hold", "reject")), "")
+                 or (str(s["value"]).replace("DATA GAP — ", "")
+                     if s["cls"] == "Gap" else str(s["value"]))),
         ))
     by_id = {r["id"]: r for r in rows}
 
@@ -96,7 +127,8 @@ def main():
                         o=orc["prereq"][i]["status"], s=sh["prereq"][i]["status"],
                         match=orc["prereq"][i]["status"] == sh["prereq"][i]["status"],
                         o_level=O[i]["level"], s_level=S[i]["level"],
-                        gate=by_id[i]["gate"], verdict=by_id[i]["verdict"]))
+                        gate=by_id[i]["gate"], why=by_id[i]["why"],
+                        verdict=by_id[i]["verdict"]))
     pre_match = sum(1 for p in pre if p["match"])
 
     # ---------------------------------------------------------------- verdict 2.1
@@ -151,6 +183,23 @@ def main():
 
     summ = spend.get("summary", {}) if isinstance(spend, dict) else {}
 
+    # ---------------------------------------------------------------- variance
+    variance = None
+    prior_path = os.path.join(LOOP1, f"{args.prior}_input.json") if args.prior else ""
+    if prior_path and os.path.exists(prior_path):
+        prior = json.load(open(prior_path))
+        this_in = json.load(open(os.path.join(LOOP1, f"{args.shadow}_input.json")))
+        shared = [i for i in row_ids if i in prior and i in this_in]
+        moved = [dict(id=i,
+                      a_cls=prior[i]["cls"], a_level=prior[i]["level"],
+                      b_cls=this_in[i]["cls"], b_level=this_in[i]["level"])
+                 for i in shared
+                 if prior[i]["level"] != this_in[i]["level"]
+                 or prior[i]["cls"] != this_in[i]["cls"]]
+        variance = dict(prior=args.prior, n=len(shared), moved=moved,
+                        same_level=sum(1 for i in shared
+                                       if prior[i]["level"] == this_in[i]["level"]))
+
     # ---------------------------------------------------------------- report
     L = []
     w = L.append
@@ -172,7 +221,7 @@ def main():
          "The divergences are listed below; each one moves at least one column of the "
          "readiness matrix.\n"))
     w(f"**3. Gaps.** The verified assessment records **{len(o_gaps)}** "
-      f"({', '.join(sorted(o_gaps)) or '—'}). The shadow run records **{len(s_gaps)}**, "
+      f"({ids(o_gaps)}). The shadow run records **{len(s_gaps)}**, "
       f"of which it found **{len(o_gaps & s_gaps)}** of the recorded ones and raised "
       f"**{len(s_gaps - o_gaps)}** the verified assessment does not carry. It also set "
       f"**{len(s_holds)}** ratification holds against the verified assessment's "
@@ -182,8 +231,8 @@ def main():
           + ("**Reproduced.** " if q4["reproduced"] else
              "**NOT reproduced — the original defect was repeated.** "
              if q4["repeated_defect"] else "**Diverged.** ")
-          + f"The shadow run recorded 2.1 as `{q4['shadow_cls']}` at "
-            f"{fmt_level(q4['shadow_level'])}, gate verdict `{q4['verdict']}`. ")
+          + f"The shadow run recorded 2.1 as `{q4['shadow_cls']}` with "
+            f"{fmt_level(q4['shadow_level'])}; gate verdict `{q4['verdict']}`. ")
         if q4["gate"]:
             w(f"  \n  Reason given: *{q4['gate']}*\n")
         if q4["construct_note"]:
@@ -207,7 +256,7 @@ def main():
         mark = "" if p["match"] else "**"
         w(f"| {p['id']} | {MODEL[p['id']]['name'][:34]} | {p['o']} | "
           f"{mark}{p['s']}{mark} | {fmt_level(p['o_level'])} → {fmt_level(p['s_level'])} | "
-          f"{fmt_value(p['gate'], 90) if not p['match'] else ''} |")
+          f"{fmt_value(p['why'], 110) if not p['match'] else ''} |")
 
     w("\n## Readiness matrix\n")
     w("| use case | verified | shadow | |")
@@ -221,6 +270,32 @@ def main():
     for p in pillars:
         w(f"| {p['pillar']} | {p['o_mean']} ({p['o_band']}) | {p['o_rated']}/{p['o_held']} "
           f"| {p['s_mean']} ({p['s_band']}) | {p['s_rated']}/{p['s_held']} |")
+
+    w("\n## Which direction the divergences run\n")
+    up = [r for r in rows if r["both_levelled"] and r["s_level"] > r["o_level"]]
+    down = [r for r in rows if r["both_levelled"] and r["s_level"] < r["o_level"]]
+    withheld = [r for r in rows if r["o_level"] is not None and r["s_level"] is None]
+    added = [r for r in rows if r["s_level"] is not None and r["o_level"] is None]
+    w("This is the part to read first. A shadow run that withholds a level where the "
+      "verified assessment set one costs coverage; a shadow run that sets a level "
+      "*higher* than the verified assessment is claiming readiness the evidence may not "
+      "carry, and that is the failure that matters.\n")
+    w(f"- **{plural(len(up), 'row')} read higher** than the verified assessment."
+      + ("" if up else " None."))
+    for r in up:
+        w(f"  - **{r['id']} {r['name']}** — L{r['o_level']} to L{r['s_level']}. "
+          f"{fmt_value(r['why'], 200)}")
+    w(f"- **{plural(len(down), 'row')} read lower.**"
+      + (" " + ", ".join(f"{r['id']} (L{r['o_level']}→L{r['s_level']})" for r in down)
+         if down else ""))
+    w(f"- **{plural(len(withheld), 'row')} withheld a level** the verified assessment set: "
+      f"{ids(r['id'] for r in withheld)}.")
+    w(f"- **{plural(len(added), 'row')} set a level** the verified assessment withheld: "
+      f"{ids(r['id'] for r in added)}.\n")
+    w("The asymmetry between the last two is the abstention threshold, stated as a "
+      "number. It is the figure to tune, and tuning it in either direction moves the "
+      "first bullet — which is the one that decides whether a machine-set readiness "
+      "matrix can be trusted.\n")
 
     w("\n## Where the shadow run withheld a level\n")
     w("Each gate below is a design decision doing its job. A row that reaches a gate "
@@ -241,6 +316,25 @@ def main():
           f"**{corrob_ok} of {len(corrob)}** research values agree with the independent "
           f"series within 2%.\n")
 
+    if variance:
+        v = variance
+        w("\n## How much of this is repeatable\n")
+        w(f"An earlier independent run of the same country on the same pipeline "
+          f"(`{v['prior']}`) agrees with this one on **{v['same_level']} of {v['n']}** "
+          f"rows by level "
+          f"({100.0 * v['same_level'] / max(v['n'], 1):.0f}%). The vendor plans its own "
+          f"searches, so two runs do not retrieve the same pages, and a row whose answer "
+          f"sits just at the edge of what the search reaches can land differently. Every "
+          f"figure above carries this variance: a difference of one or two rows against "
+          f"the verified assessment is inside the noise, and only the larger patterns "
+          f"should be read as findings.\n")
+        if v["moved"]:
+            w("| id | earlier run | this run |")
+            w("|---|---|---|")
+            for m in sorted(v["moved"], key=lambda m: id_key(m["id"])):
+                w(f"| {m['id']} | {m['a_cls']} {fmt_level(m['a_level'])} | "
+                  f"{m['b_cls']} {fmt_level(m['b_level'])} |")
+
     w("\n## Every row\n")
     w("| id | indicator | verified | shadow | | note |")
     w("|---|---|---|---|---|---|")
@@ -249,7 +343,7 @@ def main():
         pre_mark = " ⚑" if r["prereq"] else ""
         note = ""
         if not r["level_match"]:
-            note = fmt_value(r["gate"] or r["verdict"], 80)
+            note = fmt_value(r["why"] or r["verdict"], 100)
         w(f"| {r['id']}{pre_mark} | {r['name'][:36]} | {r['o_cls']} {fmt_level(r['o_level'])} "
           f"| {r['s_cls']} {fmt_level(r['s_level'])} | {mark} | {note} |")
 
@@ -278,9 +372,11 @@ def main():
                    headline=dict(level_same=level_same, n=n,
                                  both_levelled=len(both), both_same=both_same,
                                  within_one=within_one, prereq_match=pre_match,
-                                 oracle_gaps=sorted(o_gaps), shadow_gaps=sorted(s_gaps),
-                                 oracle_holds=sorted(o_holds), shadow_holds=sorted(s_holds)),
-                   question_4=q4),
+                                 oracle_gaps=sorted(o_gaps, key=id_key),
+                                 shadow_gaps=sorted(s_gaps, key=id_key),
+                                 oracle_holds=sorted(o_holds, key=id_key),
+                                 shadow_holds=sorted(s_holds, key=id_key)),
+                   question_4=q4, variance=variance),
               open(os.path.join(LOOP1, f"{args.shadow}_comparison.json"), "w"),
               indent=1, default=str)
 
@@ -293,6 +389,8 @@ def main():
     if q4:
         print(f"2.1 finding           "
               f"{'REPRODUCED' if q4['reproduced'] else 'DEFECT REPEATED' if q4['repeated_defect'] else 'diverged'}")
+    if variance:
+        print(f"repeatable            {variance['same_level']}/{variance['n']} rows vs {variance['prior']}")
     if summ:
         print(f"spend ${summ.get('total', 0):.2f} in {summ.get('elapsed_s', 0) / 60:.0f} min")
     print(f"\nwrote {os.path.basename(out)}")

@@ -1,9 +1,12 @@
 # DAR Studio — automated pipeline design record
 
-*Drafted 24 August 2026 from a structured design interview. **Not yet approved and not yet
-built.** Twenty-seven decisions, each settled deliberately; this record exists so they can be
-reviewed as a set before any code is written, and so the reasoning survives into the next
-session the way the specification and handoff do.*
+*Drafted 24 August 2026 from a structured design interview. Twenty-seven decisions, each
+settled deliberately; this record exists so they can be reviewed as a set, and so the
+reasoning survives into the next session the way the specification and handoff do.*
+
+*The first build phase landed the same day — see **Build status** at the foot of this
+record for which decisions now have code behind them. The decisions themselves are
+unchanged; nothing here was revisited in the building.*
 
 ---
 
@@ -255,4 +258,41 @@ review.
 
 ---
 
-*Nothing in this record is built. It awaits confirmation.*
+## Build status
+
+*Added 24 August 2026. The twenty-seven decisions above stand as written and were not
+revisited; this section records only which of them now have code behind them.*
+
+**Built and exercised against Egypt and Nigeria.** B2 (the audition, run for the first
+time — `gauntlet/loop-1/research_pipeline/AUDITION-RESULTS.md` and `VENDOR-DECISION.md`).
+C1, C2, C3, C4, C6, C7 and the per-pass budget of G2/G3, in
+`research_pipeline/research_orchestrator.py` with the gates in `gates.py`. E4, F1 and F4
+in the model file, enforced by the parity test and the app's loader.
+
+**Not built — later threads.** C5 (automated Gate 2), the broad and international scans,
+and G1's durable worker are Thread 3. D1 and D2 (edit semantics and versioning) live in
+the app. E1's caller, E3 and E5 (the DAR generator and its gate), and F2 are Thread 4.
+A1–A4 are governance statements the generators will carry.
+
+**Three gates exist that this record did not name**, each added because the first
+automated runs produced the failure it prevents, and each recorded here because it is a
+rule about evidence rather than an implementation detail:
+
+- **coherence** — a ladder row whose recorded rung and evidence fields derive a
+  different level from the one the row argues for is held. A row contradicting itself
+  cannot set a level that enters a pillar mean.
+- **currency** — an *Adopted* or *Operating* rung resting on evidence more than ten
+  years old is held. The rung asserts a present state; a document establishes only what
+  was true when it was written. Ten years is a calibration parameter, not a ruling.
+- **argument** — a level below 5 proposed with no negative finding is held. This is this
+  record's own standard ("a level with no negative finding is an assertion") made
+  mechanical.
+
+**Risk 4 is now measured and was wrong in a useful direction.** A full 57-row Egypt pass
+cost **$15**, not the ~$200 the apportionment allowed for indicator research. The
+binding constraint is not budget and, on the evidence of the audition, not model
+judgment either: it is retrieval depth. Figures that sit behind JavaScript database
+front-ends or inside national household-survey PDFs were not reached, and the pipeline
+abstained rather than guessing. Risk 1 stands exactly as written — the abstention
+threshold remains the highest-leverage parameter, and there is now a measurement to tune
+it against.

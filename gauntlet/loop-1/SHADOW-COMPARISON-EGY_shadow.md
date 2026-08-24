@@ -5,39 +5,39 @@
 
 ## The five questions
 
-**1. How many of the 57 rows land on the same level?** **26 of 57** (46%). Of the 25 rows where both assessments set a level at all, 17 agree exactly (68%) and 22 are within one level (88%).
+**1. How many of the 57 rows land on the same level?** **24 of 57** (42%). Of the 23 rows where both assessments set a level at all, 15 agree exactly (65%) and 21 are within one level (91%).
 
 **2. Do all twelve prerequisites match?** **4 of 12** carry the same status. The divergences are listed below; each one moves at least one column of the readiness matrix.
 
-**3. Gaps.** The verified assessment records **5** (2.1, 5.12, 6.13, 6.3, 8.17). The shadow run records **22**, of which it found **5** of the recorded ones and raised **17** the verified assessment does not carry. It also set **9** ratification holds against the verified assessment's 5.
+**3. Gaps.** The verified assessment records **5** (2.1, 5.12, 6.3, 6.13, 8.17). The shadow run records **22**, of which it found **5** of the recorded ones and raised **17** the verified assessment does not carry. It also set **11** ratification holds against the verified assessment's 5.
 
-**4. The 2.1 finding.** **Reproduced.** The shadow run recorded 2.1 as `Gap` at —, gate verdict `gap`. 
+**4. The 2.1 finding.** **Reproduced.** The shadow run recorded 2.1 as `Gap` with no level; gate verdict `gap`. 
   
-  On the construct: *The closest quantified evidence in the supplied pages is NATIONAL, not rural, and sits at T5: the USAID-affiliated digitaldevelopment.org Egypt page lists 'Population covered by 3G signal: 0.99' and 'Population covered by 4G signal: 0.61' (i.e. 99% and 61% of the total population), plus '3G Coverage: 99.00'. These are national population-coverage shares of the kind the assessment's indicator cens…*
+  On the construct: *The indicator names RURAL mobile broadband coverage. The best available Egypt-specific evidence in the retrieved pages is NATIONAL: ITU's Digital Development Dashboard for Egypt reports population covered by at least a 3G mobile network (2022) = 100% and at least a 4G mobile network (2022) = 98%. These are total-population figures with no urban/rural split. The only rural-disaggregated Egyptian f…*
 
   
-  Recorded value: `DATA GAP — Order of inspection: (1) ITU DataHub 'About' page — confirmed ITU collects 'mobile population coverage (total, 3G, 4G and above)' from regulators, but the page is methodological and carries no Egypt value and no rural/urban split; dead end for a value. (2) ITU Facts and Figures 2025 land…`
+  Recorded value: `DATA GAP — 1) ITU Statistics landing page — confirms ITU publishes population covered by mobile-broadband network 'total and by urban/rural area', but only as global/regional/development-group aggregates, not per-country. 2) ITU DataHub home and About pages — confirm the World Telecommunication Ind…`
 
 
-**5. Cost and time.** **$15.14** across 1003 vendor calls in 23 minutes, against a $500 country ceiling — 3.0% of it. By vendor: anthropic $11.21, perplexity $2.16, exa $1.18, jina $0.59.
+**5. Cost and time.** **$15.49** across 1005 vendor calls in 24 minutes, against a $500 country ceiling — 3.1% of it. By vendor: anthropic $11.57, perplexity $2.15, exa $1.18, jina $0.59.
 
 
 ## Prerequisites — the twelve rows that gate the matrix
 
 | id | prerequisite | verified | shadow | levels | why the shadow run differs |
 |---|---|---|---|---|---|
-| 2.1 | Rural mobile broadband coverage (3 | Unverified | Unverified | — → — |  |
+| 2.1 | Rural mobile broadband coverage (3 | Unverified | Unverified | no level → no level |  |
 | 2.9 | Rural electricity access (%) | Present | Present | L5 → L5 |  |
-| 3.3 | National farmer registry | Present | **Unverified** | L4 → — |  |
-| 3.11 | Agricultural data interoperability | Absent | **Unverified** | L1 → — |  |
+| 3.3 | National farmer registry | Present | **Unverified** | L4 → no level | 1) FAO 'Situation analysis of farmer registries in the Near East and North Africa (NENA)' (fao.org, T1) — the… |
+| 3.11 | Agricultural data interoperability | Absent | **Unverified** | L1 → no level | Reviewed all ten supplied pages in order. (1) FAO Egypt Country Programming Framework - names SADS-2030, digi… |
 | 4.1 | Data protection/privacy law | Present | Present | L3 → L3 |  |
-| 4.5 | Agricultural data governance frame | Absent | **Unverified** | L1 → — |  |
-| 4.7 | Digital ID coverage (%) | Present | **Unverified** | L5 → — |  |
-| 4.9 | Inter-ministerial coordination mec | Present | **Unverified** | L4 → — |  |
+| 4.5 | Agricultural data governance frame | Absent | **Unverified** | L1 → no level | 1) FAO GSARS Egypt country page and its four Egypt news items (T1) — checked for a national agricultural data… |
+| 4.7 | Digital ID coverage (%) | Present | **Unverified** | L5 → no level | 1) ID4D DataBank landing page (Source 1) — interactive shell only, no data rendered, no Egypt value. 2) Data3… |
+| 4.9 | Inter-ministerial coordination mec | Present | **Unverified** | L4 → no level | Reviewed all ten supplied pages in order. Sources 1 and 2 (World Bank NSDS project paper, T1) list ministries… |
 | 5.5 | Digital extension capability | Present | Present | L4 → L3 |  |
-| 5.7 | MoAg digital/AI unit | Unverified | **Present** | — → L3 |  |
-| 6.14 | Agri-fintech rails for smallholder | Present | **Unverified** | L4 → — | The quoted CBE text names smallholder farmers specifically (a project titled "Transformin… |
-| 7.12 | Responsible-AI safeguards (consent | Absent | **Present** | L1 → L3 |  |
+| 5.7 | MoAg digital/AI unit | Unverified | **Present** | no level → L3 | A Digital Transformation Unit (AG-DTU) was ordered established inside Egypt's Ministry of Agriculture and Lan… |
+| 6.14 | Agri-fintech rails for smallholder | Present | **Unverified** | L4 → no level | The indicator names AGRI-FINTECH RAILS for SMALLHOLDERS. The quoted T3 page sits under a heading covering 'NG… |
+| 7.12 | Responsible-AI safeguards (consent | Absent | **Present** | L1 → L3 | Egypt adopted a cross-sector Egyptian Charter for Responsible AI, launched by the National Council for Artifi… |
 
 ## Readiness matrix
 
@@ -56,11 +56,25 @@
 |---|---|---|---|---|
 | A1 | 3.0 (Established) | 8/2 | 3.6 (Advanced) | 5/2 |
 | C1 | 3.8 (Advanced) | 5/0 | 4.0 (Advanced) | 4/0 |
-| C2 | 2.88 (Established) | 8/0 | 3.33 (Established) | 3/2 |
+| C2 | 2.88 (Established) | 8/0 | 3.5 (Advanced) | 2/4 |
 | C3 | 3.25 (Established) | 8/0 | 3.5 (Advanced) | 4/1 |
 | C4 | 3.33 (Established) | 3/3 | 3.0 (Established) | 3/0 |
 | E1 | 3.11 (Established) | 9/0 | 2.5 (Emerging) | 4/4 |
-| O1 | 2.67 (Established) | 6/0 | 2.0 (Emerging) | 3/0 |
+| O1 | 2.67 (Established) | 6/0 | 2.5 (Emerging) | 2/0 |
+
+## Which direction the divergences run
+
+This is the part to read first. A shadow run that withholds a level where the verified assessment set one costs coverage; a shadow run that sets a level *higher* than the verified assessment is claiming readiness the evidence may not carry, and that is the failure that matters.
+
+- **2 rows read higher** than the verified assessment.
+  - **2.11 Device financing/subsidy schemes** — L1 to L3. Egypt's Ministry of Communications and Information Technology operates ProGIG, a joint initiative of the National Telecommunication Institute and Nasser Social Bank offering soft loans of up to EGP 6…
+  - **7.12 Responsible-AI safeguards (consent, rights)** — L1 to L3. Egypt adopted a cross-sector Egyptian Charter for Responsible AI, launched by the National Council for Artificial Intelligence in April 2023, built on five values (Human-Centeredness, Transparency an…
+- **6 rows read lower.** 2.5 (L5→L4), 3.6 (L4→L3), 4.6 (L4→L3), 5.5 (L4→L3), 3.9 (L4→L3), 3.10 (L4→L3)
+- **24 rows withheld a level** the verified assessment set: 1.5, 1.6, 1.7, 2.7, 3.3, 3.4, 3.5, 3.7, 3.8, 3.11, 4.4, 4.5, 4.7, 4.9, 5.8, 6.4, 6.9, 6.12, 6.14, 7.2, 8.4, 8.9, 8.11, 8.12.
+- **1 row set a level** the verified assessment withheld: 5.7.
+
+The asymmetry between the last two is the abstention threshold, stated as a number. It is the figure to tune, and tuning it in either direction moves the first bullet — which is the one that decides whether a machine-set readiness matrix can be trusted.
+
 
 ## Where the shadow run withheld a level
 
@@ -68,14 +82,27 @@ Each gate below is a design decision doing its job. A row that reaches a gate ke
 
 | gate | rows |
 |---|---|
-| construct (hold) | 4 |
-| tier (hold) | 4 |
-| coherence (hold) | 1 |
+| construct (hold) | 9 |
+| tier (hold) | 2 |
 
 ## Independent corroboration
 
 11 rows are also covered by a machine-fetchable T1 series, fetched separately and never substituted for the research lane's own answer. **7 of 11** research values agree with the independent series within 2%.
 
+
+## How much of this is repeatable
+
+An earlier independent run of the same country on the same pipeline (`EGY_shadow_v1`) agrees with this one on **53 of 57** rows by level (93%). The vendor plans its own searches, so two runs do not retrieve the same pages, and a row whose answer sits just at the edge of what the search reaches can land differently. Every figure above carries this variance: a difference of one or two rows against the verified assessment is inside the noise, and only the larger patterns should be read as findings.
+
+| id | earlier run | this run |
+|---|---|---|
+| 3.4 | Documented L3 | Documented no level |
+| 3.5 | Gap no level | Documented no level |
+| 3.6 | Documented no level | Documented L3 |
+| 3.7 | Judged no level | Documented no level |
+| 3.8 | Documented L3 | Documented no level |
+| 7.2 | Judged no level | Documented no level |
+| 8.9 | Documented L1 | Gap no level |
 
 ## Every row
 
@@ -85,59 +112,59 @@ Each gate below is a design decision doing its job. A row that reaches a gate ke
 | 1.2 | Cereal yield (kg/ha) | Measured L5 | Measured L5 | match |  |
 | 1.3 | Employment in agriculture (%) | Measured L3 | Measured L3 | match |  |
 | 1.4 | Food production index (2014-16=100) | Measured L3 | Measured L3 | match |  |
-| 1.5 | Post-harvest loss rate (%) | Documented L4 | Documented — | **differs** | The indicator name asserts an all-crop NATIONAL POST-HARVEST loss rate. The bes… |
-| 1.6 | Smallholder access to formal markets | Documented L1 | Gap — | **differs** | gap |
-| 1.7 | Agricultural credit access (% farmer | Documented L1 | Gap — | **differs** | gap |
-| 1.8 | Farmers using climate-smart practice | Documented — | Gap — | match |  |
+| 1.5 | Post-harvest loss rate (%) | Documented L4 | Documented no level | **differs** | The indicator name asserts a single all-crop NATIONAL post-harvest loss rate for Egypt. No such fig… |
+| 1.6 | Smallholder access to formal markets | Documented L1 | Gap no level | **differs** | Worked through the ten supplied pages in order. Sources 1, 2, 3 and 4 (IFAD, T1): the 2017 CSPE, th… |
+| 1.7 | Agricultural credit access (% farmer | Documented L1 | Gap no level | **differs** | 1) FAO Statistics highlight 'Credit to agriculture. Global and regional trends 2014-2023' — checked… |
+| 1.8 | Farmers using climate-smart practice | Documented no level | Gap no level | match |  |
 | 8.1 | Prevalence of undernourishment (%) | Measured L3 | Measured L3 | match |  |
-| 8.5 | Women who own land (% holders) | Measured — | Documented — | match |  |
-| 2.1 ⚑ | Rural mobile broadband coverage (3G/ | Gap — | Gap — | match |  |
+| 8.5 | Women who own land (% holders) | Measured no level | Documented no level | match |  |
+| 2.1 ⚑ | Rural mobile broadband coverage (3G/ | Gap no level | Gap no level | match |  |
 | 2.4 | Individuals using the Internet (%) | Measured L4 | Measured L4 | match |  |
-| 2.5 | Mobile broadband price (% GNI pc) | Measured L5 | Measured L4 | **differs** | pass |
-| 2.7 | Rural smartphone ownership (%) | Measured L4 | Gap — | **differs** | gap |
+| 2.5 | Mobile broadband price (% GNI pc) | Measured L5 | Measured L4 | **differs** | 1.58 |
+| 2.7 | Rural smartphone ownership (%) | Measured L4 | Gap no level | **differs** | 1) ITU DataHub Egypt page for household indicators with Location disaggregation — only 'Households … |
 | 2.9 ⚑ | Rural electricity access (%) | Measured L5 | Measured L5 | match |  |
-| 2.11 | Device financing/subsidy schemes | Documented L1 | Documented L3 | **differs** | pass |
+| 2.11 | Device financing/subsidy schemes | Documented L1 | Documented L3 | **differs** | Egypt's Ministry of Communications and Information Technology operates ProGIG, a joint initiative o… |
 | 3.1 | UN E-Government Development Index | Measured L4 | Measured L4 | match |  |
-| 3.3 ⚑ | National farmer registry | Documented L4 | Gap — | **differs** | gap |
-| 3.4 | Digital land/plot registration | Documented L3 | Documented L3 | match |  |
-| 3.5 | Open agricultural data (machine-read | Documented L2 | Gap — | **differs** | gap |
-| 3.6 | Weather/climate data infrastructure | Documented L4 | Documented — | **differs** | the row contradicts itself: the recorded rung and evidence fields derive level … |
-| 3.7 | Satellite/EO data integration | Documented L4 | Judged — | **differs** | the only source is T5 news, vendor or market material, which carries existence … |
-| 3.8 | National soil map/database | Documented L1 | Documented L3 | **differs** | pass |
-| 3.11 ⚑ | Agricultural data interoperability s | Documented L1 | Gap — | **differs** | gap |
+| 3.3 ⚑ | National farmer registry | Documented L4 | Gap no level | **differs** | 1) FAO 'Situation analysis of farmer registries in the Near East and North Africa (NENA)' (fao.org,… |
+| 3.4 | Digital land/plot registration | Documented L3 | Documented no level | **differs** | The indicator name "Digital land/plot registration" is satisfied only partly by the best available … |
+| 3.5 | Open agricultural data (machine-read | Documented L2 | Documented no level | **differs** | The indicator names OPEN + MACHINE-READABLE + AI-READY AGRICULTURAL data. The strongest artifact fo… |
+| 3.6 | Weather/climate data infrastructure | Documented L4 | Documented L3 | **differs** | The Egyptian Meteorological Authority operates 28 synoptic stations (all shared on the WMO Global T… |
+| 3.7 | Satellite/EO data integration | Documented L4 | Documented no level | **differs** | The indicator name, 'Satellite/EO data integration', fixes neither the object (integration into wha… |
+| 3.8 | National soil map/database | Documented L1 | Documented no level | **differs** | The indicator names a 'National soil map/database'. The best available evidence describes (a) natio… |
+| 3.11 ⚑ | Agricultural data interoperability s | Documented L1 | Gap no level | **differs** | Reviewed all ten supplied pages in order. (1) FAO Egypt Country Programming Framework - names SADS-… |
 | 4.1 ⚑ | Data protection/privacy law | Documented L3 | Documented L3 | match |  |
 | 4.2 | Cybersecurity framework (ITU GCI) | Measured L5 | Measured L5 | match |  |
 | 4.3 | Government AI Readiness Index | Measured L3 | Measured L3 | match |  |
-| 4.4 | National digital agriculture strateg | Documented L1 | Documented — | **differs** | The indicator names a 'National digital agriculture strategy'. No dedicated, st… |
-| 4.5 ⚑ | Agricultural data governance framewo | Documented L1 | Gap — | **differs** | gap |
-| 4.6 | National AI strategy with agricultur | Documented L4 | Documented L3 | **differs** | pass |
-| 4.7 ⚑ | Digital ID coverage (%) | Measured L5 | Gap — | **differs** | gap |
-| 4.9 ⚑ | Inter-ministerial coordination mecha | Documented L4 | Gap — | **differs** | gap |
+| 4.4 | National digital agriculture strateg | Documented L1 | Documented no level | **differs** | The indicator names a 'National digital agriculture strategy'. The best evidence retrieved is for a… |
+| 4.5 ⚑ | Agricultural data governance framewo | Documented L1 | Gap no level | **differs** | 1) FAO GSARS Egypt country page and its four Egypt news items (T1) — checked for a national agricul… |
+| 4.6 | National AI strategy with agricultur | Documented L4 | Documented L3 | **differs** | Egypt's National AI Strategy contains a dedicated agriculture component: Section 7.1 'Agriculture, … |
+| 4.7 ⚑ | Digital ID coverage (%) | Measured L5 | Gap no level | **differs** | 1) ID4D DataBank landing page (Source 1) — interactive shell only, no data rendered, no Egypt value… |
+| 4.9 ⚑ | Inter-ministerial coordination mecha | Documented L4 | Gap no level | **differs** | Reviewed all ten supplied pages in order. Sources 1 and 2 (World Bank NSDS project paper, T1) list … |
 | 5.2 | Adult literacy rate (%) | Measured L3 | Measured L3 | match |  |
-| 5.3 | Tertiary STEM enrollment (% gross) | Measured — | Gap — | match |  |
-| 5.4 | Digital literacy among farmers (%) | Documented — | Gap — | match |  |
-| 5.5 ⚑ | Digital extension capability | Documented L4 | Documented L3 | **differs** | pass |
-| 5.7 ⚑ | MoAg digital/AI unit | Documented — | Documented L3 | **differs** | pass |
-| 5.8 | Agtech/data-science training pipelin | Documented L3 | Gap — | **differs** | gap |
-| 5.12 | Gender balance in digital-ag workfor | Gap — | Gap — | match |  |
+| 5.3 | Tertiary STEM enrollment (% gross) | Measured no level | Gap no level | match |  |
+| 5.4 | Digital literacy among farmers (%) | Documented no level | Gap no level | match |  |
+| 5.5 ⚑ | Digital extension capability | Documented L4 | Documented L3 | **differs** | In July 2019 FAO and Egypt's Ministry of Agriculture and Land Reclamation launched a digital model … |
+| 5.7 ⚑ | MoAg digital/AI unit | Documented no level | Documented L3 | **differs** | A Digital Transformation Unit (AG-DTU) was ordered established inside Egypt's Ministry of Agricultu… |
+| 5.8 | Agtech/data-science training pipelin | Documented L3 | Gap no level | **differs** | Worked through all eight supplied pages in order. Sources 1, 2, 4, 6 (FAO e-Agriculture news, FAO D… |
+| 5.12 | Gender balance in digital-ag workfor | Gap no level | Gap no level | match |  |
 | 6.1 | Global Innovation Index | Measured L1 | Documented L1 | match |  |
-| 6.3 | Business Ready (B-READY) | Gap — | Gap — | match |  |
-| 6.4 | Agtech venture ecosystem | Documented L3 | Judged — | **differs** | the only source is T5 news, vendor or market material, which carries existence … |
-| 6.9 | Public-private partnerships in digit | Documented L4 | Gap — | **differs** | gap |
-| 6.12 | Digital public goods adopted | Documented L4 | Judged — | **differs** | the only source is T5 news, vendor or market material, which carries existence … |
-| 6.13 | SME/agribusiness adoption of digital | Gap — | Gap — | match |  |
-| 6.14 ⚑ | Agri-fintech rails for smallholders | Documented L4 | Documented — | **differs** | The quoted CBE text names smallholder farmers specifically (a project titled "T… |
-| 3.9 | Digital advisory platforms at scale | Documented L4 | Documented L3 | **differs** | pass |
-| 3.10 | Agricultural e-commerce platforms | Documented L4 | Documented L3 | **differs** | pass |
-| 7.2 | AI-enabled agricultural solutions de | Documented L3 | Judged — | **differs** | the only source is T5 news, vendor or market material, which carries existence … |
-| 7.12 ⚑ | Responsible-AI safeguards (consent,  | Documented L1 | Documented L3 | **differs** | pass |
+| 6.3 | Business Ready (B-READY) | Gap no level | Gap no level | match |  |
+| 6.4 | Agtech venture ecosystem | Documented L3 | Judged no level | **differs** | the only source is T5 news, vendor or market material, which carries existence facts but never a st… |
+| 6.9 | Public-private partnerships in digit | Documented L4 | Gap no level | **differs** | Read all nine supplied pages in order. Source 7 (MCIT Arabic, 2013 protocol) and Source 8 (MCIT Eng… |
+| 6.12 | Digital public goods adopted | Documented L4 | Judged no level | **differs** | the only source is T5 news, vendor or market material, which carries existence facts but never a st… |
+| 6.13 | SME/agribusiness adoption of digital | Gap no level | Gap no level | match |  |
+| 6.14 ⚑ | Agri-fintech rails for smallholders | Documented L4 | Documented no level | **differs** | The indicator names AGRI-FINTECH RAILS for SMALLHOLDERS. The quoted T3 page sits under a heading co… |
+| 3.9 | Digital advisory platforms at scale | Documented L4 | Documented L3 | **differs** | Digital agricultural advisory apps, websites, call centers and SMS platforms (e.g. Hodhod, Mahsooly… |
+| 3.10 | Agricultural e-commerce platforms | Documented L4 | Documented L3 | **differs** | Farmer-facing agricultural e-commerce/online marketplace platforms are operating in Egypt, includin… |
+| 7.2 | AI-enabled agricultural solutions de | Documented L3 | Documented no level | **differs** | The indicator name asserts DEPLOYMENT. The strongest admissible (T1) Egypt-specific evidence descri… |
+| 7.12 ⚑ | Responsible-AI safeguards (consent,  | Documented L1 | Documented L3 | **differs** | Egypt adopted a cross-sector Egyptian Charter for Responsible AI, launched by the National Council … |
 | 8.2 | Account ownership, female (%) | Measured L3 | Measured L3 | match |  |
-| 8.4 | Mobile money account (%) | Measured L2 | Gap — | **differs** | gap |
+| 8.4 | Mobile money account (%) | Measured L2 | Gap no level | **differs** | 1) Checked Source 1 (data.worldbank.org, Egypt) first as the canonical T1 route — found only FX.OWN… |
 | 8.6 | Gender gap in phone ownership (pp) | Measured L2 | Documented L2 | match |  |
-| 8.9 | Smallholders reached by digital serv | Documented L1 | Documented L1 | match |  |
-| 8.11 | Services in local languages (%) | Documented L5 | Gap — | **differs** | gap |
-| 8.12 | Documented impact evidence (yield/in | Documented L3 | Gap — | **differs** | gap |
-| 8.17 | Climate advisory reach (%) | Gap — | Gap — | match |  |
+| 8.9 | Smallholders reached by digital serv | Documented L1 | Gap no level | **differs** | Reviewed all ten supplied pages in order of likely relevance to a national smallholder reach figure… |
+| 8.11 | Services in local languages (%) | Documented L5 | Gap no level | **differs** | 1) Checked MCIT press release 'ICT Sector Achievements in 2025' (T3) — the most granular Egyptian g… |
+| 8.12 | Documented impact evidence (yield/in | Documented L3 | Gap no level | **differs** | Reviewed all ten supplied pages in order. (1) IFAD Egypt CSPE 2025 executive summary — country cont… |
+| 8.17 | Climate advisory reach (%) | Gap no level | Gap no level | match |  |
 
 ⚑ marks a prerequisite.
 
@@ -146,5 +173,5 @@ Each gate below is a design decision doing its job. A row that reaches a gate ke
 
 Divergence here is the expected result. The verified assessments came from sustained human-directed searching under the full tiered protocol — Nigeria went from 21 recorded gaps to 4 that way — and this pass runs once, on a budget, without the Gate 2 refutation round that found four of those gap refutations. More gaps and more holds are the honest output of a first automated pass, not a regression.
 
-The number to act on is the **abstention rate**: 9 holds and 22 gaps against the verified 5 and 5. Too loose and everything reads Ready; too tight and everything reads Unverified. These figures are what that threshold should be tuned against, and they should be kept — when automated Gate 2 arrives, re-running this comparison is what tells you whether it earns its 15% of the budget.
+The number to act on is the **abstention rate**: 11 holds and 22 gaps against the verified 5 and 5. Too loose and everything reads Ready; too tight and everything reads Unverified. These figures are what that threshold should be tuned against, and they should be kept — when automated Gate 2 arrives, re-running this comparison is what tells you whether it earns its 15% of the budget.
 

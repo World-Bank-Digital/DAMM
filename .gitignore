@@ -15,3 +15,10 @@ __pycache__/
 
 # Local virtualenv for the research pipeline (vendor SDKs). Never source of record.
 .venv/
+
+# Shadow-run resume checkpoints. Redundant with the run's own outputs — the rows are in
+# <run>_input.json and the full records in <run>_research.json — and only useful while a
+# run is in flight. The audition's state file is NOT ignored: it holds the page text each
+# fabrication verdict was measured against, which cannot be recovered without paying for
+# the run again.
+*_shadow_state.json

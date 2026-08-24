@@ -1,8 +1,14 @@
 # Thread 2 — research pipeline · handoff
 
-*Written 24 August 2026. Read this, then `DAR-Studio-Automation-Design.md`. Between them they
-carry everything: what is already built and verified, the twenty-seven design decisions settled
-by interview, your scope, your acceptance test, and the traps that cost real time.*
+*Written 24 August 2026. **Superseded by `THREAD-3-HANDOFF.md`**, which carries the state
+this brief asked for. Kept as the record of what Thread 2 was asked to do, against which
+what it delivered can be read.*
+
+*Thread 2 is complete: Task 0 was already done when it began, the vendor audition has
+been run for the first time, the research orchestrator is built, and the Egypt shadow run
+reproduced the 2.1 finding at $15 and 24 minutes. Four figures in the brief below are
+stale — verification is **75** checks, not 76, and the design record is no longer
+unbuilt. The scope and the acceptance test are as written.*
 
 ---
 
