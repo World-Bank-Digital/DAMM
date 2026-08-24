@@ -15,7 +15,7 @@ exist.
     python3 model/export_app_fixtures.py [--app PATH]
 """
 
-import argparse, json, os, shutil, sys
+import argparse, json, os, re, shutil, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, ".."))
@@ -101,6 +101,42 @@ def main():
     passes = {k: v for k, v in V.Ledger.ALLOCATION.items() if k != "audition"}
     print(f"run_budget.json  <- {len(V.Ledger.ALLOCATION)} passes, "
           f"country passes sum to {sum(passes.values()):.2f} of the ceiling")
+
+    # The reasoning vendors, and which one each pass uses when none is named.
+    #
+    # gate2.py's contract is that the reviewer comes from a DIFFERENT vendor than the
+    # primary: the audition showed a vendor's siblings sharing blind spots, so a model
+    # reviewing its own pass upholds it. Nothing in the pipeline enforces that, because
+    # the two defaults happened to differ. Now that the app chooses the vendor it has to
+    # enforce it, and to do that it needs the defaults — read from the scripts rather
+    # than restated, so a change there cannot leave the app checking the wrong pair.
+    # A pass is runnable when a script implements it. The budget allocation names five
+    # passes because it reserves each one's share of the ceiling, but only these two are
+    # built — and the app must not queue a run for the other three, because a pass with
+    # no script of its own would be handed to the research orchestrator and spend a full
+    # research budget under another pass's name.
+    PASS_SCRIPTS = {"research": "research_orchestrator.py", "g2": "gate2.py"}
+    pass_defaults = {}
+    for pass_name, script in PASS_SCRIPTS.items():
+        src = open(os.path.join(LOOP1, "research_pipeline", script)).read()
+        m = re.search(r'add_argument\(\s*"--vendor"\s*,\s*default\s*=\s*"([^"]+)"', src)
+        if not m:
+            sys.exit(f"{script}: could not read the --vendor default. Export refuses to "
+                     f"guess it: a wrong default would let a model review its own pass.")
+        pass_defaults[pass_name] = m.group(1)
+
+    vendors_out = {
+        "_source": "vendors._MODEL_PREFS and the --vendor defaults in "
+                   "research_orchestrator.py / gate2.py — exported, never restated. "
+                   "Regenerate with model/export_app_fixtures.py after changing either.",
+        "families": V._MODEL_PREFS,
+        "runnable_passes": sorted(PASS_SCRIPTS),
+        "pass_defaults": pass_defaults,
+    }
+    out = os.path.join(data, "run_vendors.json")
+    json.dump(vendors_out, open(out, "w"), indent=1)
+    print(f"run_vendors.json <- {len(V._MODEL_PREFS)} families; defaults "
+          + ", ".join(f"{k}={v}" for k, v in pass_defaults.items()))
 
     print("\nNow run the app's test suite. The port must reproduce every figure above.")
 
