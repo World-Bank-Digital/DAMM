@@ -131,9 +131,49 @@ Established: Egypt's strongest pillar, C1 at 3.80, reads Established as well.
 available is 93 rows from two countries assessed by one team, and fitting to it would
 encode those two countries into the instrument.
 
+### The secondary value, and why it settles the cut
+
+A second figure beside the band, giving the signed distance of the mean from the middle of
+its band, was proposed to carry the nuance without complicating the rule. It should be
+adopted. Under equal-width bands it is interconvertible with distance to the nearest
+boundary (distance to the edge equals half the band width minus the size of the distance
+from the midpoint), so it answers "how close to flipping" as directly, and it reads more
+naturally as "how strongly does this pillar hold its band".
+
+It also settles where the boundaries belong, because the two candidate cuts render the
+same pillar very differently.
+
+| A pillar whose rows are **all** at level… | Integer cuts | Round to nearest |
+|---|---|---|
+| all 2 | Emerging −0.50 | Emerging +0.00 |
+| all 3 | Established −0.50 | Established +0.00 |
+| all 4 | Advanced −0.50 | Advanced +0.00 |
+
+With boundaries on the integers, a pillar in which every row sits at level 3 reads
+Established −0.50: the weakest possible position in its band, a hair from dropping out of
+it. With boundaries at the midpoints it reads Established +0.00, which is what it is.
+Egypt's A1 is exactly 3.00, seven rows averaging precisely level 3, and integer cuts would
+render that as −0.50. The nuance layer would report every uniform pillar as barely holding
+on, which is the opposite of the clarity it exists to provide.
+
+### Why integer boundaries cannot carry five bands
+
+The interval [1, 5] contains three interior integers: 2, 3 and 4. Three cuts make four
+intervals, and there are five band names to place. Integer boundaries therefore force one
+of three things: run four bands and drop a name, make one band a single point (which is
+what the ceiling and floor rules do at opposite ends), or renumber the levels 0 to 4 so
+that the scale has four interior integers. The last is arithmetically clean and was raised
+as "0-1 for Nascent, 1-2 for Emerging", but it reaches every threshold, every ladder rung,
+the workbook, the indicator census and both worked examples, and a level 0 reads oddly in
+an assessment that describes what a country has rather than what it lacks.
+
+Midpoint boundaries need no such choice: 1.5, 2.5, 3.5 and 4.5 are four cuts on a scale
+with three interior integers, and they place all five names without collapsing any of
+them.
+
 ### Recommendation
 
-**B, together with publishing the margin.**
+**B, together with the signed distance from the band midpoint.**
 
 An earlier draft of this note recommended keeping the current edges on the ground that
 equal fifths was the only distribution-free cut available. That was wrong: every scheme in
@@ -157,6 +197,10 @@ reader can see when a band rests on 0.03.
 
 *Dependency.* If 13.5 moves a material number of rows, the means move with them and the
 three borderline pillars should be re-read before the recut is published.
+
+The distance is reported as a signed two-decimal figure beside the band, so a pillar reads
+"Established +0.11" or "Emerging +0.07". Zero means the pillar sits squarely at its level;
+plus or minus 0.50 means it is on the edge of flipping.
 
 **Ruling:** *awaiting*
 
