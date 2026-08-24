@@ -19,7 +19,7 @@ ruling narrows it.
 | 13.1 | Band edges | Put for ruling — recut to 1.5/2.5/3.5/4.5 recommended |
 | 13.6 | A1 thresholds | Not yet opened |
 | 13.2 | A1 additions | Not yet opened |
-| 13.12 | Need and outcome in the readiness mean | Not yet opened |
+| 13.12 | Need and outcome in the readiness mean | Not yet opened — carries evidence from 13.1 |
 | 13.3 | Per-use-case prerequisite mapping | Not yet opened |
 | 13.4 | The three binding rules | Not yet opened |
 | 13.8 | Source-tier lookup | Not yet opened |
@@ -155,6 +155,38 @@ it. With boundaries at the midpoints it reads Established +0.00, which is what i
 Egypt's A1 is exactly 3.00, seven rows averaging precisely level 3, and integer cuts would
 render that as −0.50. The nuance layer would report every uniform pillar as barely holding
 on, which is the opposite of the clarity it exists to provide.
+
+### Whether the scale should start at 0
+
+Raised as a way to get five integer-bounded bands and a floor that plainly means nothing.
+Two findings, and the second settles it.
+
+**It would still be five levels.** 0, 1, 2, 3 and 4 are five distinct values. Renaming the
+floor removes no level. It also would not deliver integer-bounded bands: N contiguous
+integer levels give N-1 integer-cut intervals whatever the origin, so on 0 to 4 the
+collapse simply moves from the bottom of the scale to the top, and Transformative becomes
+the single point 4.
+
+**The bottom level is doing two different jobs, and 0 suits only one of them.** Maturity
+scales conventionally start at 1 because the bottom rung is a characterisation rather than
+an absence; CMMI's level 1, "Initial", describes ad hoc and reactive practice, not nothing
+at all. In this register:
+
+- 25 ladder indicators record level 1 as rung *Absent*: the named instrument does not
+  exist. A zero would be more honest here.
+- 32 threshold indicators record level 1 as a real measured value below the first cut.
+  Egypt's Global Innovation Index is 24.7 against a first cut of 25, and Nigeria's is
+  21.1. Recording a score that nearly clears the bar as zero would be plainly wrong.
+
+A 0-based scale would therefore repair the semantics of 25 rows and break them for 32.
+**Ruling: the levels stay 1 to 5.**
+
+*Carried to 13.12.* The oddity that prompted the question survives the ruling: a pillar in
+which every ladder row is Absent still scores 1.00 rather than 0. That is not a property
+of the scale and renumbering would not cure it. It is that a pillar mean averages "the
+instrument does not exist" and "a real but low measured value" as though they were the
+same quantity, which is the question 13.12 asks about indicators playing different roles
+in one mean. Recorded there as evidence.
 
 ### Why integer boundaries cannot carry five bands
 
