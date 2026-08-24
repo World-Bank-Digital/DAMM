@@ -1,0 +1,1941 @@
+{
+ "country": "Nigeria",
+ "indicators": {
+  "1.1": {
+   "value": "DATA GAP \u2014 1) data.worldbank.org/indicator/NV.AGR.EMPL.KD (T1) \u2014 indicator landing page, no country values in the retrieved text, country table renders empty. 2) databank.worldbank.org WDI and SDG metadata glossary entries for NV.AGR.EMPL.KD (T1) \u2014 confirmed the exact series name, unit (constant 2015 US$), ISIC scope and ILO modeled employment denominator, but these are definitional pages with no observations. 3) databank.worldbank.org reports.aspx?dsid=2&series=NV.AGR.EMPL.KD (T1) \u2014 the only page with actual numbers, but the retrieved text covers aggregates only (Africa Eastern and Southern through Sub-Saharan Africa) and is truncated before any alphabetical country listing, so Nigeria does not appear. 4) EA.PRD.AGRI.KD glossary (T1) \u2014 a discontinued constant-2000 US$ variant, definition only. 5) FAOSTAT home and FAO statistics event page (T1) \u2014 describe the Macro Indicators domain and its release schedule; no Nigeria value. 6) FAO State of Food and Agriculture 2024 figure-11 data (T2) \u2014 gives agricultural value added per worker by agrifood-systems category (e.g. 3545.35 for 'Expanding'), a typology grouping, not a Nigeria figure. 7) indexmundi.com (T5) \u2014 the only Nigeria series found, in constant 2010 US$ with a 2019 endpoint; excluded as a statistic by the tier rule. Conclusion: the figure almost certainly exists in the live WDI country view, but it is not in the pages supplied, so no value is recorded.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: No level, including level 1, is proposed because the retrieval contains no quote-verifiable Nigeria value from a T1-T4 publisher; the World Bank DataBank extract supplied stops at aggregate rows and never reaches country detail, and the FAOSTAT and data.worldbank.org pages are navigation shells with no data values rendered in the retrieved text. Two construct issues, neither resolvable from the supplied pages. (1) Country scope: the only Nigeria-specific figures in the retrieved material are on a T5 aggregator, which states a 2019 value of 5,591 in constant 2010 US$ for NV.AGR.EMPL.KD; the only T1 numbers available here are aggregates, e.g. Africa Western and Central at 2,438.6 and Sub-Saharan Africa at 1,495.7 for 2025 \u2014 regional aggregates are not a Nigeria figure and must not be substituted for one. (2) Definition question flagged in the census: the indicator name says 'Agriculture ... (USD)', whereas the series both countries record, NV.AGR.EMPL.KD, is defined in the T1 metadata as 'Agriculture, forestry, and fishing, value added per worker (constant 2015 US$)' \u2014 i.e. broader sector scope (ISIC Rev.4 divisions 01-03, including forestry and fishing) and a constant-2015 price basis, neither of which is stated in the indicator name or in the bare-USD cut points. Any figure eventually ratified will therefore sit on the wrong side of the naming question unless the definition is amended, and the choice of price basis materially moves the value relative to the 2500/5000 cut points (the same series in constant 2010 US$ reads ~5,591 while the constant 2015 US$ vintage is a different number that is not in these pages). An independent T1 series (World Bank WDI NV.AGR.EMPL.KD) reports 3494.89 for 2025.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name says \"Agriculture... (USD)\" but both countries record WDI NV.AGR.EMPL.KD, which covers agriculture, forestry AND fishing and is denominated in constant 2015 US$ \u2014 neither the sector scope nor the price basis is stated in the name or in the bare-USD thresholds, and neither row carries\u2026",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Agriculture value added per worker (USD)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.2": {
+   "value": 1558.0,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2024,
+   "src": "World Bank, World Development Indicators \u2014 Cereal yield (kg per hectare) (AG.YLD.CREL.KG), all countries table",
+   "note": "Underlying FAOSTAT figure; WDI metadata notes complete consistency across countries and over time is not possible and that cereal yield data may be affected by reporting and timing differences. Next level not proposed: Level 3 would require a published Nigerian cereal yield at or above 3,000 kg/ha. Nothing in the retrieved evidence approaches that: the WDI most-recent value is 1,558 kg/ha, and the longest series available here (IndexMundi's reproduction of the same World Bank/FAO series, Source 7) shows Nigeria never exceeding 1,655.50 kg/ha in 57 years, with 1,509.00 in 2018. Nigeria therefore sits roughly 40 percent of the world 2024 value of 3,955 shown in the same table. The quoted figure is exactly the named construct \u2014 cereal yield in kg per hectare of harvested land (wheat, rice, maize, barley, oats, rye, millet, sorghum, buckwheat and mixed grains), for Nigeria, national level, most recent year 2024. Corroborated by an independent T1 series (World Bank WDI AG.YLD.CREL.KG): 1558 for 2024.",
+   "tier": "T1",
+   "tier_detail": "Underlying FAOSTAT figure; WDI metadata notes complete consistency across countries and over time is not possible and that cereal yield data may be affected by reporting and timing differences",
+   "url": "https://data.worldbank.org/indicator/AG.YLD.CREL.KG",
+   "subs": [],
+   "stale": false,
+   "name": "Cereal yield (kg/ha)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.3": {
+   "value": 34.0,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2025,
+   "src": "World Bank, World Development Indicators \u2014 Employment in agriculture (% of total employment) (modeled ILO estimate), Nigeria (SL.AGR.EMPL.ZS)",
+   "note": "ILO modeled estimate / nowcast for 2025, not a nationally reported observation; WDI metadata warns that imputed observations 'are subject to high uncertainty, and should not be used for country comparisons or rankings'. Value displayed rounded to whole percent on the country page (T5 Trading Economics renders the 2023 WDI figure as 34.31%). Next level not proposed: Level 3 would require the agricultural employment share to fall below the 30% cut. The published 2025 figure is 34, four points above that cut, and the series trend on the same page runs from roughly the high-30s down to 34 over 2012-2025 without crossing 30. No source in the retrieved pages publishes a Nigerian figure below 30% for employment in agriculture as a share of total employment. The indicator name 'Employment in agriculture (%)' omits its denominator; the quoted series is explicitly '% of total employment', which is the conventional reading of the name and the series the assessment register already carries. Two scope caveats sit on the wrong side of the unratified definition: (a) the WDI/ILO 'agriculture sector consists of activities in agriculture, hunting, forestry and fishing... category A (ISIC 4)', i.e. ISIC-A rather than crop-and-livestock agriculture alone, so the figure is an upper bound on agriculture narrowly defined; (b) the 2025 value is an ILO model nowcast, not a survey measurement, even though the register classes it 'Measured'. Nigeria's own NBS Labor Force Survey (Annual Report 2023) does publish 'Branch of Economic Activity at Main Job' / 'Economic sector of main job', which would be the survey-based national alternative, but no agriculture share figure appears in the retrieved text of that PDF. Corroborated by an independent T1 series (World Bank WDI SL.AGR.EMPL.ZS (ILO modeled estimate)): 33.53 for 2025.",
+   "tier": "T1",
+   "tier_detail": "ILO modelled estimate / nowcast for 2025, not a nationally reported observation; WDI metadata warns that imputed observations 'are subject to high uncertainty, and should not be used for country comparisons or rankings'. Value displayed rounded to whole percent on the country page (T5 Trading Economics renders the 2023 WDI figure as 34.31%).",
+   "url": "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=NG",
+   "defnote": "The name omits the denominator (% of total employment), the recorded series covers ISIC-A (agriculture, hunting, forestry and fishing) rather than agriculture alone, and both rows carry an ILO MODELLED 2025 nowcast under cls \"Measured\" \u2014 the register's highest evidence class \u2014 which the\u2026",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Employment in agriculture (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.4": {
+   "value": 119.8,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2022,
+   "src": "World Bank Open Data \u2014 Food production index (2014-2016 = 100) (AG.PRD.FOOD.XD), FAO source",
+   "note": "FAO-compiled index; Nigerian agricultural production statistics are widely noted as being based on incomplete national reporting, and the WDI series ends at 2022. Next level not proposed: Level 5 would require the index to exceed 130. Nigeria's published 2022 value of 119.8 falls about 10 points short, and no later or higher Nigeria figure appears in the supplied pages \u2014 the WDI reference period ends at 2022 and the prior year (2021) was lower still at 117.33 per the aggregator page, so there is no evidence of the index crossing 130. The quoted figure is the World Bank/FAO 'Food production index (2014-2016 = 100)' (series AG.PRD.FOOD.XD) for Nigeria, exactly the named construct, for the most recent year published (2022). A T5 aggregator (CEIC) reports the identical figure as 119.850 for 2022, consistent with the T1 source but not relied on. Corroborated by an independent T1 series (World Bank WDI AG.PRD.FOOD.XD): 119.85 for 2022.",
+   "tier": "T1",
+   "tier_detail": "FAO-compiled index; Nigerian agricultural production statistics are widely noted as being based on incomplete national reporting, and the WDI series ends at 2022",
+   "url": "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD",
+   "subs": [],
+   "stale": true,
+   "name": "Food production index (2014-16=100)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.5": {
+   "value": "Nigeria has no single published national all-crop post-harvest loss rate; a Nigerian government council paper reports that 30-50% of produce is lost annually (30-50% for total agricultural produce and for perishables, up",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "Nigerian Council of Food Science and Technology (NiCFoST), Paper 4B: Nigeria Agricultural Policies and Post-Harvest Strategies",
+   "note": "Secondary compilation of range estimates in a professional-training paper; the 30-50% figure is attributed to FMARD/FAO without a survey or methodology reference, and is presented as a range rather than a measured national statistic. Next level not proposed: Level 2 was not proposed because nothing in the retrieved evidence shows Nigeria's national all-crop post-harvest loss rate below the 30% cut. The only sub-30 figures are commodity-specific and therefore do not answer the named construct: grains 5-20% and cassava 13% within the same NiCFoST table, and APHLIS cereals-only estimates for Nigeria in 2021 (17.5% maize, 9.8% millet) which in any case come from a domain tiered T5 here and so cannot carry a statistic. No T1 national statistic (NBS, FAOSTAT/SDG 12.3.1 country value) for Nigeria's post-harvest loss percentage appeared in the supplied pages. The indicator names an all-crop national post-harvest loss rate. The quoted headline sentence refers specifically to perishable produce; the same document's Table 1 applies the same 30-50% band to row 1, 'Total Agricultural Produce', i.e. an all-crop national loss estimate, and disaggregates grains at 5-20%, fish/livestock at 20% and cassava at 13%. So the source does sit on the all-crop side of the census question, but only as a broad range, not a measured rate. The narrower, better-documented alternatives sit on the wrong side of that question: APHLIS publishes cereals-only estimates for Nigeria (2021: 17.5% maize, 9.8% millet), and FAO's SDG 12.3.1a portal publishes only a sub-Saharan Africa regional food loss figure of 23.0 percent (2023), not a Nigeria value. Neither a cereals-only figure nor a regional figure is an all-crop Nigerian rate.",
+   "tier": "T3",
+   "tier_detail": "Secondary compilation of range estimates in a professional-training paper; the 30-50% figure is attributed to FMARD/FAO without a survey or methodology reference, and is presented as a range rather than a measured national statistic",
+   "url": "https://nicfost.gov.ng/wp-content/uploads/2026/05/PAPER-4B-Nigeria-Agricultural-Policies-and-Post-Harvest-Strategies-1.pdf",
+   "defnote": "The name asserts an all-crop national post-harvest loss rate; both countries record cereals-only figures, and Egypt's scored figure is described by its own source as covering pre- AND post-harvest losses.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Post-harvest loss rate (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.6": {
+   "value": "DATA GAP \u2014 1) Checked the two World Bank Microdata data-dictionary pages (sect11h_plantingw2 marketing module; secta3_harvestw2 harvest/sales module) for any published statistic \u2014 they list variable labels only, including the buyer/outlet network-code questions that would underpin a channel-of-sale share, but carry no estimates. 2) Checked the GHS-Panel Wave 2 study description page (microdata.worldbank.org/catalog/1952) \u2014 scope, sampling and topic list only. 3) Checked the NBS microdata catalog entry (microdata.nigerianstat.gov.ng/catalog/50) \u2014 stub record, no tables. 4) Read the NBS 'Select Tables from the GHS Panel Wave 2 2012/13' PDF text (nigerianstat.gov.ng/download/195); its table of tables runs to 23 tables covering demography, ICT access, consumption, expenditure, food availability, shocks, income, plot input use and livestock \u2014 no marketing or buyer-outlet table, so the frequently cited 2012/13 'channel of sale' share is not present in the supplied text. 5) Read the post-planting agriculture questionnaire PDF on unstats.un.org \u2014 confirms Section 11H 'MARKETING OF AGRICULTURAL SURPLUS' exists, instrument only. 6) Opened the IFPRI NSSP WP 66 PDF text on CGSpace (T2) \u2014 only cover, contents and table titles were returned; no numeric result quotable. 7) Opened the IDEAS/RePEc page for the same paper \u2014 its abstract does carry quantified findings (thirds of households by sales share) but the domain is tiered T5, from which statistics are inadmissible, and in any case the construct is commercialisation, not formal-market access. 8) Checked the Springer EJDR four-country commercialisation article \u2014 Nigeria appears only as one of four APRA study contexts, sub-national and about commercialisation 'capacity', not national formal-market access. 9) Checked the AGRA/KIT PIATA 2019 Nigeria outcome monitoring report (T4) \u2014 it has a 'Sales channels (indicator 33)' section for maize in Kaduna and rice in Niger/Kaduna, but the supplied text stops at the contents pages, so no figure could be quoted, and it would in any case be two-state programme-beneficiary data rather than a national smallholder rate. Dead ends throughout; no admissible national figure for the named construct.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Even level 1 is withheld because the evidence does not establish any value on the indicator's own scale: nothing in these pages reports what share of Nigerian smallholders sell to, or can reach, formal market channels. To reach level 1 defensibly one would still need a published sub-20% formal-market figure; what exists instead is a share-of-harvest-sold distribution, which cannot be mapped onto formal-channel access without an unpublished assumption. Closest available evidence, recorded as context only and not as the cell value: the IFPRI NSSP working paper 'The relative commercial orientation of smallholder farmers in Nigeria' (Benson, Amare & Ogunniyi 2020), using nationally representative GHS-Panel 2015/16 data, reports on its RePEc/IDEAS abstract page (T5 domain) that about one-third of smallholder farming households made no crop sales at all and another third sold less than one-third of harvested crops by value. That is a COMMERCIALISATION / share-of-output-sold measure, not ACCESS TO FORMAL MARKETS: it does not distinguish formal channels (contract buyers, processors, aggregators, cooperatives, organised/regulated markets) from sales to informal itinerant traders or neighbours, which is precisely what the indicator name asserts. Likewise the GHS-Panel 2012/13 instrument records the largest buyer/outlet by network code, which would yield a channel-of-sale SHARE if tabulated \u2014 again participation in a channel, not access. The indicator census question flagged for this row is therefore live here: the only Nigerian evidence in these pages sits on the 'channel of sale / participation' side, not the 'access' side, and no published national percentage of smallholders with access to formal markets was found.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts national smallholder ACCESS to formal markets; Egypt records a regional contract-farming PARTICIPATION rate from seven governorates and Nigeria a 2012/13 channel-of-sale share \u2014 two different constructs, neither of which is access, and neither national in Egypt's case.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Smallholder access to formal markets (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.7": {
+   "value": "DATA GAP \u2014 Order of examination: (1) IFPRI NSSP Brief 25 'Review of small farmer access to agricultural credit in Nigeria' (CGSpace, T2) \u2014 title matches the construct exactly, but only the abstract text was retrieved; its sole quantitative statement is 18 percent of farm households with access to financial services, citing Akramov 2009 on 2006 CWIQ; the brief PDF body was not in the supplied pages. (2) World Bank 'Rural Finance in Nigeria: Integrating New Approaches' (openknowledge, T2) \u2014 abstract gives fewer than 2 percent of rural households with institutional finance; wrong unit and wrong scope. (3) CGAP/World Bank 'National Survey and Segmentation of Smallholder Households in Nigeria' (both the documents1.worldbank.org T1 mirror and cgap.org T4 pages) \u2014 the retrieved text covers only the introduction/table of contents and the summary page; the financial-inclusion chapter (Section 5) that would contain any borrowing figures is not in the supplied text, and the summary sentence available reports account-based financial inclusion (a quarter), not credit. (4) NBS GHS-Panel Wave 5 2023/24 report (T1) \u2014 only front matter and table of contents retrieved; no credit chapter figures present. (5) NBS and World Bank microdata catalog pages \u2014 confirm Credit modules exist in GHS-Panel W5 and in the 2016 CGAP survey, but publish no tabulated statistic. (6) RVO/Agri-Logic 'Addressing the $200 billion demand for finance for Agriculture and Agribusiness in Nigeria' (T5) \u2014 retrieved text is contents plus a macro indicator table (e.g., domestic credit to private sector 12% of GDP); no farmer credit-access share, and T5 could not carry a statistic in any case. Dead ends: no Findex, CBN Agricultural Credit Guarantee Scheme, or EFInA A2F page was among the supplied sources.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: No level was proposed because no supplied source states an agricultural-credit access rate for Nigerian farmers; the 18 percent figure that would imply level 2 measures access to financial services generally, and the sub-2 percent figure that would imply level 1 measures rural households rather than farmers and predates 2008. Indicator name asserts share of FARMERS with agricultural CREDIT ACCESS. Nearest available evidence in the supplied pages: IFPRI (CGSpace, T2, 2010) states 'only 18 percent of farm households (mainly smallscale farmers) have access to financial services (Akramov 2009)' \u2014 right population (farm households) but wrong service scope (all financial services, not agricultural credit), and the reference year is 2006. World Bank 'Rural Finance in Nigeria' (openknowledge, T2, 2008) states 'fewer than 2 percent of rural households have access to any sort of institutional finance' \u2014 wrong population (all rural households, including non-farmers) and wrong service scope (any institutional finance). CGAP's national smallholder survey (T4 on cgap.org, T1 mirror on documents1.worldbank.org) reports that 'Only a quarter of smallholders are financially included, meaning they hold an account registered in their own name at a full-service financial institution' \u2014 this is account ownership, not credit, and is a smallholder-household unit rather than a farmer unit. All three are 'access/inclusion' or 'use' measures of finance broadly; none is a credit-access rate for farmers.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts a share of FARMERS with credit ACCESS; Egypt records rural adults aged 15+ (a population that includes non-farmers) and Nigeria records smallholder households, and both measure borrowing/use rather than access.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural credit access (% farmers)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "FIN"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "1.8": {
+   "value": "DATA GAP \u2014 1) Checked the two NBS T1 microdata pages for a published CSA adoption statistic: catalog/82 study description lists 'Expectations on Climate Extremes and Past Experience' as a community topic and 'Extension Services / Digital Farming Information / Input Use on Plot' in agriculture, but is metadata only. 2) Opened the sectc6b_harvestw5 data dictionary \u2014 it lists question c6bq5 items (soil conservation practices, rainwater harvesting, tree planting, improved/heat/drought-tolerant seeds, irrigation intensification) but is a variable list with 2,032 community cases and no tabulated percentages. 3) Opened secta11c2_harvestw5 (plot input use) \u2014 herbicide, pesticide, inorganic/organic fertiliser and traction variables, again no percentages. 4) Scanned the GHS-Panel Wave 5 survey report page text: only front matter and table of contents were returned; no climate-smart adoption figure appears in the supplied text. 5) Checked NASC 2022 launch release and NASS 2023 catalog entry \u2014 both describe input/technology adoption as an intended output but publish no CSA figure in the supplied text. 6) World Bank 'Toward Climate-Resilient Development in Nigeria' (2013) \u2014 supplied text is front matter/contents only, with a chapter on adaptation options and 'The Climate-Smart Way'; no adoption percentage in the retrieved text. 7) IFPRI discussion paper landing page \u2014 reports experimental treatment effects (USG adoption up 24 percentage points, +8 with discounts), which is a trial effect size, not a population adoption rate. 8) Springer/CABI article \u2014 the only quotable farmer-share figure (87.2%), but zone-limited and trait-based. 9) Agricultura Tropica et Subtropica PDF \u2014 82% adopters, n=377, north-western Nigeria, on a domain tiered T5 here. Dead ends: no FAOSTAT/WDI/ITU-style T1 database series for this construct was among the retrieved pages, and no Nigerian government policy artifact reporting a national CSA adoption rate was surfaced.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "sub-national purposive survey samples; not nationally representative; adoption definitions differ between studies. Next level not proposed: No level, including level 1, is proposed because the pages contain no nationally scoped measurement of climate-smart practice adoption by Nigerian farmers at all \u2014 the NBS GHS-Panel and NASS pages establish that the underlying questions are asked (climate-response actions in the community module; plot input use) but publish no derived adoption share, and the two studies that do publish shares are zone- and state-limited. Level 5 specifically is not proposed because neither 87.2% nor 82% is a national estimate, and the 87.2% figure counts a climate-resilient crop trait rather than the practices the indicator names. The indicator names the share of FARMERS (country-wide) using climate-smart PRACTICES. The best available evidence differs on two axes. (1) Object: the Springer/CABI study measures farmers who 'adopted at least one climate resilient trait in crops' \u2014 a crop-genetics trait, not a practice basket such as conservation tillage, agroforestry, residue management or water harvesting. (2) Geography: it covers smallholders in four states across the North Central and Northwest zones only, not Nigeria as a whole. The second quantified source (Agricultura Tropica et Subtropica, on a domain tiered T5 here) reports that '82 % of the respondents are adopters of the CSA practices' among 377 households in some rural areas of north-western Nigeria \u2014 closer to the named construct in object, but an even narrower, non-representative geographic base. The NBS GHS-Panel Wave 5 community questionnaire (section C6B) collects community-level responses on actions taken to reduce climate-event damage (soil conservation, rainwater harvesting, tree planting, improved/heat- and drought-tolerant seeds, irrigation), and the plot-level input module records fertiliser/organic-fertiliser use, but no published tabulation of a farmer-level climate-smart-practice adoption rate appears in the retrieved pages. NASS 2023 and the 2022 NASC list 'use of agricultural inputs and technologies' as a topic but publish no CSA adoption share in the pages supplied.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name counts FARMERS adopting climate-smart practices; Egypt records a share of WHEAT AREA under a single practice and Nigeria a share of farmers in two zones adopting at least one climate-resilient crop TRAIT \u2014 land, practice-basket and geographic scope all differ from the name.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Farmers using climate-smart practices (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.1": {
+   "value": "DATA GAP \u2014 Checked Source 1 (SOFI 2024 Section 2.1 key messages) \u2014 global 9.1% 2023, Africa 20.4%, Asia 8.1%, LAC 6.2%, Oceania 7.3%; no country breakdown. Checked Source 2 (FAO SOFI flagship landing page) \u2014 navigational/promotional only, no country data. Checked Source 3 (SOFI 2024 Annex 1A) \u2014 this is the correct location for Nigeria's PoU in Table A1.1, but the retrieved text contains only the table heading and footnotes (n.a./n.r. conventions, <2.5 convention, three-year-average rule), not the data rows; Nigeria does not appear in the retrieved text. Checked Sources 4 and 5 (peer-reviewed Nigerian child malnutrition studies) \u2014 stunting, wasting, underweight, anaemia, vitamin A deficiency, CIAF; none is PoU. Checked Source 6 (IFRC emergency appeal via ReliefWeb) \u2014 IPC acute malnutrition caseloads for North-East/North-West; a different construct and sub-national. Dead ends: FAOSTAT Suite of Food Security Indicators and the SOFI Annex data rows were not among the supplied pages, so the figure could not be retrieved or quote-verified.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: No level, including level 1, is supported: the evidence does not show any Nigeria-specific PoU value at all, so it cannot even be established that Nigeria's PoU falls below or above the 25 percent cut. The only PoU figures present in the supplied pages are supranational: SOFI 2024 reports global PoU of 9.1 percent in 2023 and Africa at 20.4 percent in 2023. A regional African aggregate is not a Nigeria figure and must not be substituted for one \u2014 Nigeria's PoU has historically diverged materially from the continental mean, and the direction of that divergence cannot be inferred from the aggregate. Sources 4-6 report child undernutrition indicators (stunting 7.2-61%, wasting 1-29%, underweight 5.9-42.6%; 5.44m acutely malnourished children in the North-East and North-West), which measure child anthropometric status, not the population-wide prevalence of insufficient dietary energy intake that PoU (SDG 2.1.1) measures. An independent T1 series (World Bank WDI SN.ITK.DEFC.ZS) reports 19.9 for 2023.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "subs": [],
+   "stale": false,
+   "name": "Prevalence of undernourishment (%)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.5": {
+   "value": "FAO's RuLIS country brief for Nigeria (General Household Survey 2018-2019) finds that among owners or rights-bearers of agricultural land in Nigeria, about a third are women, with significantly more men than women holdin",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2018,
+   "src": "FAO, RuLIS country brief: Nigeria (Nigeria General Household Survey 2018-2019)",
+   "note": "Rounded qualitative expression (\"about a third\") rather than a published point estimate; derived from a household survey (GHS 2018-19) and conflicts with a lower government policy claim reported in the press. Next level not proposed: Level 4 would require published evidence that women make up more than 40 percent of agricultural land owners or rights-bearers in Nigeria. No retrieved source shows this; FAO's phrasing caps the estimate at roughly a third, and the other retrieved figures point lower still (DHS 2018: 4.2% of women aged 15-49 own land alone; Federal Ministry of Women Affairs, as reported in Punch, claims women are a small minority of landowners). No source establishes a share above 40 percent. The quoted FAO figure is SDG 5.a.1(b) \u2014 share of women among owners or rights-bearers of AGRICULTURAL land \u2014 i.e. it sits on the OWNERSHIP side of the unratified definition question, which matches the indicator's name (\"women who own land\") rather than the operator/holder alternative; the denominator is owners/rights-bearers of agricultural land, not all agricultural holders, so it is a close but not identical reading of \"% holders\". Two other figures in the retrieved pages do NOT measure this construct and are recorded here only as context: (a) the World Bank Gender Data Portal (DHS 2018) reports Nigeria 4.2% for \"Women who own land alone (% of women age 15-49)\" \u2014 a different denominator (all women of reproductive age, not landowners/holders) and restricted to sole ownership; (b) Punch (T5 news) reports the Federal Ministry of Women Affairs WEE policy stating \"Only one in five landowners in Nigeria is female. This accounts for only 10 per cent of all landowners in Nigeria\" \u2014 internally inconsistent, T5, and not usable for a statistic.",
+   "tier": "T2",
+   "tier_detail": "Rounded qualitative expression (\"about a third\") rather than a published point estimate; derived from a household survey (GHS 2018-19) and conflicts with a lower government policy claim reported in the press",
+   "url": "https://openknowledge.fao.org/server/api/core/bitstreams/1775a0a9-8796-4fee-bcc2-759ff92759fc/content",
+   "defnote": "The indicator name says women who OWN land while the canonical statistic counts women agricultural holders (operators), who may rent rather than own.",
+   "defsev": "asserts-falsehood",
+   "subs": [],
+   "stale": true,
+   "name": "Women who own land (% holders)",
+   "pillar": "A1",
+   "layer": "Foundation",
+   "uc": [
+    "NEED",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.1": {
+   "value": "DATA GAP \u2014 1) ITU Digital Development Dashboard for Nigeria (ddd_NGA.pdf, T1) \u2014 found national coverage: 94% mobile-cellular, 87% at-least-3G, 81% at-least-4G (2022); the only rural-tagged row is households with Internet access at home, rural (2017) 2%, a different construct. No rural coverage split. 2) ITU DataHub landing page and UMC dashboard \u2014 both rendered with United States as focus economy and no Nigeria values; no rural coverage indicator value retrievable. 3) ITU Statistics page \u2014 confirms ITU publishes 'Population covered by a mobile-cellular and a mobile-broadband network, total and by urban/rural area' but only as global/regional/development-group aggregates, not as a Nigeria country figure; dead end for a national-country rural cell. 4) ITU DataHub About page \u2014 methodology only, confirms mobile population coverage is collected as total, 3G, and 4G-and-above, with no rural split in the country questionnaire; this explains why no Nigeria rural figure exists at T1. 5) NCC Network Performance Report index (T3) \u2014 lists an 'Urban Vs Rural Analysis' section in the Q2 2026 report, the most promising route to a rural figure, but the retrieved text is navigation only, no percentage. 6) NCC 'The Technology Driving Your Connection' (T3) \u2014 qualitative rural statements about 3G prevalence and underserved-region throughput deficits of 40-50%, but throughput, not coverage. 7) GSMA SSA 2024 Year in Review (T4) \u2014 Africa-wide coverage gap of 11% (2023), not Nigeria and not rural; inadmissible for a prerequisite row regardless. 8) GSMA Coverage Maps page (T4) \u2014 tool description only, no Nigeria value. 9) nPerf Nigeria coverage map (T5) \u2014 crowdsourced map with no published percentage; T5 barred from carrying a statistic. Conclusion: no admissible, quotable rural figure in the supplied pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Closest available T1 evidence is national-level, not rural; operator-reported administrative coverage estimates. Next level not proposed: Level withheld rather than set below 5 as well: the evidence does not even support a defensible statement-based banding. The qualitative NCC finding that 3G 'remains prevalent in rural and underserved areas' establishes that some rural mobile broadband service exists but gives no share of rural population covered, so it cannot be argued past or below any of the 20/40/60/80 cut points. What is missing and would settle it: the ITU urban/rural disaggregated 'population covered by at least a 3G/4G mobile network' value for Nigeria, or the rural coverage percentage inside an NCC quarterly Network Performance Report. The indicator names RURAL mobile broadband coverage. The best T1 evidence in the supplied pages is national: ITU's Nigeria dashboard reports population covered by at least a 3G mobile network (2022) at 87% and population covered by at least a 4G mobile network (2022) at 81%, plus mobile-cellular network coverage of 94%. These are whole-population figures with no urban/rural split, so they cannot stand in for rural coverage \u2014 in Nigeria the coverage gap is concentrated precisely in rural and remote LGAs, so a national figure will overstate the rural value by an unknown margin. The one rural-disaggregated ITU figure visible on that page is a different indicator entirely: households with Internet access at home, rural (2017) 2%. On the unratified definitional question flagged in the indicator census: this row should be judged against RURAL as named, which means the Egypt-style national at-least-3G number is not admissible here; ITU does publish 'Population covered by a mobile-cellular and a mobile-broadband network, total and by urban/rural area' as a global/regional time series (per the ITU Statistics page), but that is an aggregate release, not a Nigeria country value, and no Nigeria rural cell appears in any supplied page.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts RURAL coverage, but Egypt's row records the ITU national at-least-3G figure as a clean cls=\"Measured\" number that scores level 5 mechanically, while Nigeria records a rural-but-4G-only modelled estimate \u2014 so the register's only universal connectivity prerequisite carries a\u2026",
+   "defsev": "asserts-falsehood",
+   "subs": [],
+   "stale": false,
+   "name": "Rural mobile broadband coverage (3G/4G)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "t"
+  },
+  "2.4": {
+   "value": 41.2,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "ITU DataHub \u2014 Nigeria data (Individuals using the Internet)",
+   "note": "ITU country-reported/estimated figure; ITU DataHub shows no disaggregation by age, gender or location for Nigeria. Next level not proposed: Level 4 was not proposed because 41.2% does not reach the 60% cut point \u2014 it clears 40 by only 1.2 percentage points. No published source in the retrieved pages puts Nigerian individual Internet use at or above 60%: the World Bank WDI table lists Nigeria at 41 for 2024 and FRED at 41.21140, and NCC's regulator pages (Sources 7 and 8) publish only subscription/teledensity counts, not the share of individuals using the Internet, so they cannot substitute for a higher user-penetration figure. ITU defines the indicator as 'the proportion of individuals who used the Internet from any location in the last three months' (Source 2), which is exactly the named construct. The World Bank WDI page (Source 5) carries the same ITU-sourced figure for Nigeria rounded to 41 for 2024, and FRED reports 41.21140 for 2024 \u2014 all three are the same underlying ITU series, so they corroborate rather than conflict. Corroborated by an independent T1 series (World Bank WDI IT.NET.USER.ZS): 41.21 for 2024.",
+   "tier": "T1",
+   "tier_detail": "ITU country-reported/estimated figure; ITU DataHub shows no disaggregation by age, gender or location for Nigeria",
+   "url": "https://datahub.itu.int/data/?e=NGA",
+   "subs": [],
+   "stale": false,
+   "name": "Individuals using the Internet (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.5": {
+   "value": 1.56,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2025,
+   "src": "ITU DataHub \u2014 Nigeria data (Affordability / ICT prices: Current and other ICT price baskets)",
+   "note": "ITU basket prices are expressed as a share of MONTHLY GNI per capita; the same DataHub country page displays a stale GNI per capita reference value (2013) in its Sustainability block, so the denominator vintage used for the basket calculation is not visible on the page. Next level not proposed: Level 5 would require the basket price to fall below 1% of monthly GNI per capita. It does not: ITU publishes 1.56% for Nigeria in 2025, more than half again above the 1 cut. No source in the retrieved pages shows any Nigerian data-only mobile-broadband basket below 1% on a monthly-GNI-pc basis; the only way to reach level 5 would be to reinterpret '% GNI pc' as annual GNI, which the ITU series does not do. The indicator name does not fix the basket allowance, the basket type, or whether the denominator is monthly or annual GNI pc. For Nigeria this ambiguity is largely harmless on two of the three axes: ITU's live headline data-only mobile-broadband basket (5GB, 2025) and the retired/legacy data-only 2GB series (2021-2024 label, value shown for 2025) both read 1.56% on the same page, and the 1GB experimental series also reads 1.56%; only the 10GB experimental basket differs (3.13%). The axis that does matter is basket TYPE: if the row is intended as a voice+data bundle rather than data-only, the published Nigerian figures are higher \u2014 2.74% (low-consumption, 70 min/50 SMS/1GB) and 3.44% (high-consumption, 140 min/70 SMS/5GB), both 2025. All of these are percentages of MONTHLY, not annual, GNI per capita; an annual-denominator reading of the same price would be roughly one twelfth of the recorded value and would place the cell at level 5. The recorded value sits on the data-only side of the basket-type question, matching the plain reading of \"mobile broadband price\".",
+   "tier": "T1",
+   "tier_detail": "ITU basket prices are expressed as a share of MONTHLY GNI per capita; the same DataHub country page displays a stale GNI per capita reference value (2013) in its Sustainability block, so the denominator vintage used for the basket calculation is not visible on the page.",
+   "url": "https://datahub.itu.int/data/?e=NGA",
+   "defnote": "The name fixes neither the basket allowance (2GB vs ITU's 2025 headline 5GB), nor the basket type (data-only vs voice+data), nor whether \"% GNI pc\" is monthly or annual \u2014 and Egypt's value sits on a series ITU has retired to a legacy label while Nigeria's comes from the live headline series id,\u2026",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "Mobile broadband price (% GNI pc)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.7": {
+   "value": "DATA GAP \u2014 1) NBS elibrary 2021 MICS key messages (T1) \u2014 has urban/rural mobile phone ownership (95%/81%) but any-phone and household-level, not smartphone; rejected on construct. 2) NBS GHS-Panel Wave 5 2023/24 survey report PDF (T1) \u2014 retrieved text is cover, contents and section headings only; Chapter 3 'Housing Characteristics and Household Assets' and the ICT material are not in the supplied text, so no quotable rural smartphone figure. 3) NBS microdata catalog data dictionary for sect5b_plantingw5.dta (T1) \u2014 confirms the survey collects individual smartphone ACCESS (s5bq8a__3) and a sector (urban/rural) variable, i.e. a rural cross-tab is computable from microdata but is not published on these pages; computing it myself would not be a published figure. 4) World Bank microdata variable page for s5bq8a__3 (T1) \u2014 32.3% YES, but national, access-not-ownership, and disclaimed as not a population statistic. 5) NBS HDI GHS 2017 assets variable d5b (T1) \u2014 'Mobile Telephone' household ownership, 74% of cases, no smartphone split, no rural split. 6) GSMA SOMIC 2024 and 2025 overview PDFs (T4) \u2014 retrieved text covers front matter, contents and global key findings (LMIC rural adults 28% less likely to use mobile internet); no Nigeria-specific rural smartphone ownership figure in the supplied text. 7) Punch (T5) \u2014 carries the GSMA 32% rural / 58% urban 2022 figures; tier bars use as a statistic. 8) LSMS-ISA GHS-Panel 2012/13 report (T1) \u2014 supplied text is contents and executive summary only; ICT chapter content not present. Dead end overall: the correct construct exists in GSMA's 2023 country survey data and is derivable from NBS microdata, but neither was retrievable as a quotable admissible page in this set.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Level withheld rather than set: no supplied page at T1-T4 states, in text that can be quoted, a percentage of rural Nigerians (or rural Nigerian households) owning a smartphone. Even level 1 would require an admissible published rural smartphone figure below 20, and no such figure was found either. Context, none of which measures rural smartphone ownership: (1) NBS 2021 MICS (T1) reports household ownership of a cell phone of any type, disaggregated urban/rural \u2014 'Mobile phone ownership is higher in urban areas (95%) than in rural areas (81%)'. This is any mobile phone, at the HOUSEHOLD level, not smartphones, so it is far higher than a smartphone measure and sits on the household side of the unratified individual-vs-household question. (2) NBS/World Bank GHS-Panel Wave 5 2023/24 (T1) variable s5bq8a__3 shows 32.3% of 14,450 valid individual records answering YES to smartphone \u2014 but the question wording is 'have access to', not own; the figure is national (urban and rural pooled, the sector variable is present in the file but not crossed on the published page); and the page itself warns the percentages 'cannot be interpreted as summary statistics of the population of interest'. (3) A T5 news report (Punch, 15 Oct 2023) attributes to GSMA a figure of 32% rural and 58% urban Nigerian smartphone ownership in 2022 \u2014 this is the correct construct and the correct disaggregation, but the tier bars its use as a statistic and the underlying GSMA 2023 report was not among the pages retrieved.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "\"Ownership\" of a personal device implies individuals; both countries record the share of rural HOUSEHOLDS owning at least one smartphone, which reads systematically higher than the individual measure.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Rural smartphone ownership (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "2.9": {
+   "value": 23.5,
+   "cls": "Measured",
+   "level": 2,
+   "year": 2024,
+   "src": "World Bank Open Data \u2014 Access to electricity, rural (% of rural population), Nigeria (EG.ELC.ACCS.RU.ZS)",
+   "note": "Modeled/derived estimate: World Bank Global Electrification Database compiles nationally representative household surveys and occasionally census data; the T5 aggregator Trading Economics reports a materially different figure (32.9% for 2023) suggesting the series has been revised, so the level of the series should be treated as revision-prone. Next level not proposed: Level 3 would require rural access at or above 40% of the rural population. The World Bank rural series records 23.5% for Nigeria in 2024 \u2014 roughly 16 percentage points short \u2014 and no admissible source in the retrieved pages publishes a rural figure at or above 40%. The only higher rural number encountered (32.9% for 2023) comes from a T5 aggregator, is itself still below 40, and is therefore not recorded. The quoted figure is specifically the rural series (EG.ELC.ACCS.RU.ZS), defined in the WDI metadata glossary as \"the percentage of rural population with access to electricity\", unit \"% (share) of rural population\". For context only, the national figure for Nigeria in the same database is 62.5% (Access to electricity, % of population, 2024) \u2014 that national figure is NOT used here. Corroborated by an independent T1 series (World Bank WDI EG.ELC.ACCS.RU.ZS): 23.5 for 2024.",
+   "tier": "T1",
+   "tier_detail": "Modelled/derived estimate: World Bank Global Electrification Database compiles nationally representative household surveys and occasionally census data; the T5 aggregator Trading Economics reports a materially different figure (32.9% for 2023) suggesting the series has been revised, so the level of the series should be treated as revision-prone.",
+   "url": "https://data.worldbank.org/indicator/EG.ELC.ACCS.RU.ZS?locations=NG",
+   "subs": [],
+   "stale": false,
+   "name": "Rural electricity access (%)",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "t"
+  },
+  "2.11": {
+   "value": "Nigeria's federal government, through the Nigerian Consumer Credit Corporation (CREDICORP), has launched a national digital device credit programme offering smartphones, laptops and other digital devices to working Niger",
+   "cls": "Judged",
+   "level": null,
+   "year": 2025,
+   "src": "The Guardian (Nigeria), \"Federal Government rolls out credit scheme for smartphones, laptops, others\"",
+   "note": "RATIFICATION HOLD \u2014 the only source is T5 news, vendor or market material, which carries existence facts but never a statistic. The level is withheld and this row leaves every mean. Existence fact taken from a national newspaper report of a government statement (T5); no primary CREDICORP or gazette document was among the supplied pages, and the numbers reported in the article (pilot of 'over 1,000', scaling to 'over 15,000') are not admissible as statistics at this tier.",
+   "tier": "T5",
+   "tier_detail": "Existence fact taken from a national newspaper report of a government statement (T5); no primary CREDICORP or gazette document was among the supplied pages, and the numbers reported in the article (pilot of 'over 1,000', scaling to 'over 15,000') are not admissible as statistics at this tier",
+   "url": "https://guardian.ng/news/federal-government-rolls-out-credit-scheme-for-smartphones-laptops-others/",
+   "defnote": "The ladder's name fixes neither a targeting test nor whether a subsidy is required, and the two countries applied opposite tests to the same class of evidence \u2014 commercial telco handset instalments \u2014 producing a two-rung divergence.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Device financing/subsidy schemes",
+   "pillar": "C1",
+   "layer": "Foundation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.1": {
+   "value": 0.4815,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "United Nations DESA, Division for Public Institutions and Digital Government \u2014 EGOVKB Country Information: Nigeria",
+   "note": "Next level not proposed: Level 4 would require an EGDI above 0.6. Nigeria's 2024 value of 0.4815 falls well short of that; it sits in the UN's own 'middle EGDI' group (MEGDI, rating class MH), below the world average of 0.6382 and below regional peers Ghana (0.6317) and C\u00f4te d'Ivoire (0.5587). Nothing in the retrieved pages shows any Nigerian EGDI reading at or above 0.6 in any survey edition. The quoted figure is exactly the UN E-Government Development Index (EGDI) for Nigeria in the 2024 edition of the UN E-Government Survey. The same page's historical series gives the more precise value 0.48146 for 2024 and the Data Center table lists Nigeria at rank 144 with EGDI 0.4815.",
+   "tier": "T1",
+   "tier_detail": "",
+   "url": "https://publicadministration.un.org/egovkb/en-us/Data/Country-Information/id/125-Nigeria",
+   "subs": [],
+   "stale": false,
+   "name": "UN E-Government Development Index",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "3.3": {
+   "value": "Nigeria has a formally adopted but not yet operating national farmer registry: the FMAFS/NIMC NIN-enabled farmer registry and G2P card project (announced January 2025), with a National Digital Farmers Registry still in d",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "National Identity Management Commission (NIMC), Press Release: FMAFS/NIMC NIN-Enabled Farmer Registry & G2P Card Project",
+   "note": "Implementing agencies' own announcements; no independent evaluation or enrollment statistics located. Next level not proposed: Operating was not proposed because nothing in the retrieved pages shows the registry actually enrolling or serving farmers. The November 2025 FMAFS item reports the launch of a 'National Stakeholder Workshop on Best Practices' \u2014 i.e. a design/harmonisation step, not a live register \u2014 and the workshop report's contents list is dominated by 'Strategic recommendations' and 'Key Enablers', including an MVP still to come. The World Bank's March 2026 press release uses the future tense ('will ... establish a national digital farm and farmer registry'), which indicates no operating national registry at that date. Quality_evidence was left empty because only the implementers' own descriptions of intended function (transparency, eliminating ghost beneficiaries) are available \u2014 design, not audited performance. Scale_evidence was left empty because no enrollment, card-issuance or coverage figures are published in any retrieved source; the AGROW '\"up to one million smallholder farmers\"' figure is a project beneficiary target, not registry reach. The evidence describes a register of individual farmers anchored on each farmer's National Identification Number and biometrics, which matches the indicator's name (a register of farmers as individuals). Note the same ambiguity flagged in the indicator census: the Nigerian design links each farmer's NIN to their farmland and holding characteristics ('the size of the holding, type of crops or livestock') and is bundled with a G2P benefit card, so future scale figures could mix cards issued, holdings mapped and farmers enrolled. No such figures are published yet, so no unit-mixing problem arises in this record.",
+   "tier": "T3",
+   "tier_detail": "Implementing agencies' own announcements; no independent evaluation or enrolment statistics located",
+   "url": "https://nimc.gov.ng/press-releases/fmafs-nimc-nin-enabled-farmer-registry--g2p-card-project",
+   "defnote": "The name implies a register of farmers (individuals), but Egypt's record is an agricultural holding registry embedded in a subsidy smart-card scheme, whose scale figures mix four non-comparable units \u2014 cards printed, cards distributed, farmers benefiting, and holdings registered \u2014 with no\u2026",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "National farmer registry",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "AGI",
+    "ADV"
+   ],
+   "prereq": "UC:FIN,AGI",
+   "kind": "l"
+  },
+  "3.4": {
+   "value": "Nigeria has no evidenced national digital land register, but state-level digital land administration systems are operating \u2014 Nasarawa's NAGIS reports 11,770 digital certificates issued and produces digitally secured cert",
+   "cls": "Documented",
+   "level": null,
+   "year": 2026,
+   "src": "Nasarawa Geographic Information Service (NAGIS) \u2014 Home",
+   "note": "RATIFICATION HOLD \u2014 the row contradicts itself: the recorded rung and evidence fields derive level 3, while the row argues for level 4. The level is withheld and this row leaves every mean. Implementer's own website; the certificate count is an undated site counter with no stated reference period.",
+   "tier": "T3",
+   "tier_detail": "Implementer's own website; the certificate count is an undated site counter with no stated reference period",
+   "url": "https://www.nagis.na.gov.ng/",
+   "defnote": "The name reads as one object but three distinct registers are in play \u2014 legal title, a national all-property real-estate ID database, and agricultural usufruct/holding records \u2014 and Egypt's rung-3 anchor is an economy-wide real-estate identification law (urban property included) scored inside an\u2026",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Digital land/plot registration",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.5": {
+   "value": "Nigeria's National Bureau of Statistics, with FAO support, officially released the National Agricultural Sample Survey 2023 report together with anonymised microdata, disseminated through the NBS online microdata catalog",
+   "cls": "Documented",
+   "level": null,
+   "year": 2025,
+   "src": "FAO, Agricultural integrated survey programme (AGRISurvey) \u2014 Nigeria",
+   "note": "RATIFICATION HOLD \u2014 The indicator name conjoins three qualifiers \u2014 open, machine-readable, AI-ready. The retrieved evidence supports only part of that. MACHINE-READABLE: the NBS catalog study pages offer structured metadata in 'DDI/XML' and 'JSON' and anonymised microdata files, which is machine-readable metadata at minimum. OPEN: the catalog header on every retrieved page reads 'NBS Website | Register | Login' and access is via a 'GET MICRODATA' request flow; the catalog's own License search facet carries no stated license in the retrieved text, so the datasets are registration-gated public-use files rather than openly licensed open data. AI-READY: nothing in the retrieved Nigeria pages evidences bulk/API delivery, versioned pipelines, harmonized machine-readable data dictionaries or a machine-readable license \u2014 the only AI-readiness criteria in the sources come from a NOAA (United States) presentation, which is not evidence about Nigeria and was not applied to any Nigerian dataset. No Nigerian general open-data portal (e.g. a national data.gov catalog) page was supplied, so the 'open portal' side of the census's open question could not be tested. The evidence therefore sits on the statistical-microdata side of the unresolved definition, not on the open/AI-ready side.. The level is withheld and this row leaves every mean. Dissemination platform is registration-gated; openness of license and programmatic access not documented in the retrieved pages.",
+   "tier": "T1",
+   "tier_detail": "Dissemination platform is registration-gated; openness of licence and programmatic access not documented in the retrieved pages",
+   "url": "https://www.fao.org/in-action/agrisurvey/access-to-data/nigeria/en",
+   "defnote": "The name asserts three conjoined qualifiers \u2014 open, machine-readable, AI-ready \u2014 and Nigeria scores rung 4 ('Operating with quality') on a registration-gated statistical microdata catalogue that the cell's own text says is neither open nor AI-ready, while Nigeria's actual open-data portals are\u2026",
+   "defsev": "asserts-falsehood",
+   "subs": [],
+   "stale": false,
+   "name": "Open agricultural data (machine-readable, AI-ready)",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ADV",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.6": {
+   "value": "88",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "ILRI/CGIAR \u2014 Nigeria country profile: Delivering climate and agro-advisory services in Nigeria: Progress, challenges, and investment priorities",
+   "note": "Station counts are reported in a donor/research country profile drawing on a six-country assessment, not in a NiMET or NBS statistical publication; no observation date for the counts is given beyond the August 2025 publication. Next level not proposed: No increment for quality_evidence: the only independent assessment in the supplied pages (ILRI/CGIAR) does not report an evaluation, audit, service standard met, or forecast-verification score for Nigeria's observation network \u2014 it reports the opposite, that 'Inadequate infrastructure and funding' and a shortage of stations 'constrains data quality and accessibility', and rates national readiness as 'Evolving'. No WMO GBON compliance figure, WDQMS availability rate, or NiMET performance report for Nigeria appears in the supplied pages, so no evidence exists that the network meets a published standard. Level 5 is therefore out of reach, and level 4 is withheld under the stated increment rule and because the station-density evidence is a single secondary count with no archive or data-access dimension attested. This evidence sits on the correct side of the census question: it reports the physical observation network (88 automatic weather stations, plus synoptic and agromet stations, coordinated by NiMET) rather than advisory products issued to farmers. The same source also describes advisory generation and dissemination channels (radio, TV, NiMET Weather App), which is the indicator 8.17 overlap flagged in the census; that advisory material was NOT used to score this row. No evidence was found in the supplied pages on the other two elements named in the indicator title \u2014 climate data archives and data access (API, open data portal, national climate data policy). The WMO GBON compliance app page supplied contains only methodology text, no Nigeria compliance or station-gap figures. The World Bank Climate Change Knowledge Portal Nigeria page supplied provides ERA5 reanalysis (a global ECMWF product at 0.25\u00b0 resolution), which is not Nigerian national observation infrastructure.",
+   "tier": "T2",
+   "tier_detail": "Station counts are reported in a donor/research country profile drawing on a six-country assessment, not in a NiMET or NBS statistical publication; no observation date for the counts is given beyond the August 2025 publication.",
+   "url": "https://cgspace.cgiar.org/bitstreams/c1277c60-5b9b-4697-9ba2-52c1a8be0d71/download",
+   "defnote": "The name is data infrastructure \u2014 observation networks, archives, data access \u2014 but both countries are scored at rung 4 on advisory products issued to farmers, with no station density, archive, API or data-access evidence recorded on either row, and the advisory content overlaps indicator 8.17\u2026",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Weather/climate data infrastructure",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "ADV",
+    "SMF",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.7": {
+   "value": "Nigeria produced its first set of land cover accounts, for the nation as a whole and for two pilot states, using satellite-derived geospatial data (including ESA-CCI) through a multi-agency Technical Working Group led by",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "World Bank / National Bureau of Statistics \u2014 Nigeria Natural Capital Accounting: Physical Asset Account for Land (April 2025)",
+   "note": "Capacity-building exercise co-produced with donors; land use classification and monetary valuation explicitly deferred to future analysis. Next level not proposed: Operating was not proposed: the quoted document presents a first-time, donor-supported, capacity-building production with land use classification and monetary valuation deferred, and with the sub-national work confined to two pilot states \u2014 there is no evidence in the supplied pages of a recurring, institutionalized national EO service (e.g. routine national crop-type or irrigated-cropland maps issued on a schedule). The agriculture-specific EO initiatives (IrrEO, EO for Crop Type Mapping) are at workshop and roadmap stage in 2026. quality_evidence left empty: no independent evaluation, audit, accuracy assessment or performance report on Nigeria's EO products appears in these pages \u2014 only the implementers' own descriptions. scale_evidence left empty: no published figures for users, coverage of an operating service, or beneficiaries; the GBP 3 million IrrEO grant is an input, and 'three focus countries' and '~90% rainfed cultivation' are context, not reach of a delivered EO service. The indicator name ('Satellite/EO data integration') fixes neither the object nor the bar. The evidence recorded here sits on the INSTITUTIONAL-ARRANGEMENTS-plus-first-output side of that open question, not the 'routine national crop maps' side: it is EO/geospatial data integrated into an official statistical product (land cover accounts) by a standing multi-agency Technical Working Group under the NBS, with NASRDA and the Federal Ministry of Agriculture & Food Security as members. It is land cover accounting, not agricultural crop mapping. Agriculture-specific EO work found in these pages is at project/workshop stage: NASRDA's own page (T3, central.nasrda.gov.ng, March 2026) describes a three-day IrrEO workshop whose expected outcome is to 'establish a clear roadmap for integrating Earth observation tools into Nigeria\u2019s agriculture and irrigation development strategies' \u2014 i.e. a roadmap, not an operating service. FAO GIEWS publishes ASIS/VHI Earth-observation indicators for Nigeria, but that is an FAO-run global product, not evidence of Nigerian national integration.",
+   "tier": "T1",
+   "tier_detail": "Capacity-building exercise co-produced with donors; land use classification and monetary valuation explicitly deferred to future analysis",
+   "url": "https://documents1.worldbank.org/curated/en/099092925065028604/pdf/P180402-366ce9f3-8e7e-48c9-ab09-4341719a7157.pdf",
+   "defnote": "The name fixes neither the object nor the bar for 'integration' \u2014 Egypt is scored rung 4 on producing national crop maps, Nigeria rung 3 on institutional arrangements \u2014 and Egypt's 'operating beyond pilots' assertion rests on a source whose own title announces a pilot launch, recorded under year\u2026",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "Satellite/EO data integration",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.8": {
+   "value": "Nigeria has a national digital soil map and database, created by scanning, georeferencing and vectorising the eight 1:650,000 hard-copy sheets of the 1985-1990 FDALR reconnaissance soil survey (58 soil mapping units, who",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2020,
+   "src": "Data in Brief (via PubMed Central): Free, open, quantitative and adaptable digital soil map data and database for Nigeria",
+   "note": "Derived entirely from scanned 1985-1990 legacy paper maps at 1:650,000 (no new field sampling); the peer-reviewed data brief states the repository is a university department, not a government-operated public service. Next level not proposed: Operating was not proposed. Nothing in the retrieved pages shows a functioning national soil information service delivering data to users: the peer-reviewed database is described as held by a single university department as the 'major repository' rather than published as an accessible national service; the government NFSHS/NiSIS page describes intent to incorporate legacy data and reports completed fertility mapping for only four of 36 states, with no data portal outputs, access statistics or update cycle evidenced; and the FAO GLOSIS page lists national soil information systems for Cambodia and North Macedonia but not Nigeria. Quality and scale fields were left empty for the same reason - only implementer/author descriptions of design were available, no independent performance or reach figures. The indicator name ('National soil map/database') is satisfied on its face: the quoted source documents a national-coverage digital soil map and linked attribute database for Nigeria. However, this evidence sits on the 'digitized legacy paper map' side of the assessment's unresolved definitional question - it is a 2020 digitization/vectorisation of the FDALR 1985-1990 reconnaissance survey held at the University of Nigeria Enugu Campus, not an operating national digital soil information service. The government-side artifact (Federal Ministry of Agriculture's Nigerian Farmers Soil Health Scheme 'Digital Soil Maps' page, T3, https://nfshcs.agriculture.gov.ng/digital-soil-maps/) confirms a national scheme and a NiSIS section exist, but the soil survey and fertility mapping it reports covers only four states (Edo, Oyo, Jigawa, Gombe), i.e. sub-national, and no served data product or user figures are published there. If the ladder is later ratified to mean an operating digital soil information service, this row should be re-scored downward.",
+   "tier": "T3",
+   "tier_detail": "Derived entirely from scanned 1985-1990 legacy paper maps at 1:650,000 (no new field sampling); the peer-reviewed data brief states the repository is a university department, not a government-operated public service",
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7334409/",
+   "defnote": "Does a digitised legacy paper soil map satisfy the indicator, or does the ladder measure an operating digital soil information service?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": true,
+   "name": "National soil map/database",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "ADV",
+    "SMF"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.11": {
+   "value": "DATA GAP \u2014 Order of inspection: (1) NITDA 'DATA INTEROPERABILITY STANDARDS, 2016' PDF \u2014 read preliminaries, arrangement of standards, scope (s.5) and semantic interoperability background; found a legally issued, cross-sector standard, but no agricultural data elements, classifications or domain vocabularies; (2) NITDA Ne-GIF v1.2 PDF \u2014 read metadata table (Enforcement Category: Recommended; Target Audience: all government organizations) and full table of contents through the levels-of-interoperability chapter; horizontal e-government framework, no agriculture sector annex in the retrieved extract; (3) NATIP 2022-2027 (agriculture.gov.ng) \u2014 retrieved text stops at the foreword; TOC shows '2.5.6 Data and Information Management' (p.60) and '2.5.4 Promoting Digital and Climate-Smart agriculture' (p.55), but the body text of neither section was retrieved, so no quotable statement on agricultural data standards; (4) FMARD e-Library (home, community list, login, and one item handle) \u2014 all four URLs returned '500 Service Unavailable', a dead end; (5) FAO 'Concepts and definitions of agricultural census items' (fao.org) \u2014 international census concepts/definitions guidance, not a Nigerian national standard, and it explicitly leaves adaptation to countries; not evidence about Nigeria; (6) UW EPAR data curation page \u2014 LSMS-ISA indicator construction code including the Nigeria GHS; this is a researcher's indicator harmonisation effort, not a Nigerian national interoperability standard; (7) PolicyVault.Africa Ne-GIF page \u2014 T5 aggregator, inadmissible for a prerequisite row and in any case describing the same non-agricultural framework. Not found in this pack and would be the next places to look: FMARD/NBS agricultural statistics strategic plan (NSDS/SSPARS) text, NABG/NASC data standards, NAERLS extension data schemas, and any Nigeria Agricultural Data Portal metadata standard.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Not applicable \u2014 no level is proposed. For the record, the reason no level above 0 is recorded is that the only quotable T3 artifacts (NITDA Data Interoperability Standards 2016; Ne-GIF v1.2 2019) are cross-government rather than agricultural, and both quality_evidence and scale_evidence are empty: nothing in the pack is an independent evaluation, audit or compliance report on Nigerian interoperability standards, and nothing gives adoption counts, MDA coverage, or numbers of datasets published under them. The indicator names AGRICULTURAL data interoperability standards. The best available Nigerian evidence is sector-agnostic: (a) NITDA's 'DATA INTEROPERABILITY STANDARDS, 2016', issued under s.6 of the NITDA Act 2007, whose stated scope covers data interoperability, data standardization, naming standards and data element definition across public and private sector information systems, with no agricultural data classes, and (b) the 'Nigeria e-Government Interoperability Framework (Ne-GIF)' v1.2 (August 2019), whose metadata records enforcement category 'Recommended' and target audience 'All Government organizations', again with no agriculture-specific content in the retrieved text. This is precisely the unratified question flagged for this row: whether cross-government DPI/open-data instruments count. On the indicator's name as written, they sit on the wrong side of it \u2014 they are horizontal e-government instruments, not agricultural data standards. If the assessment later ratifies a definition that admits cross-government instruments, this cell would plausibly move to Adopted on the NITDA 2016 Standards (T3, legally issued, cross-sector), and the retrieved pages would still contain no evaluation or coverage figures to justify anything above that.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Must the standard be agriculture-specific, or do cross-government open-data/DPI instruments and draft harmonisation work count as Present/Announced for this prerequisite cell?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural data interoperability standards",
+   "pillar": "C2",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "UC:AGI",
+   "kind": "l"
+  },
+  "4.1": {
+   "value": "Nigeria has a comprehensive data protection law, the Nigeria Data Protection Act (NDP Act) 2023, which is being implemented by the Nigeria Data Protection Commission through the General Application and Implementation Dir",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2023,
+   "src": "Nigeria Data Protection Commission \u2014 Nigeria Data Protection Act (NDP Act) 2023, General Application and Implementation Directive (GAID) 2025 (NDPC/NDP ACT-GAID/01/2025)",
+   "note": "Next level not proposed: Level 4 was not proposed because no independent or official evaluation, audit or performance assessment of how well the law is enforced appears in the supplied pages. The NDPC resources index lists an 'NDPC ANNUAL PERFORMANCE REPORT 2023' and annual reports for 2024 and 2025, but only their titles are visible \u2014 no findings, service standards or measured outcomes could be quoted, and a regulator's own list of documents is not quality evidence. Level 5 was likewise not proposed because no reach figures (number of registered data controllers/processors, licensed DPCOs, audits filed, complaints resolved) appear anywhere in the retrieved text. The evidence is the primary legal instrument itself (NDP Act 2023) plus the regulator's implementing directive (GAID 2025), which is exactly the named construct: a data protection/privacy law for Nigeria.",
+   "tier": "T3",
+   "tier_detail": "",
+   "url": "https://ndpc.gov.ng/wp-content/uploads/2025/03/NDP-ACT-GAID-2025-MARCH-20TH.pdf",
+   "subs": [],
+   "stale": false,
+   "name": "Data protection/privacy law",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "UNIVERSAL",
+   "kind": "l"
+  },
+  "4.2": {
+   "value": "DATA GAP \u2014 1) ITU GCI 2024 e-publication (English and Chinese-interface renderings, Sources 1 and 5) \u2014 read for a country results table or Nigeria profile; text ends partway through the foreword, no annex content, no country data. 2) ITU publication catalog entry D-HDB-GCI.01-2024 (Source 2) \u2014 download links only, no figures in page text. 3) ITU-D Global Cybersecurity Index programme page (Sources 3, 4, 6, three URL casings of the same page) \u2014 methodology description ('five pillars ... aggregated into an overall score'), links to GCI 2024 report and press release, note on the El Salvador/Sierra Leone profile error, but no scores. 4) NCC cybersecurity resources page (Source 7, T3) \u2014 confirms Nigerian instruments exist (National Cybersecurity Policy and Strategy 2021, Cybercrime Prohibition Prevention Act 2024, NDPA 2023, Cyber Resilience Framework for the Communications Sector, ngCERT) but publishes no GCI score; this is framework-existence evidence, not the named ITU index measure. 5) statbase.org Nigeria GCI page (Source 8, T5) \u2014 chart/table content unrendered ('Loading...'), and T5 is inadmissible for a statistic regardless. Dead end: the GCI 2024 annex/country-profile PDF, which is where the Nigeria entry would sit, was not among the supplied pages; it should be fetched directly before this cell is ratified.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Retrieved ITU pages are front matter only; the country-score annex of the GCI 2024 report was not among the supplied text. Next level not proposed: Not even level 1 is proposed, because level 1 would still assert that a measured value exists and falls below 0.2. The evidence does not show any Nigeria GCI value at all in the retrieved pages, and separately does not establish which scale the row is meant to use. The ITU GCI is the construct named in the indicator: the retrieved ITU page states the assessment runs across five pillars 'and then aggregated into an overall score'. However, the supplied pages give no Nigeria value, so construct match cannot be verified against an actual figure. Two further definitional problems, both visible in the retrieved material and both bearing on the census's open question: (a) the GCI 2024 acknowledgements credit the Expert Group with 'developing the tier-based model' and thank Winston Oyadomari 'for his leadership of the discussion of the transition to a tier-based model', which is consistent with the census note that neither 100 nor 0.824 is an overall score ITU actually publishes in the 2024 edition; (b) the register's own two entries (Egypt 100, Nigeria 0.824) sit on incommensurable scales, so even a correctly sourced ITU figure could not be scored against the 0.2/0.4/0.6/0.8 cut points until the scale is ratified. No value for any other country has been carried into this cell.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Thresholds are defined on a 0\u20131 basis but Egypt is recorded as 100 and Nigeria as 0.824, so the same register column holds two incommensurable scales; separately, neither number is an overall score ITU actually publishes in the GCI 2024 report.",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "Cybersecurity framework (ITU GCI)",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "4.3": {
+   "value": "DATA GAP \u2014 1) Oxford Insights 2025 index page (primary publisher) - Nigeria appears only in the country-selector list; the rankings are rendered in an interactive chart whose values are not in the fetched text. 2) Oxford Insights 2024 Government AI Readiness Index PDF - fetched extract covers credits, framework, findings and a table of contents showing 'Full rankings 41', but the extract ends in the findings section; Nigeria appears only as one of the lower-middle-income countries that 'formalised their AI visions this year'. No Nigeria score. 3) Policy Commons artifacts for both the 2024 and 2025 reports - both returned Cloudflare security-verification interstitials, no content. 4) Mauritius ICT Indicators GAIRI page - the only page carrying a Nigeria-specific index statement, but it gives a rank rather than a score, is a third country's portal (T5 by domain), and its prose ranks conflict with its own tabulated ranks. 5) Nigeria National AI Strategy (NITDA/NCAIR, T3) - a policy artifact describing pillars and objectives; the fetched text contains no Oxford Insights readiness score or benchmark figure for Nigeria. Dead end on all routes to a quote-verifiable Nigeria score; recorded as not found with a ratification hold.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Only secondary, internally inconsistent evidence available: the Mauritius ICT Indicators page states Mauritius is 'ranked 71st globally' in prose while its own table shows Mauritius at 67 and South Africa at 65, so the adjacent Nigeria rank figure cannot be relied upon. Next level not proposed: Even the lowest band (level 1, below 20) cannot be asserted, because no Nigeria score of any kind - overall or pillar - appears in the fetched text; the absence of a figure is not evidence of a low figure, and the peer evidence in the same table (South Africa 65th, Kenya 68th with pillar scores in the 35-77 range) suggests Nigeria at ~72nd would sit well above 20, which is precisely why an unsupported level-1 default would be a misrecording. For context, and not recorded as a value: the Mauritius government ICT indicators page states that Kenya, South Africa and Nigeria were the top scoring Sub-Saharan African countries in the 2025 Government AI Readiness Index, 'ranking 65th, 67th and 72nd on the global AI Readiness Index' out of 195 assessed. That is an ordinal rank in the named index, not the 0-100 overall score that this cell's cut points (20/40/60/80) presuppose, and the page's own pillar table contradicts the prose ranks. This sits exactly on the wrong side of the census's open question: the 2025 edition's overall score for Nigeria is not exposed in any supplied page, no Nigeria pillar scores (Policy Capacity, Governance, AI Infrastructure, Public Sector Adoption, Development & Diffusion, Resilience) appear, and no 2024 Nigeria overall score appears either. Until the definition is ratified as either (a) the stale 2024 overall score or (b) rank-plus-pillar substitution, and a page carrying Nigeria's actual numbers is fetched, the cell has no admissible value.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Now that the 2025 edition dropped the open overall score, does the cell score the stale 2024 overall score, substitute rank plus pillar scores, or gap?",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "Government AI Readiness Index",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "4.4": {
+   "value": "Nigeria has a draft National/Nigeria Digital Agriculture Strategy (NDAS, 2020-2030) developed by NITDA with FMARD and circulated to stakeholders for review, but the retrieved pages show no evidence it was formally adopte",
+   "cls": "Documented",
+   "level": 2,
+   "year": 2020,
+   "src": "National Information Technology Development Agency (NITDA), \"Draft National Digital Agriculture Strategy (NDAS)\"",
+   "note": "Publisher's own undated announcement page; no gazette, Federal Executive Council approval record, or final strategy document retrieved. Next level not proposed: Adopted (3) was not proposed because nothing in the retrieved pages shows formal approval, gazetting, launch of a final NDAS, or Federal Executive Council endorsement of the digital agriculture strategy itself. The only approval evidence in the sources is for a different instrument (NATIP 2022-2027, approved 18 May 2022). The FMARD/FMAFS site and e-library, which might carry a final NDAS, returned no such document (the e-library returned HTTP 500). Operating was not proposed because no implementation report, budget line, institutional coordination mechanism for NDAS, or delivery figure was found; correspondingly quality_evidence and scale_evidence are left empty (no evaluation, audit, performance report, or user/coverage figures exist in the sources). The NITDA page is squarely about a dedicated national digital agriculture strategy document (NDAS), so it sits on the correct side of the census question. However, it evidences only a first draft under stakeholder review, not an adopted instrument. On the other side of the census question, the retrieved NATIP 2022-2027 (FMARD, approved by the Federal Executive Council on 18 May 2022) is an adopted broader agricultural policy containing an embedded digital component (section 2.5.4 'Promoting Digital and Climate-Smart agriculture' and 2.5.6 'Data and Information Management'); if the indicator were later ratified to credit embedded components, that adopted policy would move the rung to Adopted. Judged against the indicator name as written (a national digital agriculture strategy), only the draft NDAS applies.",
+   "tier": "T3",
+   "tier_detail": "Publisher's own undated announcement page; no gazette, Federal Executive Council approval record, or final strategy document retrieved",
+   "url": "https://nitda.gov.ng/draft-national-digital-agriculture-strategy-ndas/",
+   "defnote": "Does the indicator score only a dedicated digital-agriculture strategy document, or does it credit digital-ag components embedded in broader national strategies and active programmes running without a strategy?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": true,
+   "name": "National digital agriculture strategy",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "4.5": {
+   "value": "DATA GAP \u2014 1) FAO Global Strategy to Improve Agricultural and Rural Statistics country page for Nigeria (T1) \u2014 checked for a governance instrument; found only 2021-2024 capacity activities (scholarships, CAPI, CAADP indicators, food balance sheets) and workshop news with NBS and FMAFS. Statistical capacity, not data governance. Dead end for the construct. 2) NITDA DRAFT Nigeria Digital Agriculture Strategy 2020-2030 (T3) \u2014 the most likely home for agricultural data governance; retrieved text stops within the table of contents at the Implementation Framework/architecture layers, so no data-governance clause is quotable, and the document is a DRAFT. 3) NITDA Final Draft National Data Strategy 2022 (T3) \u2014 has an explicit governance structure section and Data Governance Committee/Data Steering Committee, but is cross-sectoral and draft; recorded as context only under Rule 2. 4) NGF Digital Repository FMARD collection (T5) \u2014 lists four FMARD policy documents (food security and nutrition strategy, 2016 agriculture policy roadmap, livestock roadmap, NALFI draft); none is a data governance framework, and the tier is inadmissible for this prerequisite row. Not found in supplied pages: any FMARD/NBS agricultural data policy, national agricultural data sharing or farmer-data protection instrument, or NASS/NAIS data governance charter.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: The rung above Absent (Announced) was not proposed because no verbatim text in the supplied pages announces an agricultural data governance framework; and Absent was not proposed because the supplied pages are partial extracts insufficient to establish non-existence. Hence a ratification hold rather than a level. Closest available evidence: NITDA's Final Draft National Data Strategy (2022) sets out national, all-sector data governance machinery (it lists a Data Governance Committee and Data Steering Committee among its abbreviations and has sections on NDS Governance Structure and Ecosystem), but it is (i) still marked Draft and (ii) economy-wide, not an agricultural data governance framework; it does not set rules for agricultural/farmer data specifically. Separately, the DRAFT Nigeria Digital Agriculture Strategy (2020-2030) is agriculture-specific and sector-strategic, but the retrieved text is limited to cover page and contents and shows strategic initiatives and an implementation architecture rather than a data governance instrument. Neither is an agricultural data governance framework as named.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural data governance framework",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "FIN"
+   ],
+   "prereq": "UC:AGI",
+   "kind": "l"
+  },
+  "4.6": {
+   "value": "Nigeria has a National Artificial Intelligence Strategy (NAIS), published in September 2025 by the Federal Ministry of Communications, Innovation and Digital Economy, which names agriculture among the sectors where AI ad",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "Federal Ministry of Communications, Innovation and Digital Economy / NITDA-NCAIR \u2014 National Artificial Intelligence Strategy (September 2025)",
+   "note": "Next level not proposed: Operating was not proposed. No retrieved page shows the strategy in execution against its own plan \u2014 no implementation report, no monitoring output, no budget line, no agriculture-specific AI programme delivered under the strategy. OECD.AI records 'Has this initiative been evaluated? Not yet, but an evaluation is foreseen', and 'Are evaluation results public? No'. The NCAIR homepage links a 'Two Years of Nigeria's National AI Strategy: A Compilation of Ecosystem Impact' item, but only the link text was retrieved, with no content, figures or agriculture attribution, so it cannot support an Operating rung. quality_evidence left empty because the only performance-flavoured statements available are the implementer's own claims (NITDA DG at GITEX 2025 asserting AI is 'already driving transformation in agriculture'), which are design/advocacy, not an evaluation or audit. scale_evidence left empty because the only figures available are targets and ambitions (e.g. 70% of the 16-35 workforce to be AI-skilled), and the one reach-like figure quoted by the NITDA DG (70% of Nigeria's online population using generative AI) is not a reach figure for this strategy or for agriculture. The retrieved artifact is the national AI strategy document itself, and agriculture is explicitly a named sector both in the strategic goals and under Pillar 3 (Accelerating AI Adoption and Sector Transformation) \u2014 so the 'with agriculture component' element of the construct is directly evidenced. On the unratified definitional question ('official publication or formal executive/cabinet approval?'), the evidence sits on the PUBLICATION side: the September 2025 document is issued as a final (non-draft) strategy by FMCIDE and hosted on NITDA's NCAIR site, and OECD.AI records its status as Active with start year 2025, but none of the retrieved pages evidences Federal Executive Council or cabinet approval. An earlier August 2024 version of the same document is watermarked 'DRAFT' throughout, which establishes that the 2025 version is the finalised text. If the panel ratifies 'Adopted' to require documented cabinet approval, this cell would drop to 'Announced'.",
+   "tier": "T3",
+   "tier_detail": "",
+   "url": "https://ncair.nitda.gov.ng/wp-content/uploads/2025/09/National-Artificial-Intelligence-Strategy-19092025.pdf",
+   "defnote": "What evidence makes a strategy 'Adopted' \u2014 official publication, or formal executive/cabinet approval?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "National AI strategy with agriculture component",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "AGI",
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "4.7": {
+   "value": "DATA GAP \u2014 Started with ID4D as the canonical publisher: id4d.worldbank.org/global-dataset (T1) \u2014 describes the 2025 dataset and the digital-ID-for-online-transactions series but publishes only global aggregates (800 million without ID; 2.8 billion without digital ID; ~45 percent of countries), no Nigeria figure. Data360 dataset landing page (T1) \u2014 metadata and a birth-registration chart only, no Nigeria value. DataBank ID4D query builder (Source 4) \u2014 variable selector only, no data rendered. DataBank saved query (Source 5) \u2014 renders an ID4D series block including 'ID ownership, total (% of population ages 15+) 87.4' and 'Online digital identity 0.0' for 2021, but the query has 199 economies selected and the rendered rows carry no country label, so the block cannot be verified as Nigeria; discarded rather than attributed. Data catalog entry (Source 6) and ID4D 2021 Volume 1 abstract page (Source 7) \u2014 metadata only, no country figures. Turned to national sources: NIMC enrollment report index (T3) and the October 2025 enrollment dashboard (T3), which give 123,906,318 total enrolments with state breakdown but no coverage rate and no population base. World Bank Nigeria ID4D project ISR (T1) gives 121,191,781 NINs issued at 31-May-2025 against a 180,000,000 target \u2014 again a count. Nairametrics (T5, 136 million) excluded on tier grounds for a prerequisite row and in any case reports a count. Dead end: no page supplied carries a Nigerian population denominator, so no published-percentage route exists in this evidence set.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Administrative enrollment counts (cumulative records issued), not a survey-based coverage rate; NIMC counts may include duplicate or inactive records and include diaspora enrolments (1,538,582). Next level not proposed: Not even level 1 is proposed, because no percentage for this construct is published in the supplied sources; the ID4D digital-ID series for Nigeria appears only as binary availability flags, and the only percentage table retrieved (Source 5) carries no country label. To lift the hold, a ratifiable cell needs either the ID4D 2025 Nigeria digital-ID ownership/use percentage pulled with the country label visible, or an official NIMC/NBS statement of NIN coverage as a share of a named population. The indicator names a percentage \u2014 'Digital ID coverage (%)'. The quotable Nigerian evidence is an absolute count of NIN enrolments/issuances, not a share of any population. Two further mismatches bear on the census's open question: (a) the ID4D series that actually names digital ID for Nigeria is binary supply-side ('Online digital identity (1 = yes; 0 = no)', 'Digital ID verification (1 = yes; 0 = no)'), not a percentage, and (b) the ID4D percentage series that is usually pulled in its place measures foundational national-ID ownership among adults 15+, which is a different construct from digital ID and sits on a different denominator from an enrollment-versus-total-population ratio. The unlabelled DataBank block in Source 5 showing 'ID ownership, total (% of population ages 15+) 87.4' for 2021 is offered here only as context: the page does not identify which of the 199 selected economies that row belongs to, so it is not recorded as a Nigerian value.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts a digital ID, but Egypt records the World Bank ID4D foundational national-ID-card ownership series while ID4D's actual digital-ID series exists and was not used \u2014 and on top of that the two countries are recorded on different denominators (Egypt % of adults 15+, Nigeria % of\u2026",
+   "defsev": "asserts-falsehood",
+   "subs": [],
+   "stale": false,
+   "name": "Digital ID coverage (%)",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "FIN",
+    "ALL"
+   ],
+   "prereq": "UC:FIN",
+   "kind": "t"
+  },
+  "4.9": {
+   "value": "DATA GAP \u2014 Reviewed all four supplied pages in order. (1) Frontiers in Climate NDC Implementation Index (T2): covers 12 African countries including Nigeria and scores a 'Governance' dimension, but the supplied text stops in the introduction and contains no Nigeria-specific statement about an inter-ministerial coordination body, and in any case concerns climate/NDC governance, not agriculture. (2) imc.gov.ng (T3): a genuine, chartered, sub-committee-bearing Nigerian inter-ministerial mechanism, but the subject matter is AML/CFT/P \u2014 rejected on construct. (3) STATAFRIC peer review press release (T3): mentions 'improved coordination mechanisms' as a strength of Nigeria's National Statistical System, but names no inter-ministerial mechanism and does not address agriculture; the underlying peer review report itself was not among the supplied pages. (4) Nigerian Tribune (T5): the most on-point item conceptually (an inter-ministerial data-harmonisation committee including the Ministry of Agriculture and Rural Development) but excluded by the T1-T3 floor for prerequisite rows, and dated 2018 with no evidence of continued operation. Not found in the supplied set and therefore not searched further: the Federal Ministry of Agriculture and Food Security's National Agricultural Technology and Innovation Policy / NATIP implementation-coordination arrangements, NITDA or Ministry of Communications and Digital Economy instruments establishing a digital-agriculture steering committee, or any gazetted circular constituting such a body. If such an artifact exists it is not present here, so nothing is recorded.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Not applicable \u2014 no level is proposed. The reason no level above 1 (Absent) is recorded is that absence has not been demonstrated either: the retrieved set is simply silent on agriculture/digital-agriculture inter-ministerial coordination in Nigeria, so a score of 1 would also be an unevidenced claim. Context, not an answer: (a) Nigeria does operate a formally constituted standing inter-ministerial body, the Inter-Ministerial Committee (IMC) on AML/CFT/P, created and inaugurated in 2008, with its own charter, structure and sub-committees (imc.gov.ng, T3) \u2014 but its mandate is anti-money-laundering and counter-terrorism financing, not agriculture or digital agriculture. (b) A Federal Government 'Inter-Ministerial Committee on the harmonisation of data collection and evaluation' chaired by the Statistician-General, with the Federal Ministry of Agriculture and Rural Development among its members, is reported by Nigerian Tribune (T5 news, 2018) \u2014 this is the closest fit to a cross-government data-coordination mechanism touching agriculture, but it is (i) a national-statistics clearinghouse rather than a digital-agriculture coordination body and (ii) evidenced only at T5, below the T1-T3 floor this prerequisite row requires. On the census's open question: the AML/CFT IMC would satisfy the strict 'formally constituted standing body' reading but fails the domain test; the 2018 data committee would arguably satisfy the domain test but fails the tier test and cannot be shown to be recurring or still active.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Does the indicator require a formally constituted standing body or committee, or does any documented recurring \u2014 including project-based \u2014 coordination mechanism satisfy it?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Inter-ministerial coordination mechanism",
+   "pillar": "C3",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "DELIVERY",
+   "kind": "l"
+  },
+  "5.2": {
+   "value": 70.0,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "World Bank / UNESCO Institute for Statistics, World Development Indicators \u2014 Literacy rate, adult total (% of people ages 15 and above), Nigeria",
+   "note": "UIS literacy series for countries without recent direct measurement may be modeled (Global Age-Specific Literacy Projection Model); World Bank display rounds to whole percent (FRED reproduces the same World Bank series as 70.41 for 2024, but FRED is a T5 redistribution and is not used as the statistic of record here). Next level not proposed: Level 4 would require a published adult literacy rate above 80% for Nigeria. No supplied source shows this: the World Bank/UIS most-recent value is 70 for 2024, and the only other Nigeria-specific figures available (WHO via UNdata: 61.3 in 2010, 51.1 in 2008, 54.8 in 2003, 55.4 in 1991) are all far below 80. Nothing in the evidence supports crossing the 80% cut point. The indicator is defined by the publisher as \"the percentage of people ages 15 and above who can both read and write with understanding a short simple statement about their everyday life\" \u2014 i.e. the adult literacy rate, national total, both sexes, which is exactly the named construct. Note this is a national figure; no rural/urban disaggregation is claimed or needed for this cell. Corroborated by an independent T1 series (World Bank WDI SE.ADT.LITR.ZS): 70.41 for 2024.",
+   "tier": "T1",
+   "tier_detail": "UIS literacy series for countries without recent direct measurement may be modelled (Global Age-Specific Literacy Projection Model); World Bank display rounds to whole percent (FRED reproduces the same World Bank series as 70.41 for 2024, but FRED is a T5 redistribution and is not used as the statistic of record here).",
+   "url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=NG",
+   "subs": [],
+   "stale": false,
+   "name": "Adult literacy rate (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.3": {
+   "value": "DATA GAP \u2014 1) data.worldbank.org SE.TER.ENRR global country table \u2014 found Nigeria, most recent year 2011, value 10; all-fields construct. 2) data.worldbank.org SE.TER.ENRR?locations=NG \u2014 Nigeria country page confirms series coverage 1975-2011, no field-of-study breakdown. 3) databank.worldbank.org metadata glossary for SE.TER.ENRR (two variants) \u2014 long definition confirms total tertiary enrollment regardless of field; no STEM series. 4) Gender Data Portal se-ter-enrr \u2014 Nigeria shown as 2025 N/A for female tertiary GER; sex disaggregation only, no field-of-study disaggregation. 5) DataBank WDI series browser 2020-2025 \u2014 Nigeria row not rendered in the retrieved extract; only aggregates (Africa Western and Central 2020 9.9, 2021 10.2) are visible, and regional aggregates are not Nigeria. 6) UNdata UIS series FOSGP_56_F400, 'Percentage of tertiary graduates from Science programmes' \u2014 this is the closest STEM-adjacent series retrieved, but Nigeria does not appear in its 162-country reference-area list and no Nigeria record appears in the extract; it also measures graduates by field, not gross enrollment ratio. 7) NEMIS (nemis.education.gov.ng) downloads \u2014 Nigerian government EMIS portal lists digests and fact sheets but the page exposes only pre-primary, primary, JSS and SSS data categories; no tertiary STEM enrollment artifact reachable from the retrieved text. 8) Trading Economics \u2014 T5, restates World Bank all-fields data (11.81% for 2018); not admissible for a statistic and still the wrong construct. Dead ends: no NUC/JAMB/NBS tertiary field-of-study statistics were among the supplied pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Even level 1 is withheld because the evidence does not show any Nigeria-specific STEM enrollment ratio at all \u2014 not a figure below 10, not a range, not a qualitative finding about STEM gross enrollment. The absence is of the measurement itself, not of a value above a cut point. Ratification of the indicator definition (STEM subset vs. total tertiary) must precede any score. Indicator name asserts the STEM subset of tertiary enrollment. Best available Nigeria evidence is World Bank WDI SE.TER.ENRR (UIS-sourced), defined on the retrieved metadata page as 'the ratio of total enrollment, regardless of age, to the population of the age group that officially corresponds to the level of education shown' for tertiary education as a whole \u2014 i.e. all fields, not STEM. The country table on data.worldbank.org lists Nigeria with a most recent year of 2011 and a most recent value of 10 (%), and the Nigeria country page shows the series spanning 1975-2011 only, so even the all-fields proxy is roughly fifteen years stale and Nigeria is shown as N/A for the current reference year on the Gender Data Portal. Trading Economics (T5, not admissible for a statistic) restates a World Bank value of 11.81% for 2018. None of these is a STEM-share or STEM gross enrollment ratio. This cell sits squarely on the unratified-definition question flagged in the indicator census: the row's name and its threshold calibration point at a STEM measure, while the only evidence available points at the all-fields measure. An independent T1 series (World Bank WDI SE.TER.ENRR) reports 9.74 for 2011.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts the STEM subset of tertiary enrolment, but both countries record World Bank WDI SE.TER.ENRR, which is total tertiary gross enrolment across all fields, and the level is then scored against thresholds calibrated for a STEM share.",
+   "defsev": "asserts-falsehood",
+   "subs": [],
+   "stale": false,
+   "name": "Tertiary STEM enrollment (% gross)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.4": {
+   "value": "DATA GAP \u2014 1) NBS GHS-Panel Wave 2 2012/13 report (nigerianstat.gov.ng/download/388, T1): has an ICT chapter and an agriculture chapter, but the retrieved text is front matter and executive summary only \u2014 no farmer digital-literacy figure present. 2) NBS GHS-Panel Wave 5 2023/24 report (T1): table of contents shows demography/education/literacy and housing/assets sections; retrieved text contains no digital-skills or farmer digital-literacy statistic, and its literacy section refers to conventional reading/writing literacy, not digital literacy. 3) ScienceDirect article on digital technology knowledge and farmers' e-commerce valuation: page returned a captcha wall, no usable text. 4) BASIS/UC Davis MRR Innovation Lab project page (T2): describes a 2,496-household RCT on digital literacy training in rural Nigeria; no baseline or endline literacy percentage published on the page. 5) NITDA Nigeria Digital Agriculture Strategy 2020-2030 draft (T3): includes a planned 'Establish Rural Digital Literacy Initiative' but no measurement of current farmer digital literacy in the retrieved text. 6) IJAERD 12(1) 2022, Adelakun & Olupitan, Oyo State crop farmers (domain tiered T5): the only quantified farmer digital-literacy figure found, but sub-national, n=120, and stated in the low-literacy direction. Concluded: no admissible national figure exists in the supplied pages; abstaining rather than substituting the Oyo figure.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Not even level 1 is proposed: the evidence does not establish any nationally scoped, correctly-directed digital-literacy percentage for Nigerian farmers from a T1-T4 publisher, so there is no admissible value to compare against the 10 / 25 / 50 / 75 cut points. The indicator names a national percentage of farmers who are digitally literate. The nearest quantified evidence is Adelakun & Olupitan (International Journal of Agricultural Economics and Rural Development 12(1), 2022), a 120-respondent multistage sample of crop farmers in Oyo State, which reports a digital literacy level of 71.7% characterised in the same sentence as 'low' \u2014 i.e. the figure denotes the proportion of farmers at a LOW literacy level, the inverse of the indicator's high-is-better direction, exactly the ambiguity flagged in the indicator census. Supporting descriptive figures from the same study (73.3% never used social media, 72.5% used feature phones, 55% low knowledge of digital agriculture concepts, 42.5% no formal education) all point to weak farmer digital skills, but none is a national digitally-literate share. The NBS GHS-Panel reports (Waves 2 and 5) supplied here contain ICT and education chapters covering rural/urban households, not a digital-literacy rate for the farming population; their table contents were not present in the retrieved text. The BASIS/MRR page describes an ongoing RCT on digital literacy training for rural smallholders in Nigeria but publishes no baseline literacy rate. The NITDA Nigeria Digital Agriculture Strategy (2020-2030) proposes a 'Rural Digital Literacy Initiative' but the retrieved text carries no measured literacy figure.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts a national digital-literacy rate among farmers, but Nigeria records rural-population digital skills and Egypt records a two-governorate RCT baseline whose headline figure is digital ILliteracy, the inverse of the indicator's H direction.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Digital literacy among farmers (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "5.5": {
+   "value": "Nigeria's federal extension institute NAERLS established a Department of E-Extension in January 2017 to deliver agricultural extension information and training through electronic/ICT channels.",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2017,
+   "src": "National Agricultural Extension and Research Liaison Services (NAERLS), 'E-Extension'",
+   "note": "Implementer's own institutional web page; mandate stated prospectively ('The Department is set to...', 'shall pursue'), with no published activity, performance or reach data on the page. Next level not proposed: Operating (which would still yield base 3) was not claimed because none of the supplied pages document the unit actually delivering services \u2014 no described platform in use, no advisory volumes, no farmer contacts, no budget execution. The +1 for quality_evidence was withheld because the only source is the implementer's own descriptive page; no independent evaluation, audit, service standard or performance report on Nigerian digital extension was available in the supplied pages. The +2 for scale_evidence was withheld because no reach figures (users, farmers reached, states/LGAs covered, message volumes) for any Nigerian digital extension service appear in the supplied text. The quoted artifact is a Nigerian federal extension body's own record of establishing a dedicated e-extension unit, i.e. institutional digital extension capability. It is an existence/institutional fact, not a measure of service performance or coverage. The CGIAR/Alliance mapping of climate and agronomic digital advisory services in Nigeria (T2, cgspace/PLoS One) was surfaced but the supplied page text contains only metadata and an abstract with no Nigeria-specific figures that could be quoted.",
+   "tier": "T3",
+   "tier_detail": "Implementer's own institutional web page; mandate stated prospectively ('The Department is set to...', 'shall pursue'), with no published activity, performance or reach data on the page",
+   "url": "https://naerls.gov.ng/e-extension/",
+   "subs": [],
+   "stale": true,
+   "name": "Digital extension capability",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "UC:ADV",
+   "kind": "l"
+  },
+  "5.7": {
+   "value": "DATA GAP \u2014 1) Checked the two Nigeria government-domain sources first, as the only T3 candidates that could carry an organogram or department listing: elibrary.fmard.gov.ng and elibrary.fmafs.gov.ng (home, community-list, and the 'INFORMATION DEPARTMENT' and 'RURAL DEVELOPMENT' collection pages) \u2014 every one returned '500 Service Unavailable' with no content beyond the error notice, so no department structure could be read. 2) Checked the Guardian Nigeria article (T5) \u2014 it documents ARCN's launch of the Nigeria Agricultural Intelligence Platform on 9 October 2025 and references NATIP, but names no digital/AI unit inside the ministry and is below the admissible tier for a prerequisite row. 3) Checked World Bank Data360 IMF AI Preparedness Index \u2014 a cross-country macro index with no institutional or ministry-unit variable and no Nigeria figure on the retrieved page. 4) Checked the FAO Egypt digital agriculture release and the OECD AI Review of Egypt \u2014 both are Egypt evidence and were set aside under the no-cross-border rule; they are relevant only in that they illustrate the definitional ambiguity the census flagged. Dead ends: no NATIP policy text, no FMAFS organogram, no Nigeria establishment/civil-service circular, and no budget line naming a digital or AI unit was among the supplied pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Primary ministry sources (FMARD/FMAFS e-Library) were unreachable \u2014 all returned '500 Service Unavailable', so the ministry's own organogram or department listing could not be inspected. Next level not proposed: Announced (level 2) was not proposed because the only Nigeria item is a T5 news report of an ARCN platform launch, which is inadmissible for this prerequisite row and in any case describes a platform rather than a ministry unit; no T1-T3 page in the retrieved set names a digital or AI unit, department or directorate within FMAFS. The indicator name asserts a standing digital/AI unit INSIDE the ministry of agriculture. The nearest Nigeria evidence available here is a launch of the 'Nigeria Agricultural Intelligence Platform (NAIP)' by the Agricultural Research Council of Nigeria (ARCN), reported by Guardian Nigeria (T5). That sits on the wrong side of the open definitional question in two ways: (a) it is a PLATFORM/initiative, not a standing organisational unit with a mandate, staff and budget line; and (b) it is housed in ARCN, a parastatal research council, not in a department of the ministry itself \u2014 even though the Minister of Agriculture and Food Security presided over the unveiling. Scoring this row off that item would repeat the Egypt problem flagged in the indicator census, where a joint inter-ministerial programme was scored as if it were a named ministry unit. The Egypt-specific sources retrieved (FAO/MALR digital agriculture initiative; OECD AI Review of Egypt) are cross-border evidence and cannot be used for Nigeria at all.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts a standing digital/AI unit inside the ministry of agriculture, but Egypt is scored level 3 on a joint MALR-MCIT programme while the row's own note records that the named unit could not be confirmed and that the prior evidence for it was ruled inadmissible \u2014 and because this row\u2026",
+   "defsev": "asserts-falsehood",
+   "subs": [],
+   "stale": false,
+   "name": "MoAg digital/AI unit",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "DELIVERY",
+   "kind": "l"
+  },
+  "5.8": {
+   "value": "Nigeria operates a federal technical-talent training pipeline (3MTT, with a DeepTech_Ready data science/AI stream) that reports 135,000+ participants trained, but no agriculture-specific training track is documented with",
+   "cls": "Documented",
+   "level": null,
+   "year": 2026,
+   "src": "NITDA/NCAIR, 'Two Years of Nigeria's National AI Strategy: A Compilation of Ecosystem Impact' (April 2026)",
+   "note": "RATIFICATION HOLD \u2014 The indicator names an 'Agtech/data-science' pipeline. The evidence quoted (3MTT, and its DeepTech_Ready stream covering Data Science/Machine Learning, Geospatial Data Science, Computer Vision, NLP \u2014 Source 2) is a generic national digital/data-talent programme run by the Federal Ministry of Communications, Innovation & Digital Economy and NITDA. Its published skill list (AI/ML, Cloud, Data Analysis & Visualization, Data Science, DevOps, Software Development, Cybersecurity, etc.) contains no agriculture track, and no agriculture placement or curriculum bridge is documented anywhere in the retrieved pages. So the evidence satisfies only the 'data-science' half of the slash. The only agtech-specific training item retrieved is AgriTech Lab (CGIAR Big Data Platform page, T2), a private MyFarmbase Africa initiative that 'was launched in 2018 ... and has since be executed in 2 Nigerian states with over 200 youths participating' \u2014 a single small cohort-based course, not a national pipeline, with no evidence of activity after 2019. Under a conjunctive reading of the indicator name ('agtech data-science pipeline'), this row should be held at Announced/Absent; under a disjunctive reading it is Operating on the data-science side only. That unresolved question is exactly the census's open item and is why construct_match is recorded as unclear rather than as a match.. The level is withheld and this row leaves every mean. Self-reported programme/ecosystem figures compiled by the implementing government agency; no independent verification or evaluation supplied.",
+   "tier": "T3",
+   "tier_detail": "Self-reported programme/ecosystem figures compiled by the implementing government agency; no independent verification or evaluation supplied",
+   "url": "https://ncair.nitda.gov.ng/wp-content/uploads/2026/04/29042026-NAIS-@-2-Years-Impact-Story-Ecosystem-Compilation-copy.pdf",
+   "defnote": "The name's \"agtech\" half is unevidenced in both countries \u2014 each level 3 is carried entirely by a generic national ICT/data-talent programme with the agriculture bridging explicitly absent \u2014 and the slash never says whether the two halves are conjunctive or disjunctive.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Agtech/data-science training pipeline",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "5.12": {
+   "value": "DATA GAP \u2014 1) Checked the two T1 NBS Nigeria Labor Force Survey pages (Q2 2024 at nigerianstat.gov.ng/pdfuploads/NLFS_Q2_2024.pdf and the Q3 2023 download) for any sex-disaggregated occupational or sectoral breakdown that could isolate ICT-in-agriculture roles \u2014 retrieved text is contents pages, introduction and figure lists only; figures cover participation, employment status, informality, unemployment, underutilisation, NEET by sex and residence, none by digital-ag occupation. Dead end. 2) Checked the T3 NAERLS reports index for an extension-staffing report; the page lists Agricultural Performance Survey titles only, no workforce or gender publication. Dead end. 3) Checked the T3 2024 Wet Season Agricultural Performance National Report (productivity.gov.ng) \u2014 contents show Section 15 on ADP extension activities, which is the most likely home for extension-staff counts, but the retrieved text stops at the Preface and carries no staffing table, let alone a sex split. Dead end for quote verification. 4) Checked the T2 CGSpace record for the CTA/Dalberg Digitalisation of African Agriculture Report \u2014 abstract and metadata only, no figures. 5) Checked the T4 AGRA-hosted full report PDF text \u2014 front matter, glossary, contents; the Nigeria case study on p.181 is listed but its text was not in the retrieved extract, so nothing Nigeria-specific could be quoted. 6) Checked the T5 Nation newspaper summary, which carries the only gender statistic in the set ('women, who account for more than 40 per cent of the agricultural labor force, yet comprise only a quarter of the registered users of digital services') \u2014 this is sub-Saharan Africa-wide, is about service users rather than workforce, and T5 may not carry a statistic in any event. Concluded no admissible Nigeria-specific figure for this construct is present in the supplied pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Level 1 and above were all withheld rather than defaulted to, because the evidence does not establish even the lowest rung: there is no Nigerian measurement of women's share of any digital-agriculture workforce population to compare against the 20 per cent cut point. The specific missing artifact is a sex-disaggregated headcount of either (i) NAERLS/ADP extension personnel in ICT-enabled advisory roles, or (ii) employees of Nigerian agtech firms, or (iii) an NBS occupational cross-tabulation of ICT roles within the agriculture sector. Closest available evidence sits on the wrong side of the census's open question in two ways at once. (1) Population: the CTA/Dalberg-derived figure describes women as roughly a quarter of registered USERS of digital agriculture services, i.e. farmers being served, not people EMPLOYED in digital-ag roles (extension staff, agtech-company employees, or ICT-in-agriculture occupations). (2) Geography: that figure is sub-Saharan-Africa-wide, not Nigeria-specific, and Rule 5 forbids importing a regional or other-country figure as a Nigerian one. Nigeria's national labor statistics (NBS NLFS) do disaggregate employment by sex but at aggregate/sector level, not for any digital-agriculture occupational category; the supplied NLFS pages carry no such table in any case. No admissible source in the retrieved set defines or counts a Nigerian digital-ag workforce, so the denominator the indicator presupposes does not exist in the evidence.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Who counts as the 'digital-ag workforce' \u2014 extension staff, agtech-company employees, or ICT-in-agriculture roles generally \u2014 given the H 20/35/45/50 thresholds presuppose a share no source publishes?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Gender balance in digital-ag workforce (%)",
+   "pillar": "C4",
+   "layer": "Enablers",
+   "uc": [
+    "EQ",
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.1": {
+   "value": "WIPO's Global Innovation Index 2025 places Nigeria 105th of 139 economies, with published GII pillar scores for Nigeria ranging from 14.85 (Human capital and research) to 31.51 (Business sophistication) and five of the s",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "WIPO, Nigeria Ranking in the Global Innovation Index 2025",
+   "note": "Retrieved WIPO pages publish Nigeria's GII rank and its seven pillar scores, but not the single overall GII composite score; the only page carrying an explicit overall 'Innovation Index' figure (17.10 for 2024) is a T5 aggregator, which is inadmissible for a statistic. Next level not proposed: Level 2 would require a published GII score of 25 or above. Nothing in the admissible WIPO pages shows Nigeria at or above 25 on any aggregate measure: only one of seven pillar scores (Business sophistication, 31.51) exceeds 25, and both output pillars plus Human capital and research, Market sophistication and Infrastructure sit below it. Nigeria also falls below the Lower middle-income group average in Institutions, Human capital and research, Infrastructure and Market sophistication, so no pathway to a 25-plus composite is evidenced. The evidence is the Global Innovation Index for Nigeria, published by WIPO, the index owner. It differs from the indicator's expected form in that the admissible pages give a rank (105th of 139, GII 2025) and disaggregated pillar scores rather than the single overall GII score against which the 25/35/45/55 cut points are set. A T5 aggregator (countryeconomy.com) lists Nigeria's overall index as 17.10 for 2024 and 18.40 for 2023; that figure is recorded here only as context and is not used as the value, since T5 sources may support existence facts but never statistics.",
+   "tier": "T3",
+   "tier_detail": "Retrieved WIPO pages publish Nigeria's GII rank and its seven pillar scores, but not the single overall GII composite score; the only page carrying an explicit overall 'Innovation Index' figure (17.10 for 2024) is a T5 aggregator, which is inadmissible for a statistic.",
+   "url": "https://www.wipo.int/gii-ranking/en/nigeria",
+   "subs": [],
+   "stale": false,
+   "name": "Global Innovation Index",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.3": {
+   "value": "DATA GAP \u2014 1) World Bank Open Data indicator page for B-READY Business Entry Overall Score filtered to Nigeria (data.worldbank.org/indicator/IC.BRE.BE.OS?locations=NG): the 'Selected Countries and Economies' block lists Nigeria with blank year and blank value, and the all-economies table likewise shows Nigeria with no 2024 entry. 2) B-READY project landing page (worldbank.org/en/businessready) and Data page: interactive economy selector only, no Nigeria figure in the retrieved text. 3) Economy profile page (worldbank.org/en/businessready/economy): rendered without an economy selected ('Economy name is missing/wrong'), so no Nigeria profile text was captured. 4) data360 Business Ready dataset page: describes 3 indicators, 2024, 50 economies, and shows only maxima (87.3 Operational Efficiency, 73.3 Public Services, 78.3 Regulatory Framework) with no country breakdown. 5) B-READY 2025 publication pages (worldbank.org publications page, documents.worldbank.org detail record, Open Knowledge Repository entity, which returned empty content): these confirm 101 economies are covered in the 2025 interim edition but contain no Nigeria score. 6) 2024 launch blog (blogs.worldbank.org): 50-economy aggregate analysis only. Dead end: no page in the supplied set contains a numeric B-READY value attributed to Nigeria, so found=false.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Not applicable to a level assignment: the evidence does not establish even level 1, because level 1 would still require a published figure for Nigeria below 30, and no Nigeria figure of any magnitude is published in the retrieved pages. No B-READY score of any kind (overall, pillar, or topic) is published for Nigeria in the supplied pages. The World Bank B-READY country-data page for Nigeria carries an empty 'Most Recent Year' and 'Most Recent Value' cell, while comparator economies in the same table (e.g. Ghana 41.0, Cote d'Ivoire 63.8, Tanzania 69.1 for 2024 Business Entry) do carry values. Those are other countries' figures and are recorded here only as context; they are not evidence about Nigeria.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "subs": [],
+   "stale": false,
+   "name": "Business Ready (B-READY)",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.4": {
+   "value": "Nigeria has an operating agritech venture ecosystem of digital solution providers for smallholder farmers, supported by incubators, accelerators, angel investors and donors, but only a handful of start-ups have scaled.",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2020,
+   "src": "GSMA Mobile for Development, \"AgriTech in Nigeria: Investment opportunities and challenges\"",
+   "note": "Qualitative landscape summary from a 2020 grey-literature report; the summary page carries no deal counts, funding totals or company counts. Next level not proposed: Level 5 was not proposed because scale_evidence was left empty. No reach figures for the AGTECH venture ecosystem in Nigeria \u2014 number of agritech ventures, farmers reached, agritech-specific deal counts or funding volumes \u2014 appear in any admissible-tier page retrieved. The only reach-type numbers available (Nigeria's 35 agrifoodtech deals worth $154m in 2022; 38 deals in 2021; $45m in H1 2023) fail on two independent grounds: they are published at T5, where statistics are inadmissible, and they measure the broader 'agrifoodtech' category rather than agtech. Filling scale_evidence with them would import a downstream-inclusive denominator and a non-admissible publisher into this row's score. The GSMA source is explicitly about AGRITECH in Nigeria \u2014 farmer-facing digital solutions for smallholders and the investors funding them \u2014 which matches the indicator name 'agtech venture ecosystem'. The only QUANTIFIED evidence in the retrieved pages is AgFunder/AgFunderNews 'agrifoodtech' deal flow for Nigeria (reported as 35 deals worth $154 million in 2022, and $45 million in H1 2023), which sits on the wrong side of the unratified definition: 'agrifoodtech' bundles downstream eGrocery, in-store retail tech and restaurant tech with upstream farmer-facing ventures, so it is a measurably broader denominator than 'agtech'. Those figures are additionally published on agfunder.com / agfundernews.com, a T5 vendor/news tier at which statistics are not admissible under the tiering rules, so they are recorded here as context only and are not used as the cell value or as scale evidence.",
+   "tier": "T4",
+   "tier_detail": "Qualitative landscape summary from a 2020 grey-literature report; the summary page carries no deal counts, funding totals or company counts",
+   "url": "https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-for-development/gsma_resources/agritech-in-nigeria-investment-opportunities-and-challenges/",
+   "defnote": "The scale evidence is AgFunder \"agrifoodtech\" deal flow, a category that includes downstream food-tech and non-farmer-facing ventures, standing in for an agtech venture ecosystem \u2014 a measurably broader denominator that inflates deal and funding counts.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": true,
+   "name": "Agtech venture ecosystem",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.9": {
+   "value": "DATA GAP \u2014 Order of examination: (1) NITDA Nigeria Digital Agriculture Strategy 2020-2030 draft (T3, nitda.gov.ng) \u2014 the only Nigerian government digital-ag artifact retrieved; text supplied stops at the table of contents, headings 3.5.6 'Consortium on ICT for Climate-Smart Agriculture', 3.5.7 'Nigeria Digital Agriculture Platform Initiative' and 4.1 'Digital Agriculture Ecosystem' / 5.1.1 'List of Digital Agriculture Ecosystem Players' are visible but their content is not, and the document is captioned DRAFT and 'In Review', so it evidences intent at best. (2) NATIP 2022-2027 (FMARD policy, but retrieved from nabg.ng, an industry-association mirror, hence T5 by domain) \u2014 table of contents shows 2.5.4 'Promoting Digital and Climate-Smart agriculture', but the supplied text contains no PPP naming, no partner, no digital-ag partnership. (3) World Bank PPP Resource Center Country Profile: Nigeria \u2014 Nigeria-specific PPP institutional/legal links (ICRC Act, Public Procurement Act, Lagos State PPP office) but strictly infrastructure, nothing agricultural or digital. (4) FAO/AUC agri-PPP guide 2024 \u2014 agri-PPP construct but continental scope, a manual, no Nigerian instance. (5) IFC/BMZ 'Scaling up Farmer Financing through AgTechs in Sub-Saharan Africa' \u2014 supplied text is front matter, disclaimers and contents only; the 'Country Overviews' section that might carry Nigeria detail was not in the retrieved extract. (6) CGIAR/Alliance Bioversity-CIAT TAFS-WCA Nigeria digital advisory mapping (T2) \u2014 executive summary describes public, private and NGO actors working on digital solutions and 'opportunities for synergy', but names no public-private partnership and gives no figures. (7) GSMA AgriTech Accelerator 2025 and GSMA Innovation Fund 2023 (T4) \u2014 Nigerian agritechs AgroMall, FarmSpeak and Winich Farms appear, funded by BMZ/GIZ and FCDO; these are donor-private, not Nigerian-public-private. (8) FMARD e-Library item on business partnerships in agrifood chains \u2014 server returned '500 Service Unavailable', a dead end. (9) World Bank documents link surfaced by search was an unrelated 2017 Nigeria/Switzerland asset-return MOU \u2014 irrelevant. Conclusion: no quotable evidence of a Nigerian digital-agriculture public-private partnership in the supplied pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Level withheld rather than set at 1 (Absent) because the retrieval was shallow on exactly the artifacts that would settle the question: the NDAS body text, FMARD e-Library (which returned a 500 Service Unavailable error page), and any ICRC or FMARD register of agriculture-sector PPP projects. Scoring Absent on this retrieval would understate on the same weak basis that scoring Operating would overstate. Indicator names operating public-private partnerships in DIGITAL agriculture in NIGERIA. The retrieved evidence sits on the wrong side of the census's open question in three distinct ways. (1) ppp.worldbank.org Country Profile: Nigeria is Nigeria-specific and PPP-specific but covers large infrastructure concessions under the ICRC Act \u2014 no agriculture, no digital component. (2) The FAO/AUC 'Guide for the design and implementation of public-private partnerships for agribusiness development in Africa' (2024) is agri-PPP-specific but is a continental manual/guide, region 'Africa', with no Nigerian figure or named Nigerian partnership; it is guidance on how to design PPPs, i.e. design not operation. (3) GSMA AgriTech Accelerator and Innovation Fund reports and the CGIAR/Alliance Bioversity-CIAT Nigeria digital advisory mapping are digital-ag and Nigeria-relevant, but the partnerships they document are donor-to-private (BMZ/GIZ/FCDO funding AgroMall, Winich Farms, FarmSpeak) \u2014 the 'public' half is a foreign donor, not a Nigerian public authority. (4) The NITDA Nigeria Digital Agriculture Strategy (2020-2030) is the only Nigerian public artifact retrieved; it is marked DRAFT / 'In Review', and the retrieved text is limited to cover page, table of contents and section headings, so no PPP commitment, partner name, or partnership instrument can be quoted from it. This is precisely the census's concern that a level rests on intent documents rather than operating partnerships.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts operating public-private partnerships, but Nigeria's level 3 rests substantially on MOUs signed days before capture (intent, not operation) and Egypt's flagship partnership pairs ministries with state-owned financial entities, leaving the \"private\" half of the construct thin.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Public-private partnerships in digital ag",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV",
+    "AGI",
+    "SCM"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.12": {
+   "value": "Nigeria was named a member of the Digital Public Goods Alliance in September 2025 and committed to integrating digital public goods such as OpenCRVS, DHIS2 and KoboToolbox into its government digital services stack, guid",
+   "cls": "Documented",
+   "level": null,
+   "year": 2025,
+   "src": "Federal Ministry of Communications, Innovation & Digital Economy (Nigeria), \"Nigeria Joins the Digital Public Goods Alliance\"",
+   "note": "RATIFICATION HOLD \u2014 The indicator name (\"Digital public goods adopted\") is ambiguous per the census note. The best available evidence sits on the POLICY-ADOPTION side of that question: Nigeria joining the DPGA and committing, via its DPI Framework, to embed DPGs in government services. It is not a count or verified inventory of globally registered DPGs actually deployed by Nigerian government agencies, and it is not agriculture-specific. The only concrete deployment named is by a non-government actor: the same page states eHealth Nigeria \"already leverages a digital public good, OpenMRS, to digitise health data in the north of the country\". The DPG Registry page retrieved (T5, digitalpublicgoods.net) shows 247 registered DPGs globally but the retrieved excerpt is an alphabetical fragment (A\u2013C) and identifies no Nigeria-origin product, so no Nigerian registration can be evidenced from it.. The level is withheld and this row leaves every mean. Government self-announcement; no independent verification or evaluation in the retrieved pages.",
+   "tier": "T3",
+   "tier_detail": "Government self-announcement; no independent verification or evaluation in the retrieved pages",
+   "url": "https://fmcide.gov.ng/nigeria-joins-the-digital-public-goods-alliance/",
+   "defnote": "Does 'DPG adopted' mean the country deploying a globally registered DPG, or the country itself adopting a DPG policy or registering a national product?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Digital public goods adopted",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "6.13": {
+   "value": "No single national figure is published for SME/agribusiness adoption of digital tools in Nigeria; the available measures are partial and diverge widely \u2014 over 40% of 3,366 horticulture value-chain enterprises (input supp",
+   "cls": "Documented",
+   "level": null,
+   "year": 2026,
+   "src": "Olaoye, Liverpool-Tasie & Yami, 'Is Cash still King? Evidence from digital finance use along horticulture value chains in Nigeria' (VeriXiv preprint, MSU Food Security Group); with Research ICT Africa, 'Digital Technology Adoption by Microenterprises: Nigeria Report' (2024); IFC, 'Market Bite Nigeria' (Nov 2022)",
+   "note": "RATIFICATION HOLD \u2014 The indicator name leaves the population undefined (SMEs economy-wide vs agribusiness firms) and does not define 'digital tool'. Each available source sits on a different side of that ambiguity: the >40% figure is agribusiness/agri-food value-chain enterprises but is restricted to two states and to one class of tool (digital finance); the 13% internet-use-for-business figure is a national microenterprise sample (\u226410 employees, largely informal, all sectors \u2014 not SMEs and not agribusiness); the 46% WhatsApp-marketing and 'nascent' DFS findings are economy-wide MSMEs. No source publishes a percentage for the named construct as written \u2014 Nigerian SMEs/agribusinesses adopting digital tools, national scope.. The level is withheld and this row leaves every mean. Headline agribusiness figure comes from a preprint explicitly marked 'PREPRINT Not Peer Reviewed' and covers only two states and only horticulture value chains; the corroborating microenterprise and MSME figures come from non-official survey samples (718 and ~1,000 respondents respectively).",
+   "tier": "T2",
+   "tier_detail": "Headline agribusiness figure comes from a preprint explicitly marked 'PREPRINT Not Peer Reviewed' and covers only two states and only horticulture value chains; the corroborating microenterprise and MSME figures come from non-official survey samples (718 and ~1,000 respondents respectively)",
+   "url": "https://www.canr.msu.edu/fsg/projects/Research-Supporting-African-MSMEs-to-Provide-Safe-and-Nutritious-Food/Nigeria/Is%20Cash%20still%20King%20Evidence%20from%20digital%20finance%20use%20along%20horticulture%20value%20chains%20in%20Nigeria.pdf",
+   "defnote": "The name fixes neither the population (SMEs economy-wide or agribusiness firms specifically \u2014 the slash is undefined) nor what counts as a \"digital tool\", and the register itself records that the available evidence cannot be mapped onto it.",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "SME/agribusiness adoption of digital tools (%)",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "SMF",
+    "SCM",
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "6.14": {
+   "value": "Nigeria's Central Bank established the Anchor Borrowers' Programme in 2015 to channel input credit to smallholder farmers through participating financial institutions, with each participating farmer required to hold a va",
+   "cls": "Documented",
+   "level": null,
+   "year": 2015,
+   "src": "Central Bank of Nigeria \u2014 Anchor Borrowers' Programme (ABP)",
+   "note": "RATIFICATION HOLD \u2014 The ABP is explicitly and exclusively addressed to smallholders ('Create an Ecosystem to link out-growers (Small Holder Farmers) to local processors'; 'Small holder farmers are expected to come together under the umbrella of an Anchor'), so it sits on the correct side of the smallholder question. It is weaker on the 'fintech rails' side: the page documents a central-bank refinanced credit scheme delivered through banks and microfinance banks, and the only digital-rail element it evidences is the eligibility requirement to 'Have a valid bank account with BVN' \u2014 i.e. identity-linked bank accounts as a channel, not a documented digital payment/wallet/e-voucher rail with transaction functionality. No page supplied documents Nigeria's e-wallet/GES input-subsidy rail, NIRSAL digital platforms, or any agri-fintech transaction infrastructure. Broader (non-smallholder-specific and non-agricultural) context available in the supplied pages: the EFInA A2F 2023 survey covers national financial access and mobile money penetration, and CGAP's 2016 nationally representative smallholder survey reports that 'Only a quarter of smallholders are financially included' \u2014 but that CGAP page is T4 and is a demand-side inclusion statistic, not evidence of a rail.. The level is withheld and this row leaves every mean. Implementer's own programme description page; no publication date, no disbursement or performance data, and no indication on the page of the programme's current operational status.",
+   "tier": "T3",
+   "tier_detail": "Implementer's own programme description page; no publication date, no disbursement or performance data, and no indication on the page of the programme's current operational status",
+   "url": "https://www.cbn.gov.ng/DFD/agriculture/ABP.html",
+   "defnote": "The name asserts rails serving smallholders, but the scale evidence is instruments issued and vendor-reported farmers \"reached\" rather than active use, and Egypt's Farmer Card is a state-issued instrument for registered landholders generally rather than for smallholders specifically.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": true,
+   "name": "Agri-fintech rails for smallholders",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "FIN"
+   ],
+   "prereq": "UC:FIN",
+   "kind": "l"
+  },
+  "3.9": {
+   "value": "Nigeria has operating digital agronomic advisory platforms (e.g. the IITA/CGIAR-Mercy Corps Content Hub for Farmer Support Organizations), but the only published reach figure in the retrieved pages is a pilot reaching 17",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2024,
+   "src": "IITA / CGIAR Excellence in Agronomy, Agronomy Solution Profile for Content Hub for Farmer Support Organizations (Nigeria)",
+   "note": "implementer-reported pilot reach figure, not independently audited; counts farmers reached through intermediary farmer-facing organizations rather than active platform users. Next level not proposed: Level 5 was not proposed because scale_evidence was left empty. The only reach figures in the retrieved pages are a pilot explicitly described as such ('a current pilot reaching 17,000 farmers') and 'over 5,000 farmers' under a CIS-CSA training project \u2014 both implementer-reported, both pilot-sized against a smallholder population in the tens of millions, and neither reporting active users. The 300,000-farmer figure in the same source is an aim, not reach, and is excluded by rule. No official or independent publication in these pages gives national active-user, subscriber or coverage counts for any Nigerian digital advisory platform, so 'at scale' cannot be substantiated. The evidence measures digital advisory platforms in Nigeria (Content Hub, AKILIMO Nigeria, RiceAdvice, Afrimash), i.e. the named construct. It sits on the contested side of the unratified 'at scale' question: the indicator census flags that no threshold is fixed in the model and that any imported >10k-user bar rests on self-reported registered users. The figure quoted here (17,000 farmers) is an implementer-reported pilot reach through intermediary organizations, not active or independently verified users, and is explicitly described as a pilot against a stated ambition of 300,000 farmers. No published count of active users of a nationally scaled advisory platform appears in the retrieved pages.",
+   "tier": "T2",
+   "tier_detail": "implementer-reported pilot reach figure, not independently audited; counts farmers reached through intermediary farmer-facing organisations rather than active platform users",
+   "url": "https://cgspace.cgiar.org/bitstreams/4d8fd513-176b-4ea6-b88b-29a6080344f9/download",
+   "defnote": "\"At scale\" fixes no threshold anywhere in the model (th=[] for all ladder rows), so a >10k-user bar imported from outside the audited files carries both level 4s, and the counts behind it are self-reported registered users rather than active or reached farmers.",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "Digital advisory platforms at scale",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "3.10": {
+   "value": "FAO's Science, Technology and Innovation Portal records Afrimash, a Nigerian farmer-facing agricultural e-commerce marketplace connecting farmers with input suppliers, as a functioning platform actively operating in Nige",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "FAO Science, Technology and Innovation (STI) Portal \u2014 Afrimash",
+   "note": "FAO portal record is AI-assisted extraction harvested from Digital Agri Hub; the page itself states 'Newly extracted from original record - Not checked, not enriched', so the descriptive claims derive from the platform's own material rather than independent verification. Next level not proposed: Level 4 was NOT proposed because no independent or official evaluation, audit, performance report or service standard for any Nigerian agricultural e-commerce platform appears in the retrieved pages. The FAO entry's readiness and adoption narratives are AI-generated summaries of the platform's own descriptive material ('Not checked, not enriched'), which is design/self-description, not quality evidence. Level 5 was therefore also not reached: no published reach figures (registered users, farmers transacting, transaction value, geographic coverage) exist in the supplied pages for a Nigerian agricultural e-commerce platform. 'Serving thousands of farmers' in the FAO record is an unsourced AI-extracted characterisation, not a published reach statistic; the LaunchPad piece (T5) cites naira transaction volumes and farmer counts but for input-credit and input-supply startups named 'FarmPay' and 'Shamba' from an unverifiable industry blog, which cannot carry a statistic at that tier. Afrimash is an e-commerce/online marketplace in agriculture operating in Nigeria, so it matches the indicator name directly. On the unratified census question, this evidence sits on the NARROWER, farmer-facing side of the boundary (a marketplace selling inputs to farmers), rather than the broader agri-food value-chain commerce side. Broader value-chain commerce players in Nigeria (e.g. AFEX, Farmcrowdy, AgroMall) are named in the GSMA report (Source 5) as agritech companies, but that page characterises them as agritech businesses and investment cases, not specifically as e-commerce platforms with published transaction or user statistics; the GSMA text quoted here is therefore not used as the anchor.",
+   "tier": "T1",
+   "tier_detail": "FAO portal record is AI-assisted extraction harvested from Digital Agri Hub; the page itself states 'Newly extracted from original record - Not checked, not enriched', so the descriptive claims derive from the platform's own material rather than independent verification",
+   "url": "http://sti-portal.fao.org/innovations/afrimash",
+   "defnote": "Does the indicator count only farmer-facing platforms, or any agri-food value-chain commerce platform (OneOrder, Cartona, AFEX)?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Agricultural e-commerce platforms",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "MKT"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "7.2": {
+   "value": "FAO's Science, Technology and Innovation Portal records the AKILIMO Nigeria Integrated Digital Agronomic Solution \u2014 classified as an artificial intelligence (AI) digital technology \u2014 as adopted in Nigeria at the 'Livelih",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2026,
+   "src": "FAO Science, Technology and Innovation (STI) Portal \u2014 Agronomic Key Performance Indicator framework applied in the stage gating of six Use Cases (agronomic recommendations for rice, wheat, cassava, teff, sorghum, maize) - AKILIMO Nigeria Sassakawa",
+   "note": "Registry entry whose provenance is stated as 'Data source: ICARDA CGIAR Monitoring, Evaluation and Learning (MEL) Platform' and 'Entity creation mode: Harvested + Automated AI' \u2014 i.e. an implementer-sourced record machine-processed into the FAO portal, with a blank record status; no independent verification of the adoption claim on the page. Next level not proposed: Level 4 was not proposed because no independent or official assessment of how well the deployed solution performs is present in the supplied pages. The only performance-flavoured text ('These trials confirm the technology's tested capacity') sits inside a registry entry whose stated data source is the implementer's own CGIAR MEL platform and whose creation mode is 'Harvested + Automated AI' \u2014 that is developer self-description, not an evaluation or audit, so quality_evidence was left empty. Level 5 was not proposed because no reach figures for the deployed AI solution are published on any supplied page: the adoption narrative merely says a dashboard 'tracks' reach and adoption without stating any number, and the FAO record's own adoption label is 'Rare'. The only farmer counts available (250,000+ farmers, 13 states) come from a T5 news page and describe the NAPS precursor framework, which is not a deployed AI service and is not an admissible tier for a statistic. 'Operating' was not selected over 'Adopted' for the same reason: use is asserted but no verified reach or running-service evidence supports it \u2014 and in any case both rungs yield base 3, so the proposed level is unchanged. The FAO STI Portal record is squarely on the 'deployment' side of the census's open question: the innovation is explicitly typed as 'Artificial intelligence (AI)', its country of adoption is Nigeria, and it is described as actively used by smallholder farmers rather than merely announced. The competing Nigerian item in the retrieved pages \u2014 the National Agro-Productivity System (NAPS) satellite/AI crop-monitoring platform \u2014 is exactly the future-tense announcement the census flags: the T5 Space in Africa page reports only that an MoU was signed and that 'The system will be deployed in three phases, beginning with a pilot in one state'. That page also carries reach figures (13 states, 250,000+ farmers under the precursor framework), but T5 material may not be used for statistics, and those figures describe a pre-NAPS pilot framework rather than a deployed AI service, so they are excluded from scale_evidence. The World Bank AI-in-agriculture report (Source 4) is global and names no Nigerian deployment; the CCSI blog and the SN Computer Science review discuss Nigerian AI agriculture qualitatively, with the latter stating adoption 'remains at an early stage, particularly in Nigeria'.",
+   "tier": "T1",
+   "tier_detail": "Registry entry whose provenance is stated as 'Data source: ICARDA CGIAR Monitoring, Evaluation and Learning (MEL) Platform' and 'Entity creation mode: Harvested + Automated AI' \u2014 i.e. an implementer-sourced record machine-processed into the FAO portal, with a blank record status; no independent verification of the adoption claim on the page.",
+   "url": "https://sti-portal.fao.org/innovations/agronomic-key-performance-indicator-framework-applied-stage-gating-six-use-cases",
+   "defnote": "The name asserts deployment, but Egypt's level 3 rests on a solution restricted to a pilot cohort with no verified reach and Nigeria's row is anchored on a future-tense announcement of an intent to deploy.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "AI-enabled agricultural solutions deployed",
+   "pillar": "E1",
+   "layer": "Transformation",
+   "uc": [
+    "ADV",
+    "FIN",
+    "SCM",
+    "SMF",
+    "AGI"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "7.12": {
+   "value": "Nigeria has a binding cross-sector responsible-AI safeguard framework: the Nigeria Data Protection Act 2023 and the NDPC's General Application and Implementation Directive (GAID) 2025, which sets out consent rules, data-",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "Nigeria Data Protection Commission, Nigeria Data Protection Act (NDP Act) 2023 \u2014 General Application and Implementation Directive (GAID) 2025, NDPC/NDP ACT-GAID/01/2025",
+   "note": "Instrument text (arrangement of articles) quoted from the regulator's own published directive; no independent assessment of implementation was available in the retrieved pages. Next level not proposed: Level 4 was not proposed because no independent or official evaluation, audit or performance report on how well the consent/rights safeguards actually function for AI systems was found in the retrieved pages \u2014 the NDPC pages are the implementer's own description of its intentions and processes, which the scoring rules class as design, not quality. Level 5 was not proposed because no reach figures were found either: no published counts of AI-related data-subject complaints handled, DPIAs filed by AI deployers, enforcement actions under Articles 43-44, or coverage of the regime among deployers. The UNESCO AI Ethics Observatory country profile carries related figures but the domain is tiered T5 here and its cited scores (e.g. ITU GCI 82.40/100) measure cybersecurity, not AI consent/rights safeguards, so they were not used. The indicator name \u2014 'Responsible-AI safeguards (consent, rights)' \u2014 carries no agriculture qualifier, so a cross-sector regime is judged to satisfy it. The evidence sits on the cross-sector side of the census's open question: the NDP Act 2023 / GAID 2025 consent and data-subject-rights provisions and the National AI Strategy's Pillar 4 ('Ensuring Responsible and Ethical AI Development and Deployment') apply economy-wide. No agriculture- or farmer-specific consent/rights safeguard (e.g. a farmer-data code of conduct, agricultural AI code, or MARD/FMAFS instrument) appears in any retrieved page. If the row is later ratified as requiring agriculture-specific safeguards, this cell should fall to Absent/Announced and the evidence below becomes context only.",
+   "tier": "T3",
+   "tier_detail": "Instrument text (arrangement of articles) quoted from the regulator's own published directive; no independent assessment of implementation was available in the retrieved pages.",
+   "url": "https://ndpc.gov.ng/wp-content/uploads/2025/03/NDP-ACT-GAID-2025-MARCH-20TH.pdf",
+   "defnote": "The name does not fix whether the safeguards must be agriculture- or farmer-specific or whether a cross-sector regime suffices, and the two countries resolve it in opposite directions on the same recorded fact pattern \u2014 each row states that nothing agriculture-specific exists, yet one is scored\u2026",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Responsible-AI safeguards (consent, rights)",
+   "pillar": "E1",
+   "layer": "Enablers",
+   "uc": [
+    "AI"
+   ],
+   "prereq": "UC:AI",
+   "kind": "l"
+  },
+  "8.2": {
+   "value": 52.2,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2024,
+   "src": "World Bank Gender Data Portal \u2014 Nigeria (Account ownership at a financial institution or with a mobile-money-service provider, by sex, % of population ages 15+)",
+   "note": "Sample survey estimate (Global Findex 2025, Gallup World Poll; Nigeria microdata n=1000 cases), so subject to sampling error; nationally representative, not rural-specific. Next level not proposed: Level 4 would require the female figure to exceed 60%. It does not: the published 2024 value is 52.2% (WDI 52.22), nearly eight points short, and the male figure of 74.3% shows the shortfall is specifically female \u2014 the 60 threshold is passed by Nigerian men but not by Nigerian women. No admissible source in the retrieved pages publishes a higher female figure for Nigeria. The quoted figure is sex-disaggregated (female) account ownership for Nigeria, which is exactly what the indicator names. Two caveats bearing on the unratified definition: (a) the underlying WDI series is FX.OWN.TOTL.FE.ZS, 'Account ownership at a financial institution OR with a mobile-money-service provider, female (% of population ages 15+)', which reports 52.22 for Nigeria 2024 \u2014 i.e. mobile-money accounts are counted inside the total, the same construct scored separately at 8.4, so mobile money is double-weighted in the FIN column as the census note flags; (b) the corresponding all-adult figure is not the answer to this cell \u2014 for context the male figure is 74.3% and the Gender Data Portal notes a 22.1 point male-female gap, larger than the Sub-Saharan Africa gap of 12.1. Corroborated by an independent T1 series (World Bank WDI FX.OWN.TOTL.FE.ZS (Global Findex wave)): 52.22 for 2024.",
+   "tier": "T1",
+   "tier_detail": "Sample survey estimate (Global Findex 2025, Gallup World Poll; Nigeria microdata n=1000 cases), so subject to sampling error; nationally representative, not rural-specific.",
+   "url": "https://genderdata.worldbank.org/en/economies/nigeria",
+   "defnote": "\"Account\" is not defined in the name, and the chosen WDI series counts mobile-money accounts inside the total \u2014 the same construct scored separately at 8.4 \u2014 so mobile money is effectively double-weighted in the FIN use-case column and in the O1 mean.",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "Account ownership, female (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "FIN",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.4": {
+   "value": "DATA GAP \u2014 Checked, in order: (1) WDI indicator page FX.OWN.TOTL.ZS \u2014 has Nigeria 2024 = 63.26 but the series title is 'Account ownership at a financial institution or with a mobile-money-service provider', a combined measure; rejected on construct grounds. (2) Findex 2025 Nigeria microdata variable page for account_mob \u2014 correct construct label ('Has a mobile money account') but only raw case counts (529 No / 471 Yes) with an explicit warning that they cannot be read as population summary statistics; rejected. (3) Findex 2025 Nigeria data dictionary \u2014 confirms account_mob and a weight variable exist, but publishes no percentages. (4) Findex 2021 Nigeria microdata catalog pages (catalog/4688) \u2014 study metadata only, no indicator values. (5) Findex 2021 Chapter 1 headline brief and Executive Summary PDF \u2014 give the Sub-Saharan Africa regional figure (33 percent of adults have a mobile money account) and global/developing-economy aggregates, but no Nigeria figure; a regional figure is not a country figure. (6) World Bank 2022 press release \u2014 global and regional only. (7) IMF Selected Issues Paper 2023/020 on Nigeria \u2014 qualitative only ('mobile money, is still lower than in peer countries', 'relatively low mobile money account ownership'), no percentage for the construct. (8) IMTFI 2011 working paper \u2014 a 2011 preference survey predating licensed mobile money in Nigeria, self-described as not statistically representative; no account ownership rate. Dead end: the specific series that would answer this cell (Findex 'Mobile money account (% age 15+)' for Nigeria) was not among the retrieved pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Withheld rather than scored: no supplied page states a weighted, population-representative percentage of Nigerian adults aged 15+ holding a mobile money account, so even the lowest cut point (10%) cannot be tested against a verified figure. Two near-misses were considered and rejected. (1) World Bank WDI 'Account ownership at a financial institution or with a mobile-money-service provider (% of population ages 15+)' lists Nigeria 2024 = 63.26 \u2014 this is a combined bank-or-mobile-money measure, not the mobile money account share, and using it would massively overstate the named construct. (2) The Findex 2025 Nigeria microdata variable account_mob ('Has a mobile money account') shows 471 of 1000 cases coded Yes (47.1%), but the catalog page carries the standard warning that these are raw case counts, not weighted population estimates; the survey uses a weight variable (wgt), so the unweighted share is not the published national statistic. Qualitatively, the IMF selected issues paper describes mobile money in Nigeria as 'still relatively scant' and notes 'relatively low mobile money account ownership', which is not reconcilable with a 47% weighted rate for the same country in an adjacent period, reinforcing that the raw microdata frequency must not be recorded as the indicator value.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "subs": [],
+   "stale": false,
+   "name": "Mobile money account (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "FIN"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.6": {
+   "value": "DATA GAP \u2014 1) Checked the three World Bank Findex 2025 Nigeria microdata pages (catalog/7957 variable F1/V145 for con8, and two renderings of the data dictionary) for a sex-disaggregated phone-ownership statistic \u2014 found only the variable definition for con8 (household ownership, unweighted case counts carrying an explicit warning against reading them as population statistics) and a bare variable list including 'female' and 'urbanicity'; no tabulated indicator values. 2) Checked the Findex 2025 publication landing page \u2014 global/LMIC headline only ('84% of adults in LMICs own a mobile phone'), no country breakdown. 3) Checked the Findex Policy Research Talk PDF \u2014 states 'Mobile phone ownership is widespread, though women are less likely than men to own one' as a slide title, a qualitative direction statement with no Nigeria figure. 4) Checked the GSMA Mobile Gender Gap Report 2025 PDF text \u2014 retrieved portion covers cover matter, contents and introduction only; no country table reached. 5) Checked the GSMA gender-gap-2025 landing page \u2014 LMIC aggregates (8% ownership, 14% smartphone, 14% mobile internet) only, relative-gap basis, no Nigeria. 6) Checked technext24 (T5) \u2014 headline gives 39% of Nigerian women owning a smartphone but the body carries no Nigeria male comparator and news tier cannot carry a statistic. 7) Checked the Taylor & Francis article on gender variation in telecommunication use in rural Akure North LGA, Nigeria \u2014 a 495-household local survey on travel behavior; retrieved text is navigation chrome plus abstract, contains no ownership rates by sex and in any case is one LGA, not national. Dead end on all seven; recording a ratification hold.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Withheld rather than scored: the pages supplied contain no Nigeria male phone-ownership rate and no Nigeria female phone-ownership rate on the same basis, which is the minimum required to state any percentage-point gap; and no publisher in this set states a Nigeria pp gap directly. Context, not an answer to this cell: the GSMA Mobile Gender Gap Report 2025 landing page states the LMIC-aggregate gender gap in overall mobile ownership was 8% in 2024 and the smartphone gap 14% \u2014 these are (i) low- and middle-income-country aggregates across 15 surveyed markets, not Nigeria, and (ii) relative gaps expressed as a percentage of male ownership, which is exactly the basis mismatch the indicator census flags: the indicator name fixes the unit as percentage points, so the GSMA number cannot be transcribed into this cell even if a Nigeria-level version were available in these pages. The one Nigeria-specific gender figure surfaced is in a T5 news headline (technext24: 'Only 39% of Nigerian women own a smartphone'), which is (i) smartphones rather than phones, (ii) a single-sex level with no corresponding male figure from which to compute a gap, and (iii) news tier, which may not carry a statistic. The Findex Nigeria microdata variable con8 asks 'Does anyone in your household currently own a mobile phone?' \u2014 household-level ownership, not individual ownership, and therefore not decomposable by respondent sex into a personal-ownership gap.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name fixes the unit as percentage points but not the sign convention or the basis, so a reversed gap (women ahead) scores as best-in-class under direction L, and the widely quoted GSMA figure for the same construct is a relative gap on a male-ownership base, a different number entirely.",
+   "defsev": "unit-ambiguity",
+   "subs": [],
+   "stale": false,
+   "name": "Gender gap in phone ownership (pp)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.9": {
+   "value": "DATA GAP \u2014 1) Checked NBS GHS-Panel Wave 5 2023/2024 report (T1) \u2014 retrieved text is cover matter and table of contents only; sections listed cover demography, education, health, housing/assets; no digital-agriculture reach statistic visible in the supplied extract. 2) Checked World Bank microdata data dictionary for GHS-Panel W5 (T1) \u2014 confirmed existence of sect12_plantingw5.dta 'Digital Farming Information' with 4,771 cases and 222 variables (s12q1 'Did your household seek or receive information or advice for your farm?', s12q2 channel, s12q4 mobile-phone modality); variable list only, no estimates. 3) Checked NBS microdata catalog mirror (T1) \u2014 same file listing, no tabulations. 4) Checked CTA/Dalberg Digitalisation of African Agriculture Report 2018-2019 (T2) landing page and full-text front matter \u2014 Nigeria country case study is listed at page 181 in the contents, but the supplied text stops at the glossary and contains no Nigerian registered-farmer or penetration figure. 5) Checked GSMA Innovation Fund page (T4) \u2014 reports 1.4 million digitally profiled farmers and over 500 thousand service users across six countries including Nigeria, i.e. a multi-country programme total, not a Nigerian smallholder share; not usable. 6) Checked GSMA AgriTech in Nigeria 2020 (T4) \u2014 qualitative on investment and scaling barriers; executive summary in supplied text carries no reach percentage. 7) Checked 60 Decibels Digital Farmer Services in Nigeria (T5) \u2014 the closest-matching study, but the supplied page gives only the LMIC-wide ~10% figure plus sample descriptors; the Nigeria-specific reach numbers sit behind 'Explore the report' and were not retrieved. Dead end: no admissible Nigerian figure available for quotation.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: Level 1 was not proposed because no source in the supplied pages states any percentage of Nigerian smallholders reached by digital services; the GHS-Panel Wave 5 Section 12 microdata that could yield such a percentage is documented but not tabulated in the retrieved text, and the 10% figure that exists belongs to the LMIC aggregate, not to Nigeria. Context, not an answer: the 60 Decibels page (T5) states that in Low- and Middle-Income Countries digital agriculture solutions 'now have around 50 million active users, covering about 10% of smallholder farming households' \u2014 this is a cross-LMIC aggregate, not a Nigeria figure, and cannot be carried into a Nigeria cell. The same page reports a Nigeria farmer survey of 1,374 farmers (2023-24 season, 42% female, 22% smartphone access) conducted with NBS and the World Bank LSMS, but the retrieved text carries no Nigerian reach percentage. Separately, the World Bank microdata catalog for GHS-Panel Wave 5 documents 'sect12_plantingw5.dta ... Section 12 (Digital Farming Information) ... records household-level information on the farmers access, use, and experience with digital farming services', i.e. the raw variables from which a national share could be computed exist, but no published figure appears. On the unratified definitional question: the underlying Nigerian instrument measures farm households that sought/received information or advice via digital channels \u2014 a 'reached/used' concept over farming households generally, not a smallholder-delimited (e.g. <2 ha) universe, so even the best available Nigerian evidence sits on the wrong side of the indicator's SMALLHOLDER wording as well as lacking a published headline number.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "The name asserts a national share of smallholders reached, but Egypt's scored level 1 is derived from a two-governorate RCT baseline explicitly labelled as having no national provenance, and \"reached\" is nowhere defined against registered, active, or benefiting users.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Smallholders reached by digital services (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ALL",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.11": {
+   "value": "DATA GAP \u2014 1) Read Source 3 (EFInA, efina.org.ng blog, T5) \u2014 the only page directly on local-language service interfaces in Nigeria; qualitative, fintech-scoped, no share published, tier bars statistic use. 2) Read Source 2 (NITDA, Draft Technical Standards for Deployment of Nigeria's DPI, T3) \u2014 retrieved text is front matter and table of contents; '6.2 Language and Localisation' appears as a heading only, no coverage figure and no body text in the supplied extract. 3) Source 1 (ScienceDirect, T2) returned a captcha/robot-check page with no article content, so nothing quotable. Dead ends: no FAO/ITU/World Bank/NBS page in the bundle reporting language coverage of agricultural advisory or e-government services; no Nigerian extension-service language inventory supplied. Conclusion: data gap, recorded as such rather than filled.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: No level above 0 was proposed because no admissible (T1-T4) source in the supplied pages states any figure, band, or bounded qualitative finding for the share of Nigerian agricultural or public digital services offered in local languages; the NITDA standard shows a localisation requirement exists on paper but gives no measurement of how many services meet it. Nearest available evidence sits on the wrong side of the open definitional question in two ways. (1) Domain: the EFInA piece (https://efina.org.ng/2026/04/15/local-language-interfaces-a-critical-innovation-gap-in-nigerian-fintech/, T5) concerns digital FINANCIAL services, not agricultural advisory/extension or e-government services, and characterises them qualitatively as operating almost exclusively in English; it also cites education-related exclusion figures (A2F 2023) that measure financial exclusion, not language coverage of services. (2) Form: it publishes no numerator/denominator for share of services offered in local languages, which is precisely the gap the indicator census flags. The NITDA draft DPI Technical Standards (T3) contain a 'Language and Localisation' standards heading, i.e. an intended requirement, not a measured coverage share. No Egypt-derived content was used or relied upon in this record.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Should 8.11 remain a %-share indicator when no country publishes a denominator for local-language service delivery \u2014 and the Nigeria bundle's guidance text is contaminated with Egypt-specific content that must be removed regardless of the ruling?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Services in local languages (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ADV",
+    "EQ"
+   ],
+   "prereq": "",
+   "kind": "t"
+  },
+  "8.12": {
+   "value": "A randomized controlled trial of the RiceAdvice digital personalized-extension app in Nigeria found that farm households receiving personalized advice increased their yield by 7% and their profit by 10%.",
+   "cls": "Documented",
+   "level": 4,
+   "year": 2020,
+   "src": "American Journal of Agricultural Economics (Wiley) \u2014 Arouna, Michler, Yergo & Saito, 'One Size Fits All? Experimental Evidence on the Digital Delivery of Personalized Extension Advice in Nigeria'",
+   "note": "Experimental estimate from a single-country RCT with a defined study area; not a national-level impact figure. Next level not proposed: Level 5 was not proposed because scale_evidence is empty: none of the supplied pages publish reach figures for the digital services whose impact is documented \u2014 no user, subscriber, coverage or geographic-spread numbers for RiceAdvice or comparable Nigerian digital advisory platforms appear in the retrieved text. The trial sample size and study-area extent are not stated in the fetched page, and the only large reach figure available (61,171 beneficiaries, World Bank APPEALS ISR) belongs to a non-digital agro-processing project and cannot be borrowed for this row. Impact evidence therefore remains at the level of localized experiments rather than a documented, nationally scaled impact record. The evidence sits on the correct side of the census's open question: the measured outcomes are yield (+7%) and profit (+10%) from a digital advisory tool (RiceAdvice mobile app) in Nigeria, i.e. yield/income outcomes rather than diffusion or adoption of digital tools. A second Nigerian digital-extension RCT (Oyinbo et al., 'Digital extension, price risk, and farm performance', AJAE 2022) reports that site-specific digital recommendations 'improve fertilizer management practices and maize yields' with 'only incremental increases in investments and net revenues', but the page supplied for it is an IDEAS/RePEc bibliographic listing (T5), so it is recorded here only as corroborating context, not as the quoted source. Other supplied Nigerian impact studies (innovation platforms on maize income, PMC10208796; improved soybean varieties on yield and revenue, PMC9539571) measure non-digital interventions and therefore do not evidence digital-agriculture impact. World Bank APPEALS ISR figures (62.62% productivity increase, 61,171 beneficiaries) are for a general agro-processing project, not a digital service.",
+   "tier": "T2",
+   "tier_detail": "Experimental estimate from a single-country RCT with a defined study area; not a national-level impact figure",
+   "url": "https://onlinelibrary.wiley.com/doi/10.1111/ajae.12151",
+   "defnote": "The name's parenthetical fixes the outcome as yield or income, but Egypt's level 3 rests on an evaluation whose measured outcome is diffusion and adoption of digital tools, not yield or income.",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": true,
+   "name": "Documented impact evidence (yield/income)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ALL"
+   ],
+   "prereq": "",
+   "kind": "l"
+  },
+  "8.17": {
+   "value": "DATA GAP \u2014 1) NBS microdata catalog, GHS-Panel Wave 5 (2023-2024) data dictionary for sect12_plantingw5.dta \\confirmed the survey captures household receipt of farm information and specifically WEATHER INFORMATION (s12q8__1) across 4,771 cases, but the page is a variable list with no percentages. 2) NBS data dictionary for sectc6b_harvestw5.dta (community-level expectations on climate extremes) \\ variables on climate event expectations and adaptation actions, again no tabulated results and not an advisory-receipt measure. 3) CGIAR/ILRI Nigeria country profile on climate and agro-advisory delivery \\richest narrative source, but readiness is graded qualitatively ('Evolving') with only supply-side counts. 4) A second CGSpace CLIMBER report surfaced by search proved to be a Senegal CIS willingness-to-pay study \\discarded under the no-cross-border rule. 5) NiMet SCP pages (nimet.gov.ng/scp and scp.nimet.gov.ng) \\confirm annual multilingual issuance of the Seasonal Climate Prediction, i.e. supply-side issuance only. 6) HEDA Resource Center press item \\T5, gives a training headcount (500+ farmer leaders, 17 states); usable as an existence fact but never as a statistic. Dead ends: no FAO/WMO/GSMA reach survey for Nigeria and no NBS statistical release tabulating Section 12 appeared among the supplied pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Qualitative expert assessment; no sampling frame, no quantified coverage estimate. Next level not proposed: Not applicable \\no level proposed. The specific missing item is a published denominator-based statistic: the share of Nigerian farming households that received weather or climate advisory information in a defined reference period. The GHS-Panel Wave 5 variable s12q8__1 would yield it, but only the variable list, not any tabulation, is present in the retrieved pages. The indicator names ADVISORY REACH expressed as a percentage / recereceive climate advisories. Every Nigeria-specific figure found sits on the supply side of the census's open question: number of observing stations (88 automatic weather stations, 43 synoptic, 51 agromet), annual issuance of a Seasonal Climate Prediction in English, Hausa, Igbo, Yoruba and Pidgin, and a count of 500+ farmer leaders trained on the 2026 SCP by an NGO. None of these is a denominator-based share of farmers reached. The nearest demand-side instrument is NBS General Household Survey Panel Wave 5 (2023-2024), Post-Planting Section 12 'Digital Farming Information', which carries variables s12q1 ('Did your household seek or receive information or advice for your farm?') and s12q8__1 ('What type of information did you receive?: WEATHER INFORMATION') across 4,771 cases; that is the correct construct, but only the data dictionary is published on the retrieved page \\no tabulated percentage appears there, so no value can be quoted.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Does the indicator measure farmer receipt of advisories, or supply-side issuance (warnings issued, platforms live), which is all either country publishes?",
+   "defsev": "construct-drift",
+   "subs": [],
+   "stale": false,
+   "name": "Climate advisory reach (%)",
+   "pillar": "O1",
+   "layer": "Outcomes",
+   "uc": [
+    "ADV"
+   ],
+   "prereq": "",
+   "kind": "t"
+  }
+ },
+ "pillars": {
+  "A1": {
+   "n": 10,
+   "rated": 5,
+   "held": 0,
+   "mean": 2.4,
+   "band": "Emerging",
+   "weak": false,
+   "comp": {
+    "Measured": 3,
+    "Documented": 2,
+    "Judged": 0,
+    "Gap": 5
+   },
+   "stale": 2
+  },
+  "C1": {
+   "n": 6,
+   "rated": 3,
+   "held": 1,
+   "mean": 3.0,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 3,
+    "Documented": 0,
+    "Judged": 1,
+    "Gap": 2
+   },
+   "stale": 0
+  },
+  "C2": {
+   "n": 8,
+   "rated": 5,
+   "held": 2,
+   "mean": 3.0,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 1,
+    "Documented": 6,
+    "Judged": 0,
+    "Gap": 1
+   },
+   "stale": 1
+  },
+  "C3": {
+   "n": 8,
+   "rated": 3,
+   "held": 0,
+   "mean": 2.67,
+   "band": "Established",
+   "weak": true,
+   "comp": {
+    "Measured": 0,
+    "Documented": 3,
+    "Judged": 0,
+    "Gap": 5
+   },
+   "stale": 1
+  },
+  "C4": {
+   "n": 7,
+   "rated": 2,
+   "held": 1,
+   "mean": 3.0,
+   "band": "Established",
+   "weak": true,
+   "comp": {
+    "Measured": 1,
+    "Documented": 2,
+    "Judged": 0,
+    "Gap": 4
+   },
+   "stale": 1
+  },
+  "E1": {
+   "n": 11,
+   "rated": 6,
+   "held": 3,
+   "mean": 3.0,
+   "band": "Established",
+   "weak": false,
+   "comp": {
+    "Measured": 0,
+    "Documented": 9,
+    "Judged": 0,
+    "Gap": 2
+   },
+   "stale": 2
+  },
+  "O1": {
+   "n": 7,
+   "rated": 2,
+   "held": 0,
+   "mean": 3.5,
+   "band": "Advanced",
+   "weak": true,
+   "comp": {
+    "Measured": 1,
+    "Documented": 1,
+    "Judged": 0,
+    "Gap": 5
+   },
+   "stale": 1
+  }
+ },
+ "layers": {
+  "Foundation": 2.63,
+  "Enablers": 2.75,
+  "Transformation": 3.5,
+  "Outcomes": 3.5
+ },
+ "prereq": {
+  "2.1": {
+   "name": "Rural mobile broadband coverage (3G/4G)",
+   "kind": "UNIVERSAL",
+   "status": "Unverified"
+  },
+  "2.9": {
+   "name": "Rural electricity access (%)",
+   "kind": "UNIVERSAL",
+   "status": "Present (narrow)"
+  },
+  "3.3": {
+   "name": "National farmer registry",
+   "kind": "UC:FIN,AGI",
+   "status": "Present"
+  },
+  "3.11": {
+   "name": "Agricultural data interoperability standards",
+   "kind": "UC:AGI",
+   "status": "Unverified"
+  },
+  "4.1": {
+   "name": "Data protection/privacy law",
+   "kind": "UNIVERSAL",
+   "status": "Present"
+  },
+  "4.5": {
+   "name": "Agricultural data governance framework",
+   "kind": "UC:AGI",
+   "status": "Unverified"
+  },
+  "4.7": {
+   "name": "Digital ID coverage (%)",
+   "kind": "UC:FIN",
+   "status": "Unverified"
+  },
+  "4.9": {
+   "name": "Inter-ministerial coordination mechanism",
+   "kind": "DELIVERY",
+   "status": "Unverified"
+  },
+  "5.5": {
+   "name": "Digital extension capability",
+   "kind": "UC:ADV",
+   "status": "Present"
+  },
+  "5.7": {
+   "name": "MoAg digital/AI unit",
+   "kind": "DELIVERY",
+   "status": "Unverified"
+  },
+  "6.14": {
+   "name": "Agri-fintech rails for smallholders",
+   "kind": "UC:FIN",
+   "status": "Unverified"
+  },
+  "7.12": {
+   "name": "Responsible-AI safeguards (consent, rights)",
+   "kind": "UC:AI",
+   "status": "Present"
+  }
+ },
+ "matrix": {
+  "ADV": {
+   "status": "Unverified",
+   "why": "universal unverified: 2.1",
+   "mean": 3.0,
+   "prereqs": [
+    [
+     "5.5",
+     "Present"
+    ]
+   ],
+   "n_bearing": 17,
+   "basis": {
+    "need": 0,
+    "outcome": 1,
+    "enabler": 16
+   },
+   "mean_enabler": 2.94,
+   "mean_driven": false
+  },
+  "SMF": {
+   "status": "Unverified",
+   "why": "universal unverified: 2.1",
+   "mean": 2.93,
+   "prereqs": [],
+   "n_bearing": 15,
+   "basis": {
+    "need": 0,
+    "outcome": 1,
+    "enabler": 14
+   },
+   "mean_enabler": 2.86,
+   "mean_driven": false
+  },
+  "MKT": {
+   "status": "Unverified",
+   "why": "universal unverified: 2.1",
+   "mean": 2.92,
+   "prereqs": [],
+   "n_bearing": 12,
+   "basis": {
+    "need": 0,
+    "outcome": 1,
+    "enabler": 11
+   },
+   "mean_enabler": 2.82,
+   "mean_driven": false
+  },
+  "SCM": {
+   "status": "Unverified",
+   "why": "universal unverified: 2.1",
+   "mean": 2.92,
+   "prereqs": [],
+   "n_bearing": 12,
+   "basis": {
+    "need": 0,
+    "outcome": 1,
+    "enabler": 11
+   },
+   "mean_enabler": 2.82,
+   "mean_driven": false
+  },
+  "FIN": {
+   "status": "Unverified",
+   "why": "universal unverified: 2.1",
+   "mean": 2.93,
+   "prereqs": [
+    [
+     "3.3",
+     "Present"
+    ],
+    [
+     "4.7",
+     "Unverified"
+    ],
+    [
+     "6.14",
+     "Unverified"
+    ]
+   ],
+   "n_bearing": 14,
+   "basis": {
+    "need": 0,
+    "outcome": 2,
+    "enabler": 12
+   },
+   "mean_enabler": 2.83,
+   "mean_driven": false
+  },
+  "AGI": {
+   "status": "Unverified",
+   "why": "universal unverified: 2.1",
+   "mean": 2.93,
+   "prereqs": [
+    [
+     "3.3",
+     "Present"
+    ],
+    [
+     "3.11",
+     "Unverified"
+    ],
+    [
+     "4.5",
+     "Unverified"
+    ],
+    [
+     "7.12",
+     "Present"
+    ]
+   ],
+   "n_bearing": 15,
+   "basis": {
+    "need": 0,
+    "outcome": 1,
+    "enabler": 14
+   },
+   "mean_enabler": 2.86,
+   "mean_driven": false
+  }
+ },
+ "leapfrog": {
+  "gap": -0.87,
+  "flag": false,
+  "reading": "No structural flag"
+ },
+ "constraints": [
+  {
+   "id": "1.5",
+   "name": "Post-harvest loss rate (%)",
+   "level": 1,
+   "pillar": "A1",
+   "prereq": false
+  },
+  {
+   "id": "6.1",
+   "name": "Global Innovation Index",
+   "level": 1,
+   "pillar": "E1",
+   "prereq": false
+  },
+  {
+   "id": "1.2",
+   "name": "Cereal yield (kg/ha)",
+   "level": 2,
+   "pillar": "A1",
+   "prereq": false
+  },
+  {
+   "id": "1.3",
+   "name": "Employment in agriculture (%)",
+   "level": 2,
+   "pillar": "A1",
+   "prereq": false
+  },
+  {
+   "id": "2.9",
+   "name": "Rural electricity access (%)",
+   "level": 2,
+   "pillar": "C1",
+   "prereq": true
+  },
+  {
+   "id": "4.4",
+   "name": "National digital agriculture strategy",
+   "level": 2,
+   "pillar": "C3",
+   "prereq": false
+  },
+  {
+   "id": "2.4",
+   "name": "Individuals using the Internet (%)",
+   "level": 3,
+   "pillar": "C1",
+   "prereq": false
+  },
+  {
+   "id": "3.1",
+   "name": "UN E-Government Development Index",
+   "level": 3,
+   "pillar": "C2",
+   "prereq": false
+  },
+  {
+   "id": "3.10",
+   "name": "Agricultural e-commerce platforms",
+   "level": 3,
+   "pillar": "E1",
+   "prereq": false
+  },
+  {
+   "id": "3.3",
+   "name": "National farmer registry",
+   "level": 3,
+   "pillar": "C2",
+   "prereq": true
+  },
+  {
+   "id": "3.6",
+   "name": "Weather/climate data infrastructure",
+   "level": 3,
+   "pillar": "C2",
+   "prereq": false
+  },
+  {
+   "id": "3.7",
+   "name": "Satellite/EO data integration",
+   "level": 3,
+   "pillar": "C2",
+   "prereq": false
+  }
+ ],
+ "kpi": [
+  {
+   "id": "1.2",
+   "name": "Cereal yield (kg/ha)",
+   "value": 1558.0,
+   "year": 2024,
+   "src": "World Bank, World Development Indicators \u2014 Cereal yield (kg per hectare) (AG.YLD.CREL.KG), all countries table"
+  },
+  {
+   "id": "1.3",
+   "name": "Employment in agriculture (%)",
+   "value": 34.0,
+   "year": 2025,
+   "src": "World Bank, World Development Indicators \u2014 Employment in agriculture (% of total employment) (modeled ILO estimate), Nigeria (SL.AGR.EMPL.ZS)"
+  },
+  {
+   "id": "1.4",
+   "name": "Food production index (2014-16=100)",
+   "value": 119.8,
+   "year": 2022,
+   "src": "World Bank Open Data \u2014 Food production index (2014-2016 = 100) (AG.PRD.FOOD.XD), FAO source"
+  },
+  {
+   "id": "8.2",
+   "name": "Account ownership, female (%)",
+   "value": 52.2,
+   "year": 2024,
+   "src": "World Bank Gender Data Portal \u2014 Nigeria (Account ownership at a financial institution or with a mobile-money-service provider, by sex, % of population ages 15+)"
+  }
+ ],
+ "verify": [
+  {
+   "id": "1.1",
+   "name": "Agriculture value added per worker (USD)",
+   "cls": "Gap"
+  },
+  {
+   "id": "1.6",
+   "name": "Smallholder access to formal markets (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "1.7",
+   "name": "Agricultural credit access (% farmers)",
+   "cls": "Gap"
+  },
+  {
+   "id": "1.8",
+   "name": "Farmers using climate-smart practices (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.1",
+   "name": "Prevalence of undernourishment (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "2.1",
+   "name": "Rural mobile broadband coverage (3G/4G)",
+   "cls": "Gap"
+  },
+  {
+   "id": "2.7",
+   "name": "Rural smartphone ownership (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "2.11",
+   "name": "Device financing/subsidy schemes",
+   "cls": "Judged"
+  },
+  {
+   "id": "3.11",
+   "name": "Agricultural data interoperability standards",
+   "cls": "Gap"
+  },
+  {
+   "id": "4.2",
+   "name": "Cybersecurity framework (ITU GCI)",
+   "cls": "Gap"
+  },
+  {
+   "id": "4.3",
+   "name": "Government AI Readiness Index",
+   "cls": "Gap"
+  },
+  {
+   "id": "4.5",
+   "name": "Agricultural data governance framework",
+   "cls": "Gap"
+  },
+  {
+   "id": "4.7",
+   "name": "Digital ID coverage (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "4.9",
+   "name": "Inter-ministerial coordination mechanism",
+   "cls": "Gap"
+  },
+  {
+   "id": "5.3",
+   "name": "Tertiary STEM enrollment (% gross)",
+   "cls": "Gap"
+  },
+  {
+   "id": "5.4",
+   "name": "Digital literacy among farmers (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "5.7",
+   "name": "MoAg digital/AI unit",
+   "cls": "Gap"
+  },
+  {
+   "id": "5.12",
+   "name": "Gender balance in digital-ag workforce (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "6.3",
+   "name": "Business Ready (B-READY)",
+   "cls": "Gap"
+  },
+  {
+   "id": "6.9",
+   "name": "Public-private partnerships in digital ag",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.4",
+   "name": "Mobile money account (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.6",
+   "name": "Gender gap in phone ownership (pp)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.9",
+   "name": "Smallholders reached by digital services (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.11",
+   "name": "Services in local languages (%)",
+   "cls": "Gap"
+  },
+  {
+   "id": "8.17",
+   "name": "Climate advisory reach (%)",
+   "cls": "Gap"
+  }
+ ],
+ "refresh": [
+  {
+   "id": "1.4",
+   "name": "Food production index (2014-16=100)",
+   "year": 2022
+  },
+  {
+   "id": "8.5",
+   "name": "Women who own land (% holders)",
+   "year": 2018
+  },
+  {
+   "id": "3.8",
+   "name": "National soil map/database",
+   "year": 2020
+  },
+  {
+   "id": "4.4",
+   "name": "National digital agriculture strategy",
+   "year": 2020
+  },
+  {
+   "id": "5.5",
+   "name": "Digital extension capability",
+   "year": 2017
+  },
+  {
+   "id": "6.4",
+   "name": "Agtech venture ecosystem",
+   "year": 2020
+  },
+  {
+   "id": "6.14",
+   "name": "Agri-fintech rails for smallholders",
+   "year": 2015
+  },
+  {
+   "id": "8.12",
+   "name": "Documented impact evidence (yield/income)",
+   "year": 2020
+  }
+ ],
+ "counts": {
+  "Measured": 9,
+  "Documented": 23,
+  "Judged": 1,
+  "Gap": 24
+ },
+ "held": 7,
+ "rated": 26,
+ "candidates": {
+  "A1-CAND-IMP": {
+   "value": "DATA GAP \u2014 1) Source 2 (data.un.org, FAOSTAT itemCode 21035) \u2014 the exact named construct; scanned the record table for a Nigeria row: table is truncated at 'Page 1 of 81' and shows only Afghanistan (19 years), Africa aggregate and part of Albania. Nigeria appears solely in the 'Country or Area (226)' filter list, unaccompanied by any number. 2) Source 4 (openknowledge.fao.org Figure 52, cereal import dependency ratio top countries 2020\u20132022) \u2014 checked the plotted country labels; the twenty listed are small island states and Gulf/North African states in the 90\u2013100 percent band; Nigeria absent. 3) Source 1 (FAOSTAT home) \u2014 navigation and database update log only, no country values. 4) Source 3 (FAO data catalog metadata for the Suite of Food Security Indicators) \u2014 dataset description and licensing only, no figures. 5) Source 5 (USDA ERS, The Agricultural Economy of Nigeria, 1972) \u2014 Nigeria-specific but a 1970s narrative on cocoa, peanuts, wheat imports; no cereal import dependency ratio, and half a century out of date. 6) Source 6 (Foods 2025 beta regression on food insecurity) \u2014 only front matter and abstract retrieved; no Nigeria-specific cereal import dependency figure in the supplied text. 7) Source 7 (Food Systems Dashboard) \u2014 returned an HTTP 429 security checkpoint with no content, and is T5 in any case. Conclusion: the figure is almost certainly published by FAOSTAT for Nigeria, but it is not present in any supplied page text, so recording a number would require fabricating it.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Value exists in the FAOSTAT Suite of Food Security Indicators but was not returned in the retrieved page text; retrieval, not publication, is the gap. Next level not proposed: Not applicable \u2014 proposed_level is 0 by design for carried candidate indicators; additionally no value was verifiable. Source 2 is exactly the named construct (FAOSTAT cereal import dependency ratio, percent, 3-year average) and Nigeria is listed as an available country or area, but no Nigeria row is rendered in the supplied text. Source 4 (FAO openknowledge, Figure 52) covers the same construct for 2020\u20132022 but is a 'top countries' chart listing only the twenty highest-ratio countries (Antigua and Barbuda through Cabo Verde, 90\u2013100 percent range); Nigeria is not among them, so it yields no Nigeria value. Source 5 (USDA 1972) is a narrative on Nigerian agricultural trade with no dependency ratio. Sources 1, 3, 6 and 7 are portal or metadata pages with no country figures.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "A1-CAND-IRR": {
+   "value": "DATA GAP \u2014 1) FAO AQUASTAT GMIA 'Irrigation by country' page for Nigeria (T1) \u2014 read in full; gives 293 117 ha equipped and 218 840 ha actually irrigated (2004), plus basin allocation methodology; no percentage of cultivated area. 2) FAO AQUASTAT Country Profile \u2013 Nigeria landing pages (fao.org and aquastat.review.fao.org) \u2014 navigation shells only, no data values in the retrieved text. 3) FAO Knowledge Repository PDF of the 2016 AQUASTAT Country Profile \u2013 Nigeria \u2014 retrieved text covers only cover matter, geography, Table 1 basic statistics (cultivated area 40.5 million ha, 2013), climate and population; the Irrigation and Drainage section, which would normally carry 'area equipped for irrigation as % of cultivated area', is not present in the supplied excerpt. 4) AQUASTAT main database and printable-maps pages \u2014 confirm that a variable/map 'Part of cultivated area under irrigation' and 'Area equipped for irrigation as percentage of cultivated area' exist in AQUASTAT, but neither supplied page carries the Nigeria value. 5) Punch (T5) news article \u2014 carries 5.4% but against irrigation potential, a different denominator; rejected under construct and tier rules. Dead end: no supplied page states the Nigeria share of cultivated area equipped for irrigation. Next step for a re-run would be the AQUASTAT Country Statistics query for variable 4313/4188 (area equipped for irrigation as % of cultivated area) or the full text of the 2016 AQUASTAT Nigeria profile's Irrigation and Drainage section.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: No level is proposed because the cell is a carried candidate (never scored) and because the construct itself could not be evidenced: the retrieved pages contain the numerator and the denominator on separate documents with different reference years (293 117 ha equipped, target year ~2004/2005; 40 500 000 ha cultivated, 2013) but no publisher-stated share. Context only, not recorded as the value: (a) FAO AQUASTAT GMIA country page for Nigeria states area equipped for irrigation of 293 117 ha and area actually irrigated of 218 840 ha in 2004 \u2014 an absolute area, not a share of cultivated area; (b) FAO AQUASTAT Country Profile \u2013 Nigeria (2016) states cultivated area of 40 500 000 ha in 2013 \u2014 a denominator, not the indicator; (c) Punch (T5, Dec 2022) reports '5.4 per cent' but that figure is actual irrigated area (169,718 ha) as a share of Nigeria's irrigation POTENTIAL (3.14 million ha), not of cultivated area, and a T5 publisher may not carry a statistic in any case. The named construct requires equipped area divided by cultivated area; no supplied page states that quotient. An independent T1 series (World Bank WDI AG.LND.IRIG.AG.ZS) reports 0.32 for 2017.",
+   "tier": "",
+   "tier_detail": "",
+   "url": "",
+   "defnote": "Which denominator defines 'land equipped' \u2014 cultivated land, arable land, or total agricultural land \u2014 since Egypt reads 94.2-94.9% on the first and 100% on the second?",
+   "defsev": "unit-ambiguity"
+  }
+ }
+}

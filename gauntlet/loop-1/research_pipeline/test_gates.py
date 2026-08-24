@@ -163,9 +163,9 @@ ROW = dict(value="v", cls="Documented", level=3, year=2024, src="s", note="", ti
            tier_detail="", url="u", defnote="an open question", defsev="construct-drift")
 
 
-def finding(verdict, kind, plevel, gate="pass"):
+def finding(verdict, kind, plevel, gate="pass", quote_verified=True):
     return dict(verdict=verdict, refutation_kind=kind, reason="the evidence shows X",
-                gate_verdict=gate,
+                gate_verdict=gate, quote_verified=quote_verified,
                 proposed_row=dict(ROW, level=plevel, src="new src"))
 
 
@@ -181,6 +181,14 @@ check("an unsupported source withdraws the level",
       decide("refuted", "source does not support the value", None)[0], "withdrawn")
 check("a construct mismatch withdraws the level",
       decide("refuted", "construct mismatch", None)[0], "withdrawn")
+# A withdrawal is the only path that lowers a row, so it must rest on something the
+# reviewer actually read. Both countries' 7.12 withdrawals came from a reviewer that
+# asserted no value and verified no quote — an absence filed as a refutation.
+check("a withdrawal with nothing quoted is not a withdrawal",
+      decide("refuted", "source does not support the value", None,
+             quote_verified=False)[0], "upheld")
+check("a construct mismatch with nothing quoted is not a withdrawal",
+      decide("refuted", "construct mismatch", None, quote_verified=False)[0], "upheld")
 check("a proposal that did not clear the gates changes nothing",
       decide("adjust", "better evidence exists", 4, gate="hold")[0], "upheld")
 # The schema calls 'adjust' a wrong tier, class, LEVEL or vintage. It once copied only

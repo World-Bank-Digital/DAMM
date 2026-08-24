@@ -253,10 +253,24 @@ def decide(spec, row, f):
     if verdict == "confirmed":
         return "upheld", None
 
-    # An affirmative refutation of the row's own basis withdraws the level, whether or
-    # not Gate 2 found a replacement. This is the only path that can lower a row.
+    # An affirmative refutation of the row's own basis withdraws the level. This is the
+    # only path that can lower a row, so it carries the heaviest evidence requirement:
+    # the reviewer must have quote-verified something it actually read.
+    #
+    # Without that, the asymmetry above is enforced by the reviewer's own labelling
+    # rather than by evidence — and the reviewer is the thing being checked. Both
+    # countries' 7.12 withdrawals came from a reviewer that asserted no value, produced
+    # no quote and verified nothing: an absence, filed under "source does not support
+    # the value" instead of "could not locate independently". An absence cannot refute a
+    # quote-verified citation whatever it is called.
+    #
+    # The legitimate case survives. A reviewer that reads a page and finds it does not
+    # say what the row claims can quote the text it read, and that quote verifies. What
+    # is excluded is a withdrawal resting on nothing.
     if verdict == "refuted" and kind in ("source does not support the value",
                                          "construct mismatch") and row_has_level:
+        if not f.get("quote_verified"):
+            return "upheld", None
         out = dict(row, level=None)
         out["note"] = (f"RATIFICATION HOLD — withdrawn on second review: {f['reason']} "
                        f"The level is withheld and this row leaves every mean. "

@@ -10,10 +10,10 @@ An independent vendor (`openai/gpt-5.6-terra`) attacked the first pass on the **
 | outcome | rows | |
 |---|---|---|
 | **filled** | 3 | a gap or withheld level replaced by evidence that cleared every gate |
-| **withdrawn** | 1 | a level removed: the cited source was shown not to support it |
+| **withdrawn** | 0 | a level removed: the cited source was shown not to support it |
 | **relevelled** | 0 | the level changed: a second reading of better evidence, cleared through every gate |
 | **adjusted** | 2 | substance and level stand, provenance corrected |
-| **upheld** | 32 | the row survived the attack |
+| **upheld** | 33 | the row survived the attack |
 
 ## Verdicts as the reviewer gave them
 
@@ -48,15 +48,6 @@ Evidence the first pass did not reach, which then cleared every gate. This is th
 - The first pass’s gap is refuted by the supplied World Bank Global Findex DataBank table, which publishes the exact Egypt mobile-money-account series and shows 0.0 for 2021.
 - now: Measured at level 1, T1 — World Bank, Global Findex database - DataBank
 - https://databank.worldbank.org/id/739ae3c1
-
-## Levels Gate 2 withdrew
-
-An affirmative finding that the cited source does not support the value, or measures a different construct. The evidence stays on the row; the level goes.
-
-
-**7.12 Responsible-AI safeguards (consent, rights)** · prerequisite · severity high
-
-- The first-pass T3 citation does support the existence and launch of a general responsible-AI charter, but it does not support this indicator as named: neither “consent” nor “rights” appears in the quoted MCIT charter release. Treating general ethics and impact-assessment language as evidence of consent/rights safeguards changes the construct and would improperly assign the prerequisite level.
 
 ## Provenance Gate 2 corrected
 
@@ -106,7 +97,7 @@ The substance and the level survived; the source, tier or vintage did not.
 | 6.13 | gap | adjust · better evidence exists | upheld | The first pass correctly found no usable percentage, but its Gap classification overlooks the supplied ICARDA  |
 | 6.14 | prerequisite | confirmed | upheld | The first-pass withholding survives review. The supplied FAO T1 page affirmatively supports the narrower point |
 | 7.2 | hold | refuted · better evidence exists | upheld | The first-pass withholding rationale fails because it did not reach the official MCIT release. That release ex |
-| 7.12 | prerequisite | refuted · construct mismatch | **withdrawn** | The first-pass T3 citation does support the existence and launch of a general responsible-AI charter, but it d |
+| 7.12 | prerequisite | refuted · construct mismatch | upheld | The first-pass T3 citation does support the existence and launch of a general responsible-AI charter, but it d |
 | 8.4 | gap | refuted · better evidence exists | **filled** | The first pass’s gap is refuted by the supplied World Bank Global Findex DataBank table, which publishes the e |
 | 8.5 | hold | confirmed · could not locate independently | upheld | I attacked the withholding rationale by looking for an Egyptian sex-disaggregated land-ownership statistic in  |
 | 8.9 | gap | confirmed | upheld | The gap was attacked using the supplied Egypt-specific ICARDA and IFPRI materials, especially the smallholder  |

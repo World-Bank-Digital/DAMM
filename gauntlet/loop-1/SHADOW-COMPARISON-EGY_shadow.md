@@ -11,10 +11,11 @@
 
 **3. Gaps.** The verified assessment records **5** (2.1, 5.12, 6.3, 6.13, 8.17). The shadow run records **22**, of which it found **5** of the recorded ones and raised **17** the verified assessment does not carry. It also set **11** ratification holds against the verified assessment's 5.
 
-**4. The 2.1 finding.** **Reproduced.** The shadow run recorded 2.1 as `Gap` with no level; gate verdict `gap`. 
+**4. The rural/national trap at 2.1.** **Avoided.** The shadow run recorded 2.1 as `Gap` with no level; gate verdict `gap`. It did not record a national coverage figure against an indicator naming rural coverage — the error that passed an assessor gate and an initial peer review before an audit caught it.
+  
+  This country's verified assessment records 2.1 as `Gap` at no level, so the two agree.
   
   On the construct: *The indicator names RURAL mobile broadband coverage. The best available Egypt-specific evidence in the retrieved pages is NATIONAL: ITU's Digital Development Dashboard for Egypt reports population covered by at least a 3G mobile network (2022) = 100% and at least a 4G mobile network (2022) = 98%. These are total-population figures with no urban/rural split. The only rural-disaggregated Egyptian f…*
-
   
   Recorded value: `DATA GAP — 1) ITU Statistics landing page — confirms ITU publishes population covered by mobile-broadband network 'total and by urban/rural area', but only as global/regional/development-group aggregates, not per-country. 2) ITU DataHub home and About pages — confirm the World Telecommunication Ind…`
 
@@ -89,20 +90,6 @@ Each gate below is a design decision doing its job. A row that reaches a gate ke
 
 11 rows are also covered by a machine-fetchable T1 series, fetched separately and never substituted for the research lane's own answer. **7 of 11** research values agree with the independent series within 2%.
 
-
-## How much of this is repeatable
-
-An earlier independent run of the same country on the same pipeline (`EGY_shadow_v1`) agrees with this one on **53 of 57** rows by level (93%). The vendor plans its own searches, so two runs do not retrieve the same pages, and a row whose answer sits just at the edge of what the search reaches can land differently. Every figure above carries this variance: a difference of one or two rows against the verified assessment is inside the noise, and only the larger patterns should be read as findings.
-
-| id | earlier run | this run |
-|---|---|---|
-| 3.4 | Documented L3 | Documented no level |
-| 3.5 | Gap no level | Documented no level |
-| 3.6 | Documented no level | Documented L3 |
-| 3.7 | Judged no level | Documented no level |
-| 3.8 | Documented L3 | Documented no level |
-| 7.2 | Judged no level | Documented no level |
-| 8.9 | Documented L1 | Gap no level |
 
 ## Every row
 

@@ -19,11 +19,10 @@ Decision G3 reserves 15% of the country budget for Gate 2 — $75 of $500. It sp
 | outcome | rows |
 |---|---|
 | filled | 3 |
-| withdrawn | 1 |
 | adjusted | 2 |
-| upheld | 32 |
+| upheld | 33 |
 
-**4 rows** had their level changed by the second review (3 filled, 1 withdrawn). That figure, not the upheld count, is what the 15% buys.
+**3 rows** had their level changed by the second review (3 filled, 0 withdrawn, 0 relevelled). That figure, not the upheld count, is what the 15% buys.
 
 
 ## Whether it moved the assessment toward the verified one
@@ -33,13 +32,11 @@ Decision G3 reserves 15% of the country budget for Gate 2 — $75 of $500. It sp
 | rows at the verified level (of 57) | 24 | 24 | no change |
 | prerequisites matching (of 12) | 4 | 5 | +1 ✓ |
 | recorded gaps | 22 | 20 | -2 ✓ (the verified assessment records 5) |
-| ratification holds | 11 | 11 | no change (the verified assessment records 5) |
-| rows both assessments levelled | 23 | 25 | +2 ✓ |
+| ratification holds | 11 | 10 | -1 ✓ (the verified assessment records 5) |
+| rows both assessments levelled | 23 | 26 | +3 ✓ |
 | of those, exactly equal | 15 | 15 | no change |
 
 Gaps Gate 2 closed: 4.9, 8.4.
-
-Levels Gate 2 withdrew: 7.12.
 
 
 ## Reading this

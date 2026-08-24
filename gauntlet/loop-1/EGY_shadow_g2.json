@@ -1135,10 +1135,10 @@
   "7.12": {
    "value": "Egypt adopted a cross-sector Egyptian Charter for Responsible AI, launched by the National Council for Artificial Intelligence in April 2023, built on five values (Human-Centeredness, Transparency and Explainability, Fai",
    "cls": "Documented",
-   "level": null,
+   "level": 3,
    "year": 2023,
    "src": "Egypt, Ministry of Communications and Information Technology (MCIT) \u2014 Press Release: \"Egyptian Charter for Responsible AI Launched\"",
-   "note": "RATIFICATION HOLD \u2014 withdrawn on second review: The first-pass T3 citation does support the existence and launch of a general responsible-AI charter, but it does not support this indicator as named: neither \u201cconsent\u201d nor \u201crights\u201d appears in the quoted MCIT charter release. Treating general ethics and impact-assessment language as evidence of consent/rights safeguards changes the construct and would improperly assign the prerequisite level. The level is withheld and this row leaves every mean. Charter is a voluntary, non-binding ethical framework; the quoted page is the implementing ministry's own announcement. Next level not proposed: Operating was not proposed (and would in any case yield the same base level 3): the only implementation mechanism visible in the retrieved pages is a prospective one stated inside the Charter itself \u2014 that government AI projects \"should be supervised by\" MCIT and that MCIT \"presents periodically a report\" to the Council \u2014 which is design intent from the implementer's own announcement, not evidence of a functioning compliance, consent or redress mechanism. Level 4 was not proposed because no independent evaluation, audit or performance report on how the Charter's safeguards work in practice was in the retrieved pages (the OECD AI Review of Egypt was retrieved only as front matter/abstract, containing no quotable finding on the Charter's effectiveness). Level 5 was not proposed because no reach figures exist \u2014 no count of AI systems assessed, impact assessments completed, complaints handled, or entities certified under the Charter. The indicator name (\"Responsible-AI safeguards (consent, rights)\") is not qualified as agriculture-specific, and the best available admissible evidence is an economy-wide, cross-sector instrument: the Egyptian Charter for Responsible AI (2023), a voluntary national ethics charter administered by MCIT/NCAI. Nothing agriculture- or farmer-specific (e.g., consent for farm data used in AI advisory or credit-scoring systems) appears in any retrieved page \u2014 the National AI Strategy lists agriculture only as an application sector (7.1 Agriculture, Water Management and Environment), with no farmer-facing consent or rights safeguards quoted. Additionally, the quoted Charter text names five values (human-centeredness, transparency, fairness, accountability, safety) but does not explicitly name \"consent\"; the UNESCO country page refers to a Data Protection Law (2020) as the consent-bearing instrument, but that page is T5 and thus not admissible for this prerequisite row.",
+   "note": "Charter is a voluntary, non-binding ethical framework; the quoted page is the implementing ministry's own announcement. Next level not proposed: Operating was not proposed (and would in any case yield the same base level 3): the only implementation mechanism visible in the retrieved pages is a prospective one stated inside the Charter itself \u2014 that government AI projects \"should be supervised by\" MCIT and that MCIT \"presents periodically a report\" to the Council \u2014 which is design intent from the implementer's own announcement, not evidence of a functioning compliance, consent or redress mechanism. Level 4 was not proposed because no independent evaluation, audit or performance report on how the Charter's safeguards work in practice was in the retrieved pages (the OECD AI Review of Egypt was retrieved only as front matter/abstract, containing no quotable finding on the Charter's effectiveness). Level 5 was not proposed because no reach figures exist \u2014 no count of AI systems assessed, impact assessments completed, complaints handled, or entities certified under the Charter. The indicator name (\"Responsible-AI safeguards (consent, rights)\") is not qualified as agriculture-specific, and the best available admissible evidence is an economy-wide, cross-sector instrument: the Egyptian Charter for Responsible AI (2023), a voluntary national ethics charter administered by MCIT/NCAI. Nothing agriculture- or farmer-specific (e.g., consent for farm data used in AI advisory or credit-scoring systems) appears in any retrieved page \u2014 the National AI Strategy lists agriculture only as an application sector (7.1 Agriculture, Water Management and Environment), with no farmer-facing consent or rights safeguards quoted. Additionally, the quoted Charter text names five values (human-centeredness, transparency, fairness, accountability, safety) but does not explicitly name \"consent\"; the UNESCO country page refers to a Data Protection Law (2020) as the consent-bearing instrument, but that page is T5 and thus not admissible for this prerequisite row.",
    "tier": "T3",
    "tier_detail": "Charter is a voluntary, non-binding ethical framework; the quoted page is the implementing ministry's own announcement",
    "url": "https://mcit.gov.eg/en/Media_Center/Press_Room/Press_Releases/66939",
@@ -1396,9 +1396,9 @@
   },
   "E1": {
    "n": 11,
-   "rated": 3,
-   "held": 5,
-   "mean": 2.33,
+   "rated": 4,
+   "held": 4,
+   "mean": 2.5,
    "band": "Emerging",
    "weak": true,
    "comp": {
@@ -1490,7 +1490,7 @@
   "7.12": {
    "name": "Responsible-AI safeguards (consent, rights)",
    "kind": "UC:AI",
-   "status": "Unverified"
+   "status": "Present"
   }
  },
  "matrix": {
@@ -1601,7 +1601,7 @@
     ],
     [
      "7.12",
-     "Unverified"
+     "Present"
     ]
    ],
    "n_bearing": 15,
@@ -1931,8 +1931,8 @@
   "Judged": 2,
   "Gap": 20
  },
- "held": 11,
- "rated": 26,
+ "held": 10,
+ "rated": 27,
  "candidates": {
   "A1-CAND-IMP": {
    "value": "DATA GAP \u2014 1) FAO GIEWS Egypt country brief (T1) \u2014 read in full; gives 2026/27 cereal import requirements of 29 million tonnes, wheat 13.5 Mt, maize 15.5 Mt, plus 2026 wheat production ~10 Mt, but publishes no dependency ratio; a ratio derived from these would be my own arithmetic, not a published figure, so rejected. 2) UNdata mirror of FAOSTAT item 21035, 'Cereal import dependency ratio (percent) (3-year average)' (T1) \u2014 exact construct match; Egypt is listed in the 226-country filter and 19 year-windows are offered, but the rendered table shows only records 1 of 4004 through Albania 2007-2009, so the Egypt rows were not in the fetched text. Dead end for quoting. 3) FAO data catalog entry for the Suite of Food Security Indicators (T1) \u2014 metadata only, no country values. 4) FAOSTAT landing page (T1) \u2014 update log only, confirms Suite of Food Security Indicators refreshed 21 July 2026; no values. 5) FAO Statistics Country Profile Tool (T1) \u2014 describes a dashboard that would carry the Egypt value, but the page itself contains no data. 6) FAO openknowledge figure_52 PDF, 'Cereal import dependency ratio, top countries (2020-2022)' (T2) \u2014 right indicator and vintage, but the country list is the top 20 (Antigua and Barbuda, Barbados, Djibouti, Dominica, Grenada, Libya, Malta, Republic of Moldova, Solomon Islands, Bahamas, Jamaica, Micronesia, Jordan, Cyprus, United Arab Emirates, Saint Lucia, Kuwait, Trinidad and Tobago, Vanuatu, Cabo Verde); Egypt is absent. Note Libya and Jordan appear here \u2014 neighbouring-country figures, explicitly not carried across the border to Egypt. 7) CGIAR-hosted FAO RNE presentation 'Food security in Egypt' (T2) \u2014 names 'Cereal import dependency ratio (percent) (3-year average)' as an Egypt stability indicator and shows a chart with a 0-70 axis, but the underlying values are in the figure, not the extracted text; unquotable. 8) Heliyon article via PMC \u2014 concerns wheat import dependency and econometric elasticities, a different construct from the FAO cereal import dependency ratio. 9) Food Systems Dashboard table \u2014 blocked by a Vercel security checkpoint, no data returned; also T5. Conclusion: correct series located at T1, Egypt value not retrievable from supplied pages; abstaining rather than estimating.",

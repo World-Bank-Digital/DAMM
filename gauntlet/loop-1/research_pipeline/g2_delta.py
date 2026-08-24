@@ -50,7 +50,9 @@ def main():
     outcomes = {}
     for f in findings:
         outcomes[f["outcome"]] = outcomes.get(f["outcome"], 0) + 1
-    changed = outcomes.get("filled", 0) + outcomes.get("withdrawn", 0)
+    # Every outcome that moved a level. "adjusted" is provenance only and is not
+    # a level change, so it is reported beside these rather than among them.
+    changed = sum(outcomes.get(k, 0) for k in ("filled", "withdrawn", "relevelled"))
 
     L = []
     w = L.append
@@ -75,12 +77,13 @@ def main():
     w("\n## What it changed\n")
     w("| outcome | rows |")
     w("|---|---|")
-    for k in ("filled", "withdrawn", "adjusted", "upheld"):
+    for k in ("filled", "withdrawn", "relevelled", "adjusted", "upheld"):
         if k in outcomes:
             w(f"| {k} | {outcomes[k]} |")
     w(f"\n**{changed} rows** had their level changed by the second review "
-      f"({outcomes.get('filled', 0)} filled, {outcomes.get('withdrawn', 0)} withdrawn). "
-      f"That figure, not the upheld count, is what the 15% buys.\n")
+      f"({outcomes.get('filled', 0)} filled, {outcomes.get('withdrawn', 0)} withdrawn, "
+      f"{outcomes.get('relevelled', 0)} relevelled). That figure, not the upheld count, "
+      f"is what the 15% buys.\n")
 
     w("\n## Whether it moved the assessment toward the verified one\n")
     w("| measure | before Gate 2 | after | change |")

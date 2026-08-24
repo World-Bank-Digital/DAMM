@@ -168,27 +168,50 @@ def main():
                         verdict=by_id[i]["verdict"]))
     pre_match = sum(1 for p in pre if p["match"])
 
-    # ---------------------------------------------------------------- verdict 2.1
+    # ------------------------------------------------------- 2.1, the rural/national trap
+    #
+    # Two different questions live here and the first draft ran them together, which let
+    # Nigeria report the Egypt finding as "reproduced" when Nigeria's own verified
+    # assessment records a value at 2.1 rather than a gap.
+    #
+    #   Did the run avoid recording a NATIONAL coverage figure against an indicator
+    #   naming RURAL coverage? That is the defect that passed an assessor gate and a
+    #   peer review, and it is the same test in every country.
+    #
+    #   Did it reach the same conclusion as this country's verified assessment? That
+    #   differs by country and is a separate matter.
     q4 = None
     if "2.1" in by_id:
         r = by_id["2.1"]
         rec = research.get("2.1", {})
         ans = rec.get("answer", {})
+        o_row = (json.load(open(os.path.join(LOOP1, f"{args.oracle}_input.json")))
+                 if os.path.exists(os.path.join(LOOP1, f"{args.oracle}_input.json"))
+                 else {}).get("2.1", {})
         text = " ".join(str(x) for x in (r["s_value"], ans.get("construct_note", ""),
                                          ans.get("abstain_reason", "")))
-        national_present = any(k in text for k in ("99.8", "99,8", "national"))
         recorded_national = (r["s_cls"] == "Measured" and r["s_level"] is not None
                              and isinstance(r["s_value"], (int, float))
                              and float(r["s_value"]) > 90)
         q4 = dict(
-            reproduced=(r["s_level"] is None and not recorded_national),
+            avoided_trap=not recorded_national,
             repeated_defect=recorded_national,
+            matches_verified=(r["s_level"] == r["o_level"] and r["s_cls"] == r["o_cls"]),
+            oracle_cls=r["o_cls"], oracle_level=r["o_level"],
+            oracle_tier=o_row.get("tier", ""),
             shadow_cls=r["s_cls"], shadow_level=r["s_level"], shadow_value=r["s_value"],
             verdict=r["verdict"], gate=r["gate"],
-            names_national_as_context=national_present,
+            names_national_as_context=any(k in text for k in ("99.8", "national")),
             construct_match=ans.get("construct_match", ""),
             construct_note=ans.get("construct_note", ""),
             abstain_reason=ans.get("abstain_reason", ""))
+        # C4 requires T1-T3 for a prerequisite. Where the verified assessment's own row
+        # rests on a lower tier, the machine could not have reproduced it at any depth
+        # of searching — the bar would have held it. That is a fact about the rule, not
+        # a failure of the run, and it belongs in the report rather than in a footnote.
+        q4["unreachable_under_c4"] = bool(
+            MODEL["2.1"]["prereq"] and o_row.get("tier")
+            and o_row["tier"] not in ("T1", "T2", "T3"))
 
     # ---------------------------------------------------------------- aggregates
     pillars = []
@@ -265,17 +288,36 @@ def main():
       f"**{len(s_holds)}** ratification holds against the verified assessment's "
       f"{len(o_holds)}.\n")
     if q4:
-        w(f"**4. The 2.1 finding.** "
-          + ("**Reproduced.** " if q4["reproduced"] else
-             "**NOT reproduced — the original defect was repeated.** "
-             if q4["repeated_defect"] else "**Diverged.** ")
+        w("**4. The rural/national trap at 2.1.** "
+          + ("**Avoided.** " if q4["avoided_trap"] else
+             "**NOT avoided — the original defect was repeated.** ")
           + f"The shadow run recorded 2.1 as `{q4['shadow_cls']}` with "
-            f"{fmt_level(q4['shadow_level'])}; gate verdict `{q4['verdict']}`. ")
+            f"{fmt_level(q4['shadow_level'])}; gate verdict `{q4['verdict']}`. "
+          + ("It did not record a national coverage figure against an indicator naming "
+             "rural coverage — the error that passed an assessor gate and an initial "
+             "peer review before an audit caught it."
+             if q4["avoided_trap"] else ""))
+        w(f"  \n  This country's verified assessment records 2.1 as "
+          f"`{q4['oracle_cls']}` at {fmt_level(q4['oracle_level'])}"
+          + (f" on a {q4['oracle_tier']} source" if q4["oracle_tier"] else "")
+          + (", so the two agree." if q4["matches_verified"] else
+             ", so the two differ — avoiding the trap and matching the verified "
+             "conclusion are separate questions."))
+        if q4["unreachable_under_c4"]:
+            w(f"  \n  **The verified level here could not have been reproduced at any "
+              f"depth of searching.** It rests on a {q4['oracle_tier']} source, and "
+              f"decision C4 requires T1–T3 quote-verified evidence for a prerequisite. "
+              f"The bar would have withheld this level even had the pipeline found the "
+              f"same document. That is a fact about the rule rather than about the run, "
+              f"and it is a genuine question for the §13 rulings: either the bar is "
+              f"right and this row should read Unverified, or the bar is too high for "
+              f"an indicator whose only published estimate is modelled.")
         if q4["gate"]:
-            w(f"  \n  Reason given: *{q4['gate']}*\n")
+            w(f"  \n  Reason given: *{q4['gate']}*")
         if q4["construct_note"]:
-            w(f"  \n  On the construct: *{fmt_value(q4['construct_note'], 400)}*\n")
+            w(f"  \n  On the construct: *{fmt_value(q4['construct_note'], 400)}*")
         w(f"  \n  Recorded value: `{fmt_value(q4['shadow_value'], 300)}`\n")
+
     if summ:
         w(f"\n**5. Cost and time.** **${summ.get('total', 0):.2f}** across "
           f"{summ.get('calls', 0)} vendor calls in "
@@ -426,8 +468,10 @@ def main():
           f"(found {len(o_gaps & s_gaps)}, new {len(s_gaps - o_gaps)})")
     print(f"holds verified {len(o_holds)} · shadow {len(s_holds)}")
     if q4:
-        print(f"2.1 finding           "
-              f"{'REPRODUCED' if q4['reproduced'] else 'DEFECT REPEATED' if q4['repeated_defect'] else 'diverged'}")
+        print(f"2.1 rural/national    "
+              f"{'trap avoided' if q4['avoided_trap'] else 'DEFECT REPEATED'}"
+              f" · {'matches' if q4['matches_verified'] else 'differs from'} the verified row"
+              + (" (unreachable under C4)" if q4["unreachable_under_c4"] else ""))
     if variance:
         print(f"repeatable            {variance['same_level']}/{variance['n']} rows vs {variance['prior']}")
     if summ:

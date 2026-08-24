@@ -1440,14 +1440,13 @@
   "tier (hold)": 2
  },
  "spend": {
-  "label": "EGY_shadow",
-  "ceiling": 500.0,
-  "total": 15.49149,
+  "total": 15.4915,
   "calls": 1005,
   "elapsed_s": 1464.5,
-  "by_pass": {
-   "research": 15.4912
-  },
+  "ceiling": 500.0,
+  "passes": [
+   "EGY_shadow"
+  ],
   "by_vendor": {
    "anthropic": 11.5684,
    "exa": 1.18,
@@ -1515,8 +1514,12 @@
   ]
  },
  "question_4": {
-  "reproduced": true,
+  "avoided_trap": true,
   "repeated_defect": false,
+  "matches_verified": true,
+  "oracle_cls": "Gap",
+  "oracle_level": null,
+  "oracle_tier": "",
   "shadow_cls": "Gap",
   "shadow_level": null,
   "shadow_value": "DATA GAP \u2014 1) ITU Statistics landing page \u2014 confirms ITU publishes population covered by mobile-broadband network 'total and by urban/rural area', but only as global/regional/development-group aggregates, not per-country. 2) ITU DataHub home and About pages \u2014 confirm the World Telecommunication Indicators questionnaire collects 'mobile population coverage (total, 3G, 4G and above)'; no rural disaggregation requested from countries; no Egypt value on these pages. 3) ITU DataHub UMC dashboard page \u2014 rendered for United States, not Egypt; no rural coverage indicator in the UMC target set anyway. 4) ITU Digital Development Dashboard for Egypt (ddd_EGY.pdf) \u2014 the only Egypt-specific coverage data found: national 100% (>=3G) and 98% (>=4G) for 2022; the only rural cut on the page is households with internet access at home (64%), a different construct. 5) MCIT Egypt indicators index and the September 2023 ICT Indicators in Brief (T3) \u2014 mobile penetration, subscriptions, ADSL regional distribution and number of rural local exchanges (1072 fixed-line exchanges in rural areas), but no rural mobile broadband population coverage percentage. 6) GSMA Coverage Maps page and GSMA State of Mobile Internet Connectivity 2025 (both T4) \u2014 methodology and global/regional coverage-gap discussion only; no Egypt rural figure quotable, and T4 is inadmissible for this prerequisite row. 7) nPerf Egypt coverage map (T5) \u2014 crowdsourced map, no statistic, inadmissible. Dead end: no admissible source in the retrieved set states rural 3G/4G coverage for Egypt.",
@@ -1525,62 +1528,8 @@
   "names_national_as_context": true,
   "construct_match": "measures a different construct",
   "construct_note": "The indicator names RURAL mobile broadband coverage. The best available Egypt-specific evidence in the retrieved pages is NATIONAL: ITU's Digital Development Dashboard for Egypt reports population covered by at least a 3G mobile network (2022) = 100% and at least a 4G mobile network (2022) = 98%. These are total-population figures with no urban/rural split. The only rural-disaggregated Egyptian figure on the same ITU page is a different construct entirely \u2014 households with Internet access at home, rural (2022) 64% (vs urban 84%) \u2014 which measures household subscription/access, not network coverage. ITU states it publishes coverage 'by urban/rural area' only as global and regional aggregates ('Population covered by a mobile-cellular and a mobile-broadband network, total and by urban/rural area'), not as an Egypt country value in any page supplied here. This is precisely the open question flagged in the indicator census: Egypt's row currently sits on the wrong side of it, carrying the ITU national at-least-3G number as if it were a rural measure.",
-  "abstain_reason": "None of the retrieved pages publishes a rural-disaggregated mobile broadband (3G/4G) population-coverage figure for Egypt. The only Egypt-specific coverage figures available at T1 are national (ITU Digital Development Dashboard: 100% at least 3G, 98% at least 4G, 2022). Per the indicator definition, a national figure does not measure the named RURAL construct, so the cell is held rather than scored on the national number."
+  "abstain_reason": "None of the retrieved pages publishes a rural-disaggregated mobile broadband (3G/4G) population-coverage figure for Egypt. The only Egypt-specific coverage figures available at T1 are national (ITU Digital Development Dashboard: 100% at least 3G, 98% at least 4G, 2022). Per the indicator definition, a national figure does not measure the named RURAL construct, so the cell is held rather than scored on the national number.",
+  "unreachable_under_c4": false
  },
- "variance": {
-  "prior": "EGY_shadow_v1",
-  "n": 57,
-  "moved": [
-   {
-    "id": "3.4",
-    "a_cls": "Documented",
-    "a_level": 3,
-    "b_cls": "Documented",
-    "b_level": null
-   },
-   {
-    "id": "3.5",
-    "a_cls": "Gap",
-    "a_level": null,
-    "b_cls": "Documented",
-    "b_level": null
-   },
-   {
-    "id": "3.6",
-    "a_cls": "Documented",
-    "a_level": null,
-    "b_cls": "Documented",
-    "b_level": 3
-   },
-   {
-    "id": "3.7",
-    "a_cls": "Judged",
-    "a_level": null,
-    "b_cls": "Documented",
-    "b_level": null
-   },
-   {
-    "id": "3.8",
-    "a_cls": "Documented",
-    "a_level": 3,
-    "b_cls": "Documented",
-    "b_level": null
-   },
-   {
-    "id": "7.2",
-    "a_cls": "Judged",
-    "a_level": null,
-    "b_cls": "Documented",
-    "b_level": null
-   },
-   {
-    "id": "8.9",
-    "a_cls": "Documented",
-    "a_level": 1,
-    "b_cls": "Gap",
-    "b_level": null
-   }
-  ],
-  "same_level": 53
- }
+ "variance": null
 }
