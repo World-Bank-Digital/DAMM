@@ -22,3 +22,6 @@ __pycache__/
 # fabrication verdict was measured against, which cannot be recovered without paying for
 # the run again.
 *_shadow_state.json
+
+# Gate 2 resume checkpoints — redundant with the run's own findings file.
+*_g2_state.json

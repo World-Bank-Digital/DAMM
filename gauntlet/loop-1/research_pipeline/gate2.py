@@ -278,7 +278,27 @@ def decide(spec, row, f):
             if k in row:
                 out[k] = row[k]
         return "filled", out
-    if verdict == "adjust":
+    if verdict in ("adjust", "refuted"):
+        # The schema defines 'adjust' as right substance with the wrong tier, class,
+        # level or vintage — so an adjustment that changes the level has to change the
+        # level. Copying only the provenance and silently keeping the old level, which
+        # is what this did at first, made the verdict mean less than it says: on 5.5 the
+        # reviewer argued the rung was understated and the row kept its old one anyway.
+        #
+        # The protection is that the proposal has already cleared every gate, including
+        # quote verification, the construct rule, the T1-T3 prerequisite bar and the
+        # requirement that a level below 5 carry its negative finding. A level that has
+        # cleared all of those from an independent vendor is as well-founded as the one
+        # it replaces. Levels Gate 2 raised are listed separately in the report, because
+        # raising a level is the direction that needs a reader.
+        if proposed.get("level") is not None and proposed["level"] != row["level"]:
+            out = dict(proposed)
+            out["note"] = (f"Level {row['level']} to {proposed['level']} on second "
+                           f"review: {f['reason']} " + (proposed.get("note") or "")).strip()
+            for k in ("defnote", "defsev"):
+                if k in row:
+                    out[k] = row[k]
+            return "relevelled", out
         out = dict(row)
         for k in ("src", "url", "tier", "tier_detail", "year"):
             if proposed.get(k):
@@ -311,7 +331,8 @@ def write_report(path, country, run, findings, counts, summ, scope_n, vendor):
     w("|---|---|---|")
     w(f"| **filled** | {len(by('filled'))} | a gap or withheld level replaced by evidence that cleared every gate |")
     w(f"| **withdrawn** | {len(by('withdrawn'))} | a level removed: the cited source was shown not to support it |")
-    w(f"| **adjusted** | {len(by('adjusted'))} | substance stands, provenance corrected |")
+    w(f"| **relevelled** | {len(by('relevelled'))} | the level changed: a second reading of better evidence, cleared through every gate |")
+    w(f"| **adjusted** | {len(by('adjusted'))} | substance and level stand, provenance corrected |")
     w(f"| **upheld** | {len(by('upheld'))} | the row survived the attack |")
 
     w("\n## Verdicts as the reviewer gave them\n")
@@ -331,8 +352,13 @@ def write_report(path, country, run, findings, counts, summ, scope_n, vendor):
         ("withdrawn", "Levels Gate 2 withdrew",
          "An affirmative finding that the cited source does not support the value, or "
          "measures a different construct. The evidence stays on the row; the level goes."),
+        ("relevelled", "Levels Gate 2 changed",
+         "The row kept its evidence and changed its level, on a proposal that cleared "
+         "quote verification, the construct rule, the prerequisite bar and the "
+         "requirement to carry a negative finding. Read the ones that went UP first — "
+         "raising a level is the direction that claims readiness."),
         ("adjusted", "Provenance Gate 2 corrected",
-         "The substance survived; the source, tier or vintage did not.")):
+         "The substance and the level survived; the source, tier or vintage did not.")):
         rows_ = by(outcome)
         if not rows_:
             continue
@@ -342,7 +368,7 @@ def write_report(path, country, run, findings, counts, summ, scope_n, vendor):
             a = f["applied_row"] or {}
             w(f"\n**{f['id']} {f['name']}** · {f['role']} · severity {f['severity']}\n")
             w(f"- {f['reason']}")
-            if outcome == "filled":
+            if outcome in ("filled", "relevelled"):
                 w(f"- now: {a.get('cls')} at level {a.get('level')}, "
                   f"{a.get('tier') or 'untiered'} — {(a.get('src') or '')[:140]}")
                 w(f"- {(a.get('url') or '')[:160]}")
@@ -386,6 +412,12 @@ def main():
     ap.add_argument("--ceiling", type=float, default=500.0)
     ap.add_argument("--rows", default="")
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--reapply", action="store_true",
+                    help="recompute what each saved finding does to its row, and rewrite "
+                         "the outputs, without making a single vendor call. The findings "
+                         "carry the reviewer's answer, its gate results and its proposed "
+                         "row, so a corrected decision rule applies to the review already "
+                         "paid for rather than occasioning another one.")
     args = ap.parse_args()
 
     V.load_env()
@@ -409,6 +441,19 @@ def main():
     if args.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
         print(f"resuming — {len(state['findings'])} rows already reviewed")
+
+    if args.reapply:
+        findings = json.load(open(os.path.join(LOOP1, f"{args.run}_g2_findings.json")))
+        for f in findings:
+            spec = specs[f["id"]]
+            f["outcome"], f["applied_row"] = decide(spec, rows[f["id"]], f)
+            state["findings"][f["id"]] = f
+        json.dump(state, open(state_path, "w"), indent=1, default=str)
+        print(f"reapplied the decision rule to {len(findings)} saved findings — "
+              "no vendor calls")
+        return finish(args, rows, findings, ledger, scope, f"{vendor}/{llm.model}",
+                      prior_spend=json.load(open(
+                          os.path.join(LOOP1, f"{args.run}_g2_spend.json"))).get("summary"))
 
     print(f"Gate 2 on {args.run} · reviewer {vendor}/{llm.model}")
     print(f"scope: {len(scope)} of 57 rows — {len(prereq)} prerequisites, "
@@ -442,7 +487,8 @@ def main():
             json.dump(state, open(state_path, "w"), indent=1, default=str)
             ledger.save(os.path.join(LOOP1, f"{args.run}_g2_spend.json"))
             n = len(state["findings"])
-        mark = {"upheld": "  ", "filled": "F ", "withdrawn": "W ", "adjusted": "A "}[f["outcome"]]
+        mark = {"upheld": "  ", "filled": "F ", "withdrawn": "W ", "adjusted": "A ",
+            "relevelled": "L "}[f["outcome"]]
         log(f"{mark}[{n:2}/{len(todo_ids)}] {iid:12} {f['role']:12} {f['verdict']:9} "
             f"-> {f['outcome']:10} ${ledger.spent(PASS):6.2f} {time.time() - t0:4.0f}s")
 
@@ -454,7 +500,12 @@ def main():
         print("   Rows never reviewed are absent from the findings, NOT recorded as "
               "upheld — an unreviewed row must not read like one that survived review.")
 
-    findings = list(state["findings"].values())
+    return finish(args, rows, list(state["findings"].values()), ledger, scope,
+                  f"{vendor}/{llm.model}")
+
+
+def finish(args, rows, findings, ledger, scope, vendor_label, prior_spend=None):
+    """Write the corrected input, the findings and the report. Shared with --reapply."""
     counts = {"verdict": {}, "outcome": {}}
     for f in findings:
         counts["verdict"][f["verdict"]] = counts["verdict"].get(f["verdict"], 0) + 1
@@ -469,14 +520,16 @@ def main():
     json.dump(corrected, open(out_input, "w"), indent=1, default=str)
     json.dump(findings, open(os.path.join(LOOP1, f"{args.run}_g2_findings.json"), "w"),
               indent=1, default=str)
-    ledger.save(os.path.join(LOOP1, f"{args.run}_g2_spend.json"))
+    summ = prior_spend or ledger.summary()
+    if not prior_spend:
+        ledger.save(os.path.join(LOOP1, f"{args.run}_g2_spend.json"))
     write_report(os.path.join(LOOP1, f"G2-REPORT-{args.run}.md"), args.country, args.run,
-                 findings, counts, ledger.summary(), len(scope), f"{vendor}/{llm.model}")
+                 findings, counts, summ, len(scope), vendor_label)
 
     print(f"\nreviewed {len(findings)} rows · "
           + " · ".join(f"{k} {v}" for k, v in sorted(counts["outcome"].items())))
-    print(f"spend ${ledger.spent():.2f} of ${ledger.cap(PASS):.0f} allocated "
-          f"in {ledger.elapsed() / 60:.0f} minutes")
+    print(f"spend ${summ.get('total', 0):.2f} of ${ledger.cap(PASS):.0f} allocated "
+          f"in {summ.get('elapsed_s', 0) / 60:.0f} minutes")
     print(f"wrote {os.path.basename(out_input)} and G2-REPORT-{args.run}.md")
     return 0
 

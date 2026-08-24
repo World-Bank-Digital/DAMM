@@ -31,6 +31,38 @@ def load(name):
     return json.load(open(os.path.join(LOOP1, f"{name}.json")))
 
 
+def lineage_spend(name):
+    """Every pass that went into this assessment, summed.
+
+    A Gate 2 assessment is the first pass plus the second review, and reporting only
+    the second review's ledger would price the deliverable at a third of what it cost.
+    The passes are separate files because decision G3 allocates them separately; the
+    total is what a reader wants.
+    """
+    base = name[:-3] if name.endswith("_g2") else name
+    parts, seen = [], []
+    for stem in (f"{base}_spend.json", f"{base}_g2_spend.json"):
+        p = os.path.join(LOOP1, stem)
+        if not os.path.exists(p) or (name == base and stem.endswith("_g2_spend.json")):
+            continue
+        j = json.load(open(p)).get("summary", {})
+        parts.append(j)
+        seen.append(stem.replace("_spend.json", ""))
+    if not parts:
+        return {}
+    out = dict(total=round(sum(p.get("total", 0) for p in parts), 4),
+               calls=sum(p.get("calls", 0) for p in parts),
+               elapsed_s=sum(p.get("elapsed_s", 0) for p in parts),
+               ceiling=max((p.get("ceiling", 0) for p in parts), default=0),
+               passes=seen)
+    by = {}
+    for p in parts:
+        for k, v in (p.get("by_vendor") or {}).items():
+            by[k] = round(by.get(k, 0) + v, 4)
+    out["by_vendor"] = by
+    return {"summary": out}
+
+
 def fmt_level(v):
     return "no level" if v is None else f"L{v}"
 
@@ -71,11 +103,16 @@ def main():
     args = ap.parse_args()
 
     sh, orc = load(args.shadow), load(args.oracle)
-    research, spend = {}, {}
-    for suffix, target in (("_research", "research"), ("_spend", "spend")):
-        p = os.path.join(LOOP1, f"{args.shadow}{suffix}.json")
+    research = {}
+    p = os.path.join(LOOP1, f"{args.shadow}_research.json")
+    if os.path.exists(p):
+        research.update(json.load(open(p)))
+    if not research:  # a Gate 2 assessment carries the first pass's research records
+        base = args.shadow[:-3] if args.shadow.endswith("_g2") else args.shadow
+        p = os.path.join(LOOP1, f"{base}_research.json")
         if os.path.exists(p):
-            (research if target == "research" else spend).update(json.load(open(p)))
+            research.update(json.load(open(p)))
+    spend = lineage_spend(args.shadow)
 
     S, O = sh["indicators"], orc["indicators"]
     row_ids = list(MODEL.keys())
@@ -182,6 +219,7 @@ def main():
                     if "Corroborated" in (rec.get("row", {}).get("note") or ""))
 
     summ = spend.get("summary", {}) if isinstance(spend, dict) else {}
+    passes = summ.get("passes") or []
 
     # ---------------------------------------------------------------- variance
     variance = None
@@ -243,8 +281,9 @@ def main():
           f"{summ.get('calls', 0)} vendor calls in "
           f"{summ.get('elapsed_s', 0) / 60:.0f} minutes, against a "
           f"${summ.get('ceiling', 0):.0f} country ceiling — "
-          f"{100.0 * summ.get('total', 0) / max(summ.get('ceiling', 1), 1):.1f}% of it. "
-          f"By vendor: "
+          f"{100.0 * summ.get('total', 0) / max(summ.get('ceiling', 1), 1):.1f}% of it"
+          + (f", across {len(passes)} passes ({', '.join(passes)})" if len(passes) > 1 else "")
+          + f". By vendor: "
           + ", ".join(f"{k} ${v:.2f}" for k, v in
                       sorted(summ.get("by_vendor", {}).items(), key=lambda kv: -kv[1]))
           + ".\n")

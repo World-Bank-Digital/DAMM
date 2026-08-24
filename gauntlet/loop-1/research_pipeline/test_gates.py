@@ -1,0 +1,219 @@
+#!/usr/bin/env python3
+"""Regression tests for the evidence rules — no keys, no network, no cost.
+
+`smoke_vendors.py` proves the vendor paths work and needs six keys to do it. This file
+proves the *rules* are right and needs nothing, so it can run on every change. Everything
+here is a rule that was once wrong: each test names the defect it exists to prevent.
+
+    python3 test_gates.py
+"""
+
+import os, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..")))
+
+import vendors as V
+import gates as G
+import gate2
+from build_inputs import ladder_level
+
+FAIL = []
+N = [0]
+
+
+def check(label, got, want):
+    N[0] += 1
+    if got != want:
+        FAIL.append(f"{label}: got {got!r}, wanted {want!r}")
+
+
+def section(t):
+    print(f"\n## {t}")
+
+
+# ---------------------------------------------------------------- quote verification
+section("Quote verification is script-blind")
+# The alphanumeric fold once kept only [a-z0-9], so a quote in any non-Latin script
+# reduced to the empty string — and the empty string is a substring of every page. An
+# entirely invented Arabic quote verified as genuine. Egypt publishes in Arabic.
+SCRIPTS = [
+    ("Arabic", "The platform serves citizens. مرحبا بكم في مصر الرقمية اليوم.",
+     "هذه جملة عربية مختلقة تماما لا توجد", "مرحبا بكم في مصر الرقمية"),
+    ("Chinese", "Report text 中国农业农村部发布了最新的统计数据资料。",
+     "这是完全捏造的一句中文引文内容", "中国农业农村部发布了最新的统计"),
+    ("Cyrillic", "Source: Министерство сельского хозяйства опубликовало данные.",
+     "Это полностью выдуманная цитата которой нет", "Министерство сельского хозяйства"),
+    ("Greek", "Text: Το Υπουργείο Γεωργίας δημοσίευσε τα στοιχεία.",
+     "Αυτή είναι μια εντελώς κατασκευασμένη φράση", "Το Υπουργείο Γεωργίας δημοσίευσε"),
+    ("Latin", "Rural electricity access in Egypt reached 100.0 percent in 2024.",
+     "Rural electricity access in Egypt reached 62.4 percent", "reached 100.0 percent"),
+]
+for name, page, fake, real in SCRIPTS:
+    check(f"{name}: invented quote rejected", V.quote_verify(fake, page), False)
+    check(f"{name}: genuine quote accepted", V.quote_verify(real, page), True)
+check("a quote of pure punctuation is rejected",
+      V.quote_verify("··· —— ,,,,,,", "any page text here"), False)
+check("a changed number is not a quote",
+      V.quote_verify("reached 100.1 percent", SCRIPTS[4][1]), False)
+check("markup between words is tolerated",
+      V.quote_verify("reached 100.0 percent", "…reached **100.0** percent in 2024…"), True)
+
+# ---------------------------------------------------------------- tiers
+section("Tier lookup takes the most specific domain")
+# `openknowledge.worldbank.org` is the World Bank's repository of analytical reports (T2)
+# and once matched the shorter `worldbank.org` needle, filing a flagship as an official
+# statistic. And the UN's statistical hosts are T1 while its newswire is not.
+for url, want in [
+    ("https://data.worldbank.org/indicator/X", "T1"),
+    ("https://openknowledge.worldbank.org/handle/1", "T2"),
+    ("https://publicadministration.un.org/egovkb/en-us/Data/Country-Information/id/53", "T1"),
+    ("https://news.un.org/en/story/2026/01/1234", "T5"),
+    ("https://www.ncc.gov.ng/docs/report.pdf", "T3"),
+    ("https://www.gsma.com/r/report.pdf", "T4"),
+    ("https://agritechblog.example.com/post", "T5"),
+]:
+    check(f"tier {url[:52]}", V.tier_for_url(url), want)
+
+section("Citation resolvability distinguishes a bad link from a bad day")
+check("a domain root is not a citation", V.url_resolves("https://www.example.com/")[0], False)
+check("a non-URL is not a citation", V.url_resolves("see the annex")[0], False)
+
+# ---------------------------------------------------------------- country isolation
+section("Country isolation rejects attribution, not mention")
+check("a fact about another country is rejected",
+      G.foreign_attribution("Nigeria's rural electrification reached 23.5 percent.", "Egypt"),
+      ["Nigeria"])
+check("a multi-country table naming the target is evidence",
+      G.foreign_attribution("Egypt 100.0, Nigeria 23.5, Kenya 71.4", "Egypt"), [])
+check("Niger never matches inside Nigeria",
+      "Niger" in G.foreign_attribution("Nigeria published the figure.", "Egypt"), False)
+check("adjectival forms are caught",
+      G.foreign_attribution("The Nigerian regulator published it.", "Egypt"), ["Nigeria"])
+check("an ISO3 in a citation path is caught",
+      G.foreign_url("https://api.worldbank.org/v2/country/NGA/indicator/X", "Egypt"), "Nigeria")
+check("the target's own ISO3 is fine",
+      G.foreign_url("https://api.worldbank.org/v2/country/EGY/indicator/X", "Egypt"), None)
+
+# ---------------------------------------------------------------- the ladder
+section("The shared ladder")
+check("Absent", ladder_level("Absent")[0], 1)
+check("Announced", ladder_level("Announced")[0], 2)
+check("Adopted", ladder_level("Adopted")[0], 3)
+check("Operating with no evidence of quality stays at 3",
+      ladder_level("Operating", "", "")[0], 3)
+check("Operating + quality", ladder_level("Operating", "x" * 60, "")[0], 4)
+check("Operating + quality + scale", ladder_level("Operating", "x" * 60, "y" * 60)[0], 5)
+check("scale without quality does not skip a rung",
+      ladder_level("Operating", "", "y" * 60)[0], 3)
+check("a missing rung yields no level", ladder_level("")[0], None)
+
+# ---------------------------------------------------------------- the gates
+section("The gates")
+BASE = dict(found=True, value_kind="statement", value="A national soil database exists.",
+            quote="A national soil database exists.", proposed_tier="T3",
+            construct_match="measures the named construct", presence_rung="Adopted",
+            year=2024, proposed_level=3, negative_finding="x" * 40, construct_note="",
+            abstain=False, source_url="https://x.gov.eg/a")
+PAGES = {"https://x.gov.eg/a"}
+
+
+def gates(**over):
+    a = dict(BASE, **over)
+    g = G.run_gates(a, country="Egypt", indicator_id="3.8",
+                    is_prerequisite=over.pop("_prereq", False),
+                    quote_ok=over.get("_quote_ok", True),
+                    quote_page_tier=over.get("_page_tier", "T3"),
+                    cited_url=a["source_url"], page_urls=PAGES,
+                    derived_level=over.get("_derived", 3), is_ladder=True,
+                    assessment_year=2026)
+    return G.verdict_of(g)[0]
+
+
+check("a clean row passes", gates(), "pass")
+check("an unverifiable quote is rejected", gates(_quote_ok=False), "reject")
+check("a T5-only source holds", gates(proposed_tier="T5", _page_tier="T5"), "hold")
+check("a construct mismatch holds",
+      gates(construct_match="measures a different construct"), "hold")
+check("an unclear construct holds", gates(construct_match="unclear"), "hold")
+check("a prerequisite on T4 holds",
+      gates(_prereq=True, proposed_tier="T4", _page_tier="T4"), "hold")
+check("a prerequisite on T1 passes",
+      gates(_prereq=True, proposed_tier="T1", _page_tier="T1"), "pass")
+check("a row that contradicts its own level holds",
+      gates(proposed_level=5, _derived=3), "hold")
+# A 2001 workshop report once recorded a national soil database as Adopted today.
+check("a 25-year-old document cannot establish a present state",
+      gates(year=2001), "hold")
+check("a 2019 instrument still can", gates(year=2019), "pass")
+check("an announcement is exempt from currency",
+      gates(year=2001, presence_rung="Announced", proposed_level=2, _derived=2), "pass")
+check("a level below 5 with no negative finding holds",
+      gates(negative_finding=""), "hold")
+check("a foreign attribution is rejected",
+      gates(value="Nigeria's registry covers 12 million farmers.",
+            quote="Nigeria's registry covers 12 million farmers."), "reject")
+
+# ---------------------------------------------------------------- Gate 2's decisions
+section("What a Gate 2 finding does to a row")
+SPEC = dict(id="9.9", name="Test", method="ladder", candidate=False, prerequisite=None,
+            direction="higher-is-better", thresholds=[], pillar="C1")
+ROW = dict(value="v", cls="Documented", level=3, year=2024, src="s", note="", tier="T3",
+           tier_detail="", url="u", defnote="an open question", defsev="construct-drift")
+
+
+def finding(verdict, kind, plevel, gate="pass"):
+    return dict(verdict=verdict, refutation_kind=kind, reason="the evidence shows X",
+                gate_verdict=gate,
+                proposed_row=dict(ROW, level=plevel, src="new src"))
+
+
+def decide(*a, **k):
+    return gate2.decide(SPEC, ROW, finding(*a, **k))
+
+
+check("confirmed leaves the row alone", decide("confirmed", "", 5)[0], "upheld")
+# Failing to find it again is not a refutation — the hand protocol's own rule.
+check("could not locate independently is not a refutation",
+      decide("refuted", "could not locate independently", 5)[0], "upheld")
+check("an unsupported source withdraws the level",
+      decide("refuted", "source does not support the value", None)[0], "withdrawn")
+check("a construct mismatch withdraws the level",
+      decide("refuted", "construct mismatch", None)[0], "withdrawn")
+check("a proposal that did not clear the gates changes nothing",
+      decide("adjust", "better evidence exists", 4, gate="hold")[0], "upheld")
+# The schema calls 'adjust' a wrong tier, class, LEVEL or vintage. It once copied only
+# the provenance and kept the old level, which made the verdict mean less than it says.
+check("an adjustment that changes the level changes the level",
+      decide("adjust", "better evidence exists", 4)[0], "relevelled")
+check("an adjustment can lower a level too",
+      decide("adjust", "better evidence exists", 2)[0], "relevelled")
+check("an adjustment at the same level is provenance only",
+      decide("adjust", "tier or class wrong", 3)[0], "adjusted")
+for verdict, kind, lvl in [("adjust", "better evidence exists", 4),
+                           ("refuted", "source does not support the value", None),
+                           ("adjust", "tier or class wrong", 3)]:
+    _, applied = decide(verdict, kind, lvl)
+    check(f"the ratification note survives '{kind}'",
+          (applied or ROW).get("defnote"), "an open question")
+
+# A gap the reviewer also could not fill leaves the gap standing.
+GAP = dict(ROW, cls="Gap", level=None)
+check("a gap the reviewer could not fill either stays a gap",
+      gate2.decide(SPEC, GAP, dict(verdict="refuted", refutation_kind="better evidence exists",
+                                   reason="r", gate_verdict="pass",
+                                   proposed_row=dict(GAP)))[0], "upheld")
+check("a gap the reviewer filled becomes evidence",
+      gate2.decide(SPEC, GAP, dict(verdict="refuted", refutation_kind="better evidence exists",
+                                   reason="r", gate_verdict="pass",
+                                   proposed_row=dict(ROW, level=3)))[0], "filled")
+
+# ---------------------------------------------------------------- report
+print()
+if FAIL:
+    print(f"FAILED {len(FAIL)} of {N[0]} checks\n")
+    for f in FAIL:
+        print("  " + f)
+    sys.exit(1)
+print(f"all {N[0]} checks pass")
