@@ -2,8 +2,7 @@
 """Prove every vendor path works before anything is built on top of it.
 
 Six keys, five call shapes, and quote verification in five scripts. Costs a few cents.
-Prints key
-NAMES and outcomes only — never a key value (standing decision 3).
+Prints key NAMES and outcomes only — never a key value (standing decision 3).
 """
 import json, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
