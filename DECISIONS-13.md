@@ -30,6 +30,91 @@ ruling narrows it.
 
 ---
 
+## Continuous scoring, and what the Bhutan assessment settles
+
+*Opened 25 August 2026, from a proposal to score every indicator on a continuous 0 to 5
+scale by ratio to the cut points, so that Egypt's innovation index of 24.7 against a cut
+of 25 would record as 0.988 rather than as level 1. Not one of the twelve, but it bears
+on 13.1 and 13.6 and is recorded here so the reasoning survives.*
+
+### The proposal is coherent, and compatible with the levels
+
+On a piecewise-linear reading the continuous score and the discrete level agree exactly:
+level equals the integer part plus one. Egypt's 24.7 gives 0.988 and level 1; Nigeria's
+cereal yield of 1558 gives 1.039 and level 2; Egypt's rural electricity of 100 gives 5.000
+and level 5. So a 0 to 5 continuous axis and 1 to 5 level labels are not in conflict, and a
+mean built from continuous values would move smoothly rather than jumping by a whole level
+when one row is re-read, which would dissolve much of the band-edge fragility recorded
+under 13.1.
+
+### Three things stop it becoming the scored quantity
+
+**It reaches about a third of the register.** Egypt has 20 of 57 rows carrying a number,
+Nigeria 19. The remainder are 25 ladder indicators, where Absent, Announced, Adopted and
+Operating are discrete states with nothing to interpolate between, and 12 or 13 threshold
+rows carrying an assessor level and no number. A pillar mean would average a precise third
+against a discrete two-thirds.
+
+**Its precision comes from cut points that are not ratified.** Egypt's innovation index of
+24.7 scores 0.988 on the current cuts, 1.313 if the first cut were 20, and 0.823 if it were
+30. The discrete level is 1 in all three. The added resolution is more sensitive to the
+unsettled parameter than the thing it refines, and 13.6 records the A1 thresholds as test
+values while 13.5 leaves 44 definitions open.
+
+**It asserts linearity inside a band.** Interpolating between cuts claims that rural
+electricity rising from 20 to 40 percent is the same increment of readiness as 60 to 80.
+Banding exists to decline that claim.
+
+### What the Bhutan assessment shows
+
+Bhutan (March 2025) is out of scope as an assessment and stands as a design source under
+13.11. It resolved this exact question the same way: all 97 indicators carry a whole-number
+level with the measured value recorded beside it, and there is not one fractional level in
+the register. It also used the same band edges, 1.8 / 2.6 / 3.4 / 4.2, which confirms the
+specification's note that they are inherited from v1.5 and were never justified.
+
+Bhutan then did three things v1.6 and v1.7 deliberately removed, and continuous scoring
+would make all three easy again: an overall maturity score of 2.29 out of 5, layer weights
+of 0.20 / 0.35 / 0.25 / 0.20 to produce it, and a Data Confidence rating. Its own figures
+show the cost. Thirty-two of its 97 indicators were rated Low or Estimated, and every one
+of them still received a level that fed the headline number. Nothing was withheld: zero
+gaps, zero holds, in a register where a third of the evidence was acknowledged weak. That
+is the failure the ratification hold and the abstention rule were built to prevent.
+
+**Position: keep the whole-number level as the scored quantity, and carry the continuous
+value as recorded data and optional display.** Revisit promoting it only after 13.5 and
+13.6 land, since ratified cut points are what the added precision would have to rest on.
+
+### One thing to adopt from Bhutan: an indicator scope tag
+
+Bhutan tags every indicator **Global** or **Local**, according to whether an international
+body publishes it for every country or it has to be found nationally. This register carries
+no equivalent: `method` says how a row is scored and the tier says what a source turned out
+to be, but nothing says in advance where the data should live.
+
+| Bhutan rows | n | rated Low or Estimated |
+|---|---|---|
+| Global | 27 | 0 (0 percent) |
+| Local | 70 | 32 (46 percent) |
+
+All seven rows that both automated country runs failed to reach are tagged Local: 1.6, 1.7,
+2.7, 3.11, 4.5, 4.7 and 6.9. Seven of seven is suggestive rather than decisive on its own,
+since 72 percent of Bhutan's register is Local; the confidence split is the stronger and
+independent signal.
+
+The tag would earn its place twice. The research pipeline currently searches Global and
+Local rows identically, when it should go to the international database first for one and
+to the national statistical office and the responsible ministry first for the other. And on
+the page it tells a reader that a thin Local row is structurally thin rather than the
+product of a lazy search.
+
+**Proposal: add `scope: global | local` to the 57 indicators in v1.8, alongside the band
+recut.** It changes no score, it is a property of the indicator rather than of the country
+so it is set once, and it is the first change identified that would improve retrieval on
+the rows the pipeline reaches least well.
+
+---
+
 ## 13.11 Bhutan out of scope
 
 **The question.** Section 13 records this as a statement rather than a question: Bhutan
