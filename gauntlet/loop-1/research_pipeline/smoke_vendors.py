@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Prove every vendor path works before anything is built on top of it.
 
-Six keys, five call shapes, one quote verification. Costs a few cents. Prints key
+Six keys, five call shapes, and quote verification in five scripts. Costs a few cents.
+Prints key
 NAMES and outcomes only — never a key value (standing decision 3).
 """
 import json, sys, os
@@ -57,6 +58,36 @@ def t_quote():
     return "real quote accepted, invented quote rejected"
 
 
+def t_quote_scripts():
+    """Quote verification must be script-blind.
+
+    It was not. The alphanumeric fold kept only [a-z0-9], so an Arabic, Chinese,
+    Cyrillic, Greek or Hebrew quote reduced to the empty string — and the empty string
+    is a substring of every page, so a wholly invented quote in any of those scripts
+    verified as genuine. Egypt publishes in Arabic. This is the check the fabrication
+    rate rests on, so it is tested in every script the assessment might meet.
+    """
+    cases = [
+        ("Arabic", "The platform serves citizens. مرحبا بكم في مصر الرقمية اليوم.",
+         "هذه جملة عربية مختلقة تماما لا توجد", "مرحبا بكم في مصر الرقمية"),
+        ("Chinese", "Report text 中国农业农村部发布了最新的统计数据资料。",
+         "这是完全捏造的一句中文引文内容", "中国农业农村部发布了最新的统计"),
+        ("Cyrillic", "Source: Министерство сельского хозяйства опубликовало данные.",
+         "Это полностью выдуманная цитата которой нет", "Министерство сельского хозяйства"),
+        ("Greek", "Text: Το Υπουργείο Γεωργίας δημοσίευσε τα στοιχεία.",
+         "Αυτή είναι μια εντελώς κατασκευασμένη φράση", "Το Υπουργείο Γεωργίας δημοσίευσε"),
+        ("Latin", "Rural electricity access in Egypt reached 100.0 percent in 2024.",
+         "Rural electricity access in Egypt reached 62.4 percent", "reached 100.0 percent"),
+    ]
+    wrong = [name for name, page, fake, real in cases
+             if V.quote_verify(fake, page) or not V.quote_verify(real, page)]
+    if wrong:
+        raise RuntimeError(f"quote verification wrong in: {', '.join(wrong)}")
+    if V.quote_verify("··· —— ,,,,,,", "any page text here"):
+        raise RuntimeError("a quote made only of punctuation was accepted")
+    return f"{len(cases)} scripts: invented rejected, genuine accepted"
+
+
 def t_tier():
     cases = {"https://data.worldbank.org/indicator/X": "T1",
              "https://openknowledge.worldbank.org/handle/1": "T2",
@@ -108,6 +139,7 @@ def llm_test(vendor):
 check("exa.search", t_exa)
 check("jina.fetch", t_jina)
 check("quote_verify", t_quote)
+check("quote_verify (scripts)", t_quote_scripts)
 check("tier_for_url", t_tier)
 check("url_resolves", t_resolvable)
 check("perplexity.citations", t_perplexity)

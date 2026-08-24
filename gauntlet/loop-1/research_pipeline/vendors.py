@@ -250,20 +250,36 @@ def _norm(s):
 
 
 def _alnum(s):
-    return re.sub(r"[^a-z0-9]+", "", _norm(s))
+    """Letters and digits in ANY script, with everything else dropped.
+
+    This was `[^a-z0-9]` and that was a hole in the most important check in the
+    pipeline. An Arabic, Chinese, Cyrillic, Greek or Hebrew quote reduces to the
+    empty string under an ASCII-only filter, and the empty string is a substring of
+    every page — so an entirely invented quote in any of those scripts verified as
+    genuine. Egypt publishes in Arabic. `str.isalnum` is Unicode-aware and keeps the
+    content while still dropping the punctuation and markup the fold is there to
+    ignore.
+    """
+    return "".join(c for c in _norm(s) if c.isalnum())
 
 
 def quote_verify(quote, page_text):
     """True when the quote actually appears in the fetched page.
 
-    Two passes: whitespace/punctuation-normalised, then alphanumerics only. The
+    Two passes: whitespace/punctuation-normalised, then letters and digits only. The
     second tolerates a table cell rendered with stray markup between words; neither
     tolerates a changed number or a changed word. This is the check that caught a
     fabricated pilot in the gauntlet, so it stays strict about content.
     """
     if not quote or not page_text or len(quote.strip()) < 8:
         return False
-    return _norm(quote) in _norm(page_text) or _alnum(quote) in _alnum(page_text)
+    reduced = _alnum(quote)
+    if not reduced:
+        # Nothing survived the fold, so there is nothing to match. Falling through
+        # would test whether the empty string appears in the page, which it always
+        # does. A quote made entirely of punctuation or symbols is not a quote.
+        return False
+    return _norm(quote) in _norm(page_text) or reduced in _alnum(page_text)
 
 
 # ---------------------------------------------------------------- retrieval

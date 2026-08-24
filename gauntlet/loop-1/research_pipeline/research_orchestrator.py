@@ -134,11 +134,16 @@ def scoring_text(spec):
 
 # ------------------------------------------------------------------ retrieval
 
-def retrieve(spec, country, llm, ledger, log):
+def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
     """Discovery and fetch for exactly one row of exactly one country.
 
     Queries are generated per row from that row's own construct — there is no shared
     lead list anywhere in this function, which is what closes defect #11.
+
+    `pass_name` decides which budget allocation the searching bills against. Gate 2 does
+    its own retrieval through this same function, and billing that to the research pass
+    would let one pass spend another's share — which is exactly what decision G3's fixed
+    allocation exists to prevent.
     """
     construct = construct_for(spec, country)
     try:
@@ -149,7 +154,7 @@ def retrieve(spec, country, llm, ledger, log):
             "Propose the web searches most likely to surface the highest-tier published "
             "source for this exact construct, for this country and no other. Search the "
             "publisher, not the topic.",
-            QUERY_SCHEMA, PASS, max_tokens=2000, detail=f"queries {spec['id']}")
+            QUERY_SCHEMA, pass_name, max_tokens=2000, detail=f"queries {spec['id']}")
     except V.BudgetExhausted:
         raise
     except Exception as e:
@@ -183,7 +188,7 @@ def retrieve(spec, country, llm, ledger, log):
 
     def one_search(q):
         try:
-            return V.exa_search(q, ledger, PASS, num_results=EXA_RESULTS)
+            return V.exa_search(q, ledger, pass_name, num_results=EXA_RESULTS)
         except V.BudgetExhausted:
             raise
         except Exception as e:
@@ -203,7 +208,7 @@ def retrieve(spec, country, llm, ledger, log):
         ppx = V.perplexity_citations(
             f"For {country} only: {construct} Which published source states this, and "
             f"what does it say? If no source publishes this exact measure, say so.",
-            ledger, PASS)
+            ledger, pass_name)
         for u in ppx["citations"]:
             offer(u, "", "perplexity")
     except V.BudgetExhausted:
@@ -228,7 +233,7 @@ def retrieve(spec, country, llm, ledger, log):
             chosen.append(s)
 
     def one_fetch(s):
-        return s, V.jina_fetch(s["url"], ledger, PASS, max_chars=PAGE_CHARS * 3)
+        return s, V.jina_fetch(s["url"], ledger, pass_name, max_chars=PAGE_CHARS * 3)
 
     pack = []
     with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as ex:

@@ -1,0 +1,445 @@
+[
+ {
+  "id": "2.1",
+  "name": "Rural mobile broadband coverage (3G/4G)",
+  "role": "prerequisite",
+  "verdict": "confirmed",
+  "refutation_kind": "",
+  "reason": "The first-pass gap survives review. The directly relevant T1 Egypt dashboard confirms that the apparent high coverage figures are national population measures, while its rural figure is household Internet access. Neither measures the indicator named in this cell.",
+  "severity": "high",
+  "gate_verdict": "gap",
+  "gate_reason": "no value asserted",
+  "gates": [
+   {
+    "gate": "isolation",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "quote",
+    "verdict": "pass",
+    "reason": "no value asserted"
+   }
+  ],
+  "quote_verified": false,
+  "answer": {
+   "found": false,
+   "abstain": true,
+   "abstain_reason": "The supplied Egypt-specific official dashboard reports national 3G/4G population coverage, but no supplied page reports mobile-broadband coverage restricted to Egypt's rural population. The available rural percentage measures household Internet access at home, a different construct.",
+   "value_kind": "none",
+   "value": "",
+   "unit": "",
+   "year": 0,
+   "source_title": "ITU, INFRASTRUCTURE & ACCESS \u2014 Egypt Digital Development Dashboard",
+   "source_url": "https://www.itu.int/en/ITU-D/Statistics/Documents/DDD/ddd_EGY.pdf",
+   "proposed_tier": "T1",
+   "quote": "",
+   "data_quality_flag": "",
+   "construct_match": "measures a different construct",
+   "construct_note": "ITU's Egypt dashboard reports national population coverage: at least a 3G mobile network (2022) 100% and at least a 4G mobile network (2022) 98%. Its rural figure is instead \u201cHouseholds with Internet access at home, rural (2022) 64%\u201d, which measures household Internet access rather than rural mobile-broadband network coverage.",
+   "presence_rung": "",
+   "quality_evidence": "",
+   "scale_evidence": "",
+   "proposed_level": 0,
+   "rung_argument": "No threshold level is proposed. The reviewed T1 Egypt dashboard establishes national 3G and 4G population-coverage figures, and a rural household Internet-access figure, but does not establish rural population coverage by a 3G/4G mobile-broadband network. Therefore even level 1 cannot be supported for the named rural-coverage construct.",
+   "negative_finding": "The evidence does not show a rural mobile-broadband coverage percentage for Egypt, let alone a value meeting the first 20% cut point.",
+   "search_trail": "Independently reviewed the supplied sources. Source 1 (ITU Egypt Digital Development Dashboard) contains Egypt-specific national 3G/4G population coverage and rural/urban household Internet-access disaggregation, but no rural mobile-network-coverage disaggregation. Source 7 (NTRA presentation) contains national coverage statements and targets plus village-project material, but no published rural 3G/4G coverage percentage. Sources 8 and 9 (NTRA quality-service material) report road/city/village measurement activity and quality results, not rural population coverage. Source 10 is a T5 crowdsourced map and provides no rural percentage; it is not admissible for this prerequisite statistic. Sources 2\u20136 are policy, global/regional, or Africa-wide materials and supply no Egypt rural-coverage observation.",
+   "verdict": "confirmed",
+   "refutation_kind": "",
+   "reason": "The first-pass gap survives review. The directly relevant T1 Egypt dashboard confirms that the apparent high coverage figures are national population measures, while its rural figure is household Internet access. Neither measures the indicator named in this cell.",
+   "severity": "high"
+  },
+  "queries": [
+   "site:tra.gov.eg Egypt rural mobile broadband coverage 3G 4G rural population coverage report",
+   "site:itu.int Egypt \"rural\" \"3G\" \"4G\" mobile broadband coverage",
+   "site:mcit.gov.eg Egypt rural mobile broadband coverage 3G 4G"
+  ],
+  "pack": [
+   {
+    "url": "https://www.itu.int/en/ITU-D/Statistics/Documents/DDD/ddd_EGY.pdf",
+    "title": "INFRASTRUCTURE & ACCESS",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa, perplexity",
+    "cap": 6000
+   },
+   {
+    "url": "http://www.itu.int/ITU-D/treg/events/seminars/gsr/gsr11/consultation/GSR11_contribution_Egypt.pdf",
+    "title": "",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.itu.int/dms_pub/itu-d/opb/ind/D-IND-ICT_MDD-2023-1-PDF-E.pdf",
+    "title": "Measuring digital development",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.itu.int/dms_pub/itu-d/opb/ind/d-ind-ict_mdd-2022-pdf-e.pdf",
+    "title": "Measuring digital development Facts and Figures 2022",
+    "published": "2022-11-30T00:00:00.000Z",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.itu.int/dms_pub/itu-d/md/22/wtdc25/inf/D22-WTDC25-INF-0002!!PDF-E.pdf",
+    "title": "",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.itu.int/itu-d/reports/statistics/wp-content/uploads/sites/5/2025/04/2500037E_SDDT_2025_Africa_FINAL.pdf",
+    "title": "Measuring digital development",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.itu.int/en/ITU-D/Regional-Presence/Europe/Documents/Events/2024/11.27-28_ITU-EMERG-EaPeReg%20Sixth%20Onsite%20Workshop/Egypt_Valuable%20insights%20to%20telecom%20community%20(1).pdf",
+    "title": "",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "perplexity",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.tra.gov.eg/en/national-telecommunications-regulatory-authority-ntra-issues-q4-2024-mobile-network-quality-report/",
+    "title": "National Telecommunications Regulatory Authority (NTRA) Issues Q4 2024 Mobile Network Quality Report - National Telecom Regulatory Authority",
+    "published": "2025-02-27T00:00:00.000Z",
+    "tier": "T3",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.tra.gov.eg/en/consumers/quality-of-services/quality-of-services-reports/",
+    "title": "Quality of Services Reports - National Telecom Regulatory Authority",
+    "published": "2020-08-09T00:00:00.000Z",
+    "tier": "T3",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.nperf.com/en/map/EG/-/-/signal",
+    "title": "3G / 4G / 5G coverage map, Egypt - nPerf.com",
+    "published": "",
+    "tier": "T5",
+    "surfaced_by": "exa, perplexity",
+    "cap": 6000
+   }
+  ],
+  "proposed_row": {
+   "value": "DATA GAP \u2014 Independently reviewed the supplied sources. Source 1 (ITU Egypt Digital Development Dashboard) contains Egypt-specific national 3G/4G population coverage and rural/urban household Internet-access disaggregation, but no rural mobile-network-coverage disaggregation. Source 7 (NTRA presentation) contains national coverage statements and targets plus village-project material, but no published rural 3G/4G coverage percentage. Sources 8 and 9 (NTRA quality-service material) report road/city/village measurement activity and quality results, not rural population coverage. Source 10 is a T5 crowdsourced map and provides no rural percentage; it is not admissible for this prerequisite statistic. Sources 2\u20136 are policy, global/regional, or Africa-wide materials and supply no Egypt rural-coverage observation.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "Next level not proposed: The evidence does not show a rural mobile-broadband coverage percentage for Egypt, let alone a value meeting the first 20% cut point. ITU's Egypt dashboard reports national population coverage: at least a 3G mobile network (2022) 100% and at least a 4G mobile network (2022) 98%. Its rural figure is instead \u201cHouseholds with Internet access at home, rural (2022) 64%\u201d, which measures household Internet access rather than rural mobile-broadband network coverage.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "outcome": "upheld",
+  "applied_row": null
+ },
+ {
+  "id": "4.7",
+  "name": "Digital ID coverage (%)",
+  "role": "prerequisite",
+  "verdict": "adjust",
+  "refutation_kind": "better evidence exists",
+  "reason": "The first-pass hold on a numeric coverage level survives: no supplied page measures Egyptian digital-ID coverage. However, the row should not be recorded as a complete factual gap. Egypt Pass explicitly describes a national unified digital-identity platform, and MCIT reports a pilot digital-identity-verification application. These are affirmative construct-adjacent existence facts, though not admissible coverage evidence.",
+  "severity": "medium",
+  "gate_verdict": "reject",
+  "gate_reason": "the quoted text does not appear in the page it cites",
+  "gates": [
+   {
+    "gate": "isolation",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "quote",
+    "verdict": "reject",
+    "reason": "the quoted text does not appear in the page it cites"
+   }
+  ],
+  "quote_verified": false,
+  "answer": {
+   "found": true,
+   "abstain": true,
+   "abstain_reason": "Egypt Pass and MCIT evidence establish that Egypt has a national digital-identity platform/pilot, but neither page publishes a percentage of Egyptians with a digital ID. The evidence therefore cannot populate a coverage threshold cell or support a cut-point level.",
+   "value_kind": "statement",
+   "value": "\u062a\u0645\u062b\u0644 \u0645\u0646\u0635\u0629 \u0627\u0644\u0647\u0648\u064a\u0629 \u0627\u0644\u0631\u0642\u0645\u064a\u0629 \u0645\u0646\u0635\u0629 \u0648\u0637\u0646\u064a\u0629 \u0645\u0648\u062d\u062f\u0629 \u062a\u062a\u064a\u062d \u0644\u0644\u0645\u0648\u0627\u0637\u0646\u064a\u0646 \u0648\u0627\u0644\u0645\u0642\u064a\u0645\u064a\u0646 \u0627\u0644\u0648\u0635\u0648\u0644 \u0627\u0644\u0622\u0645\u0646 \u0625\u0644\u0649 \u0627\u0644\u062e\u062f\u0645\u0627\u062a \u0627\u0644\u062d\u0643\u0648\u0645\u064a\u0629 \u0628\u062d\u0633\u0627\u0628 \u0648\u0627\u062d\u062f\u060c \u0645\u0645\u0627 \u064a\u0639\u0632\u0632 \u0627\u0644\u062b\u0642\u0629 \u0641\u064a \u0627\u0644\u062a\u0639\u0627\u0645\u0644\u0627\u062a \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a\u0629 \u0648\u064a\u062f\u0639\u0645 \u0627\u0644\u062a\u062d\u0648\u0644 \u0646\u062d\u0648 \u062d\u0643\u0648\u0645\u0629 \u0630\u0643\u064a\u0629 \u0645\u062a\u0631\u0627\u0628\u0637\u0629.",
+   "unit": "",
+   "year": 0,
+   "source_title": "Egypt Pass | \u0627\u0644\u0647\u0648\u064a\u0629 \u0627\u0644\u0631\u0642\u0645\u064a\u0629",
+   "source_url": "https://di.gov.eg/",
+   "proposed_tier": "T3",
+   "quote": "",
+   "data_quality_flag": "",
+   "construct_match": "measures a different construct",
+   "construct_note": "The indicator name requires digital ID coverage (%). Source 5 establishes the existence and described function of Egypt\u2019s national digital-ID platform, not the proportion of people owning, activating, or using it. Source 6 likewise reports only that \u201cThe pilot version of a digital identity verification application was developed,\u201d not coverage. This is closer to system availability/operation than coverage.",
+   "presence_rung": "",
+   "quality_evidence": "Egypt Pass is a government digital-identity platform page and MCIT is a government ministry press release, both T3 evidence for platform existence; neither is a statistical publication of uptake or coverage.",
+   "scale_evidence": "No Egypt-labelled numerator, denominator, percentage, user count for Egypt Pass, or representative ownership/use survey result is published in the supplied pages.",
+   "proposed_level": 0,
+   "rung_argument": "No threshold level is proposed. The supplied evidence establishes a real Egyptian digital-ID platform and a digital-identity-verification pilot, but does not establish any percentage coverage. Consequently it cannot establish passage of the first 20% cut point, nor any higher cut point.",
+   "negative_finding": "The pages do not show the percentage of Egypt\u2019s relevant population that owns, has activated, or uses a digital ID; in particular, they do not show coverage at or above 20%.",
+   "search_trail": "Reviewed the supplied pages independently: (1) World Bank ID4D Practitioner\u2019s Guide for digital-ID methodology or Egypt coverage\u2014no Egypt figure; (2) ID4D Diagnostics country list\u2014Egypt is not listed and no coverage statistic appears; (3) ID4D Legal Assessment Tool\u2014generic assessment methodology only; (4) Open Knowledge Repository download shell\u2014no rendered dataset content or Egypt value; (5) Egypt Pass\u2014evidence of a national unified digital-identity platform and registration process, but no coverage statistic; (6) MCIT 2025 achievements\u2014reports development of a pilot verification application, but no coverage statistic; (7) World Bank blog\u2014reports global/regional digital-ID findings and ranges, but no Egypt-specific digital-ID coverage figure.",
+   "verdict": "adjust",
+   "refutation_kind": "better evidence exists",
+   "reason": "The first-pass hold on a numeric coverage level survives: no supplied page measures Egyptian digital-ID coverage. However, the row should not be recorded as a complete factual gap. Egypt Pass explicitly describes a national unified digital-identity platform, and MCIT reports a pilot digital-identity-verification application. These are affirmative construct-adjacent existence facts, though not admissible coverage evidence.",
+   "severity": "medium"
+  },
+  "queries": [
+   "site:id4d.worldbank.org Egypt \"digital ID\"",
+   "site:worldbank.org Egypt \"digital ID coverage\"",
+   "site:microdata.worldbank.org ID4D Egypt digital ID"
+  ],
+  "pack": [
+   {
+    "url": "https://id4d.worldbank.org/guide",
+    "title": "ID4D Practitioner\u2019s Guide | Identification for Development",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://id4d.worldbank.org/country-action/id4d-diagnostics",
+    "title": "ID4D Diagnostics | Identification for Development",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://id4d.worldbank.org/legal-assessment",
+    "title": "Legal Assessment Tool | Identification for Development",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://openknowledge.worldbank.org/bitstreams/a105aa4e-7b0f-4e80-bd1f-835cfae88e57/download",
+    "title": "GLOBAL DATASET 2025 - Open Knowledge Repository",
+    "published": "",
+    "tier": "T2",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://di.gov.eg/",
+    "title": "\u0627\u0644\u0647\u0648\u064a\u0629 \u0627\u0644\u0631\u0642\u0645\u064a\u0629 | Egypt Pass",
+    "published": "",
+    "tier": "T3",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "http://mcit.gov.eg/en/Media_Center/Press_Room/Press_Releases/98928",
+    "title": "Ministry of Communications and Information Technology",
+    "published": "",
+    "tier": "T3",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://blogs.worldbank.org/en/digital-development/global-progress-in-identification--3-findings-from-the-latest-da",
+    "title": "Global progress in identification: 3 findings from the latest data",
+    "published": "",
+    "tier": "T5",
+    "surfaced_by": "exa, perplexity",
+    "cap": 6000
+   }
+  ],
+  "proposed_row": {
+   "value": "DATA GAP \u2014 Reviewed the supplied pages independently: (1) World Bank ID4D Practitioner\u2019s Guide for digital-ID methodology or Egypt coverage\u2014no Egypt figure; (2) ID4D Diagnostics country list\u2014Egypt is not listed and no coverage statistic appears; (3) ID4D Legal Assessment Tool\u2014generic assessment methodology only; (4) Open Knowledge Repository download shell\u2014no rendered dataset content or Egypt value; (5) Egypt Pass\u2014evidence of a national unified digital-identity platform and registration process, but no coverage statistic; (6) MCIT 2025 achievements\u2014reports development of a pilot verification application, but no coverage statistic; (7) World Bank blog\u2014reports global/regional digital-ID findings and ranges, but no Egypt-specific digital-ID coverage figure.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 24 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the quoted text does not appear in the page it cites. The indicator name requires digital ID coverage (%). Source 5 establishes the existence and described function of Egypt\u2019s national digital-ID platform, not the proportion of people owning, activating, or using it. Source 6 likewise reports only that \u201cThe pilot version of a digital identity verification application was developed,\u201d not coverage. This is closer to system availability/operation than coverage.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "outcome": "upheld",
+  "applied_row": null
+ },
+ {
+  "id": "2.9",
+  "name": "Rural electricity access (%)",
+  "role": "prerequisite",
+  "verdict": "confirmed",
+  "refutation_kind": "",
+  "reason": "The first-pass result survives review: supplied Source 2 is a T1 World Bank page for the rural-specific construct and its country table states \u201cEgypt, Arab Rep.\t2024\t100.0\u201d. Source 1 would have been a construct mismatch because it is national access, but it was not needed to support the recorded rural value.",
+  "severity": "low",
+  "gate_verdict": "pass",
+  "gate_reason": "",
+  "gates": [
+   {
+    "gate": "isolation",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "quote",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "tier",
+    "verdict": "pass",
+    "reason": "recorded at T1"
+   },
+   {
+    "gate": "construct",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "prerequisite",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "coherence",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "currency",
+    "verdict": "pass",
+    "reason": ""
+   },
+   {
+    "gate": "argument",
+    "verdict": "pass",
+    "reason": ""
+   }
+  ],
+  "quote_verified": true,
+  "answer": {
+   "found": true,
+   "abstain": false,
+   "abstain_reason": "",
+   "value_kind": "number",
+   "value": "100.0",
+   "unit": "% of rural population",
+   "year": 2024,
+   "source_title": "World Bank Data \u2014 Access to electricity, rural (% of rural population) - Africa",
+   "source_url": "https://data.worldbank.org/indicator/EG.ELC.ACCS.RU.ZS?locations=A9",
+   "proposed_tier": "T1",
+   "quote": "Access to electricity, rural (% of rural population)\nAfrica",
+   "data_quality_flag": "",
+   "construct_match": "measures the named construct",
+   "construct_note": "The cited World Bank series is explicitly rural (% of rural population), and the country table reports Egypt, Arab Rep. for 2024. This is not the broader national-access series.",
+   "presence_rung": "",
+   "quality_evidence": "The page identifies the dataset as \u201cSDG 7.1.1 Electrification Dataset, World Bank ( WB )\u201d.",
+   "scale_evidence": "The reported unit is the percentage of the rural population with electricity access, matching the indicator's percentage scale.",
+   "proposed_level": 5,
+   "rung_argument": "The World Bank rural-specific indicator page identifies the construct as \u201cAccess to electricity, rural (% of rural population)\u201d and reports Egypt, Arab Rep. at 100.0 in 2024. This exceeds all threshold cut points (20, 40, 60, and 80), producing level 5.",
+   "negative_finding": "",
+   "search_trail": "Independently checked the supplied World Bank rural-series page (Source 2), which is explicitly for EG.ELC.ACCS.RU.ZS and includes Egypt in its country table. Also checked Source 1, but it is the national \u201cAccess to electricity (% of population)\u201d series and therefore does not measure the rural construct. Sources 3\u20136 provide methodology or general SDG context rather than an Egypt rural value; Source 8 reports older rural values but is T5 and was not needed.",
+   "verdict": "confirmed",
+   "refutation_kind": "",
+   "reason": "The first-pass result survives review: supplied Source 2 is a T1 World Bank page for the rural-specific construct and its country table states \u201cEgypt, Arab Rep.\t2024\t100.0\u201d. Source 1 would have been a construct mismatch because it is national access, but it was not needed to support the recorded rural value.",
+   "severity": "low"
+  },
+  "queries": [
+   "site:api.worldbank.org/v2/country/EGY/indicator/EG.ELC.ACCS.RU.ZS Egypt rural electricity access",
+   "site:data.worldbank.org/indicator/EG.ELC.ACCS.RU.ZS Egypt",
+   "site:unstats.un.org Egypt SDG 7.1.1 rural electricity access"
+  ],
+  "pack": [
+   {
+    "url": "https://data.worldbank.org/indicator/EG.ELC.ACCS.ZS?locations=EG",
+    "title": "Access to electricity (% of population) - Egypt, Arab Rep.",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa, perplexity",
+    "cap": 6000
+   },
+   {
+    "url": "https://data.worldbank.org/indicator/EG.ELC.ACCS.RU.ZS?locations=A9",
+    "title": "Access to electricity, rural (% of rural population) - Africa",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://unstats.un.org/sdgs/metadata/files/Metadata-07-01-01.pdf",
+    "title": "SDG indicator metadata",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://unstats.un.org/sdgs/metadata/?Goal=7",
+    "title": "SDG Indicators \u2014 SDG Indicators",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://unstats.un.org/sdgs/files/metadata-compilation/metadata-goal-7.pdf",
+    "title": "Goal 7 Ensure access to affordable, reliable, sustainable and modern energy for all",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://unstats.un.org/sdgs/report/2024/extended-report/Extended-Report_Goal-7.pdf",
+    "title": "The Sustainable Development Goals",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://unstats.un.org/unsd/energystats/events/2019-Beirut/documents/Radia%20Sedaoui%20-%20Energy%20statistics%20and%20balance%20for%20sustainable%20energy%20policy.pdf",
+    "title": "Training Workshops on Energy Statistics",
+    "published": "",
+    "tier": "T1",
+    "surfaced_by": "exa",
+    "cap": 6000
+   },
+   {
+    "url": "https://www.se4all-africa.org/seforall-in-africa/country-data/egypt/",
+    "title": "Egypt - SEforALL Africa Hub",
+    "published": "",
+    "tier": "T5",
+    "surfaced_by": "exa, perplexity",
+    "cap": 6000
+   }
+  ],
+  "proposed_row": {
+   "value": 100.0,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2024,
+   "src": "World Bank Data \u2014 Access to electricity, rural (% of rural population) - Africa",
+   "note": "The cited World Bank series is explicitly rural (% of rural population), and the country table reports Egypt, Arab Rep. for 2024. This is not the broader national-access series.",
+   "tier": "T1",
+   "tier_detail": "",
+   "url": "https://data.worldbank.org/indicator/EG.ELC.ACCS.RU.ZS?locations=A9"
+  },
+  "outcome": "upheld",
+  "applied_row": null
+ }
+]
