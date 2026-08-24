@@ -138,17 +138,25 @@ decision 13.8 needs to say so explicitly, because a general rule that tier 4 can
 a prerequisite will keep producing this result in every country where rural coverage is
 modelled rather than measured. That is most of them.
 
-Egypt is the control, and it now reads well. Its 2.1 is a recorded gap in both
-assessments, so the rule has nothing to bite on, and **the automated Egypt matrix
-reproduces your Egypt matrix cell for cell**: Unverified on five columns and Blocked on
-agricultural intelligence, exactly as your assessment records it. The same machinery that
-turns every Nigerian column Unverified leaves every Egyptian column where you put it.
+Egypt now shows the same machinery driven by a definition rather than by a tier, and it
+is the sharper of the two cases. Your Egypt assessment reads Blocked on advisory, smart
+farming, financial services and agricultural intelligence. The automated assessment reads
+**Unverified on all four**. One row accounts for every one of them: 7.12, consent and
+rights safeguards, which your assessors recorded as **Absent** and the machine recorded as
+**Present**, on the Egyptian Charter for Responsible AI.
 
-That contrast is the useful part. The rule is not new and it is not misfiring. What is new
-is that an automated pass reaches the withheld state far more often than a hand pass does,
-so a rule that rarely fired now fires whenever a single universal prerequisite rests on
-evidence the tier bar will not take. In Egypt no universal prerequisite does. In Nigeria
-one does, and six columns follow it.
+That is the same disagreement set out in section 2, where it appeared as a single row
+reading level 3 against your level 1. Under the ruling that 7.12 follows the use of
+personal or farm-level data rather than the agricultural-intelligence column alone, it is
+no longer a single row. **A permissive reading of one unratified indicator name now moves
+four columns of the readiness matrix**, and it moves them from a definite finding to an
+absence of one: your assessment establishes that those services are blocked for want of
+consent and rights safeguards, and the automated assessment reports that it does not know.
+
+The two countries therefore fail in different ways and for different reasons. Nigeria's
+matrix turns on a tier bar refusing the only published estimate. Egypt's turns on which
+reading of an indicator name is taken. Neither is a retrieval failure and neither is a
+fabrication, and no amount of further engineering addresses either.
 
 ---
 

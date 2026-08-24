@@ -983,7 +983,7 @@
   {
    "id": "7.12",
    "name": "Responsible-AI safeguards (consent, rights)",
-   "prereq": "UC:AI",
+   "prereq": "UC:ADV,SMF,FIN,AGI",
    "o_cls": "Documented",
    "o_level": 1,
    "o_value": "No agriculture/AI-specific consent or farmer-data-rights safeguards exist beyond the general regime. General regime now operational: PDPL 151/2020 became enforceable in practice with Executive Regulations issued by Minis",
@@ -1288,7 +1288,7 @@
   {
    "id": "7.12",
    "name": "Responsible-AI safeguards (consent, rights)",
-   "kind": "UC:AI",
+   "kind": "UC:ADV,SMF,FIN,AGI",
    "o": "Absent",
    "s": "Present",
    "match": false,
@@ -1388,18 +1388,18 @@
  "matrix": [
   {
    "uc": "ADV",
-   "o": "Unverified",
+   "o": "Blocked",
    "s": "Unverified",
-   "match": true,
-   "o_why": "universal unverified: 2.1",
+   "match": false,
+   "o_why": "7.12",
    "s_why": "universal unverified: 2.1"
   },
   {
    "uc": "SMF",
-   "o": "Unverified",
+   "o": "Blocked",
    "s": "Unverified",
-   "match": true,
-   "o_why": "universal unverified: 2.1",
+   "match": false,
+   "o_why": "7.12",
    "s_why": "universal unverified: 2.1"
   },
   {
@@ -1420,10 +1420,10 @@
   },
   {
    "uc": "FIN",
-   "o": "Unverified",
+   "o": "Blocked",
    "s": "Unverified",
-   "match": true,
-   "o_why": "universal unverified: 2.1",
+   "match": false,
+   "o_why": "7.12",
    "s_why": "universal unverified: 2.1"
   },
   {

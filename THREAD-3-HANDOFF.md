@@ -1,10 +1,9 @@
 # Thread 3 — Gate 2, the scans, and the worker · handoff
 
-*Written 24 August 2026, at the close of Thread 2. Read this, then
-`DAR-Studio-Automation-Design.md` (the twenty-seven decisions, with a build-status
-section now at its foot), then `gauntlet/loop-1/research_pipeline/README.md` (how the
-machinery runs and what will bite you). `THREAD-2-HANDOFF.md` is the previous thread's
-brief and is now history — everything from it that still matters is repeated here.*
+*Written 24 August 2026. **Superseded by `THREAD-4-HANDOFF.md`**. Kept as the record of
+what Thread 3 was asked to do. Gate 2 was built and run; the section 13 rulings were then
+taken and applied, which moved most of the figures below. The scans and the worker are
+still outstanding and carry forward.*
 
 ---
 

@@ -1152,7 +1152,7 @@
    "uc": [
     "AI"
    ],
-   "prereq": "UC:AI",
+   "prereq": "UC:ADV,SMF,FIN,AGI",
    "kind": "l"
   },
   "8.2": {
@@ -1325,6 +1325,7 @@
    "held": 0,
    "mean": 2.4,
    "band": "Emerging",
+   "margin": 0.4,
    "weak": false,
    "comp": {
     "Measured": 3,
@@ -1340,6 +1341,7 @@
    "held": 1,
    "mean": 3.0,
    "band": "Established",
+   "margin": 0.0,
    "weak": false,
    "comp": {
     "Measured": 3,
@@ -1355,6 +1357,7 @@
    "held": 3,
    "mean": 3.0,
    "band": "Established",
+   "margin": 0.0,
    "weak": false,
    "comp": {
     "Measured": 1,
@@ -1370,6 +1373,7 @@
    "held": 1,
    "mean": 2.25,
    "band": "Emerging",
+   "margin": 0.25,
    "weak": false,
    "comp": {
     "Measured": 0,
@@ -1385,6 +1389,7 @@
    "held": 1,
    "mean": 2.33,
    "band": "Emerging",
+   "margin": 0.33,
    "weak": true,
    "comp": {
     "Measured": 1,
@@ -1400,6 +1405,7 @@
    "held": 4,
    "mean": 3.0,
    "band": "Established",
+   "margin": 0.0,
    "weak": false,
    "comp": {
     "Measured": 0,
@@ -1415,6 +1421,7 @@
    "held": 0,
    "mean": 3.5,
    "band": "Advanced",
+   "margin": -0.5,
    "weak": true,
    "comp": {
     "Measured": 1,
@@ -1489,7 +1496,7 @@
   },
   "7.12": {
    "name": "Responsible-AI safeguards (consent, rights)",
-   "kind": "UC:AI",
+   "kind": "UC:ADV,SMF,FIN,AGI",
    "status": "Present"
   }
  },
@@ -1497,10 +1504,13 @@
   "ADV": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.89,
    "prereqs": [
     [
      "5.5",
+     "Present"
+    ],
+    [
+     "7.12",
      "Present"
     ]
    ],
@@ -1510,27 +1520,34 @@
     "outcome": 1,
     "enabler": 17
    },
-   "mean_enabler": 2.82,
+   "mean_readiness": 2.82,
+   "mean_need": null,
+   "mean_outcome": 4.0,
    "mean_driven": false
   },
   "SMF": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.81,
-   "prereqs": [],
+   "prereqs": [
+    [
+     "7.12",
+     "Present"
+    ]
+   ],
    "n_bearing": 16,
    "basis": {
     "need": 0,
     "outcome": 1,
     "enabler": 15
    },
-   "mean_enabler": 2.73,
+   "mean_readiness": 2.73,
+   "mean_need": null,
+   "mean_outcome": 4.0,
    "mean_driven": false
   },
   "MKT": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.77,
    "prereqs": [],
    "n_bearing": 13,
    "basis": {
@@ -1538,13 +1555,14 @@
     "outcome": 1,
     "enabler": 12
    },
-   "mean_enabler": 2.67,
+   "mean_readiness": 2.67,
+   "mean_need": null,
+   "mean_outcome": 4.0,
    "mean_driven": false
   },
   "SCM": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.77,
    "prereqs": [],
    "n_bearing": 13,
    "basis": {
@@ -1552,13 +1570,14 @@
     "outcome": 1,
     "enabler": 12
    },
-   "mean_enabler": 2.67,
+   "mean_readiness": 2.67,
+   "mean_need": null,
+   "mean_outcome": 4.0,
    "mean_driven": false
   },
   "FIN": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.69,
    "prereqs": [
     [
      "3.3",
@@ -1571,6 +1590,10 @@
     [
      "6.14",
      "Unverified"
+    ],
+    [
+     "7.12",
+     "Present"
     ]
    ],
    "n_bearing": 16,
@@ -1579,13 +1602,14 @@
     "outcome": 2,
     "enabler": 14
    },
-   "mean_enabler": 2.57,
+   "mean_readiness": 2.57,
+   "mean_need": null,
+   "mean_outcome": 3.5,
    "mean_driven": false
   },
   "AGI": {
    "status": "Blocked",
    "why": "4.5",
-   "mean": 2.71,
    "prereqs": [
     [
      "3.3",
@@ -1610,7 +1634,9 @@
     "outcome": 1,
     "enabler": 16
    },
-   "mean_enabler": 2.63,
+   "mean_readiness": 2.63,
+   "mean_need": null,
+   "mean_outcome": 4.0,
    "mean_driven": false
   }
  },

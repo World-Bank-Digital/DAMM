@@ -59,10 +59,10 @@
 |---|---|---|---|---|
 | A1 | 2.25 (Emerging) | 8/2 | 2.33 (Emerging) | 6/0 |
 | C1 | 2.83 (Established) | 6/0 | 3.0 (Established) | 3/1 |
-| C2 | 2.57 (Emerging) | 7/1 | 2.5 (Emerging) | 6/2 |
+| C2 | 2.57 (Established) | 7/1 | 2.5 (Established) | 6/2 |
 | C3 | 2.88 (Established) | 8/0 | 2.4 (Emerging) | 5/1 |
-| C4 | 2.5 (Emerging) | 4/2 | 2.33 (Emerging) | 3/1 |
-| E1 | 2.56 (Emerging) | 9/1 | 2.86 (Established) | 7/3 |
+| C4 | 2.5 (Established) | 4/2 | 2.33 (Emerging) | 3/1 |
+| E1 | 2.56 (Established) | 9/1 | 2.86 (Established) | 7/3 |
 | O1 | 3.25 (Established) | 4/1 | 3.5 (Advanced) | 2/0 |
 
 ## Which direction the divergences run

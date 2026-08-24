@@ -44,11 +44,11 @@
 
 | use case | verified | shadow | |
 |---|---|---|---|
-| ADV | Unverified | Unverified | match |
-| SMF | Unverified | Unverified | match |
+| ADV | Blocked | Unverified | **differs** |
+| SMF | Blocked | Unverified | **differs** |
 | MKT | Unverified | Unverified | match |
 | SCM | Unverified | Unverified | match |
-| FIN | Unverified | Unverified | match |
+| FIN | Blocked | Unverified | **differs** |
 | AGI | Blocked | Blocked | match |
 
 ## Pillars

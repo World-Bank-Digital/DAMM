@@ -983,7 +983,7 @@
   {
    "id": "7.12",
    "name": "Responsible-AI safeguards (consent, rights)",
-   "prereq": "UC:AI",
+   "prereq": "UC:ADV,SMF,FIN,AGI",
    "o_cls": "Documented",
    "o_level": 3,
    "o_value": "General cross-sector AI/automated-decision safeguards adopted and in force; nothing agriculture-specific. NDPC General Application and Implementation Directive (GAID) 2025 under NDPA 2023 (document dated 20 Mar 2025; law",
@@ -1288,7 +1288,7 @@
   {
    "id": "7.12",
    "name": "Responsible-AI safeguards (consent, rights)",
-   "kind": "UC:AI",
+   "kind": "UC:ADV,SMF,FIN,AGI",
    "o": "Present",
    "s": "Present",
    "match": true,
@@ -1327,11 +1327,11 @@
   {
    "pillar": "C2",
    "o_mean": 2.57,
-   "o_band": "Emerging",
+   "o_band": "Established",
    "o_rated": 7,
    "o_held": 1,
    "s_mean": 2.5,
-   "s_band": "Emerging",
+   "s_band": "Established",
    "s_rated": 6,
    "s_held": 2,
    "band_match": true
@@ -1351,26 +1351,26 @@
   {
    "pillar": "C4",
    "o_mean": 2.5,
-   "o_band": "Emerging",
+   "o_band": "Established",
    "o_rated": 4,
    "o_held": 2,
    "s_mean": 2.33,
    "s_band": "Emerging",
    "s_rated": 3,
    "s_held": 1,
-   "band_match": true
+   "band_match": false
   },
   {
    "pillar": "E1",
    "o_mean": 2.56,
-   "o_band": "Emerging",
+   "o_band": "Established",
    "o_rated": 9,
    "o_held": 1,
    "s_mean": 2.86,
    "s_band": "Established",
    "s_rated": 7,
    "s_held": 3,
-   "band_match": false
+   "band_match": true
   },
   {
    "pillar": "O1",
@@ -1407,7 +1407,7 @@
    "o": "Partial",
    "s": "Unverified",
    "match": false,
-   "o_why": "thin enablers",
+   "o_why": "universal narrow: 2.9",
    "s_why": "universal unverified: 2.1"
   },
   {
