@@ -20,8 +20,9 @@ where it cannot cite rung-specific quote-verified evidence at an admissible tier
 acceptance test — a full shadow run of Egypt compared row by row against the verified
 assessment — has been run twice: **$15, 24 minutes, 3% of the country ceiling**, and it
 **reproduced the 2.1 finding**, the defect that passed a human assessor gate and an
-initial peer review. Your job is what Thread 2 did not build: automated Gate 2, the two
-scans, and the durable worker.
+initial peer review. **Automated Gate 2 is now built and run** (Thread 3, Task 1): it cost 9% of its
+allocation and caught a prerequisite over-claim the first pass had made. What remains is
+the two scans and the durable worker.
 
 ---
 
@@ -52,15 +53,22 @@ There is **no Time Machine on this Mac** — git is the only backup.
 - **`research_pipeline/vendors.py`** — the only place an outside call is made. Keys,
   metering, pricing, the domain→tier lookup, quote verification, and a budget ceiling
   that raises rather than degrading. Nine live checks in `smoke_vendors.py`.
-- **`research_pipeline/gates.py`** — seven gates in order: isolation (C7), quote (C6),
-  tier (C1), construct (C3), prerequisite (C4), coherence, currency, argument. Each one
-  withholds a *level* and records why; none deletes evidence.
+- **`research_pipeline/gates.py`** — eight gates, in the order a failure would mislead
+  a reader: isolation (C7), quote (C6), tier (C1), construct (C3), prerequisite (C4),
+  coherence, currency, argument. Each withholds a *level* and records why; none deletes
+  evidence.
 - **`research_pipeline/research_orchestrator.py`** — per-indicator research for one
   country, checkpointed per row, resumable, producing an engine input directly.
 - **`research_pipeline/run_audition.py`** + `audition_cells.json` — the thirteen-cell
   audition, with `--rescore` to re-apply a corrected rule to saved evidence for free.
 - **`research_pipeline/compare_shadow.py`** — the acceptance test, including a
   `--prior` mode that measures run-to-run variance.
+- **`research_pipeline/gate2.py`** + `g2_delta.py` — the second review and the
+  arithmetic on whether it earned its share. `--reapply` reruns the decision rule over
+  saved findings for free.
+- **`research_pipeline/test_gates.py`** — 62 checks over quote verification in five
+  scripts, the tier lookup, country isolation, the ladder, all eight gates and every
+  Gate 2 decision path. No keys, no network. Run it on every change.
 
 Derivation rules have one home each: the qualitative ladder is `build_inputs.ladder_level`
 and the machine-fetchable T1 series map is `machine_pass.SERIES`. Both files were made
@@ -112,23 +120,52 @@ exactly as predicted, and it is an argument for the §13 rulings rather than for
 pipeline. Twenty-four rows withheld a level the verified assessment set; one set a level
 it withheld. That asymmetry *is* the abstention threshold, stated as a number.
 
+*Gate 2 has since caught the second of those two — the AI charter row — and withdrawn
+its level. The figures in this table are the first pass alone; see Task 1 below for the
+same comparison after the second review.*
+
 ---
 
 ## Your scope
 
-### Task 1 — automated Gate 2 (decision C5)
+### Task 1 — automated Gate 2 (decision C5) — **DONE**
 
-Scoped to prerequisites, held rows and recorded gaps — roughly 20 rows of 57, not all of
-them — prompted to refute, run on the independent second vendor. In the hand gauntlet
-this earned its keep: 24 of 24 prerequisites survived attack, 12 provenance adjustments
-landed, and **4 gap refutations** found what the first pass missed.
+Built and run on Egypt, 24 August 2026. `research_pipeline/gate2.py`, with the
+before/after arithmetic in `g2_delta.py`. Results in `G2-REPORT-EGY_shadow.md` and
+`G2-VALUE-EGY_shadow.md`.
 
-**You have a before-measurement and should use it.** Re-run `compare_shadow.py` after
-Gate 2 and the delta tells you whether it earns its 15% of budget. Given the shadow run's
-17 new gaps and 11 holds, the specific question is how many of those a refutation pass
-converts back into evidenced rows.
+**It earns its share, and costs a fraction of it.** $6.39 on 38 rows in 14 minutes —
+**9% of the $75** decision G3 reserves, and 29% of the two passes together. Three gaps
+filled, one level withdrawn, two provenances corrected, 32 rows upheld.
 
-### Task 2 — the broad and international scans (steps 2 and 3)
+| | before Gate 2 | after |
+|---|---|---|
+| prerequisites matching the verified assessment | 4 of 12 | **5 of 12** |
+| recorded gaps | 22 | **20** |
+| rows at the verified level | 24 of 57 | 24 of 57 |
+| of rows both levelled, within one level | 21 of 23 | **24 of 25** |
+
+**The withdrawal is the result to read.** 7.12 was one of only two rows where the first
+pass read *higher* than the verified assessment — it had taken Egypt's responsible-AI
+charter as evidence of consent and rights safeguards. The reviewer found that neither
+"consent" nor "rights" appears in the quoted release and the level went. The over-claim
+the shadow-run analysis flagged as the dangerous direction was caught by the mechanism
+built to catch it, on a prerequisite, without a human.
+
+**Three things about the design that should not be undone.** The reviewer is a different
+*vendor*, not a sibling model — the audition showed the gpt-5.6 siblings sharing their
+blind spots. Its retrieval is independent, because a reviewer handed the same pages can
+re-judge but never *find*. And its proposals pass through `gates.run_gates` like any
+other evidence, so the second opinion is not held to weaker rules than the first.
+
+**One asymmetry, deliberately:** failing to find something again is not a refutation. A
+quote-verified citation cannot be disproved by a reviewer who did not reach it.
+
+*Open from this task:* whether 38 rows is the right scope. C5 estimated ~20; the
+automated first pass abstains more than the hand-run assessment did, so its scope is
+larger and will shrink as the abstention threshold is tuned.
+
+### Task 2 — the broad and international scans (steps 2 and 3) — **start here**
 
 Country evidence outside the indicator set, and a free-form international strategies
 scan. Note decision **E2**: the international scan feeds the **DAR only**. The diagnostic
@@ -180,6 +217,11 @@ live spend counter (G2), plus adding Perplexity to the app's provider set.
 - **A reasoning model can spend its whole output allowance thinking and return an empty
   body.** `json_call` retries once with double the room; Gemini additionally carries a
   floor, because its thinking tokens come out of the same allowance.
+- **Quote verification must stay script-blind.** The alphanumeric fold once kept only
+  `[a-z0-9]`, so an Arabic, Chinese, Cyrillic, Greek or Hebrew quote reduced to the
+  empty string — which is a substring of every page, so an invented quote in any of
+  those scripts verified as genuine. Egypt publishes in Arabic. `test_gates.py` checks
+  five scripts; keep it that way.
 - **Correcting a scoring rule does not require re-running.** Both the audition and the
   orchestrator checkpoint the retrieved pages beside the answers. Two of the audition's
   own findings were corrections to the scoring rather than to a vendor, and both were
