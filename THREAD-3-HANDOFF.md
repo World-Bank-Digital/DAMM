@@ -20,9 +20,11 @@ where it cannot cite rung-specific quote-verified evidence at an admissible tier
 acceptance test — a full shadow run of Egypt compared row by row against the verified
 assessment — has been run twice: **$15, 24 minutes, 3% of the country ceiling**, and it
 **reproduced the 2.1 finding**, the defect that passed a human assessor gate and an
-initial peer review. **Automated Gate 2 is now built and run** (Thread 3, Task 1): it cost 9% of its
-allocation and caught a prerequisite over-claim the first pass had made. What remains is
-the two scans and the durable worker.
+initial peer review. **Automated Gate 2 is built and run** (Thread 3, Task 1) at 8-9% of its allocation, and
+**the pipeline has now been run end to end on both countries**. Nigeria cost the same as
+Egypt and behaved the same way, and the two together answer the abstention-threshold
+question the design record called the highest-leverage one in the system —
+`CALIBRATION.md`. What remains is the two scans and the durable worker.
 
 ---
 
@@ -66,7 +68,10 @@ There is **no Time Machine on this Mac** — git is the only backup.
 - **`research_pipeline/gate2.py`** + `g2_delta.py` — the second review and the
   arithmetic on whether it earned its share. `--reapply` reruns the decision rule over
   saved findings for free.
-- **`research_pipeline/test_gates.py`** — 62 checks over quote verification in five
+- **`research_pipeline/calibration.py`** — the two-country analysis: which
+  abstention is the pipeline, which is the country, and which needs retrieval rather
+  than tuning.
+- **`research_pipeline/test_gates.py`** — 64 checks over quote verification in five
   scripts, the tier lookup, country isolation, the ladder, all eight gates and every
   Gate 2 decision path. No keys, no network. Run it on every change.
 
@@ -99,7 +104,7 @@ is, since three entrants returned identical figures on all three governing score
   fully quote-verified. This is why the construct gate and the prerequisite bar exist
   and why they cannot be collapsed into the quote check.
 
-### The Egypt shadow run (`SHADOW-COMPARISON-EGY_shadow.md`)
+### The Egypt shadow run, first pass alone (`SHADOW-COMPARISON-EGY_shadow.md`)
 
 | | |
 |---|---|
@@ -123,6 +128,42 @@ it withheld. That asymmetry *is* the abstention threshold, stated as a number.
 *Gate 2 has since caught the second of those two — the AI charter row — and withdrawn
 its level. The figures in this table are the first pass alone; see Task 1 below for the
 same comparison after the second review.*
+
+---
+
+## The calibration answer — read this before tuning anything
+
+`CALIBRATION.md`, from both countries with Gate 2 applied.
+
+| | Egypt | Nigeria |
+|---|---|---|
+| rows at the verified level (of 57) | 24 | 30 |
+| prerequisites matching (of 12) | 5 | 5 |
+| **rows read HIGHER than the verified assessment** | **2** | **4** |
+| levels withheld where the verified assessment set one | 21 | 19 |
+| gaps (verified) | 20 (5) | 22 (4) |
+| cost, both passes | $21.88 | $21.47 |
+
+**The abstention threshold is largely the wrong lever.** Eleven rows withheld a level in
+*both* countries — those are the pipeline, not the country's data environment — and
+**seven of the eleven were never reached at all**. Loosening the threshold would not have
+produced those levels; it would have produced levels with less behind them. The seven are
+named in `CALIBRATION.md` and three are prerequisites: **1.6, 1.7, 2.7, 3.11 ⚑, 4.5 ⚑,
+4.7 ⚑, 6.9**. Each is a targeted retrieval job — a source behind a JavaScript dashboard
+or inside a survey PDF — and fixing one fixes it for every country. That is the highest
+-value work left in the whole pipeline, and it is cheaper than any of the three tasks
+below.
+
+**One structural limit, and it is a §13 question rather than a bug.** Nigeria's verified
+2.1 rests on a **T4** GSMA geospatial estimate, while decision C4 requires T1–T3 for a
+prerequisite. The pipeline could not have reproduced that level at any depth of
+searching — the bar would have held it. Either the bar is right and the row should read
+Unverified, or it is too high for an indicator whose only published estimate is modelled.
+Do not settle this by loosening C4.
+
+**Gate 2 earns its share in both countries**: $6.39 and $6.14, 8–9% of the $75 reserved,
+three level changes each. It is worth keeping and worth widening before it is worth
+deepening pass one.
 
 ---
 
@@ -222,6 +263,10 @@ live spend counter (G2), plus adding Perplexity to the app's provider set.
   empty string — which is a substring of every page, so an invented quote in any of
   those scripts verified as genuine. Egypt publishes in Arabic. `test_gates.py` checks
   five scripts; keep it that way.
+- **A reviewer cannot be trusted to classify its own failure.** Gate 2's withdrawal path
+  once fired on a reviewer that asserted no value and verified no quote — an absence
+  filed as a refutation. A withdrawal now requires a verified quote. Any rule whose
+  enforcement depends on the thing being checked labelling itself honestly is not a rule.
 - **Correcting a scoring rule does not require re-running.** Both the audition and the
   orchestrator checkpoint the retrieved pages beside the answers. Two of the audition's
   own findings were corrections to the scoring rather than to a vendor, and both were
