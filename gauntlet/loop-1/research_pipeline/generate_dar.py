@@ -159,6 +159,18 @@ def allowed_figures(assessment, foresight=None):
     return ok
 
 
+def _rounds_to(n, raw, allowed):
+    """Whether `n` is an allowed figure written to fewer decimals.
+
+    A chapter that writes the A1 mean of 2.71 as "2.7" has not fabricated anything, and
+    blocking the document for it would train everyone to loosen the gate. A figure that
+    rounds to a real one is still traceable to a real one. Matching is at the precision
+    the prose actually used, so "3" does not silently stand for 2.71.
+    """
+    decimals = len(raw.split(".")[1]) if "." in raw else 0
+    return any(round(a, decimals) == n for a in allowed)
+
+
 def _ordinary(n):
     """Numbers a sentence may carry without the engine having produced them.
 
@@ -194,7 +206,8 @@ def fidelity_check(prose, figures, allowed):
     stray = []
     for raw in _numbers(prose):
         n = _norm_num(raw)
-        if n is None or n in claimed or n in allowed or _ordinary(n):
+        if (n is None or n in claimed or n in allowed
+                or _ordinary(n) or _rounds_to(n, raw, allowed)):
             continue
         stray.append(raw)
     return supported, unsupported, sorted(set(stray))

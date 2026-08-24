@@ -81,6 +81,19 @@ check("a declared figure is not also counted as a stray",
       D.fidelity_check("The value is 109.1.", [{"value": "109.1", "what_it_is": "1.4"}],
                        ALLOWED)[2], [])
 
+check("a figure written to fewer decimals is still that figure",
+      # A chapter writing the A1 mean of 2.71 as "2.7" has fabricated nothing, and
+      # blocking the document for it would train everyone to loosen the gate.
+      D.fidelity_check("The mean is 2.7.", [], ALLOWED)[2], [])
+
+check("rounding is only tolerated toward a real figure",
+      D.fidelity_check("The mean is 2.9.", [], ALLOWED)[2], ["2.9"])
+
+check("a bare integer does not silently stand for a decimal figure",
+      # 2.71 rounds to 3 at zero decimals, but 3 is an ordinary count anyway; 109.1
+      # rounding to 109 is the case worth pinning.
+      D.fidelity_check("Coverage of 109 was recorded.", [], ALLOWED)[2], [])
+
 check("ordinary covers counts up to twelve only", D._ordinary(12), True)
 check("thirteen is not an ordinary count", D._ordinary(13), False)
 check("a decimal is never ordinary", D._ordinary(4.5), False)

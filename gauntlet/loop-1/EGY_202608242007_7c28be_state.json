@@ -483,6 +483,39 @@
    "tier": "",
    "tier_detail": "",
    "url": ""
+  },
+  "6.14": {
+   "value": "DATA GAP \u2014 1) FAO STI Portal (T1) entry for Agri Cash [Egypt] \u2014 the only country-specific, admissible-tier record of an operating agri-fintech rail; quoted for the presence rung, but contains no user or disbursement figures and no smallholder disaggregation. 2) Central Bank of Egypt financial inclusion events page (T3) \u2014 confirms farmers are a named inclusion segment with card and wallet issuance drives, but reports no agricultural or smallholder statistic. 3) CBE news release on the Second Financial Inclusion Strategy 2026-2030 (T3) \u2014 gives national inclusion 77.6% and 54.7 million active accounts and names the Ministry of Agriculture as a partner, but nothing on agri-specific rails or smallholders; rejected under the construct rule. 4) CGAP publications on digitising value-chain finance and smallholder DFS (T4) \u2014 global or Zimbabwe/Senegal/Rwanda/Cambodia/Mozambique/Uganda/Tanzania/C\u00f4te d'Ivoire/Nigeria/Bangladesh evidence, no Egypt content; cross-border carry-over refused. 5) UNDP Egypt 'Rural Resilience in Egypt' qualitative study \u2014 Egypt-specific and rural-finance relevant but qualitative, with no agri-fintech rail figures in the retrieved text. 6) Daily News Egypt (T5) on the MALR/e-finance 'Agri Egypt' network and the Farmer Card's conversion to a Meeza payment card \u2014 recorded as context in construct_note only; T5 is inadmissible for this prerequisite row and the item is in any case about registered landholders generally. Dead end: no CBE, MALR, Agricultural Bank of Egypt or FRA document reporting smallholder-specific counts of agri-fintech accounts, cards or loans was among the retrieved pages.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. FAO STI Portal entry is an AI-assisted extraction harvested from Digital Agri Hub; the page itself states 'Record status\tNewly extracted from original record - Not checked, not enriched' and 'AI stamp\tAI-assisted extraction of information', so the underlying claims are vendor-derived rather than independently verified. The indicator names rails FOR SMALLHOLDERS. The quoted evidence describes a fintech platform 'developed for Egyptian farmers' generally; the FAO record lists prospective users spanning medium-size farms, small-micro entrepreneurs, smallholder farms and SMEs, i.e. smallholders are one target segment among several, not the defining population, and no smallholder-disaggregated usage figure is published. The nearest state instrument, the Farmer Card converted into a Meeza payment card under the MALR/e-finance 'Agri Egypt' network, is issued to registered landholders generally (reported only in Daily News Egypt, T5, quoting a database 'representing 9.4 million feddan') and is likewise not smallholder-specific. The Central Bank of Egypt (T3) treats farmers as a financial-inclusion target segment ('\"Farmers Financial Inclusion Day\" in September') and reports 77.6% national financial inclusion and 54.7 million active accounts at end-2025, but those are whole-population figures, not smallholder or agricultural rails. Best available evidence therefore sits on the wrong side of the open definitional question flagged in the indicator census.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "3.10": {
+   "value": "DATA GAP \u2014 Started with FAO's T1 STI/ATIO Portal innovation records for Egypt, which yielded three explicitly typed E-commerce/online marketplace entries (Agri Cash, Bashaier, Nile) \u2014 used Nile as the quoted anchor because it carries an operating-status sentence. Checked FAO Egypt country office page and FAO Digital Services Portfolio country cases for a government or FAO-run agricultural e-commerce platform in Egypt: the Egypt entry covers only the El Mufeed advisory app (the e-commerce platform Senlouma described there is Senegal, not Egypt, and was excluded under the no-cross-border rule). Checked the World Bank Egypt DECA 2020 for a digital-platforms chapter reference to agricultural marketplaces \u2014 only the table of contents and front matter were retrieved, no agri e-commerce figure. Checked the IFPRI/CGIAR policy note on digital agricultural technology in Egypt for evaluation or scale data \u2014 it names apps (Hodhod, Mahsooly, The Smart Farmer Guide) and characterises the ecosystem as pilot-stage, but gives no platform-level user or transaction figures. Checked IFC's e-commerce report (MaxAB) and the Cartona corporate site for scale numbers: both are downstream FMCG retail rather than farmer-facing, and Cartona is T5 vendor material from which statistics may not be recorded. The Alliance Bioversity-CIAT page on digitalization of Egypt's food crop value chains was blocked by a Cloudflare verification screen and could not be read. No published count or registry of Egyptian agricultural e-commerce platforms was found, so no numeric value is recorded.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. FAO STI Portal innovation profiles are harvested from Digital Agri Hub and enriched by automated AI extraction; the record itself states \"Newly extracted from original record - Not checked, not enriched\", so the descriptive claims are not independently verified by FAO staff. The census asks whether the row counts only farmer-facing platforms or any agri-food value-chain commerce platform. The evidence quoted sits on the narrower, farmer-facing side of that question: Nile connects fresh-produce growers to commercial buyers, Bashaier connects small-scale horticulture farmers to buyers, and Agri Cash sells inputs to farmers and markets their crops. Downstream agri-food value-chain platforms also exist in Egypt but sit on the wider side and are weaker evidence: Cartona is an FMCG B2B retail marketplace serving mom-and-pop grocers (vendor page, T5, statistics not admissible), and IFC documents MaxAB, an FMCG B2B distribution platform for MSME retailers \u2014 neither transacts with farmers. If the definition is ratified as farmer-facing only, the FAO STI Portal entries still support the rung; if ratified as any agri-food commerce platform, the population is larger still.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "3.9": {
+   "value": "DATA GAP \u2014 Started with FAO country and corporate sources: FAO Egypt 2019 launch news on the digital agricultural extension model with MALR (announcement-level, four thematic areas, ToT plans, no users); FAO e-Agriculture reprint of the same launch (duplicate, no figures); FAO Digital Services Portfolio 'About' page (confirms Egypt roll-out, no country figures); FAO Agro-informatics DSP project page (quoted \u2014 confirms Egypt-specific advisory services and farmer-to-farmer forum, status Ongoing, 'Impact' field blank, no user counts). Checked FAO STI Portal entry on GeoAgro-Misr (ICARDA/CGIAR harvested, AI-enriched record; its own adoption narrative states it cannot elaborate on usage, so no reach figure). AFRAS Egypt country brief on fao.org returned a Cloudflare bot-verification page, not content \u2014 a dead end. World Bank documents retrieved were a 1997 Egypt extension project information document and a 1991 MENA regional extension paper, both pre-digital and one not country-specific. GSMA AgriTech Accelerator report has scaling figures but its cohort and implementation countries are Ghana, Senegal, Nigeria, Kenya, Myanmar, Tunisia etc., not Egypt \u2014 not carried across the border. The IFPRI/WUR Food Policy RCT is the only Egypt-specific empirical piece; it concerns two Egyptian apps but reports treatment effects on uptake, not platform user totals, and states Egyptian uptake remains low. Conclusion: operation established, scale not published in any retrieved page.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt, Jordan, Senegal rather than to Egypt, Arab Rep. Implementer's own project page; no independent verification of live service status or usage. The evidence establishes existence and ongoing operation of digital advisory platforms in Egypt, but not the 'at scale' half of the indicator name, which the assessment's own census records as having no ratified threshold. None of the retrieved pages carries any user, subscriber or farmer-reached count for the FAO DSP in Egypt or for the two Egyptian advisory/marketing apps studied by IFPRI/WUR. The one substantive performance statement available \u2014 the peer-reviewed RCT (Abdelaziz & Abay) \u2014 points the other way, stating that 'In Egypt, the focus of this study, uptake of these technologies remains low despite the increasing and considerable investment and availability of digital agricultural tools', i.e. availability without demonstrated scale. That paper evaluates a digital-literacy training intervention, not the platforms' own performance, so it is recorded here as context rather than as quality evidence for the platform.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
   }
  },
  "records": {
@@ -6805,6 +6838,423 @@
     {
      "url": "https://www.digitalpublicgoods.net/",
      "title": "Digital Public Goods Alliance",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "6.14": {
+   "id": "6.14",
+   "name": "Agri-fintech rails for smallholders",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Agri-fintech rails exist and are running in Egypt at the level of individual platforms \u2014 FAO's STI Portal records Agri Cash as an operational Egyptian fintech application combining a digital wallet, interest-free 'Plant Now & Pay Later' input financing and a marketplace, with smallholder farms listed among its prospective users \u2014 but no admissible source reports a rail defined for, or usage figures specific to, smallholders.",
+    "unit": "",
+    "year": 2025,
+    "source_title": "FAO Science, Technology and Innovation (STI) Portal \u2014 Agri Cash [Egypt]",
+    "source_url": "https://sti-portal.fao.org/innovations/agri-cash-egypt",
+    "proposed_tier": "T1",
+    "quote": "Agri Cash is a fintech platform developed for Egyptian farmers that integrates financial services with agricultural marketplace solutions.",
+    "data_quality_flag": "FAO STI Portal entry is an AI-assisted extraction harvested from Digital Agri Hub; the page itself states 'Record status\tNewly extracted from original record - Not checked, not enriched' and 'AI stamp\tAI-assisted extraction of information', so the underlying claims are vendor-derived rather than independently verified.",
+    "construct_match": "unclear",
+    "construct_note": "The indicator names rails FOR SMALLHOLDERS. The quoted evidence describes a fintech platform 'developed for Egyptian farmers' generally; the FAO record lists prospective users spanning medium-size farms, small-micro entrepreneurs, smallholder farms and SMEs, i.e. smallholders are one target segment among several, not the defining population, and no smallholder-disaggregated usage figure is published. The nearest state instrument, the Farmer Card converted into a Meeza payment card under the MALR/e-finance 'Agri Egypt' network, is issued to registered landholders generally (reported only in Daily News Egypt, T5, quoting a database 'representing 9.4 million feddan') and is likewise not smallholder-specific. The Central Bank of Egypt (T3) treats farmers as a financial-inclusion target segment ('\"Farmers Financial Inclusion Day\" in September') and reports 77.6% national financial inclusion and 54.7 million active accounts at end-2025, but those are whole-population figures, not smallholder or agricultural rails. Best available evidence therefore sits on the wrong side of the open definitional question flagged in the indicator census.",
+    "presence_rung": "Operating",
+    "quality_evidence": "",
+    "scale_evidence": "",
+    "proposed_level": 3,
+    "rung_argument": "Absent is ruled out: agri-fintech instruments addressed to farmers demonstrably exist in Egypt (Agri Cash on the FAO STI Portal; CBE financial-inclusion machinery that names farmers as a target segment). Announced is exceeded: the FAO record does not describe an intention but a deployed application with a digital wallet, input financing and marketplace functions. Adopted is exceeded: the record classifies the innovation as ready and in adoption rather than under design. Operating is the rung supported: FAO records the platform as an existing, functioning service used by Egyptian farmers. Base level for Operating is 3; quality_evidence and scale_evidence are both empty, so no increments apply and the level is 3.",
+    "negative_finding": "Level 4 was not proposed because no independent or official evaluation, audit, performance report or service standard for any Egyptian agri-fintech rail appears in the retrieved pages \u2014 the only statements about how well Agri Cash works are AI-summarised restatements of the provider's own description, which is design, not quality. Level 5 was additionally not reached because no reach figures for smallholder users, disbursement volumes or geographic coverage of an agri-fintech rail are published in any admissible source; the only quantities available are a national financial-inclusion rate and account count (CBE, whole population) and a T5 press mention of 9.4 million feddan in a database, neither of which is a smallholder user or disbursement count.",
+    "search_trail": "1) FAO STI Portal (T1) entry for Agri Cash [Egypt] \u2014 the only country-specific, admissible-tier record of an operating agri-fintech rail; quoted for the presence rung, but contains no user or disbursement figures and no smallholder disaggregation. 2) Central Bank of Egypt financial inclusion events page (T3) \u2014 confirms farmers are a named inclusion segment with card and wallet issuance drives, but reports no agricultural or smallholder statistic. 3) CBE news release on the Second Financial Inclusion Strategy 2026-2030 (T3) \u2014 gives national inclusion 77.6% and 54.7 million active accounts and names the Ministry of Agriculture as a partner, but nothing on agri-specific rails or smallholders; rejected under the construct rule. 4) CGAP publications on digitising value-chain finance and smallholder DFS (T4) \u2014 global or Zimbabwe/Senegal/Rwanda/Cambodia/Mozambique/Uganda/Tanzania/C\u00f4te d'Ivoire/Nigeria/Bangladesh evidence, no Egypt content; cross-border carry-over refused. 5) UNDP Egypt 'Rural Resilience in Egypt' qualitative study \u2014 Egypt-specific and rural-finance relevant but qualitative, with no agri-fintech rail figures in the retrieved text. 6) Daily News Egypt (T5) on the MALR/e-finance 'Agri Egypt' network and the Farmer Card's conversion to a Meeza payment card \u2014 recorded as context in construct_note only; T5 is inadmissible for this prerequisite row and the item is in any case about registered landholders generally. Dead end: no CBE, MALR, Agricultural Bank of Egypt or FRA document reporting smallholder-specific counts of agri-fintech accounts, cards or loans was among the retrieved pages."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 1) FAO STI Portal (T1) entry for Agri Cash [Egypt] \u2014 the only country-specific, admissible-tier record of an operating agri-fintech rail; quoted for the presence rung, but contains no user or disbursement figures and no smallholder disaggregation. 2) Central Bank of Egypt financial inclusion events page (T3) \u2014 confirms farmers are a named inclusion segment with card and wallet issuance drives, but reports no agricultural or smallholder statistic. 3) CBE news release on the Second Financial Inclusion Strategy 2026-2030 (T3) \u2014 gives national inclusion 77.6% and 54.7 million active accounts and names the Ministry of Agriculture as a partner, but nothing on agri-specific rails or smallholders; rejected under the construct rule. 4) CGAP publications on digitising value-chain finance and smallholder DFS (T4) \u2014 global or Zimbabwe/Senegal/Rwanda/Cambodia/Mozambique/Uganda/Tanzania/C\u00f4te d'Ivoire/Nigeria/Bangladesh evidence, no Egypt content; cross-border carry-over refused. 5) UNDP Egypt 'Rural Resilience in Egypt' qualitative study \u2014 Egypt-specific and rural-finance relevant but qualitative, with no agri-fintech rail figures in the retrieved text. 6) Daily News Egypt (T5) on the MALR/e-finance 'Agri Egypt' network and the Farmer Card's conversion to a Meeza payment card \u2014 recorded as context in construct_note only; T5 is inadmissible for this prerequisite row and the item is in any case about registered landholders generally. Dead end: no CBE, MALR, Agricultural Bank of Egypt or FRA document reporting smallholder-specific counts of agri-fintech accounts, cards or loans was among the retrieved pages.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. FAO STI Portal entry is an AI-assisted extraction harvested from Digital Agri Hub; the page itself states 'Record status\tNewly extracted from original record - Not checked, not enriched' and 'AI stamp\tAI-assisted extraction of information', so the underlying claims are vendor-derived rather than independently verified. The indicator names rails FOR SMALLHOLDERS. The quoted evidence describes a fintech platform 'developed for Egyptian farmers' generally; the FAO record lists prospective users spanning medium-size farms, small-micro entrepreneurs, smallholder farms and SMEs, i.e. smallholders are one target segment among several, not the defining population, and no smallholder-disaggregated usage figure is published. The nearest state instrument, the Farmer Card converted into a Meeza payment card under the MALR/e-finance 'Agri Egypt' network, is issued to registered landholders generally (reported only in Daily News Egypt, T5, quoting a database 'representing 9.4 million feddan') and is likewise not smallholder-specific. The Central Bank of Egypt (T3) treats farmers as a financial-inclusion target segment ('\"Farmers Financial Inclusion Day\" in September') and reports 77.6% national financial inclusion and 54.7 million active accounts at end-2025, but those are whole-population figures, not smallholder or agricultural rails. Best available evidence therefore sits on the wrong side of the open definitional question flagged in the indicator census.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "CGAP Egypt smallholder farmers digital financial services report",
+    "World Bank Egypt agriculture finance Farmer Card smallholders digital payments",
+    "Central Bank of Egypt financial inclusion report farmers agricultural card"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://sti-portal.fao.org/innovations/agri-cash-egypt",
+     "title": "Agri Cash [Egypt] | Science, Technology and Innovation (STI) Portal",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.cbe.org.eg/en/financial-inclusion/financial-inclusion-events",
+     "title": "Events",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.cbe.org.eg/en/news-publications/news/2026/02/17/14/44/financial-inclusion-2026",
+     "title": "The Central Bank of Egypt Formulates the Second ...",
+     "published": "2026-02-17T00:00:00.000Z",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.cgap.org/research/publication/digitizing-value-chain-finance-for-smallholder-farmers",
+     "title": "Digitizing Value Chain Finance for Smallholder Farmers - CGAP",
+     "published": "2017-04-20T00:00:00.000Z",
+     "tier": "T4",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.cgap.org/research/publication/designing-digital-financial-services-for-smallholder-families",
+     "title": "",
+     "published": "",
+     "tier": "T4",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.cgap.org/research/publication/serving-smallholder-farmers-recent-developments-in-digital-finance",
+     "title": "",
+     "published": "",
+     "tier": "T4",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.cgap.org/sites/default/files/publications/Executive-Summary-CGAP-National-Surveys-of-Smallholder-Households-Nov-2018_1.pdf",
+     "title": "CGAP National Surveys of",
+     "published": "",
+     "tier": "T4",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.cgap.org/research/publication/smallholder-households-distinct-segments-different-needs",
+     "title": "",
+     "published": "",
+     "tier": "T4",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.undp.org/sites/g/files/zskgke326/files/2023-06/rr_report_undp_egypt.pdf",
+     "title": "Rural Resilience in Egypt: Exploring finance as a tool",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.dailynewsegypt.com/2021/07/14/agriculture-ministry-e-finance-launch-ai-powered-agri-egypt-digital-network/",
+     "title": "Agriculture Ministry, e-finance launch AI-powered \u2018Agri Egypt\u2019 digital network - Dailynewsegypt",
+     "published": "2021-07-14T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "3.10": {
+   "id": "3.10",
+   "name": "Agricultural e-commerce platforms",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Agricultural e-commerce platforms are operating in Egypt: FAO's Science, Technology and Innovation Portal records at least three Egyptian platforms typed as \"E-commerce/online marketplace\" \u2014 Nile (B2B fresh-produce marketplace linking growers to commercial buyers), Bashaier (marketplace linking small-scale horticulture farmers to buyers) and Agri Cash (marketplace plus input financing) \u2014 with Nile described as actively operating and adopted by a growing number of users.",
+    "unit": "",
+    "year": 2025,
+    "source_title": "FAO Science, Technology and Innovation (STI) Portal \u2014 Nile online marketplace (Egypt)",
+    "source_url": "https://sti-portal.fao.org/innovations/nile-online-marketplace",
+    "proposed_tier": "T1",
+    "quote": "Nile is actively operating and has seen adoption by a growing number of users in the fresh produce industry.",
+    "data_quality_flag": "FAO STI Portal innovation profiles are harvested from Digital Agri Hub and enriched by automated AI extraction; the record itself states \"Newly extracted from original record - Not checked, not enriched\", so the descriptive claims are not independently verified by FAO staff",
+    "construct_match": "measures the named construct",
+    "construct_note": "The census asks whether the row counts only farmer-facing platforms or any agri-food value-chain commerce platform. The evidence quoted sits on the narrower, farmer-facing side of that question: Nile connects fresh-produce growers to commercial buyers, Bashaier connects small-scale horticulture farmers to buyers, and Agri Cash sells inputs to farmers and markets their crops. Downstream agri-food value-chain platforms also exist in Egypt but sit on the wider side and are weaker evidence: Cartona is an FMCG B2B retail marketplace serving mom-and-pop grocers (vendor page, T5, statistics not admissible), and IFC documents MaxAB, an FMCG B2B distribution platform for MSME retailers \u2014 neither transacts with farmers. If the definition is ratified as farmer-facing only, the FAO STI Portal entries still support the rung; if ratified as any agri-food commerce platform, the population is larger still.",
+    "presence_rung": "Operating",
+    "quality_evidence": "",
+    "scale_evidence": "",
+    "proposed_level": 3,
+    "rung_argument": "Absent is ruled out: named agricultural e-commerce platforms exist and are documented for Egypt by a T1 publisher (FAO STI Portal entries for Nile, Bashaier and Agri Cash, all typed \"E-commerce/online marketplace\", country of origin and adoption Egypt). Announced is exceeded: these are not press-release intentions \u2014 Bashaier is live on Google Play with an Orange-operated hotline, Nile has a live URL (nile.ag) and Agri Cash is recorded at readiness level \"9. Ready\" with adoption level \"8. Livelihood system\". Adopted is exceeded: the FAO record states Nile is actively operating with adoption by a growing number of users, i.e. transactions are being carried, not merely a platform being stood up. Operating therefore = base level 3.",
+    "negative_finding": "Level 4 was not proposed because no independent or official evaluation, audit or performance report of any Egyptian agricultural e-commerce platform appears in the retrieved pages. The FAO STI Portal narratives are AI-generated restatements of the implementers' own descriptions and are explicitly marked unchecked, so they are design description, not quality evidence. The closest independent analysis, the IFPRI/CGIAR policy note, points the other way \u2014 it reports that Egyptian digital agriculture developers \"struggle between piloting and scaling\" and that \"many Egyptian digital tools remain pilot-stage or region-specific, with very few achieving national scale\" \u2014 but it evaluates the app-developer ecosystem broadly rather than the performance of e-commerce platforms specifically, so it was not used to add a level. Level 5 was not proposed because no reach figures (registered farmers, transaction volumes, governorate coverage) are published for any of these agricultural platforms in the retrieved sources; the only numbers available (Cartona's retail users, suppliers, cities) are vendor self-reported, on a T5 page, and describe FMCG retail rather than agriculture.",
+    "search_trail": "Started with FAO's T1 STI/ATIO Portal innovation records for Egypt, which yielded three explicitly typed E-commerce/online marketplace entries (Agri Cash, Bashaier, Nile) \u2014 used Nile as the quoted anchor because it carries an operating-status sentence. Checked FAO Egypt country office page and FAO Digital Services Portfolio country cases for a government or FAO-run agricultural e-commerce platform in Egypt: the Egypt entry covers only the El Mufeed advisory app (the e-commerce platform Senlouma described there is Senegal, not Egypt, and was excluded under the no-cross-border rule). Checked the World Bank Egypt DECA 2020 for a digital-platforms chapter reference to agricultural marketplaces \u2014 only the table of contents and front matter were retrieved, no agri e-commerce figure. Checked the IFPRI/CGIAR policy note on digital agricultural technology in Egypt for evaluation or scale data \u2014 it names apps (Hodhod, Mahsooly, The Smart Farmer Guide) and characterises the ecosystem as pilot-stage, but gives no platform-level user or transaction figures. Checked IFC's e-commerce report (MaxAB) and the Cartona corporate site for scale numbers: both are downstream FMCG retail rather than farmer-facing, and Cartona is T5 vendor material from which statistics may not be recorded. The Alliance Bioversity-CIAT page on digitalization of Egypt's food crop value chains was blocked by a Cloudflare verification screen and could not be read. No published count or registry of Egyptian agricultural e-commerce platforms was found, so no numeric value is recorded."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 Started with FAO's T1 STI/ATIO Portal innovation records for Egypt, which yielded three explicitly typed E-commerce/online marketplace entries (Agri Cash, Bashaier, Nile) \u2014 used Nile as the quoted anchor because it carries an operating-status sentence. Checked FAO Egypt country office page and FAO Digital Services Portfolio country cases for a government or FAO-run agricultural e-commerce platform in Egypt: the Egypt entry covers only the El Mufeed advisory app (the e-commerce platform Senlouma described there is Senegal, not Egypt, and was excluded under the no-cross-border rule). Checked the World Bank Egypt DECA 2020 for a digital-platforms chapter reference to agricultural marketplaces \u2014 only the table of contents and front matter were retrieved, no agri e-commerce figure. Checked the IFPRI/CGIAR policy note on digital agricultural technology in Egypt for evaluation or scale data \u2014 it names apps (Hodhod, Mahsooly, The Smart Farmer Guide) and characterises the ecosystem as pilot-stage, but gives no platform-level user or transaction figures. Checked IFC's e-commerce report (MaxAB) and the Cartona corporate site for scale numbers: both are downstream FMCG retail rather than farmer-facing, and Cartona is T5 vendor material from which statistics may not be recorded. The Alliance Bioversity-CIAT page on digitalization of Egypt's food crop value chains was blocked by a Cloudflare verification screen and could not be read. No published count or registry of Egyptian agricultural e-commerce platforms was found, so no numeric value is recorded.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. FAO STI Portal innovation profiles are harvested from Digital Agri Hub and enriched by automated AI extraction; the record itself states \"Newly extracted from original record - Not checked, not enriched\", so the descriptive claims are not independently verified by FAO staff. The census asks whether the row counts only farmer-facing platforms or any agri-food value-chain commerce platform. The evidence quoted sits on the narrower, farmer-facing side of that question: Nile connects fresh-produce growers to commercial buyers, Bashaier connects small-scale horticulture farmers to buyers, and Agri Cash sells inputs to farmers and markets their crops. Downstream agri-food value-chain platforms also exist in Egypt but sit on the wider side and are weaker evidence: Cartona is an FMCG B2B retail marketplace serving mom-and-pop grocers (vendor page, T5, statistics not admissible), and IFC documents MaxAB, an FMCG B2B distribution platform for MSME retailers \u2014 neither transacts with farmers. If the definition is ratified as farmer-facing only, the FAO STI Portal entries still support the rung; if ratified as any agri-food commerce platform, the population is larger still.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "Egypt agricultural e-commerce platform farmers B2B Cartona OneOrder FAO report",
+    "FAO Egypt digital agriculture e-commerce platforms agri-food value chain assessment",
+    "\"e-commerce\" agriculture Egypt platforms report World Bank OR ITC OR UNCTAD digital agri-food"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://sti-portal.fao.org/innovations/agri-cash-egypt",
+     "title": "Agri Cash [Egypt] | Science, Technology and Innovation (STI) Portal",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://sti-portal.fao.org/innovations/kef-bashaier-egypt",
+     "title": "KEF - Bashaier (Egypt) | Science, Technology and Innovation (STI) Portal",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://sti-portal.fao.org/innovations/nile-online-marketplace",
+     "title": "Nile online marketplace | Science, Technology and Innovation (STI) Portal",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/egypt/our-office/the-fao-digital-app-of---el-mufeed-in-food-and-agriculture/en",
+     "title": "The FAO digital app of \" El-Mufeed in Food and Agriculture\"",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/digital-services/country-cases/en",
+     "title": "Country Cases | FAO Digital Services Portfolio | Food and Agriculture Organization of the United Nations",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://thedocs.worldbank.org/en/doc/b7a35868206ace761909f9bd2daa1f91-0200022021/original/Digital-Economy-Country-Assessment-May-26-Final.pdf",
+     "title": "Egypt Digital Economy Country Assessment (DECA) 2020",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://cgspace.cgiar.org/server/api/core/bitstreams/d4a33acc-564a-4e4c-a413-81ba3ebd4d90/content",
+     "title": "[PDF] Digital Agricultural Technology in Egypt: - CGSpace",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.ifc.org/content/dam/ifc/doc/2023-delta/inclusive-distribution-and-retail-egypt.pdf",
+     "title": "Inclusive Distribution and Retail: Women Entrepreneurs using E-Commerce in Egypt",
+     "published": "",
+     "tier": "T4",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://cartona.com/",
+     "title": "Egypt\u2019s fastest-growing B2B E-commerce marketplace - Cartona",
+     "published": "2021-05-28T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://alliancebioversityciat.org/publications-data/digitalization-food-crop-value-chains-advancing-digital-integration-egypts-key",
+     "title": "Digitalization of food crop value chains: Advancing digital integration in Egypt\u2019s key food crop value chains | Alliance Bioversity International - CIAT",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "3.9": {
+   "id": "3.9",
+   "name": "Digital advisory platforms at scale",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt, Jordan, Senegal rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Egypt has an operating national digital agricultural advisory platform \u2014 the FAO Digital Services Portfolio (DSP), rolled out with the Ministry of Agriculture and Land Reclamation since 2019 and carrying Egypt-specific advisory content (date and citrus production, COVID-19 food safety, a farmer-to-farmer forum) \u2014 but no published figure for registered, active or reached farmers was found, so operation is documented while 'at scale' is not.",
+    "unit": "",
+    "year": 2019,
+    "source_title": "FAO, Agro-informatics \u2014 Digital Services Portfolio (DSP) project page",
+    "source_url": "https://www.fao.org/agroinformatics/projects/projects-detail/digital-services-portfolio-(dsp)/en",
+    "proposed_tier": "T1",
+    "quote": "Advisory services include also now tailored advisories on: Post harvest practices and processes (Jordan), Capture Fishery, Aquaculture,  date and citrus production (Egypt), and COVID-19 food safety advisories (Egypt, Jordan, Senegal), as well a farmer to farmer forum (Egypt, Jordan) that provides the farmers with the ability to post questions and receive expert advice from governmentally appointed agriculture experts, post success stories, upload photos and videos and receive feedback from other farmers.",
+    "data_quality_flag": "Implementer's own project page; no independent verification of live service status or usage",
+    "construct_match": "measures the named construct",
+    "construct_note": "The evidence establishes existence and ongoing operation of digital advisory platforms in Egypt, but not the 'at scale' half of the indicator name, which the assessment's own census records as having no ratified threshold. None of the retrieved pages carries any user, subscriber or farmer-reached count for the FAO DSP in Egypt or for the two Egyptian advisory/marketing apps studied by IFPRI/WUR. The one substantive performance statement available \u2014 the peer-reviewed RCT (Abdelaziz & Abay) \u2014 points the other way, stating that 'In Egypt, the focus of this study, uptake of these technologies remains low despite the increasing and considerable investment and availability of digital agricultural tools', i.e. availability without demonstrated scale. That paper evaluates a digital-literacy training intervention, not the platforms' own performance, so it is recorded here as context rather than as quality evidence for the platform.",
+    "presence_rung": "Operating",
+    "quality_evidence": "",
+    "scale_evidence": "",
+    "proposed_level": 3,
+    "rung_argument": "Absent is ruled out: a named digital advisory instrument for Egypt exists in T1 sources. Announced is exceeded: the FAO/MALR digital extension model was not merely announced in 2019 but was built out with country-specific content. Adopted is exceeded: the DSP is listed by FAO as an ongoing project rolled out to Egypt with government-appointed agriculture experts answering farmer questions, and with Egypt-specific advisory themes (date and citrus, COVID-19 food safety, farmer-to-farmer forum), which is delivery rather than mere institutional adoption \u2014 hence Operating, base level 3. Neither additive field is filled, so the level stays at 3.",
+    "negative_finding": "Level 4 was not proposed because no independent or official evaluation, audit, performance report or service standard for the Egypt DSP (or any other Egyptian advisory platform) appears in the retrieved pages \u2014 only FAO's own project description, which is design, not quality. Level 5 was not proposed because no reach figures of any kind (registered users, active users, farmers reached, governorate coverage) are published in these pages for Egypt; the only performance-adjacent statement, from the peer-reviewed RCT, says uptake of such tools in Egypt remains low, which is the opposite of demonstrated scale.",
+    "search_trail": "Started with FAO country and corporate sources: FAO Egypt 2019 launch news on the digital agricultural extension model with MALR (announcement-level, four thematic areas, ToT plans, no users); FAO e-Agriculture reprint of the same launch (duplicate, no figures); FAO Digital Services Portfolio 'About' page (confirms Egypt roll-out, no country figures); FAO Agro-informatics DSP project page (quoted \u2014 confirms Egypt-specific advisory services and farmer-to-farmer forum, status Ongoing, 'Impact' field blank, no user counts). Checked FAO STI Portal entry on GeoAgro-Misr (ICARDA/CGIAR harvested, AI-enriched record; its own adoption narrative states it cannot elaborate on usage, so no reach figure). AFRAS Egypt country brief on fao.org returned a Cloudflare bot-verification page, not content \u2014 a dead end. World Bank documents retrieved were a 1997 Egypt extension project information document and a 1991 MENA regional extension paper, both pre-digital and one not country-specific. GSMA AgriTech Accelerator report has scaling figures but its cohort and implementation countries are Ghana, Senegal, Nigeria, Kenya, Myanmar, Tunisia etc., not Egypt \u2014 not carried across the border. The IFPRI/WUR Food Policy RCT is the only Egypt-specific empirical piece; it concerns two Egyptian apps but reports treatment effects on uptake, not platform user totals, and states Egyptian uptake remains low. Conclusion: operation established, scale not published in any retrieved page."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 Started with FAO country and corporate sources: FAO Egypt 2019 launch news on the digital agricultural extension model with MALR (announcement-level, four thematic areas, ToT plans, no users); FAO e-Agriculture reprint of the same launch (duplicate, no figures); FAO Digital Services Portfolio 'About' page (confirms Egypt roll-out, no country figures); FAO Agro-informatics DSP project page (quoted \u2014 confirms Egypt-specific advisory services and farmer-to-farmer forum, status Ongoing, 'Impact' field blank, no user counts). Checked FAO STI Portal entry on GeoAgro-Misr (ICARDA/CGIAR harvested, AI-enriched record; its own adoption narrative states it cannot elaborate on usage, so no reach figure). AFRAS Egypt country brief on fao.org returned a Cloudflare bot-verification page, not content \u2014 a dead end. World Bank documents retrieved were a 1997 Egypt extension project information document and a 1991 MENA regional extension paper, both pre-digital and one not country-specific. GSMA AgriTech Accelerator report has scaling figures but its cohort and implementation countries are Ghana, Senegal, Nigeria, Kenya, Myanmar, Tunisia etc., not Egypt \u2014 not carried across the border. The IFPRI/WUR Food Policy RCT is the only Egypt-specific empirical piece; it concerns two Egyptian apps but reports treatment effects on uptake, not platform user totals, and states Egyptian uptake remains low. Conclusion: operation established, scale not published in any retrieved page.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt, Jordan, Senegal rather than to Egypt, Arab Rep. Implementer's own project page; no independent verification of live service status or usage. The evidence establishes existence and ongoing operation of digital advisory platforms in Egypt, but not the 'at scale' half of the indicator name, which the assessment's own census records as having no ratified threshold. None of the retrieved pages carries any user, subscriber or farmer-reached count for the FAO DSP in Egypt or for the two Egyptian advisory/marketing apps studied by IFPRI/WUR. The one substantive performance statement available \u2014 the peer-reviewed RCT (Abdelaziz & Abay) \u2014 points the other way, stating that 'In Egypt, the focus of this study, uptake of these technologies remains low despite the increasing and considerable investment and availability of digital agricultural tools', i.e. availability without demonstrated scale. That paper evaluates a digital-literacy training intervention, not the platforms' own performance, so it is recorded here as context rather than as quality evidence for the platform.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "site:fao.org Egypt digital agriculture advisory e-extension platform farmers",
+    "site:documents.worldbank.org Egypt digital agriculture advisory services farmers registered users",
+    "GSMA AgriTech OR IFPRI Egypt digital advisory platform farmers users report"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://sti-portal.fao.org/innovations/egypt-partnership-advancing-digital-agricultural-extension-strengthen-resilience",
+     "title": "Egypt Partnership Advancing Digital Agricultural Extension to ...",
+     "published": "2026-04-14T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/egypt/news/detail/FAO-and-MALR-launch-a-Digital-Agriculture-initiative-in-Egypt/",
+     "title": "FAO and MALR launch a Digital Agriculture initiative in Egypt",
+     "published": "2019-03-07T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/e-agriculture/news/egypt-turns-fao-digital-transformation-agriculture",
+     "title": "Egypt turns to FAO for digital transformation in agriculture | e-Agriculture | Food and Agriculture Organization of the United Nations",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/digital-services/about/en",
+     "title": "About | FAO Digital Services Portfolio | Food and Agriculture Organization of the United Nations",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/agroinformatics/projects/projects-detail/digital-services-portfolio-(dsp)/en",
+     "title": "Digital Services Portfolio (DSP)",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/family-farming/detail/en/c/1750447/",
+     "title": "Arab Forum For Rural Advisory Services (AFRAS) Country brief - Egypt\u00a0| FAO",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/237771468248724472",
+     "title": "Egypt - Agricultural Extension and Marketing Assistance Project",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/364901468760237001",
+     "title": "From extension to agricultural information management : issues and recommendations from World Bank experience in the Middle East and North Africa",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-for-development/wp-content/uploads/2025/09/AgriTech-Accelerator-Lessons-From-Scaling-Digital-Agriculture-Services.pdf",
+     "title": "AgriTech Accelerator: Lessons From Scaling Digital Agriculture Services",
+     "published": "",
+     "tier": "T4",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://edepot.wur.nl/716640",
+     "title": "Digital literacy training to promote diffusion of digital agricultural tools to smallholder farmers: evidence from a randomized intervention in Egypt",
      "published": "",
      "tier": "T5",
      "surfaced_by": "exa",
