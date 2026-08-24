@@ -90,37 +90,70 @@ Neither Nascent nor Transformative was reached by any pillar in either country.
 
 ### The options
 
-**(a) Keep the edges.** Continuity holds and both worked examples stand unchanged. The
-band name stays out of alignment with the level it is named for, and the generosity
-gradient stays.
+The boundaries can sit in three places: between the levels at arbitrary fifths of the
+range (the current cut), on the integers, or halfway between the integers. Putting them
+on the integers is the natural instinct, since the levels are the maturity scale, but it
+forces a choice: a boundary at exactly 2.0 has to send a mean of 2.0 either up or down,
+and the two answers are the two extremes.
 
-**(b) Recut to 1.5 / 2.5 / 3.5 / 4.5.** The rule becomes sayable in one sentence: the band
-is the level the pillar rounds to. Every level lands at the centre of its own band, the
-generosity gradient disappears, and Transformative comes to mean nearer 5 than 4. The end
-bands are half-width, which is correct, since there is no data below 1 or above 5. Cost:
-three of the fourteen pillar bands change, all Nigerian, all upward, and Nigeria's
-assessment is already with the reviewer.
+| | Tolerance: how far below level *k* a pillar may sit and still claim band *k* | Nascent width | Transformative width |
+|---|---|---|---|
+| **A** current, equal fifths, 1.8 / 2.6 / 3.4 / 4.2 | 0.2, 0.4, 0.6, 0.8 — rising | 0.8 | 0.8 |
+| **B** round to nearest level, 1.5 / 2.5 / 3.5 / 4.5 | 0.5, flat | 0.5 | 0.5 |
+| **C** ceiling, bands (*k*-1, *k*] | 1.0, flat | **0** | 1.0 |
+| **D** floor, bands [*k*, *k*+1) | 0, flat | 1.0 | **0** |
 
-**(c) Recut to fit the observed level distribution.** Rejected. The only distribution
+All four agree on the pure case: a pillar whose rows are all at level *k* reads as band
+*k* under every scheme. That test does not separate them. Tolerance does.
+
+**C is the most generous scheme available.** A pillar averaging 2.01 reads Established,
+the band named for level 3, because any progress past level 2 counts as having arrived at
+level 3. Nascent collapses to the single point 1.0: with roughly seven rows in a pillar,
+one row above the floor moves the whole pillar to Emerging, so Nascent would in practice
+never be used and the five-band scale would become four.
+
+**D is the strictest, with the mirror flaw.** Transformative becomes unreachable except at
+a flat 5.0, and a pillar averaging 3.99 reads Established.
+
+On the fourteen real pillar means both integer cuts destroy the discrimination, in
+opposite directions. Under C nothing reads below Established: Nigeria's weakest pillar,
+A1 at 2.25, reads Established, and five pillars read Advanced. Under D nothing reads above
+Established: Egypt's strongest pillar, C1 at 3.80, reads Established as well.
+
+| Scheme | How the fourteen means distribute |
+|---|---|
+| A | Emerging 4 · Established 9 · Advanced 1 |
+| B | Emerging 1 · Established 12 · Advanced 1 |
+| C | Established 9 · Advanced 5 |
+| D | Emerging 8 · Established 6 |
+
+**E. Recut to fit the observed level distribution.** Rejected. The only distribution
 available is 93 rows from two countries assessed by one team, and fitting to it would
 encode those two countries into the instrument.
 
 ### Recommendation
 
-**(b), together with publishing the margin.**
+**B, together with publishing the margin.**
 
-An earlier draft of this note recommended keeping the edges on the ground that equal
-fifths was the only distribution-free cut available. That was wrong. Round-to-nearest is
-equally distribution-free and better justified, because it ties each band to the maturity
-level whose name it carries rather than to an arbitrary fifth of the range. The question
-"why 0.8" has no answer in the record, and an inherited number with no rationale is a weak
-thing to leave in an instrument whose whole claim is that every figure is traceable.
+An earlier draft of this note recommended keeping the current edges on the ground that
+equal fifths was the only distribution-free cut available. That was wrong: every scheme in
+the table is distribution-free. The question is where the boundary belongs relative to the
+levels, and the current cut answers it worst. Its tolerance rises from 0.2 at the bottom
+to 0.8 at the top, so the higher the band the further below its namesake level a pillar
+may sit, and no principled alternative has that property.
 
-The three bands that move are Nigeria C4 at 2.50, E1 at 2.56, and C2 at 2.57. All three
-are inside 0.07 of a boundary under either cut, so what changes is which side of a
-coin-toss they fall, not the reading of the country. That is the argument for doing both
-things at once: recut so the band means what it says, and print the margin so a reader can
-see when a band rests on 0.03.
+Anchoring the bands to the levels is right. Anchoring them *on* the integers is what
+cannot be done without choosing C or D, and each degenerates at one end: C erases Nascent,
+D erases Transformative. Halfway between the integers is the symmetric resolution of the
+same instinct. Every level then sits at the centre of the band that carries its name,
+tolerance is 0.5 in both directions, and the rule states itself in one sentence: the band
+is the level the pillar rounds to.
+
+The three bands that move under B are Nigeria C4 at 2.50, E1 at 2.56, and C2 at 2.57. All
+three sit within 0.07 of a boundary under either cut, so what changes is which side of a
+coin-toss they fall on, not the reading of the country. That is the argument for doing
+both things at once: recut so the band means what it says, and print the margin so a
+reader can see when a band rests on 0.03.
 
 *Dependency.* If 13.5 moves a material number of rows, the means move with them and the
 three borderline pillars should be re-read before the recut is published.
