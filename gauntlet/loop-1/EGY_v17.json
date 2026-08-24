@@ -1488,7 +1488,6 @@
   "ADV": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.27,
    "prereqs": [
     [
      "5.5",
@@ -1501,13 +1500,14 @@
     "outcome": 3,
     "enabler": 27
    },
-   "mean_enabler": 3.3,
+   "mean_readiness": 3.3,
+   "mean_need": null,
+   "mean_outcome": 3.0,
    "mean_driven": false
   },
   "SMF": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.12,
    "prereqs": [],
    "n_bearing": 26,
    "basis": {
@@ -1515,13 +1515,14 @@
     "outcome": 2,
     "enabler": 24
    },
-   "mean_enabler": 3.21,
+   "mean_readiness": 3.21,
+   "mean_need": null,
+   "mean_outcome": 2.0,
    "mean_driven": false
   },
   "MKT": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.13,
    "prereqs": [],
    "n_bearing": 23,
    "basis": {
@@ -1529,13 +1530,14 @@
     "outcome": 2,
     "enabler": 20
    },
-   "mean_enabler": 3.35,
+   "mean_readiness": 3.35,
+   "mean_need": 1.0,
+   "mean_outcome": 2.0,
    "mean_driven": false
   },
   "SCM": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.22,
    "prereqs": [],
    "n_bearing": 23,
    "basis": {
@@ -1543,13 +1545,14 @@
     "outcome": 2,
     "enabler": 21
    },
-   "mean_enabler": 3.33,
+   "mean_readiness": 3.33,
+   "mean_need": null,
+   "mean_outcome": 2.0,
    "mean_driven": false
   },
   "FIN": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.03,
    "prereqs": [
     [
      "3.3",
@@ -1570,13 +1573,14 @@
     "outcome": 4,
     "enabler": 24
    },
-   "mean_enabler": 3.25,
+   "mean_readiness": 3.25,
+   "mean_need": 1.0,
+   "mean_outcome": 2.25,
    "mean_driven": false
   },
   "AGI": {
    "status": "Blocked",
    "why": "3.11, 4.5, 7.12",
-   "mean": 3.17,
    "prereqs": [
     [
      "3.3",
@@ -1601,7 +1605,9 @@
     "outcome": 2,
     "enabler": 27
    },
-   "mean_enabler": 3.26,
+   "mean_readiness": 3.26,
+   "mean_need": null,
+   "mean_outcome": 2.0,
    "mean_driven": false
   }
  },

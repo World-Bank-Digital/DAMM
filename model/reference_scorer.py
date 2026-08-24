@@ -123,24 +123,30 @@ class Scorer:
                     and (uc in v["kind"] or (v["kind"] == "UC:AI" and uc == "AGI"))]
             bear = [i for i, d in self.ind.items()
                     if (uc in d["use_cases"] or "ALL" in d["tags"]) and rows[i]["level"] is not None]
-            lv = [rows[i]["level"] for i in bear]
-            mean = r2(sum(lv) / len(lv)) if lv else None
-            enab = [rows[i]["level"] for i in bear if self.ind[i]["pillar"] not in ("A1", "O1")]
+            # Ruling 13.12: need, readiness and outcome are separated, and only the
+            # readiness mean decides the column.
+            def _rm(want):
+                v = [rows[i]["level"] for i in bear
+                     if {"A1": "need", "O1": "outcome"}.get(self.ind[i]["pillar"],
+                                                            "enabler") == want]
+                return r2(sum(v) / len(v)) if v else None
+            mean_readiness, mean_need, mean_outcome = _rm("enabler"), _rm("need"), _rm("outcome")
 
             if blk:                                        st, why = "Blocked", "Universal: " + ", ".join(blk)
             elif any(s == "Absent" for _, s in pres):      st, why = "Blocked", ", ".join(i for i, s in pres if s == "Absent")
             elif unv:                                      st, why = "Unverified", "universal unverified: " + ", ".join(unv)
             elif any(s == "Unverified" for _, s in pres):  st, why = "Unverified", ", ".join(i for i, s in pres if s == "Unverified")
-            elif any("narrow" in s for _, s in pres) or (mean and mean < self.cfg["readiness_threshold"]):
+            elif any("narrow" in s for _, s in pres) or (mean_readiness and mean_readiness < self.cfg["readiness_threshold"]):
                 st = "Partial"; why = ", ".join(i for i, s in pres if "narrow" in s) or "thin enablers"
             elif nrw:                                      st, why = "Partial", "universal narrow: " + ", ".join(nrw)
             else:                                          st, why = "Ready", ""
 
             out["matrix"][uc] = {
-                "status": st, "why": why, "mean": mean,
-                "mean_enabler": r2(sum(enab) / len(enab)) if enab else None,
+                "status": st, "why": why,
+                "mean_readiness": mean_readiness,
+                "mean_need": mean_need, "mean_outcome": mean_outcome,
                 "n_bearing": len(bear),
-            }
+}
         out["counts"] = {c: sum(1 for v in rows.values() if v["cls"] == c)
                          for c in ("Measured", "Documented", "Judged", "Gap")}
         out["rated"] = sum(1 for v in rows.values() if v["level"] is not None)

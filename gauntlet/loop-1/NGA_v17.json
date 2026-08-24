@@ -1488,7 +1488,6 @@
   "ADV": {
    "status": "Partial",
    "why": "universal narrow: 2.9",
-   "mean": 2.72,
    "prereqs": [
     [
      "5.5",
@@ -1501,13 +1500,14 @@
     "outcome": 1,
     "enabler": 28
    },
-   "mean_enabler": 2.71,
+   "mean_readiness": 2.71,
+   "mean_need": null,
+   "mean_outcome": 3.0,
    "mean_driven": false
   },
   "SMF": {
    "status": "Partial",
    "why": "universal narrow: 2.9",
-   "mean": 2.69,
    "prereqs": [],
    "n_bearing": 26,
    "basis": {
@@ -1515,13 +1515,14 @@
     "outcome": 1,
     "enabler": 25
    },
-   "mean_enabler": 2.68,
+   "mean_readiness": 2.68,
+   "mean_need": null,
+   "mean_outcome": 3.0,
    "mean_driven": false
   },
   "MKT": {
    "status": "Partial",
    "why": "universal narrow: 2.9",
-   "mean": 2.58,
    "prereqs": [],
    "n_bearing": 24,
    "basis": {
@@ -1529,13 +1530,14 @@
     "outcome": 1,
     "enabler": 22
    },
-   "mean_enabler": 2.64,
+   "mean_readiness": 2.64,
+   "mean_need": 1.0,
+   "mean_outcome": 3.0,
    "mean_driven": false
   },
   "SCM": {
    "status": "Partial",
    "why": "universal narrow: 2.9",
-   "mean": 2.63,
    "prereqs": [],
    "n_bearing": 24,
    "basis": {
@@ -1543,13 +1545,14 @@
     "outcome": 1,
     "enabler": 23
    },
-   "mean_enabler": 2.61,
+   "mean_readiness": 2.61,
+   "mean_need": null,
+   "mean_outcome": 3.0,
    "mean_driven": false
   },
   "FIN": {
    "status": "Partial",
    "why": "3.3",
-   "mean": 2.5,
    "prereqs": [
     [
      "3.3",
@@ -1570,13 +1573,14 @@
     "outcome": 3,
     "enabler": 26
    },
-   "mean_enabler": 2.5,
+   "mean_readiness": 2.5,
+   "mean_need": 1.0,
+   "mean_outcome": 3.0,
    "mean_driven": false
   },
   "AGI": {
    "status": "Blocked",
    "why": "3.11, 4.5",
-   "mean": 2.59,
    "prereqs": [
     [
      "3.3",
@@ -1601,7 +1605,9 @@
     "outcome": 1,
     "enabler": 28
    },
-   "mean_enabler": 2.57,
+   "mean_readiness": 2.57,
+   "mean_need": null,
+   "mean_outcome": 3.0,
    "mean_driven": false
   }
  },

@@ -499,7 +499,7 @@ def sheet_scoring(wb, sheet_name, country, rows):
                          f'IF({lvl_}>=3,"Present",IF({lvl_}=2,"Present (narrow)","Absent")))', F_BOLD, border=True)
 
     put(ws, f"A{UC_ROWS-2}", "Use-case readiness  (feeds Playbook Step 2B — Digital Readiness)", F_SECT, FILL_SECT)
-    for i, h in enumerate(["Use case area", "Mean of bearing indicators", "Status", "Blocking / limiting factor"]):
+    for i, h in enumerate(["Use case area", "Mean of enabling indicators", "Status", "Blocking / limiting factor"]):
         put(ws, f"{col(1+i)}{UC_ROWS-1}", h, F_HEAD, FILL_HEAD, border=True)
 
     def anyeq(pids, state):
@@ -509,7 +509,12 @@ def sheet_scoring(wb, sheet_name, country, rows):
         r = UC_ROWS + i
         spec = UC_SPECIFIC[code]
         put(ws, f"A{r}", label, F_BOLD, border=True)
-        put(ws, f"B{r}", f'=IFERROR(ROUND(AVERAGEIF({col(22+i)}${R0}:{col(22+i)}${RN},1,$T${R0}:$T${RN}),2),"")',
+        # Ruling 13.12: readiness averages ENABLING rows only. A1 rows measure the
+        # severity of the problem and O1 rows measure achieved outcomes; folding either
+        # into the column made a country with a worse problem read as less ready.
+        put(ws, f"B{r}", f'=IFERROR(ROUND(AVERAGEIFS($T${R0}:$T${RN},'
+                         f'{col(22+i)}${R0}:{col(22+i)}${RN},1,'
+                         f'$C${R0}:$C${RN},"<>A1",$C${R0}:$C${RN},"<>O1"),2),"")',
             F_BODY, border=True)
         # precedence mirrors the engine: a KNOWN block outranks an UNKNOWN prerequisite
         blocked = anyeq(UNIVERSAL + spec, "Absent")

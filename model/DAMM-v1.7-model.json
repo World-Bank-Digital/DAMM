@@ -1914,7 +1914,8 @@
       "title": "A1 additions (cereal import dependency, irrigation)",
       "governs": [
         "candidates"
-      ]
+      ],
+      "ruled": "Hold A1 at ten indicators. Both candidates stay carried and unscored, outside every mean, every prerequisite and the readiness matrix."
     },
     {
       "id": "13.3",
@@ -1977,11 +1978,13 @@
     {
       "id": "13.11",
       "title": "Bhutan out of scope (statement)",
-      "governs": []
+      "governs": [],
+      "ruled": "Confirmed. Bhutan remains a design source and no assessment ships."
     },
     {
       "id": "13.12",
       "title": "Whether need and outcome indicators belong in a readiness mean",
+      "ruled": "Separate the three roles. A use-case column reads on its enabling indicators alone; need and outcome are reported beside it and never averaged into it.",
       "governs": [
         "indicators[].use_cases",
         "config.readiness_threshold",

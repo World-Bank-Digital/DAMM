@@ -162,26 +162,36 @@ def run(country, D, refyear=2026):
     for uc in UCS:
         pres=[(i,out['prereq'][i]['status']) for i in out['prereq'] if out['prereq'][i]['kind'].startswith('UC:') and (uc in out['prereq'][i]['kind'] or (out['prereq'][i]['kind']=='UC:AI' and uc=='AGI'))]  # loop-1 ruling: UC:AI binds AGI pending spec definition of 'all AI-enabled services' (D6)
         bearing=[i for i in MODEL if (uc in MODEL[i]['uc'] or 'ALL' in MODEL[i]['uc']) and out['indicators'][i]['level'] is not None]
-        lv=[out['indicators'][i]['level'] for i in bearing]
-        mean=r2(sum(lv)/len(lv)) if lv else None
         # The bearing set mixes three roles: A1 rows measure the SEVERITY OF THE PROBLEM, O1 rows
         # measure ACHIEVED OUTCOMES, and the rest measure ENABLING READINESS. Averaging all three
         # into one readiness number is an open design question (spec 13.12), so the split and the
         # enabler-only mean are published beside the mean rather than silently folded into it.
+        # Ruling 13.12: the three roles are separated. A1 rows measure the SEVERITY OF THE
+        # PROBLEM, O1 rows measure ACHIEVED OUTCOMES, and only the rest measure ENABLING
+        # READINESS. Averaging all three produced the inversion the specification records:
+        # a country with a worse agricultural problem read as less digitally ready. Only
+        # the readiness mean decides the column; need and outcome are reported beside it
+        # and never scored into it.
         role={'A1':'need','O1':'outcome'}
         basis={'need':0,'outcome':0,'enabler':0}
         for i in bearing: basis[role.get(MODEL[i]['pillar'],'enabler')]+=1
-        enab=[out['indicators'][i]['level'] for i in bearing if MODEL[i]['pillar'] not in ('A1','O1')]
-        mean_enabler=r2(sum(enab)/len(enab)) if enab else None
+        def _rolemean(want):
+            v=[out['indicators'][i]['level'] for i in bearing
+               if role.get(MODEL[i]['pillar'],'enabler')==want]
+            return r2(sum(v)/len(v)) if v else None
+        mean_readiness=_rolemean('enabler')
+        mean_need=_rolemean('need')
+        mean_outcome=_rolemean('outcome')
         if uni_block: st='Blocked'; why='Universal: '+', '.join(uni_block)
         elif any(s=='Absent' for _,s in pres): st='Blocked'; why=', '.join(i for i,s in pres if s=='Absent')
         elif uni_unver: st='Unverified'; why='universal unverified: '+', '.join(uni_unver)
         elif any(s=='Unverified' for _,s in pres): st='Unverified'; why=', '.join(i for i,s in pres if s=='Unverified')
-        elif any(s=='Present (narrow)' for _,s in pres) or (mean and mean<READINESS_THRESHOLD): st='Partial'; why=', '.join(i for i,s in pres if 'narrow' in s) or 'thin enablers'
+        elif any(s=='Present (narrow)' for _,s in pres) or (mean_readiness and mean_readiness<READINESS_THRESHOLD): st='Partial'; why=', '.join(i for i,s in pres if 'narrow' in s) or 'thin enablers'
         elif uni_narrow: st='Partial'; why='universal narrow: '+', '.join(uni_narrow)
         else: st='Ready'; why=''
-        out['matrix'][uc]=dict(status=st, why=why, mean=mean, prereqs=pres,
-                               n_bearing=len(bearing), basis=basis, mean_enabler=mean_enabler,
+        out['matrix'][uc]=dict(status=st, why=why, prereqs=pres, n_bearing=len(bearing),
+                               basis=basis, mean_readiness=mean_readiness,
+                               mean_need=mean_need, mean_outcome=mean_outcome,
                                mean_driven=(st=='Partial' and why=='thin enablers'))
     rated=[(i,out['indicators'][i]) for i in MODEL if out['indicators'][i]['level'] is not None]
     out['constraints']=[dict(id=i,name=r['name'],level=r['level'],pillar=r['pillar'],prereq=bool(r['prereq'])) for i,r in sorted(rated,key=lambda x:(x[1]['level'],x[0]))[:12]]

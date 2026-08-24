@@ -53,7 +53,8 @@ for iso, name in (("EGY", "Egypt"), ("NGA", "Nigeria")):
 
     for uc, e in eng["matrix"].items():
         g = got["matrix"][uc]
-        for k in ("status", "why", "mean", "mean_enabler", "n_bearing"):
+        for k in ("status", "why", "mean_readiness", "mean_need", "mean_outcome",
+                  "n_bearing"):
             eq(f"{name} matrix {uc}.{k}", g[k], e[k])
 
 # --- structural invariants the schema declares, asserted directly (no schema engine here:

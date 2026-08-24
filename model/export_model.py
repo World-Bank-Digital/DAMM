@@ -277,7 +277,8 @@ OPEN_DECISIONS = [
     {"id": "13.1",  "title": "Band edges", "governs": ["bands"],
      "ruled": "Recut to midpoint boundaries. The band is the level the pillar mean rounds "
               "to, and a signed margin from that level is printed beside it."},
-    {"id": "13.2",  "title": "A1 additions (cereal import dependency, irrigation)", "governs": ["candidates"]},
+    {"id": "13.2",  "title": "A1 additions (cereal import dependency, irrigation)", "governs": ["candidates"],
+     "ruled": "Hold A1 at ten indicators. Both candidates stay carried and unscored, outside every mean, every prerequisite and the readiness matrix."},
     {"id": "13.3",  "title": "Per-use-case prerequisite mapping", "governs": ["indicators[].prerequisite", "binding_rules"]},
     {"id": "13.4",  "title": "The three binding rules in force", "governs": ["binding_rules"]},
     {"id": "13.5",  "title": "Indicator definitions — the largest item",
@@ -288,8 +289,10 @@ OPEN_DECISIONS = [
     {"id": "13.8",  "title": "Source-tier lookup and register field set", "governs": ["source_tiers"]},
     {"id": "13.9",  "title": "QC gate scope", "governs": ["process, not model"]},
     {"id": "13.10", "title": "Practice Library schema", "governs": ["companion schema"]},
-    {"id": "13.11", "title": "Bhutan out of scope (statement)", "governs": []},
+    {"id": "13.11", "title": "Bhutan out of scope (statement)", "governs": [],
+     "ruled": "Confirmed. Bhutan remains a design source and no assessment ships."},
     {"id": "13.12", "title": "Whether need and outcome indicators belong in a readiness mean",
+     "ruled": "Separate the three roles. A use-case column reads on its enabling indicators alone; need and outcome are reported beside it and never averaged into it.",
      "governs": ["indicators[].use_cases", "config.readiness_threshold", "binding_rules.thin-enablers"]},
 ]
 

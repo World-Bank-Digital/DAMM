@@ -194,7 +194,7 @@ def pillar_chart():
         weak = pd["weak"]
         cls = "bar weakbar" if weak else "bar"
         s.append(f'<rect x="{x0}" y="{y+4}" width="{bw:.1f}" height="17" rx="3" class="{cls}">'
-                 f'<title>{esc(PILLAR_NAMES[p])}: mean {pd["mean"]:.2f} — {pd["band"]}{f" {pd[chr(34)+chr(34)]}" if False else ""}{" (weak evidence)" if weak else ""}; '
+                 f'<title>{esc(PILLAR_NAMES[p])}: mean {pd["mean"]:.2f} — {pd["band"]}{f" {pd["margin"]:+.2f}" if pd.get("margin") is not None else ""}{" (weak evidence)" if weak else ""}; '
                  f'averaged over {pd["rated"]} of {pd["n"]} indicators'
                  f'{(", " + str(pd["held"]) + " level(s) withheld pending ratification") if pd["held"] else ""}; '
                  f'{pd["comp"].get("Measured",0)}M/{pd["comp"].get("Documented",0)}D/{pd["comp"].get("Judged",0)}J/{pd["comp"].get("Gap",0)}G</title></rect>')
@@ -420,21 +420,22 @@ EVID_NOTE = ("Evidence composition per pillar; the bar shows what class of evide
                 if _weak else "No pillar carries the weak-evidence rendering: in every pillar, the levelled measured and documented rows outnumber judged rows, recorded gaps and withheld levels."))
 
 _mdriven = [(u, m) for u, m in d["matrix"].items() if m.get("mean_driven")]
+_roles = [m for m in d["matrix"].values() if m["basis"]["need"] or m["basis"]["outcome"]]
+# Ruling 13.12: the three roles are separated and only the readiness mean decides a
+# column. This note used to carry the open question; it now states the rule.
 MATRIX_NOTE = ("Cells: Ready / Partial / Blocked (named blocker) / Unverified. Prerequisites bind on presence "
                "only \u2014 a fact, never an opinion. Delivery-risk flags sit on the cover and block nothing. "
-               "The bearing set for a column is every indicator mapped to it, which includes agricultural-need "
-               "and outcome indicators as well as enabling ones; both means are shown."
+               "A column reads on its ENABLING indicators alone. Indicators of agricultural need measure the "
+               "severity of the problem and outcome indicators measure what has already been achieved; both "
+               "are reported beside the column and neither is averaged into it, because a country with a worse "
+               "agricultural problem must not thereby read as less digitally ready."
                + ("".join(f' {UC_NAMES[u]} is the one column whose reading turns on the mean rather than on a '
-                          f'prerequisite: {m["basis"]["need"]} need indicator{"" if m["basis"]["need"]==1 else "s"} '
-                          f'and {m["basis"]["outcome"]} outcome indicator{"" if m["basis"]["outcome"]==1 else "s"} sit'
-                          f'{"s" if (m["basis"]["need"]+m["basis"]["outcome"])==1 else ""} '
-                          f'among its {m["n_bearing"]} bearing rows, and on enabling indicators alone the mean is '
-                          f'{m["mean_enabler"]:.2f} rather than {m["mean"]:.2f} \u2014 either side of the '
-                          f'{CFG.get("readiness_threshold", 2.5)} line. Whether need and outcome indicators belong in a '
-                          f'readiness mean is carried as an open question for ratification.'
-                          for u, m in _mdriven) if len(_mdriven) == 1 else
-                  "".join(f' {UC_NAMES[u]}: on enabling indicators alone the mean is {m["mean_enabler"]:.2f} rather '
-                          f'than {m["mean"]:.2f}.' for u, m in _mdriven)))
+                          f'prerequisite, at {m["mean_readiness"]:.2f} against the '
+                          f'{CFG.get("readiness_threshold", 2.5)} line.'
+                          for u, m in _mdriven))
+               + (f' Across the six columns, need and outcome rows sit among the bearing set '
+                  f'{len(_roles)} time{"" if len(_roles)==1 else "s"}; they are shown as separate '
+                  f'means and never folded in.' if _roles else ""))
 
 def sec(no, title, feeds, body, note=""):
     n = f'<p class="secnote">{note}</p>' if note else ""
@@ -533,17 +534,21 @@ def matrix_table():
             why.append(f'<td class="why">{names}</td>')
         else:
             why.append(f'<td class="why dim">{esc(w) if w else "—"}</td>')
-    mean = "".join(f'<td class="num">{d["matrix"][u]["mean"]:.2f}</td>' for u in UC_ORDER)
-    # The bearing set is not purely enabling: it carries A1 need rows and O1 outcome rows too.
-    # Where a column's status turns on this mean rather than on a prerequisite, the enabling-only
-    # mean is published beside it so the reader can see what the number is made of.
-    enab = "".join(f'<td class="num">{(f"{d["matrix"][u]["mean_enabler"]:.2f}" if d["matrix"][u]["mean_enabler"] is not None else "—")}</td>'
-                   for u in UC_ORDER)
+    # Ruling 13.12: readiness is the enabling mean and is the only one that decides a
+    # column. Need and outcome are published beside it as separate rows so the reader can
+    # see the whole picture without either being averaged into the reading.
+    def _mrow(key):
+        return "".join(
+            f'<td class="num">'
+            + (f'{d["matrix"][u][key]:.2f}' if d["matrix"][u].get(key) is not None else "\u2014")
+            + '</td>' for u in UC_ORDER)
+    mean, need, outc = _mrow("mean_readiness"), _mrow("mean_need"), _mrow("mean_outcome")
     return ('<div class="tablewrap"><table class="tbl matrix"><thead><tr><th></th>'+head+'</tr></thead><tbody>'
             f'<tr><td class="rowhd">Readiness</td>{st}</tr>'
             f'<tr><td class="rowhd">Named blocker / reason</td>{"".join(why)}</tr>'
-            f'<tr><td class="rowhd">Mean of bearing indicators</td>{mean}</tr>'
-            f'<tr><td class="rowhd">Mean, enabling indicators only</td>{enab}</tr>'
+            f'<tr><td class="rowhd">Readiness &#8212; enabling indicators</td>{mean}</tr>'
+            f'<tr><td class="rowhd">Need &#8212; severity of the problem</td>{need}</tr>'
+            f'<tr><td class="rowhd">Outcomes already achieved</td>{outc}</tr>'
             '</tbody></table></div>')
 
 def constraints_table():

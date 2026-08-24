@@ -160,7 +160,10 @@ for iso, c in (("EGY","Egypt"), ("NGA","Nigeria")):
     for i, pid in enumerate(PRE): cmp(f"prereq {pid}", ws[f"D{86+i}"].value, e["prereq"][pid]["status"])
     for i, uc in enumerate(UCS):
         cmp(f"matrix {uc}", ws[f"C{102+i}"].value, e["matrix"][uc]["status"])
-        cmp(f"matrix {uc} mean", ws[f"B{102+i}"].value, e["matrix"][uc]["mean"])
+        # Ruling 13.12: the workbook column now averages ENABLING rows only, so it is
+        # checked against the readiness mean rather than the old mixed one.
+        cmp(f"matrix {uc} readiness mean", ws[f"B{102+i}"].value,
+            e["matrix"][uc]["mean_readiness"])
     ok(f"{c}: {n-bad}/{n} checks match", bad == 0, "; ".join(first))
 
 # ── 7 ratification apparatus visible in the instrument ──────────────────────
