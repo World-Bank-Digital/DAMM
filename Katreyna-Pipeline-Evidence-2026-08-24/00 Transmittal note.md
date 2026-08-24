@@ -43,13 +43,13 @@ the error that passed an assessor gate and an initial peer review in the Egypt a
 before an audit caught it in August 2026, and no model repeated it.
 
 **The machine's error runs toward saying too little, not too much.** Across both
-countries the automated pipeline read two rows (Egypt) and four rows (Nigeria) above the
-level your assessments record, and withheld a level on about twenty rows per country
-where your assessments set one. That asymmetry is deliberate and it is the safer of the
+countries the automated pipeline read three rows (Egypt) and five rows (Nigeria) above
+the level your assessments record, and withheld a level on fifteen rows per country where
+your assessments set one. That asymmetry is deliberate and it is the safer of the
 two failures, but it means an automated assessment will look thinner than a hand one, and
 the thinness is the honest output rather than a fault to be tuned away.
 
-**Almost every disagreement is definitional rather than evidential.** Of the six rows
+**Almost every disagreement is definitional rather than evidential.** Of the eight rows
 where the machine read higher than the assessors, every one turns on which reading of an
 unratified indicator name is taken. The machine reads a name as written and reads it
 permissively. The assessors read the same names restrictively. Both readings are

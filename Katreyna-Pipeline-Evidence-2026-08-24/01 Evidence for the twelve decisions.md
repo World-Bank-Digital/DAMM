@@ -21,8 +21,9 @@ pages.
 rows and the two carried candidates for one country, proposes a source and a tier for
 each, sets a level, and records a rung-by-rung argument including the negative finding
 for every level below five. It then runs a second review on the rows where being wrong
-costs the most, using a different vendor, and applies whatever survives. Egypt cost
-$21.88 across both passes and took 38 minutes. Nigeria cost $21.47 and took 37 minutes.
+costs the most, using a different vendor, and applies whatever survives. A first pass
+costs about $15.50 and takes about 25 minutes; the second review costs about $6.20 and
+takes about 13 minutes. Both countries were assessed for roughly $22 each.
 
 **A comparison against the verified assessments.** Every automated row was compared with
 its counterpart in your assessments. The pipeline did not read those assessments at any
@@ -38,12 +39,12 @@ read as findings.
 
 | | Egypt | Nigeria |
 |---|---|---|
-| Rows at the level your assessment records (of 57) | 24 | 30 |
-| Prerequisites at the same status (of 12) | 5 | 5 |
-| Rows read **above** your assessment | 2 | 4 |
-| Levels withheld where your assessment set one | 21 | 19 |
-| Recorded gaps (your assessment) | 20 (5) | 22 (4) |
-| Cost, both passes | $21.88 | $21.47 |
+| Rows at the level your assessment records (of 57) | 29 | 33 |
+| Prerequisites at the same status (of 12) | 8 | 8 |
+| Rows read **above** your assessment | 3 | 5 |
+| Levels withheld where your assessment set one | 15 | 15 |
+| Recorded gaps (your assessment) | 14 (5) | 17 (4) |
+| Cost, both passes | about $22 | about $21 |
 
 ---
 
@@ -61,9 +62,9 @@ moves on, and thirty of the forty-four are recorded as a defensible but measurab
 different proxy rather than as a construct error.
 
 A machine does not have that judgment, and this is where the cost becomes visible.
-**Every one of the six rows where the automated pipeline read above your assessment, in
+**Every one of the eight rows where the automated pipeline read above your assessment, in
 both countries, carries an open definitional question, and the instrument's own audit
-classifies all six as construct drift.** Not one of them is a case of the machine
+classifies all eight as construct drift.** Not one of them is a case of the machine
 misreading a source. In each, the machine took the name as written and read it
 permissively, and the assessors read the same name restrictively.
 
@@ -86,6 +87,9 @@ general instrument that does not use the words consent or rights.
 level 1. The machine recorded level 3 on a United Nations record of a Nigerian
 inter-ministerial committee, reading the name as satisfied by a committee that exists and
 meets. The assessor read it as requiring a mechanism that coordinates.
+
+The eight are 2.11, 3.8 and 7.12 in Egypt, and 4.9, 6.4, 6.12, 7.2 and 8.12 in Nigeria.
+Three are set out below.
 
 The second review does not correct this class of error, and it is worth being clear about
 why. On Nigeria's farmer registry (3.3) it did: the first pass recorded level 3 and the
@@ -209,8 +213,9 @@ prerequisite mapping (13.3), which the runs applied without testing.
 
 Two gained something slight. On the A1 candidates (13.2), the machine located Egypt's
 irrigation figure at 100 percent of cultivated area against the 94.21 percent your
-assessment records from AQUASTAT for 2023, and found neither candidate for Nigeria; the
-candidates are findable but not reliably so. On whether need and outcome indicators belong
+assessment records from AQUASTAT for 2023, and found neither candidate for Nigeria and
+neither import-dependency figure for either country. Three of the four candidate cells
+came back empty, so the candidates are not reliably findable. On whether need and outcome indicators belong
 in a readiness mean (13.12), the automated runs withhold enough levels that use-case means
 rest on fewer rows than in your assessments, which makes any status driven by the mean
 rather than by a prerequisite thinner than it looks. Neither observation is strong enough
