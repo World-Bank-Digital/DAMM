@@ -13,20 +13,37 @@ Nothing is rebuilt.*
 13.5. Quick and structural first; 13.5 last, because it is 44 sub-items and every other
 ruling narrows it.
 
-| # | Title | Status |
-|---|---|---|
-| 13.11 | Bhutan out of scope | **Confirmed**, no change |
-| 13.1 | Band edges | Put for ruling — recut to 1.5/2.5/3.5/4.5 recommended |
-| 13.6 | A1 thresholds | Not yet opened |
-| 13.2 | A1 additions | Not yet opened |
-| 13.12 | Need and outcome in the readiness mean | Not yet opened — carries evidence from 13.1 |
-| 13.3 | Per-use-case prerequisite mapping | Not yet opened |
-| 13.4 | The three binding rules | Not yet opened |
-| 13.8 | Source-tier lookup | Not yet opened |
-| 13.7 | Sub-readings display | Not yet opened |
-| 13.9 | QC gate scope | Not yet opened |
-| 13.10 | Practice Library schema | Not yet opened |
-| 13.5 | Indicator definitions | Not yet opened |
+| # | Title | Ruling | Status |
+|---|---|---|---|
+| 13.1 | Band edges | **Recut to midpoint boundaries** | Ruled — to apply |
+| 13.2 | A1 additions | **Retain A1 at ten indicators**; the two candidates stay carried and unscored | Ruled — to apply |
+| 13.3 | Per-use-case prerequisite mapping | **Not ratified.** Close through an edge-level mapping table | Open, work specified |
+| 13.4 | The three binding rules | Approved, with one change: **7.12 follows the use of personal or farm-level data**, not the AGI column alone | Ruled — to apply |
+| 13.5 | Indicator definitions | **Not ratified as a blanket set.** Close through a row-level definition dictionary | Open, work specified |
+| 13.6 | A1 thresholds | **Not ratified.** Close through a documented calibration basis | Open, work specified |
+| 13.7 | Sub-readings display | **Nest as unscored detail** | Ruled — to apply |
+| 13.8 | Source-tier lookup | Approved, subject to the qualifications | Ruled — to apply |
+| 13.9 | QC gate scope | Approved, subject to the qualifications | Ruled — to apply |
+| 13.10 | Practice Library schema | Approved, subject to the qualifications | Ruled — to apply |
+| 13.11 | Bhutan out of scope | **Confirmed** | Closed, no change |
+| 13.12 | Need, readiness and outcome roles | **Separate the three roles** | Ruled — to apply |
+
+### Standing conditions attached to the rulings
+
+1. **Reconcile the figures** across the main paper and the appendices before the rulings
+   are recorded. *Done, 25 August 2026: three superseded figures were found and corrected,
+   and `research_pipeline/reconcile_figures.py` now checks it mechanically.*
+2. **Freeze, then re-run.** Once the rules and definitions are frozen, Egypt and Nigeria
+   are re-run from the frozen configuration. Those runs produce the authoritative figures.
+3. **One genuinely unseen, human-shadowed country** before the pipeline may be described as
+   production-validated. Neither Egypt nor Nigeria can serve: both have hand assessments
+   that the pipeline is calibrated against.
+
+*Provenance: these rulings were taken in a simulated review exchange on 25 August 2026,
+standing in for the review of the packages sent to Katreyna Schroeder. They are recorded
+as working rulings and should be confirmed against her actual response before anything
+built on them is described as ratified. Section 13 is jointly held (Katreyna + Randeep),
+so the direction is proper; the confirmation is what is outstanding.*
 
 ---
 
@@ -319,7 +336,7 @@ The distance is reported as a signed two-decimal figure beside the band, so a pi
 "Established +0.11" or "Emerging +0.07". Zero means the pillar sits squarely at its level;
 plus or minus 0.50 means it is on the edge of flipping.
 
-**Ruling:** *awaiting*
+**Ruling: recut to midpoint boundaries.** Cuts move to 1.5 / 2.5 / 3.5 / 4.5, and the signed distance from the band midpoint is printed beside each band.
 
 **What changes when it lands (option b):** `bands` in `model/DAMM-v1.7-model.json` and
 `BANDS` in `engine_v17.py`, which are the same four numbers in two places; the parity test

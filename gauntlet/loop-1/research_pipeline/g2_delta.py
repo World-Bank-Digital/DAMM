@@ -63,10 +63,26 @@ def main():
 
     w("\n## What it cost\n")
     g2c, fpc = spend.get("total", 0), first.get("total", 0)
+    # A first-pass ledger smaller than the second review's is not a cheap first pass. It
+    # is a truncated ledger: resuming a run used to overwrite the counter rather than
+    # carry it, so a run finished in two sittings kept only the second. Saying so beats
+    # printing a share of a total that is wrong.
+    truncated = fpc < g2c
+    if truncated:
+        w("**The first-pass ledger for this run is incomplete and the figures below "
+          "understate it.** Resuming a run overwrote the spend counter instead of "
+          "carrying it forward, so what survives is the cost of the final sitting only. "
+          "The defect is fixed and the counter now accumulates across a resume, but this "
+          "run's first-pass total cannot be recovered from the file. Clean measurements "
+          "of a full first pass, taken before the resumes, were $15.49 for Egypt and "
+          "$15.32 for Nigeria. The authoritative figure will come from the re-run on the "
+          "frozen configuration.\n")
     w(f"| | first pass | Gate 2 | Gate 2 as a share |")
     w("|---|---|---|---|")
-    w(f"| cost | ${fpc:.2f} | ${g2c:.2f} | "
-      f"{100.0 * g2c / max(fpc + g2c, 1e-9):.0f}% of the two passes together |")
+    w(f"| cost | ${fpc:.2f}{' (incomplete)' if truncated else ''} | ${g2c:.2f} | "
+      + ("not derivable from an incomplete first-pass ledger"
+         if truncated else
+         f"{100.0 * g2c / max(fpc + g2c, 1e-9):.0f}% of the two passes together") + " |")
     w(f"| rows | 57 | {len(findings)} | "
       f"{100.0 * len(findings) / 57:.0f}% of the register |")
     w(f"| minutes | {first.get('elapsed_s', 0) / 60:.0f} | "

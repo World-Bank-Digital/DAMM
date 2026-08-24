@@ -138,10 +138,17 @@ decision 13.8 needs to say so explicitly, because a general rule that tier 4 can
 a prerequisite will keep producing this result in every country where rural coverage is
 modelled rather than measured. That is most of them.
 
-Egypt shows the same rule operating with no visible effect, because its 2.1 is a recorded
-gap in both assessments and its matrix already read Unverified. The rule is not new. What
-is new is that an automated pass reaches the withheld state far more often than a hand
-pass does, which turns a rule that rarely fired into one that fires by default.
+Egypt is the control, and it now reads well. Its 2.1 is a recorded gap in both
+assessments, so the rule has nothing to bite on, and **the automated Egypt matrix
+reproduces your Egypt matrix cell for cell**: Unverified on five columns and Blocked on
+agricultural intelligence, exactly as your assessment records it. The same machinery that
+turns every Nigerian column Unverified leaves every Egyptian column where you put it.
+
+That contrast is the useful part. The rule is not new and it is not misfiring. What is new
+is that an automated pass reaches the withheld state far more often than a hand pass does,
+so a rule that rarely fired now fires whenever a single universal prerequisite rests on
+evidence the tier bar will not take. In Egypt no universal prerequisite does. In Nigeria
+one does, and six columns follow it.
 
 ---
 
@@ -173,10 +180,10 @@ written rather than softened.
 One figure bears on the scope of Gate 2. The design work assumed a second review would
 cover roughly twenty rows. Scoped as intended, to prerequisites, withheld levels, and
 recorded gaps, it covered 38 rows in Egypt and 36 in Nigeria, because an automated first
-pass withholds more often than a hand one. It cost $6.39 and $6.14 respectively, against
-an allocation of $75, and changed three levels in each country. It is cheap and it earns
-its place, but its scope is a function of how conservative the first pass is, and that in
-turn is a function of section 13.5.
+pass withholds more often than a hand one. It cost $6.35 in Egypt and $5.99 in Nigeria,
+against an allocation of $75, and changed four levels in the first and five in the second.
+It is cheap and it earns its place, but its scope is a function of how conservative the
+first pass is, and that in turn is a function of section 13.5.
 
 ---
 

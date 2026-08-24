@@ -5,9 +5,11 @@ The same comparison against the same verified assessment, before and after the s
 
 ## What it cost
 
+**The first-pass ledger for this run is incomplete and the figures below understate it.** Resuming a run overwrote the spend counter instead of carrying it forward, so what survives is the cost of the final sitting only. The defect is fixed and the counter now accumulates across a resume, but this run's first-pass total cannot be recovered from the file. Clean measurements of a full first pass, taken before the resumes, were $15.49 for Egypt and $15.32 for Nigeria. The authoritative figure will come from the re-run on the frozen configuration.
+
 | | first pass | Gate 2 | Gate 2 as a share |
 |---|---|---|---|
-| cost | $1.60 | $5.99 | 79% of the two passes together |
+| cost | $1.60 (incomplete) | $5.99 | not derivable from an incomplete first-pass ledger |
 | rows | 57 | 36 | 63% of the register |
 | minutes | 4 | 11 | |
 
