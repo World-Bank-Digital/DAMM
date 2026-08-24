@@ -1520,7 +1520,7 @@
   },
   "MKT": {
    "status": "Partial",
-   "why": "thin enablers",
+   "why": "universal narrow: 2.9",
    "mean": 2.58,
    "prereqs": [],
    "n_bearing": 24,
@@ -1530,7 +1530,7 @@
     "enabler": 22
    },
    "mean_enabler": 2.64,
-   "mean_driven": true
+   "mean_driven": false
   },
   "SCM": {
    "status": "Partial",

@@ -344,7 +344,14 @@ def build(defnotes):
         "config": {
             "assessment_year": 2026,
             "staleness_years": 3,
-            "readiness_threshold": 2.6,
+            # Ruling of 25 August 2026, taken with 13.1. Set to the lower edge of the
+            # Established band, so that "ready" means "enablers at least Established".
+            # That reading was never recorded anywhere: 2.6 and the old band edge merely
+            # coincided. The rationale is supplied here rather than restored, because an
+            # unexplained constant is the same weakness the band recut removed. The
+            # parity test asserts the coincidence, so decoupling the two has to be done
+            # deliberately rather than by forgetting, which is how it orphaned last time.
+            "readiness_threshold": 2.5,
             "leapfrog_threshold": 1.5,
             "rounding": "half-up",
             "rounding_note": "Half-up to 2dp, matching the workbook. Banker's rounding disagrees at exact .xx5 and would band a mean differently.",

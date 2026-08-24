@@ -78,6 +78,14 @@ inv("threshold rows carry 4 cut-points and a direction",
         for i in model["indicators"] if i["method"] == "threshold"))
 inv("ladder rows carry no cut-points",
     all(not i["thresholds"] for i in model["indicators"] if i["method"] == "ladder"))
+# The readiness threshold duplicated a band edge as a separate constant, and when the
+# bands were recut it stayed behind, leaving a column that could read "Partial, thin
+# enablers" while its enablers were Established. Breaking this invariant is a decision.
+_est = next(b for b in model["bands"] if b["name"] == "Established")
+inv("readiness threshold is the Established band's lower edge",
+    model["config"]["readiness_threshold"] == _est["lo"],
+    f"threshold {model['config']['readiness_threshold']} vs Established lo {_est['lo']}")
+
 inv("bands are contiguous and half-open",
     all(model["bands"][k]["hi"] == model["bands"][k + 1]["lo"] for k in range(len(model["bands"]) - 1)))
 inv("prerequisite kinds are closed",

@@ -1,6 +1,6 @@
 # DAMM v1.7 — end-to-end build and verification record
 
-Run 25 August 2026, 01:05. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
+Run 25 August 2026, 01:11. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
 
 **Result: ALL CHECKS PASS**
 
@@ -62,7 +62,7 @@ Run 25 August 2026, 01:05. Every artifact below was regenerated from the sources
 - PASS — Nigeria: every pillar publishes the mean's own denominator · {'A1': (8, 10), 'C1': (6, 6), 'C2': (7, 8), 'C3': (8, 8), 'C4': (4, 7), 'E1': (9, 11), 'O1': (4, 7)}
 - PASS — Nigeria: a pillar resting on a minority of its rows cannot read unflagged · []
 - PASS — Nigeria: verify-first carries every Judged row and every gap · 5 listed vs 1J + 4G
-- PASS — Nigeria: a mean-driven use-case status publishes its enabler-only mean · ['MKT']
+- PASS — Nigeria: a mean-driven use-case status publishes its enabler-only mean · []
 
 ## 4. Report render — automated QC blocks emission on failure
 

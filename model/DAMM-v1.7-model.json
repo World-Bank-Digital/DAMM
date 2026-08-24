@@ -18,7 +18,7 @@
   "config": {
     "assessment_year": 2026,
     "staleness_years": 3,
-    "readiness_threshold": 2.6,
+    "readiness_threshold": 2.5,
     "leapfrog_threshold": 1.5,
     "rounding": "half-up",
     "rounding_note": "Half-up to 2dp, matching the workbook. Banker's rounding disagrees at exact .xx5 and would band a mean differently."

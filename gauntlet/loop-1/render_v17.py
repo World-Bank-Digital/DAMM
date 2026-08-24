@@ -125,7 +125,10 @@ UC_NAMES = {"ADV":"Advisory & extension","SMF":"Smart farming","MKT":"Market lin
             "SCM":"Supply chain","FIN":"Financial services","AGI":"Agricultural intelligence"}
 UC_ORDER = ["ADV","SMF","MKT","SCM","FIN","AGI"]
 LAYERS = ["Foundation","Enablers","Transformation","Outcomes"]
-BANDS = [(1.0,"Nascent"),(1.8,"Emerging"),(2.6,"Established"),(3.4,"Advanced"),(4.2,"Transformative")]
+# The chart axis bands. Derived from the engine rather than restated, because this was
+# a second copy of the edges and it silently kept the pre-recut values.
+from engine_v17 import BANDS as _EB
+BANDS = [(lo, n) for lo, hi, n in _EB]
 
 def tier_of(src):
     s = src.lower()
@@ -427,7 +430,7 @@ MATRIX_NOTE = ("Cells: Ready / Partial / Blocked (named blocker) / Unverified. P
                           f'{"s" if (m["basis"]["need"]+m["basis"]["outcome"])==1 else ""} '
                           f'among its {m["n_bearing"]} bearing rows, and on enabling indicators alone the mean is '
                           f'{m["mean_enabler"]:.2f} rather than {m["mean"]:.2f} \u2014 either side of the '
-                          f'{CFG.get("readiness_threshold", 2.6)} line. Whether need and outcome indicators belong in a '
+                          f'{CFG.get("readiness_threshold", 2.5)} line. Whether need and outcome indicators belong in a '
                           f'readiness mean is carried as an open question for ratification.'
                           for u, m in _mdriven) if len(_mdriven) == 1 else
                   "".join(f' {UC_NAMES[u]}: on enabling indicators alone the mean is {m["mean_enabler"]:.2f} rather '

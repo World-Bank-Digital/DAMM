@@ -229,7 +229,7 @@ def sheet_config(wb):
     rows = [
         ("Assessment year", 2026, "ENTRY (yellow). Staleness is measured against this year."),
         ("Staleness limit (years)", 3, "A reading older than this is flagged STALE. One rule for all indicators."),
-        ("Readiness threshold", 2.6, "A use-case column whose bearing indicators average below this reads Partial."),
+        ("Readiness threshold", 2.5, "A use-case column whose bearing indicators average below this reads Partial. Set to the Established band's lower edge."),
         ("Leapfrog threshold", 1.5, "|mean(Foundation) − mean(Transformation)| above this raises a structural flag."),
         ("Band: Nascent", "1.0 – <1.5", "Half-open bands; a pillar band in parentheses means judged, gap and held rows "
                                         "outnumber the levelled measured and documented ones."),

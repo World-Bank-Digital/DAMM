@@ -101,6 +101,11 @@ BANDS=[(1,1.5,'Nascent'),(1.5,2.5,'Emerging'),(2.5,3.5,'Established'),(3.5,4.5,'
 # 4.75, and a pillar with every row at level 1 would read -0.25 instead of the +0.00 that
 # makes the figure mean what it looks like it means.
 BAND_LEVEL={'Nascent':1,'Emerging':2,'Established':3,'Advanced':4,'Transformative':5}
+# Ready means enablers at least Established, so the threshold IS the Established edge
+# rather than a constant that happens to equal it. It was a separate literal, and when
+# the bands were recut it stayed at 2.6 while the edge moved to 2.5 — leaving a column
+# able to read 'Partial, thin enablers' with enablers the instrument calls Established.
+READINESS_THRESHOLD = next(lo for lo, hi, n in BANDS if n == 'Established')
 def band(x):
     for lo,hi,n in BANDS:
         if lo<=x<hi: return n
@@ -172,7 +177,7 @@ def run(country, D, refyear=2026):
         elif any(s=='Absent' for _,s in pres): st='Blocked'; why=', '.join(i for i,s in pres if s=='Absent')
         elif uni_unver: st='Unverified'; why='universal unverified: '+', '.join(uni_unver)
         elif any(s=='Unverified' for _,s in pres): st='Unverified'; why=', '.join(i for i,s in pres if s=='Unverified')
-        elif any(s=='Present (narrow)' for _,s in pres) or (mean and mean<2.6): st='Partial'; why=', '.join(i for i,s in pres if 'narrow' in s) or 'thin enablers'
+        elif any(s=='Present (narrow)' for _,s in pres) or (mean and mean<READINESS_THRESHOLD): st='Partial'; why=', '.join(i for i,s in pres if 'narrow' in s) or 'thin enablers'
         elif uni_narrow: st='Partial'; why='universal narrow: '+', '.join(uni_narrow)
         else: st='Ready'; why=''
         out['matrix'][uc]=dict(status=st, why=why, mean=mean, prereqs=pres,
