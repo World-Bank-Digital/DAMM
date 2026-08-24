@@ -484,10 +484,14 @@ def main():
     llm = V.LLM(vendor, ledger, model=mname or None)
 
     state_path = os.path.join(LOOP1, f"{args.out}_state.json")
+    spend_path = os.path.join(LOOP1, f"{args.out}_spend.json")
     state = {"rows": {}, "records": {}}
     if args.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
-        print(f"resuming — {len(state['rows'])} rows already researched")
+        carried = ledger.load(spend_path)
+        print(f"resuming — {len(state['rows'])} rows already researched, "
+              f"{carried} earlier vendor calls carried into the spend counter "
+              f"(${ledger.spent():.2f} already spent)")
 
     print(f"{args.country} ({args.iso}) · {len(specs)} rows · vendor {vendor}/{llm.model}")
     print(f"budget ${args.ceiling:.0f}, research allocation "
@@ -528,7 +532,7 @@ def main():
             state["rows"][spec["id"]] = row
             state["records"][spec["id"]] = record
             json.dump(state, open(state_path, "w"), indent=1, default=str)
-            ledger.save(os.path.join(LOOP1, f"{args.out}_spend.json"))
+            ledger.save(spend_path)
             n = len(state["rows"])
         mark = {"pass": "  ", "hold": "H ", "reject": "R ", "gap": "G "}[record["verdict"]]
         log(f"{mark}[{n:2}/{len(specs)}] {spec['id']:12} {record['verdict']:6} "
@@ -566,7 +570,7 @@ def main():
     json.dump(rows, open(inp, "w"), indent=1, default=str)
     json.dump(state["records"], open(os.path.join(LOOP1, f"{args.out}_research.json"), "w"),
               indent=1, default=str)
-    ledger.save(os.path.join(LOOP1, f"{args.out}_spend.json"))
+    ledger.save(spend_path)
 
     s = ledger.summary()
     held = sum(1 for r in rows.values() if r["level"] is None and r["cls"] != "Gap")

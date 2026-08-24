@@ -189,10 +189,10 @@
    "cls": "Measured",
    "level": 2,
    "year": 2023,
-   "src": "World Bank, Prevalence of undernourishment (% of population) - Nigeria",
-   "note": "Recorded on second review, which located evidence the first pass did not reach. The first-pass gap is refuted by the supplied T1 World Bank Nigeria indicator page, which directly reports a Nigeria-specific prevalence-of-undernourishment value for 2023. Next level not proposed: Level 2 is not proposed because the reported value, 20, is not below the 15-percent cut point. The World Bank page is explicitly titled \u201cPrevalence of undernourishment (% of population) - Nigeria\u201d and identifies FAO as the source.",
+   "src": "World Bank Data \u2014 Prevalence of undernourishment (% of population) - Nigeria",
+   "note": "Recorded on second review, which located evidence the first pass did not reach. The first-pass conclusion that no Nigeria-specific PoU value was available is contradicted by the supplied World Bank T1 indicator page, which reports Nigeria\u2019s most recent value as 20 in 2023. FAO PoU national estimates are reported as three-year moving averages; the World Bank page displays a rounded whole-percent value. Next level not proposed: The reported value of 20 is not below the next cut point of 15, so level 2 is not supported. The World Bank page is explicitly titled \u201cPrevalence of undernourishment (% of population) - Nigeria\u201d and identifies FAO as the source.",
    "tier": "T1",
-   "tier_detail": "",
+   "tier_detail": "FAO PoU national estimates are reported as three-year moving averages; the World Bank page displays a rounded whole-percent value.",
    "url": "https://data.worldbank.org/indicator/SN.ITK.DEFC.ZS?locations=NG",
    "subs": [],
    "stale": false,
@@ -391,7 +391,7 @@
    "level": 2,
    "year": 2025,
    "src": "Federal Ministry of Agriculture and Food Security, Nigeria Launches National Digital Farmers Registry to Strengthen Food Security",
-   "note": "Level 3 to 2 on second review: The first-pass level 3 claim of a formally adopted registry is not supported by the supplied official evidence. The Ministry characterises the November 2025 event as a stakeholder workshop and uses prospective language: the registry \u201cwill be anchored\u201d on NIN and \u201cwill include\u201d geo-tagging. Other supplied FMAFS pages likewise describe a technical working group, a request to establish a database, and ongoing harmonisation. These are affirmative planning-stage evidence, supporting Announced rather than Adopted. Next level not proposed: Level 3 was not proposed because the supplied official pages document planning, workshops, technical working arrangements, and intended future registry features, but do not document formal adoption or operation of the registry. The official evidence identifies a National Digital Farmers Registry and says it will geo-tag \u201cfarmers and farmlands.\u201d It therefore concerns farmers, while also planning to record farm/farmland information; it is not evidence of a holding-only registry. The 80,000 and other registered-farmer figures on the publications page concern the separate NAGS-AP wheat programme, not the national registry.",
+   "note": "Level 3 to 2 on second review: The first-pass Adopted/level-3 classification is not sustained by the independently supplied official evidence. The nearest directly relevant Ministry evidence documents a stakeholder workshop and planned registry features, while later Ministry material says the country needs a credible national farmer registry. This supports Announced, not Adopted. Next level not proposed: Level 3 was not proposed because the official November 2025 account uses future-tense language\u2014\u201cwill be anchored\u201d and \u201cwill include\u201d\u2014and the July 2026 Ministry page still states a need for \u201ca credible national farmer registry.\u201d Neither is evidence that a national registry has been formally adopted or is live. The proposed instrument is explicitly a National Digital Farmers Registry and is to be anchored on the National Identification Number, consistent with a registry of farmers as individuals. Available design evidence also includes geo-tagged farmlands and farmer information, so future figures could mix farmers with farms or holdings; no such scale figure is used here.",
    "tier": "T3",
    "tier_detail": "",
    "url": "https://agriculture.gov.ng/nigeria-launches-national-digital-farmers-registry-to-strengthen-food-security/",
@@ -533,19 +533,19 @@
    "kind": "l"
   },
   "3.11": {
-   "value": "DATA GAP \u2014 Order of inspection: (1) NITDA 'DATA INTEROPERABILITY STANDARDS, 2016' PDF \u2014 read preliminaries, arrangement of standards, scope (s.5) and semantic interoperability background; found a legally issued, cross-sector standard, but no agricultural data elements, classifications or domain vocabularies; (2) NITDA Ne-GIF v1.2 PDF \u2014 read metadata table (Enforcement Category: Recommended; Target Audience: all government organizations) and full table of contents through the levels-of-interoperability chapter; horizontal e-government framework, no agriculture sector annex in the retrieved extract; (3) NATIP 2022-2027 (agriculture.gov.ng) \u2014 retrieved text stops at the foreword; TOC shows '2.5.6 Data and Information Management' (p.60) and '2.5.4 Promoting Digital and Climate-Smart agriculture' (p.55), but the body text of neither section was retrieved, so no quotable statement on agricultural data standards; (4) FMARD e-Library (home, community list, login, and one item handle) \u2014 all four URLs returned '500 Service Unavailable', a dead end; (5) FAO 'Concepts and definitions of agricultural census items' (fao.org) \u2014 international census concepts/definitions guidance, not a Nigerian national standard, and it explicitly leaves adaptation to countries; not evidence about Nigeria; (6) UW EPAR data curation page \u2014 LSMS-ISA indicator construction code including the Nigeria GHS; this is a researcher's indicator harmonisation effort, not a Nigerian national interoperability standard; (7) PolicyVault.Africa Ne-GIF page \u2014 T5 aggregator, inadmissible for a prerequisite row and in any case describing the same non-agricultural framework. Not found in this pack and would be the next places to look: FMARD/NBS agricultural statistics strategic plan (NSDS/SSPARS) text, NABG/NASC data standards, NAERLS extension data schemas, and any Nigeria Agricultural Data Portal metadata standard.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: Not applicable \u2014 no level is proposed. For the record, the reason no level above 0 is recorded is that the only quotable T3 artifacts (NITDA Data Interoperability Standards 2016; Ne-GIF v1.2 2019) are cross-government rather than agricultural, and both quality_evidence and scale_evidence are empty: nothing in the pack is an independent evaluation, audit or compliance report on Nigerian interoperability standards, and nothing gives adoption counts, MDA coverage, or numbers of datasets published under them. The indicator names AGRICULTURAL data interoperability standards. The best available Nigerian evidence is sector-agnostic: (a) NITDA's 'DATA INTEROPERABILITY STANDARDS, 2016', issued under s.6 of the NITDA Act 2007, whose stated scope covers data interoperability, data standardization, naming standards and data element definition across public and private sector information systems, with no agricultural data classes, and (b) the 'Nigeria e-Government Interoperability Framework (Ne-GIF)' v1.2 (August 2019), whose metadata records enforcement category 'Recommended' and target audience 'All Government organizations', again with no agriculture-specific content in the retrieved text. This is precisely the unratified question flagged for this row: whether cross-government DPI/open-data instruments count. On the indicator's name as written, they sit on the wrong side of it \u2014 they are horizontal e-government instruments, not agricultural data standards. If the assessment later ratifies a definition that admits cross-government instruments, this cell would plausibly move to Adopted on the NITDA 2016 Standards (T3, legally issued, cross-sector), and the retrieved pages would still contain no evaluation or coverage figures to justify anything above that.",
-   "tier": "",
+   "value": "Nigeria has a cross-government Data Interoperability Standards instrument, but no agriculture-specific data interoperability standard was identified in the examined instruments.",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2016,
+   "src": "National Information Technology Development Agency (NITDA) \u2014 Data Interoperability Standards, 2016",
+   "note": "Recorded on second review, which located evidence the first pass did not reach. The first pass cites a Federal Ministry press release for a compound claim about the status of a NITDA standard and an agricultural governance framework, but that cited page was not supplied for quote verification. The independently supplied primary NITDA document affirmatively shows that the issued standard is for public-sector interoperability, not agriculture. Treating the agriculture-related registry architecture work as an agricultural interoperability standard would be a construct expansion; under the name as written, the evidence supports the explicit Absent rung rather than a withheld/Announced classification. Next level not proposed: No agriculture-specific standard, schema, code list, or formally issued agricultural data-governance/interoperability instrument is evidenced in the supplied T1-T3 sources. The available NITDA standard is cross-government, while the agricultural registry material is a design-and-pilot architecture initiative. The quoted NITDA instrument is a public-sector, cross-government interoperability standard, not an agricultural data interoperability standard. The IFAD Nigeria-and-Rwanda project material describes a future Digital Farmer Registry architecture, rather than an issued agricultural data standard; it therefore remains on the wrong side of the indicator name as written.",
+   "tier": "T3",
    "tier_detail": "",
-   "url": "",
+   "url": "https://nitda.gov.ng/wp-content/uploads/2020/11/DATA-INTEROPERABILITY-STANDARDS11.pdf",
    "defnote": "Must the standard be agriculture-specific, or do cross-government open-data/DPI instruments and draft harmonisation work count as Present/Announced for this prerequisite cell?",
    "defsev": "construct-drift",
    "subs": [],
-   "stale": false,
+   "stale": true,
    "name": "Agricultural data interoperability standards",
    "pillar": "C2",
    "layer": "Enablers",
@@ -561,11 +561,11 @@
    "cls": "Documented",
    "level": 3,
    "year": 2023,
-   "src": "Nigeria Data Protection Commission \u2014 Nigeria Data Protection Act (NDP Act) 2023, General Application and Implementation Directive (GAID) 2025 (NDPC/NDP ACT-GAID/01/2025)",
-   "note": "Next level not proposed: Level 4 was not proposed because no independent or official evaluation, audit or performance assessment of how well the law is enforced appears in the supplied pages. The NDPC resources index lists an 'NDPC ANNUAL PERFORMANCE REPORT 2023' and annual reports for 2024 and 2025, but only their titles are visible \u2014 no findings, service standards or measured outcomes could be quoted, and a regulator's own list of documents is not quality evidence. Level 5 was likewise not proposed because no reach figures (number of registered data controllers/processors, licensed DPCOs, audits filed, complaints resolved) appear anywhere in the retrieved text. The evidence is the primary legal instrument itself (NDP Act 2023) plus the regulator's implementing directive (GAID 2025), which is exactly the named construct: a data protection/privacy law for Nigeria.",
+   "src": "Federal Republic of Nigeria Official Gazette \u2014 Nigeria Data Protection Act, 2023",
+   "note": "Provenance adjusted on second review: The first-pass substantive conclusion and level survive review, but the supplied primary Official Gazette is stronger and directly quote-verifies enactment and the law's data-protection purpose. The cited GAID document was not among the retrieved quote-verifiable pages; the row should therefore be recorded against the Official Gazette, with the NDPC resource page used only as supporting evidence of operational administration. Next level not proposed: Level 4 was not proposed because no independent or official evaluation, audit or performance assessment of how well the law is enforced appears in the supplied pages. The NDPC resources index lists an 'NDPC ANNUAL PERFORMANCE REPORT 2023' and annual reports for 2024 and 2025, but only their titles are visible \u2014 no findings, service standards or measured outcomes could be quoted, and a regulator's own list of documents is not quality evidence. Level 5 was likewise not proposed because no reach figures (number of registered data controllers/processors, licensed DPCOs, audits filed, complaints resolved) appear anywhere in the retrieved text. The evidence is the primary legal instrument itself (NDP Act 2023) plus the regulator's implementing directive (GAID 2025), which is exactly the named construct: a data protection/privacy law for Nigeria.",
    "tier": "T3",
    "tier_detail": "",
-   "url": "https://ndpc.gov.ng/wp-content/uploads/2025/03/NDP-ACT-GAID-2025-MARCH-20TH.pdf",
+   "url": "https://www.ncc.gov.ng/sites/default/files/2024-11/Documents/hidden/Nigeria_Data_Protection_Act_2023.pdf",
    "subs": [],
    "stale": false,
    "name": "Data protection/privacy law",
@@ -582,11 +582,11 @@
    "cls": "Gap",
    "level": null,
    "year": 2024,
-   "src": "International Telecommunication Union, GCI MEDIA COVERAGE",
-   "note": "Provenance adjusted on second review: The first-pass gap is affirmatively contradicted by ITU\u2019s own GCI media-coverage page, which explicitly states that Nigeria is among GCI 2024 tier-3 countries. This does not support a numeric threshold score or an assessable level, but it does mean the country is not wholly absent from the GCI evidence. Retrieved ITU pages are front matter only; the country-score annex of the GCI 2024 report was not among the supplied text. Next level not proposed: Not even level 1 is proposed, because level 1 would still assert that a measured value exists and falls below 0.2. The evidence does not show any Nigeria GCI value at all in the retrieved pages, and separately does not establish which scale the row is meant to use. The ITU GCI is the construct named in the indicator: the retrieved ITU page states the assessment runs across five pillars 'and then aggregated into an overall score'. However, the supplied pages give no Nigeria value, so construct match cannot be verified against an actual figure. Two further definitional problems, both visible in the retrieved material and both bearing on the census's open question: (a) the GCI 2024 acknowledgements credit the Expert Group with 'developing the tier-based model' and thank Winston Oyadomari 'for his leadership of the discussion of the transition to a tier-based model', which is consistent with the census note that neither 100 nor 0.824 is an overall score ITU actually publishes in the 2024 edition; (b) the register's own two entries (Egypt 100, Nigeria 0.824) sit on incommensurable scales, so even a correctly sourced ITU figure could not be scored against the 0.2/0.4/0.6/0.8 cut points until the scale is ratified. No value for any other country has been carried into this cell.",
+   "src": "ITU \u2014 GCI MEDIA COVERAGE",
+   "note": "Provenance adjusted on second review: The first-pass Gap finding is too strong: an ITU T1 page explicitly states that Nigeria is among tier-3 countries in GCI 2024. The page still does not provide a numerical GCI score or tier-to-threshold crosswalk, so the threshold level remains withheld. Retrieved ITU pages are front matter only; the country-score annex of the GCI 2024 report was not among the supplied text. Next level not proposed: Not even level 1 is proposed, because level 1 would still assert that a measured value exists and falls below 0.2. The evidence does not show any Nigeria GCI value at all in the retrieved pages, and separately does not establish which scale the row is meant to use. The ITU GCI is the construct named in the indicator: the retrieved ITU page states the assessment runs across five pillars 'and then aggregated into an overall score'. However, the supplied pages give no Nigeria value, so construct match cannot be verified against an actual figure. Two further definitional problems, both visible in the retrieved material and both bearing on the census's open question: (a) the GCI 2024 acknowledgements credit the Expert Group with 'developing the tier-based model' and thank Winston Oyadomari 'for his leadership of the discussion of the transition to a tier-based model', which is consistent with the census note that neither 100 nor 0.824 is an overall score ITU actually publishes in the 2024 edition; (b) the register's own two entries (Egypt 100, Nigeria 0.824) sit on incommensurable scales, so even a correctly sourced ITU figure could not be scored against the 0.2/0.4/0.6/0.8 cut points until the scale is ratified. No value for any other country has been carried into this cell.",
    "tier": "T1",
-   "tier_detail": "tier-based classification; no Nigeria overall numeric score is published in the supplied page",
-   "url": "https://www.itu.int/en/ITU-D/Cybersecurity/Pages/GCI/GCI-Media.aspx",
+   "tier_detail": "The ITU page provides a media-coverage headline, not Nigeria's underlying GCI profile, tier definition, or numerical score.",
+   "url": "http://www.itu.int/en/ITU-D/Cybersecurity/Pages/GCI/GCI-Media.aspx",
    "defnote": "Thresholds are defined on a 0\u20131 basis but Egypt is recorded as 100 and Nigeria as 0.824, so the same register column holds two incommensurable scales; separately, neither number is an overall score ITU actually publishes in the GCI 2024 report.",
    "defsev": "unit-ambiguity",
    "subs": [],
@@ -648,15 +648,15 @@
    "kind": "l"
   },
   "4.5": {
-   "value": "DATA GAP \u2014 1) FAO Global Strategy to Improve Agricultural and Rural Statistics country page for Nigeria (T1) \u2014 checked for a governance instrument; found only 2021-2024 capacity activities (scholarships, CAPI, CAADP indicators, food balance sheets) and workshop news with NBS and FMAFS. Statistical capacity, not data governance. Dead end for the construct. 2) NITDA DRAFT Nigeria Digital Agriculture Strategy 2020-2030 (T3) \u2014 the most likely home for agricultural data governance; retrieved text stops within the table of contents at the Implementation Framework/architecture layers, so no data-governance clause is quotable, and the document is a DRAFT. 3) NITDA Final Draft National Data Strategy 2022 (T3) \u2014 has an explicit governance structure section and Data Governance Committee/Data Steering Committee, but is cross-sectoral and draft; recorded as context only under Rule 2. 4) NGF Digital Repository FMARD collection (T5) \u2014 lists four FMARD policy documents (food security and nutrition strategy, 2016 agriculture policy roadmap, livestock roadmap, NALFI draft); none is a data governance framework, and the tier is inadmissible for this prerequisite row. Not found in supplied pages: any FMARD/NBS agricultural data policy, national agricultural data sharing or farmer-data protection instrument, or NASS/NAIS data governance charter.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: The rung above Absent (Announced) was not proposed because no verbatim text in the supplied pages announces an agricultural data governance framework; and Absent was not proposed because the supplied pages are partial extracts insufficient to establish non-existence. Hence a ratification hold rather than a level. Closest available evidence: NITDA's Final Draft National Data Strategy (2022) sets out national, all-sector data governance machinery (it lists a Data Governance Committee and Data Steering Committee among its abbreviations and has sections on NDS Governance Structure and Ecosystem), but it is (i) still marked Draft and (ii) economy-wide, not an agricultural data governance framework; it does not set rules for agricultural/farmer data specifically. Separately, the DRAFT Nigeria Digital Agriculture Strategy (2020-2030) is agriculture-specific and sector-strategic, but the retrieved text is limited to cover page and contents and shows strategic initiatives and an implementation architecture rather than a data governance instrument. Neither is an agricultural data governance framework as named.",
-   "tier": "",
+   "value": "Nigeria has no dedicated agricultural data governance framework: the domain is covered instead by cross-cutting instruments \u2014 the National Bureau of Statistics' Third National Strategy for the Development of Statistics (",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2024,
+   "src": "National Bureau of Statistics, Third National Strategy for the Development of Statistics in Nigeria, 2024-2028",
+   "note": "Next level not proposed: Announced was not proposed because no admissible T1-T3 artifact in the retrieved pages announces an agriculture-specific data governance framework: NSDS III mentions no such instrument in the retrieved text, the Nigeria Digital Agriculture Strategy is an explicitly labelled 2020 DRAFT on digital agriculture generally rather than a data governance framework, and the only item actually bearing the phrase 'Ministry of Agriculture data governance framework' is a GenderOpenData catalog entry \u2014 a T5 publisher, and the page returned a maintenance notice with no document text, so nothing could be quote-verified from it. The FMAFS e-Library collection page returned a 500 Service Unavailable error and could not be inspected. NSDS III is an economy-wide statistical development strategy for the National Statistical System, not an agricultural data governance framework: it sets out reform and modernisation of official statistics across all sectors and says nothing in the retrieved text about ownership, access rights, sharing rules, licensing or stewardship of agricultural data specifically. It is cited here as the nearest adjacent national instrument, i.e. as evidence that the right domain was searched and the named instrument is not there. The other adjacent artifact, the Nigeria Digital Agriculture Strategy (2020-2030), is a NITDA-hosted document whose cover page reads 'DRAFT' and which is a sector digitalisation strategy rather than a data governance instrument.",
+   "tier": "T1",
    "tier_detail": "",
-   "url": "",
+   "url": "https://microdata.nigerianstat.gov.ng/index.php/catalog/174/download/1324/NSDS_III_2025_REPORT.pdf",
    "subs": [],
    "stale": false,
    "name": "Agricultural data governance framework",
@@ -694,15 +694,15 @@
    "kind": "l"
   },
   "4.7": {
-   "value": "DATA GAP \u2014 Started with ID4D as the canonical publisher: id4d.worldbank.org/global-dataset (T1) \u2014 describes the 2025 dataset and the digital-ID-for-online-transactions series but publishes only global aggregates (800 million without ID; 2.8 billion without digital ID; ~45 percent of countries), no Nigeria figure. Data360 dataset landing page (T1) \u2014 metadata and a birth-registration chart only, no Nigeria value. DataBank ID4D query builder (Source 4) \u2014 variable selector only, no data rendered. DataBank saved query (Source 5) \u2014 renders an ID4D series block including 'ID ownership, total (% of population ages 15+) 87.4' and 'Online digital identity 0.0' for 2021, but the query has 199 economies selected and the rendered rows carry no country label, so the block cannot be verified as Nigeria; discarded rather than attributed. Data catalog entry (Source 6) and ID4D 2021 Volume 1 abstract page (Source 7) \u2014 metadata only, no country figures. Turned to national sources: NIMC enrollment report index (T3) and the October 2025 enrollment dashboard (T3), which give 123,906,318 total enrolments with state breakdown but no coverage rate and no population base. World Bank Nigeria ID4D project ISR (T1) gives 121,191,781 NINs issued at 31-May-2025 against a 180,000,000 target \u2014 again a count. Nairametrics (T5, 136 million) excluded on tier grounds for a prerequisite row and in any case reports a count. Dead end: no page supplied carries a Nigerian population denominator, so no published-percentage route exists in this evidence set.",
-   "cls": "Gap",
+   "value": "No publisher in the retrieved sources gives a percentage digital-ID coverage figure for Nigeria; the World Bank reports 121,191,781 National Identity Numbers issued as at 31 May 2025 (against a project target of 180,000,",
+   "cls": "Documented",
    "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Administrative enrollment counts (cumulative records issued), not a survey-based coverage rate; NIMC counts may include duplicate or inactive records and include diaspora enrolments (1,538,582). Next level not proposed: Not even level 1 is proposed, because no percentage for this construct is published in the supplied sources; the ID4D digital-ID series for Nigeria appears only as binary availability flags, and the only percentage table retrieved (Source 5) carries no country label. To lift the hold, a ratifiable cell needs either the ID4D 2025 Nigeria digital-ID ownership/use percentage pulled with the country label visible, or an official NIMC/NBS statement of NIN coverage as a share of a named population. The indicator names a percentage \u2014 'Digital ID coverage (%)'. The quotable Nigerian evidence is an absolute count of NIN enrolments/issuances, not a share of any population. Two further mismatches bear on the census's open question: (a) the ID4D series that actually names digital ID for Nigeria is binary supply-side ('Online digital identity (1 = yes; 0 = no)', 'Digital ID verification (1 = yes; 0 = no)'), not a percentage, and (b) the ID4D percentage series that is usually pulled in its place measures foundational national-ID ownership among adults 15+, which is a different construct from digital ID and sits on a different denominator from an enrollment-versus-total-population ratio. The unlabelled DataBank block in Source 5 showing 'ID ownership, total (% of population ages 15+) 87.4' for 2021 is offered here only as context: the page does not identify which of the 199 selected economies that row belongs to, so it is not recorded as a Nigerian value.",
-   "tier": "",
-   "tier_detail": "",
-   "url": "",
+   "year": 2025,
+   "src": "World Bank, Implementation Status & Results Report \u2014 Nigeria Digital Identification for Development Project (P167183), Seq No. 9, 18-Jul-2025",
+   "note": "RATIFICATION HOLD \u2014 The indicator name asks for digital ID coverage as a percentage. The best T1/T3 evidence available for Nigeria in these pages is an absolute count of National Identity Numbers issued/enrolled (121.19m at 31-May-2025 per World Bank ISR; 123.91m at 31-Oct-2025 per NIMC), not a coverage rate. The ID4D demand-side series 'ID ownership, total (% of population ages 15+)' \u2014 the series used for Egypt \u2014 could not be read for Nigeria: the DataBank slice retrieved (Source 5) displays a single unidentified economy (values 71.4 in 2017 and 87.4 in 2021, with female 48.4/male 94.2 in 2017), which the page does not attribute to Nigeria and which does not match Nigeria's known profile, so it cannot be recorded here. ID4D's actual digital-ID series (digital ID verification / availability for online transactions) likewise has no Nigeria-specific value in any retrieved page. Note also the denominator question flagged in the census: NIN enrollment counts include children, whereas the ID4D ownership series Egypt uses is % of adults 15+, so the two country rows would not be on the same basis even if a rate were derived here.. The level is withheld and this row leaves every mean. Administrative enrollment counts (cumulative unique records), not a survey-based coverage rate; no denominator published in the cited sources. An independent T1 series (World Bank WDI ID.OWN.TOTL.ZS (World Bank Identification for Development (ID4D))) reports 79.08 for 2024.",
+   "tier": "T1",
+   "tier_detail": "Administrative enrolment counts (cumulative unique records), not a survey-based coverage rate; no denominator published in the cited sources",
+   "url": "https://documents1.worldbank.org/curated/en/099071825191020438/pdf/P167183-61a31932-0bb7-42e3-97ba-62d066c621a9.pdf",
    "defnote": "The name asserts a digital ID, but Egypt records the World Bank ID4D foundational national-ID-card ownership series while ID4D's actual digital-ID series exists and was not used \u2014 and on top of that the two countries are recorded on different denominators (Egypt % of adults 15+, Nigeria % of\u2026",
    "defsev": "asserts-falsehood",
    "subs": [],
@@ -718,15 +718,15 @@
    "kind": "t"
   },
   "4.9": {
-   "value": "The National Authority organizes meetings of the Inter-Ministerial Committee on Chemical and Biological Weapons Conventions quarterly or bi-annually, and its membership includes the Federal Ministry of Agriculture and Ru",
+   "value": "The Vice President, Senator Kashim Shettima, has inaugurated the Interministerial Committee on Research and Innovation with a charge to its members to ensure food security in Nigeria, energy security to power the economy",
    "cls": "Documented",
    "level": 3,
-   "year": 2026,
-   "src": "Office of the Secretary to the Government of the Federation, National Authority On Chemical & Biological Weapons Convention",
-   "note": "Recorded on second review, which located evidence the first pass did not reach. The first-pass Gap is refuted by affirmative T3 official evidence in Source 7. It documents an operating, recurring Nigerian Inter-Ministerial Committee and lists the Federal Ministry of Agriculture and Rural Development among its members. The source does not establish a digital-agriculture-specific body, but the indicator name as written requires only an inter-ministerial coordination mechanism for Nigeria. Next level not proposed: Level 4 is not proposed: none of the supplied pages provides independent or official evidence evaluating how well this committee performs its coordination function. No reach or coverage figures are supplied either. The indicator name is broad and does not limit the mechanism to digital agriculture. This is a formally constituted, recurring inter-ministerial mechanism in Nigeria; it concerns chemical and biological weapons conventions rather than digital agriculture, but its listed members include the Federal Ministry of Agriculture and Rural Development.",
+   "year": 2025,
+   "src": "The State House, Abuja \u2014 VP Shettima Inaugurates Interministerial Committee On Research, Innovation",
+   "note": "Recorded on second review, which located evidence the first pass did not reach. The first-pass Gap is affirmatively contradicted by the official State House report of an inaugurated Nigerian Interministerial Committee on Research and Innovation. The report gives the committee a coordination role across five strategic sectors and expressly includes Agriculture and Climate Resilience; it therefore supports an Adopted mechanism under the indicator name as written. Next level not proposed: No supplied page reports recurring meetings, implemented coordination actions, outputs, or other post-inauguration evidence demonstrating that the committee is operating. Against the indicator NAME as written, this is a Nigerian inter-ministerial coordination mechanism. Its documented remit includes agriculture: the source says it is to coordinate action in \u201cAgriculture and Climate Resilience.\u201d It is a research-and-innovation mechanism rather than one explicitly for digital agriculture, and the page does not establish recurring coordination after inauguration. Thus it sits on the formal-committee side of the unresolved definition question, not the project-based-recurring side.",
    "tier": "T3",
    "tier_detail": "",
-   "url": "https://www.osgf.gov.ng/offices/political-economic-affairs-office/national-authority-on-chemical-biological-weapons-convention/",
+   "url": "https://statehouse.gov.ng/vp-shettima-inaugurates-interministerial-committee-on-research-innovation/",
    "defnote": "Does the indicator require a formally constituted standing body or committee, or does any documented recurring \u2014 including project-based \u2014 coordination mechanism satisfy it?",
    "defsev": "construct-drift",
    "subs": [],
@@ -811,14 +811,14 @@
    "value": "Nigeria's federal extension institute NAERLS established a Department of E-Extension in January 2017 to deliver agricultural extension information and training through electronic/ICT channels.",
    "cls": "Documented",
    "level": 3,
-   "year": 2017,
-   "src": "National Agricultural Extension and Research Liaison Services (NAERLS), 'E-Extension'",
-   "note": "Implementer's own institutional web page; mandate stated prospectively ('The Department is set to...', 'shall pursue'), with no published activity, performance or reach data on the page. Next level not proposed: Operating (which would still yield base 3) was not claimed because none of the supplied pages document the unit actually delivering services \u2014 no described platform in use, no advisory volumes, no farmer contacts, no budget execution. The +1 for quality_evidence was withheld because the only source is the implementer's own descriptive page; no independent evaluation, audit, service standard or performance report on Nigerian digital extension was available in the supplied pages. The +2 for scale_evidence was withheld because no reach figures (users, farmers reached, states/LGAs covered, message volumes) for any Nigerian digital extension service appear in the supplied text. The quoted artifact is a Nigerian federal extension body's own record of establishing a dedicated e-extension unit, i.e. institutional digital extension capability. It is an existence/institutional fact, not a measure of service performance or coverage. The CGIAR/Alliance mapping of climate and agronomic digital advisory services in Nigeria (T2, cgspace/PLoS One) was surfaced but the supplied page text contains only metadata and an abstract with no Nigeria-specific figures that could be quoted.",
+   "year": 2025,
+   "src": "Federal Ministry of Agriculture and Food Security, \u201cFG Launches NEEP to Enhance Extension Service Delivery\u201d",
+   "note": "Provenance adjusted on second review: The first pass withheld Operating because it lacked evidence that a digital-extension unit was delivering services. A newer, directly relevant T3 federal-ministry release affirmatively reports that NEEP has been launched and says farmers and stakeholders \u201cwill now have access\u201d to real-time agricultural information through an interactive platform. This supports Operating rather than merely a documented institutional unit, although the mechanically derived level remains 3 because no quality or actual-scale evidence is available. Implementer's own institutional web page; mandate stated prospectively ('The Department is set to...', 'shall pursue'), with no published activity, performance or reach data on the page. Next level not proposed: Operating (which would still yield base 3) was not claimed because none of the supplied pages document the unit actually delivering services \u2014 no described platform in use, no advisory volumes, no farmer contacts, no budget execution. The +1 for quality_evidence was withheld because the only source is the implementer's own descriptive page; no independent evaluation, audit, service standard or performance report on Nigerian digital extension was available in the supplied pages. The +2 for scale_evidence was withheld because no reach figures (users, farmers reached, states/LGAs covered, message volumes) for any Nigerian digital extension service appear in the supplied text. The quoted artifact is a Nigerian federal extension body's own record of establishing a dedicated e-extension unit, i.e. institutional digital extension capability. It is an existence/institutional fact, not a measure of service performance or coverage. The CGIAR/Alliance mapping of climate and agronomic digital advisory services in Nigeria (T2, cgspace/PLoS One) was surfaced but the supplied page text contains only metadata and an abstract with no Nigeria-specific figures that could be quoted.",
    "tier": "T3",
    "tier_detail": "Implementer's own institutional web page; mandate stated prospectively ('The Department is set to...', 'shall pursue'), with no published activity, performance or reach data on the page",
-   "url": "https://naerls.gov.ng/e-extension/",
+   "url": "https://agriculture.gov.ng/fg-launches-neep-to-enhance-extension-service-delivery/",
    "subs": [],
-   "stale": true,
+   "stale": false,
    "name": "Digital extension capability",
    "pillar": "C4",
    "layer": "Enablers",
@@ -829,15 +829,15 @@
    "kind": "l"
   },
   "5.7": {
-   "value": "DATA GAP \u2014 1) Checked the two Nigeria government-domain sources first, as the only T3 candidates that could carry an organogram or department listing: elibrary.fmard.gov.ng and elibrary.fmafs.gov.ng (home, community-list, and the 'INFORMATION DEPARTMENT' and 'RURAL DEVELOPMENT' collection pages) \u2014 every one returned '500 Service Unavailable' with no content beyond the error notice, so no department structure could be read. 2) Checked the Guardian Nigeria article (T5) \u2014 it documents ARCN's launch of the Nigeria Agricultural Intelligence Platform on 9 October 2025 and references NATIP, but names no digital/AI unit inside the ministry and is below the admissible tier for a prerequisite row. 3) Checked World Bank Data360 IMF AI Preparedness Index \u2014 a cross-country macro index with no institutional or ministry-unit variable and no Nigeria figure on the retrieved page. 4) Checked the FAO Egypt digital agriculture release and the OECD AI Review of Egypt \u2014 both are Egypt evidence and were set aside under the no-cross-border rule; they are relevant only in that they illustrate the definitional ambiguity the census flagged. Dead ends: no NATIP policy text, no FMAFS organogram, no Nigeria establishment/civil-service circular, and no budget line naming a digital or AI unit was among the supplied pages.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Primary ministry sources (FMARD/FMAFS e-Library) were unreachable \u2014 all returned '500 Service Unavailable', so the ministry's own organogram or department listing could not be inspected. Next level not proposed: Announced (level 2) was not proposed because the only Nigeria item is a T5 news report of an ARCN platform launch, which is inadmissible for this prerequisite row and in any case describes a platform rather than a ministry unit; no T1-T3 page in the retrieved set names a digital or AI unit, department or directorate within FMAFS. The indicator name asserts a standing digital/AI unit INSIDE the ministry of agriculture. The nearest Nigeria evidence available here is a launch of the 'Nigeria Agricultural Intelligence Platform (NAIP)' by the Agricultural Research Council of Nigeria (ARCN), reported by Guardian Nigeria (T5). That sits on the wrong side of the open definitional question in two ways: (a) it is a PLATFORM/initiative, not a standing organisational unit with a mandate, staff and budget line; and (b) it is housed in ARCN, a parastatal research council, not in a department of the ministry itself \u2014 even though the Minister of Agriculture and Food Security presided over the unveiling. Scoring this row off that item would repeat the Egypt problem flagged in the indicator census, where a joint inter-ministerial programme was scored as if it were a named ministry unit. The Egypt-specific sources retrieved (FAO/MALR digital agriculture initiative; OECD AI Review of Egypt) are cross-border evidence and cannot be used for Nigeria at all.",
-   "tier": "",
-   "tier_detail": "",
-   "url": "",
+   "value": "The Federal Ministry of Agriculture and Food Security (FMAFS) of Nigeria publicly presents its programmes and current work as including digital initiatives \u2014 a national cooperative digital identity system MoU, a state-le",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "Federal Ministry of Agriculture and Food Security (Nigeria), ministry website homepage (About the Ministry / Our Programs / News and Publications)",
+   "note": "Ministry homepage does not enumerate the full departmental structure; the linked 'Structure' page and the ministry e-Library were not retrievable (e-Library returned '500 Service Unavailable'), so absence is established from the ministry's own public self-presentation rather than from an organigram. Next level not proposed: Announced (level 2) was not proposed because no ministerial or presidential decree, budget line, press release or policy document in an admissible tier announces the creation of a digital/AI unit within FMAFS. The only Nigerian digitalisation artifact retrieved \u2014 the November 2025 National Digital Farmer Registry stakeholder workshop report \u2014 is on a T5 domain, is inadmissible for this prerequisite row, and in any case describes a registry initiative and strategic recommendations rather than the establishment of a standing unit. The indicator names a standing digital/AI unit inside the ministry of agriculture. The quoted evidence is the Nigerian agriculture ministry's own site, examined for exactly that: it shows agricultural digitalisation activity (cooperative digital identity system, digital rollout to 36 states) but no named digital-transformation or AI unit. The strongest examples of the named construct in the retrieved pack sit on the wrong side of the border: Egypt's MALR Digital Transformation Unit (AG-DTU), created by MCIT decree 605 of 15 March 2020 with 16 experts, appears in CGIAR/OECD sources. Under rule 5 that is not evidence about Nigeria and is recorded here only as context for the unratified definition. The nearest Nigerian adjacent instrument, the National Digital Farmer Registry, is documented only on a T5 domain (ndfrplatform.ng) and is a programme/registry, not a standing ministerial unit.",
+   "tier": "T3",
+   "tier_detail": "Ministry homepage does not enumerate the full departmental structure; the linked 'Structure' page and the ministry e-Library were not retrievable (e-Library returned '500 Service Unavailable'), so absence is established from the ministry's own public self-presentation rather than from an organigram.",
+   "url": "https://fmard.gov.ng/",
    "defnote": "The name asserts a standing digital/AI unit inside the ministry of agriculture, but Egypt is scored level 3 on a joint MALR-MCIT programme while the row's own note records that the named unit could not be confirmed and that the prior evidence for it was ruled inadmissible \u2014 and because this row\u2026",
    "defsev": "asserts-falsehood",
    "subs": [],
@@ -964,19 +964,19 @@
    "kind": "l"
   },
   "6.9": {
-   "value": "DATA GAP \u2014 Order of examination: (1) NITDA Nigeria Digital Agriculture Strategy 2020-2030 draft (T3, nitda.gov.ng) \u2014 the only Nigerian government digital-ag artifact retrieved; text supplied stops at the table of contents, headings 3.5.6 'Consortium on ICT for Climate-Smart Agriculture', 3.5.7 'Nigeria Digital Agriculture Platform Initiative' and 4.1 'Digital Agriculture Ecosystem' / 5.1.1 'List of Digital Agriculture Ecosystem Players' are visible but their content is not, and the document is captioned DRAFT and 'In Review', so it evidences intent at best. (2) NATIP 2022-2027 (FMARD policy, but retrieved from nabg.ng, an industry-association mirror, hence T5 by domain) \u2014 table of contents shows 2.5.4 'Promoting Digital and Climate-Smart agriculture', but the supplied text contains no PPP naming, no partner, no digital-ag partnership. (3) World Bank PPP Resource Center Country Profile: Nigeria \u2014 Nigeria-specific PPP institutional/legal links (ICRC Act, Public Procurement Act, Lagos State PPP office) but strictly infrastructure, nothing agricultural or digital. (4) FAO/AUC agri-PPP guide 2024 \u2014 agri-PPP construct but continental scope, a manual, no Nigerian instance. (5) IFC/BMZ 'Scaling up Farmer Financing through AgTechs in Sub-Saharan Africa' \u2014 supplied text is front matter, disclaimers and contents only; the 'Country Overviews' section that might carry Nigeria detail was not in the retrieved extract. (6) CGIAR/Alliance Bioversity-CIAT TAFS-WCA Nigeria digital advisory mapping (T2) \u2014 executive summary describes public, private and NGO actors working on digital solutions and 'opportunities for synergy', but names no public-private partnership and gives no figures. (7) GSMA AgriTech Accelerator 2025 and GSMA Innovation Fund 2023 (T4) \u2014 Nigerian agritechs AgroMall, FarmSpeak and Winich Farms appear, funded by BMZ/GIZ and FCDO; these are donor-private, not Nigerian-public-private. (8) FMARD e-Library item on business partnerships in agrifood chains \u2014 server returned '500 Service Unavailable', a dead end. (9) World Bank documents link surfaced by search was an unrelated 2017 Nigeria/Switzerland asset-return MOU \u2014 irrelevant. Conclusion: no quotable evidence of a Nigerian digital-agriculture public-private partnership in the supplied pages.",
-   "cls": "Gap",
+   "value": "Nigeria has digital-agriculture collaborations in which private agritech firms deliver services through government programmes \u2014 GSMA reports that AFEX and AgroMall \"have worked effectively through government initiatives\"",
+   "cls": "Documented",
    "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: Level withheld rather than set at 1 (Absent) because the retrieval was shallow on exactly the artifacts that would settle the question: the NDAS body text, FMARD e-Library (which returned a 500 Service Unavailable error page), and any ICRC or FMARD register of agriculture-sector PPP projects. Scoring Absent on this retrieval would understate on the same weak basis that scoring Operating would overstate. Indicator names operating public-private partnerships in DIGITAL agriculture in NIGERIA. The retrieved evidence sits on the wrong side of the census's open question in three distinct ways. (1) ppp.worldbank.org Country Profile: Nigeria is Nigeria-specific and PPP-specific but covers large infrastructure concessions under the ICRC Act \u2014 no agriculture, no digital component. (2) The FAO/AUC 'Guide for the design and implementation of public-private partnerships for agribusiness development in Africa' (2024) is agri-PPP-specific but is a continental manual/guide, region 'Africa', with no Nigerian figure or named Nigerian partnership; it is guidance on how to design PPPs, i.e. design not operation. (3) GSMA AgriTech Accelerator and Innovation Fund reports and the CGIAR/Alliance Bioversity-CIAT Nigeria digital advisory mapping are digital-ag and Nigeria-relevant, but the partnerships they document are donor-to-private (BMZ/GIZ/FCDO funding AgroMall, Winich Farms, FarmSpeak) \u2014 the 'public' half is a foreign donor, not a Nigerian public authority. (4) The NITDA Nigeria Digital Agriculture Strategy (2020-2030) is the only Nigerian public artifact retrieved; it is marked DRAFT / 'In Review', and the retrieved text is limited to cover page, table of contents and section headings, so no PPP commitment, partner name, or partnership instrument can be quoted from it. This is precisely the census's concern that a level rests on intent documents rather than operating partnerships.",
-   "tier": "",
-   "tier_detail": "",
-   "url": "",
+   "year": 2020,
+   "src": "GSMA, AgriTech in Nigeria: Investment opportunities and challenges",
+   "note": "RATIFICATION HOLD \u2014 The indicator name asserts OPERATING public-private partnerships in digital agriculture. The strongest retrieved evidence (GSMA) describes private agritech companies delivering digital financial services through government initiatives \u2014 a functioning public-private working relationship in digital ag, but not identified as a formally constituted PPP under Nigeria's PPP framework (ICRC/Lagos OPPP processes described in the World Bank and Lagos PPP documents cover infrastructure concessions, not digital ag). The government-side digital-ag artifacts retrieved sit on the intent side of the census's open question: the NDAS (2020-2030) is a DRAFT strategy listing ecosystem players and proposed forums, and the NITDA-USAID item records a willingness to partner (and USAID is a public donor, not a private party). FAO's 2013 agribusiness PPP country report for Nigeria documents agribusiness PPPs (Josepdam Sugar, Shonga Farms, Olam, Enugu-Songhai, Agric-Yes) but these are production/agro-industry PPPs, not digital agriculture.. The level is withheld and this row leaves every mean. Industry-association analysis; describes company-government working relationships in general terms, with no named PPP agreements, no count of partnerships and no performance data.",
+   "tier": "T4",
+   "tier_detail": "Industry-association analysis; describes company-government working relationships in general terms, with no named PPP agreements, no count of partnerships and no performance data",
+   "url": "https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-for-development/wp-content/uploads/2020/04/AgriTech_in_Nigeria_Investment_Opportunities_and_Challenges1.pdf",
    "defnote": "The name asserts operating public-private partnerships, but Nigeria's level 3 rests substantially on MOUs signed days before capture (intent, not operation) and Egypt's flagship partnership pairs ministries with state-owned financial entities, leaving the \"private\" half of the construct thin.",
    "defsev": "construct-drift",
    "subs": [],
-   "stale": false,
+   "stale": true,
    "name": "Public-private partnerships in digital ag",
    "pillar": "E1",
    "layer": "Transformation",
@@ -989,14 +989,14 @@
    "kind": "l"
   },
   "6.12": {
-   "value": "Nigeria was named a member of the Digital Public Goods Alliance in September 2025 and committed to integrating digital public goods such as OpenCRVS, DHIS2 and KoboToolbox into its government digital services stack, guid",
+   "value": "Through joining the DPGA, Nigeria confirms its commitment to integrate digital public goods into its government digital services stack by fostering a supportive policy environment and promoting effective public-private p",
    "cls": "Documented",
-   "level": null,
+   "level": 2,
    "year": 2025,
-   "src": "Federal Ministry of Communications, Innovation & Digital Economy (Nigeria), \"Nigeria Joins the Digital Public Goods Alliance\"",
-   "note": "RATIFICATION HOLD \u2014 The indicator name (\"Digital public goods adopted\") is ambiguous per the census note. The best available evidence sits on the POLICY-ADOPTION side of that question: Nigeria joining the DPGA and committing, via its DPI Framework, to embed DPGs in government services. It is not a count or verified inventory of globally registered DPGs actually deployed by Nigerian government agencies, and it is not agriculture-specific. The only concrete deployment named is by a non-government actor: the same page states eHealth Nigeria \"already leverages a digital public good, OpenMRS, to digitise health data in the north of the country\". The DPG Registry page retrieved (T5, digitalpublicgoods.net) shows 247 registered DPGs globally but the retrieved excerpt is an alphabetical fragment (A\u2013C) and identifies no Nigeria-origin product, so no Nigerian registration can be evidenced from it.. The level is withheld and this row leaves every mean. Government self-announcement; no independent verification or evaluation in the retrieved pages.",
+   "src": "Federal Ministry of Communications, Innovation & Digital Economy (Nigeria), Nigeria Joins the Digital Public Goods Alliance",
+   "note": "Recorded on second review, which located evidence the first pass did not reach. The first pass\u2019s withholding applies an additional requirement\u2014verified registration or deployment inventory\u2014that is not in the indicator name. The official FMCIDE announcement explicitly records Nigeria\u2019s commitment to integrate DPGs into government digital services. This supports an Announced rung, while its language about developing a playbook and planned nominations prevents Adopted or Operating. Next level not proposed: The source says that Nigeria\u2019s activities include \u201cdeveloping a national playbook\u201d and refers to \u201cplanned national DPG nominations\u201d; it therefore does not demonstrate completed government adoption or operating deployment across agencies. The source directly concerns Nigeria\u2019s stated adoption of digital public goods. It does not establish a verified inventory of globally registered DPGs deployed by Nigerian government agencies, but the indicator name as written does not require either registry status or agriculture-specific deployment.",
    "tier": "T3",
-   "tier_detail": "Government self-announcement; no independent verification or evaluation in the retrieved pages",
+   "tier_detail": "",
    "url": "https://fmcide.gov.ng/nigeria-joins-the-digital-public-goods-alliance/",
    "defnote": "Does 'DPG adopted' mean the country deploying a globally registered DPG, or the country itself adopting a DPG policy or registering a national product?",
    "defsev": "construct-drift",
@@ -1351,63 +1351,63 @@
   },
   "C2": {
    "n": 8,
-   "rated": 5,
+   "rated": 6,
    "held": 2,
-   "mean": 2.8,
-   "band": "Established",
+   "mean": 2.5,
+   "band": "Emerging",
    "weak": false,
    "comp": {
     "Measured": 1,
-    "Documented": 6,
+    "Documented": 7,
     "Judged": 0,
-    "Gap": 1
+    "Gap": 0
    },
-   "stale": 1
+   "stale": 2
   },
   "C3": {
    "n": 8,
-   "rated": 4,
-   "held": 0,
-   "mean": 2.75,
-   "band": "Established",
+   "rated": 5,
+   "held": 1,
+   "mean": 2.4,
+   "band": "Emerging",
    "weak": false,
    "comp": {
     "Measured": 0,
-    "Documented": 4,
+    "Documented": 6,
     "Judged": 0,
-    "Gap": 4
+    "Gap": 2
    },
    "stale": 1
   },
   "C4": {
    "n": 7,
-   "rated": 2,
+   "rated": 3,
    "held": 1,
-   "mean": 3.0,
-   "band": "Established",
+   "mean": 2.33,
+   "band": "Emerging",
    "weak": true,
    "comp": {
     "Measured": 1,
-    "Documented": 2,
+    "Documented": 3,
     "Judged": 0,
-    "Gap": 4
+    "Gap": 3
    },
-   "stale": 1
+   "stale": 0
   },
   "E1": {
    "n": 11,
-   "rated": 6,
+   "rated": 7,
    "held": 3,
-   "mean": 3.0,
+   "mean": 2.86,
    "band": "Established",
    "weak": false,
    "comp": {
     "Measured": 0,
-    "Documented": 9,
+    "Documented": 10,
     "Judged": 0,
-    "Gap": 2
+    "Gap": 1
    },
-   "stale": 2
+   "stale": 3
   },
   "O1": {
    "n": 7,
@@ -1427,8 +1427,8 @@
  },
  "layers": {
   "Foundation": 2.56,
-  "Enablers": 2.69,
-  "Transformation": 3.5,
+  "Enablers": 2.38,
+  "Transformation": 3.2,
   "Outcomes": 3.5
  },
  "prereq": {
@@ -1450,7 +1450,7 @@
   "3.11": {
    "name": "Agricultural data interoperability standards",
    "kind": "UC:AGI",
-   "status": "Unverified"
+   "status": "Absent"
   },
   "4.1": {
    "name": "Data protection/privacy law",
@@ -1460,7 +1460,7 @@
   "4.5": {
    "name": "Agricultural data governance framework",
    "kind": "UC:AGI",
-   "status": "Unverified"
+   "status": "Absent"
   },
   "4.7": {
    "name": "Digital ID coverage (%)",
@@ -1480,7 +1480,7 @@
   "5.7": {
    "name": "MoAg digital/AI unit",
    "kind": "DELIVERY",
-   "status": "Unverified"
+   "status": "Absent"
   },
   "6.14": {
    "name": "Agri-fintech rails for smallholders",
@@ -1497,26 +1497,40 @@
   "ADV": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.94,
+   "mean": 2.71,
    "prereqs": [
     [
      "5.5",
      "Present"
     ]
    ],
-   "n_bearing": 18,
+   "n_bearing": 21,
    "basis": {
     "need": 0,
     "outcome": 1,
-    "enabler": 17
+    "enabler": 20
    },
-   "mean_enabler": 2.88,
+   "mean_enabler": 2.65,
    "mean_driven": false
   },
   "SMF": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.94,
+   "mean": 2.68,
+   "prereqs": [],
+   "n_bearing": 19,
+   "basis": {
+    "need": 0,
+    "outcome": 1,
+    "enabler": 18
+   },
+   "mean_enabler": 2.61,
+   "mean_driven": false
+  },
+  "MKT": {
+   "status": "Unverified",
+   "why": "universal unverified: 2.1",
+   "mean": 2.63,
    "prereqs": [],
    "n_bearing": 16,
    "basis": {
@@ -1524,41 +1538,27 @@
     "outcome": 1,
     "enabler": 15
    },
-   "mean_enabler": 2.87,
-   "mean_driven": false
-  },
-  "MKT": {
-   "status": "Unverified",
-   "why": "universal unverified: 2.1",
-   "mean": 2.92,
-   "prereqs": [],
-   "n_bearing": 13,
-   "basis": {
-    "need": 0,
-    "outcome": 1,
-    "enabler": 12
-   },
-   "mean_enabler": 2.83,
+   "mean_enabler": 2.53,
    "mean_driven": false
   },
   "SCM": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.92,
+   "mean": 2.63,
    "prereqs": [],
-   "n_bearing": 13,
+   "n_bearing": 16,
    "basis": {
     "need": 0,
     "outcome": 1,
-    "enabler": 12
+    "enabler": 15
    },
-   "mean_enabler": 2.83,
+   "mean_enabler": 2.53,
    "mean_driven": false
   },
   "FIN": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 2.87,
+   "mean": 2.53,
    "prereqs": [
     [
      "3.3",
@@ -1573,19 +1573,19 @@
      "Unverified"
     ]
    ],
-   "n_bearing": 15,
+   "n_bearing": 19,
    "basis": {
     "need": 0,
     "outcome": 2,
-    "enabler": 13
+    "enabler": 17
    },
-   "mean_enabler": 2.77,
+   "mean_enabler": 2.41,
    "mean_driven": false
   },
   "AGI": {
-   "status": "Unverified",
-   "why": "universal unverified: 2.1",
-   "mean": 2.88,
+   "status": "Blocked",
+   "why": "3.11, 4.5",
+   "mean": 2.55,
    "prereqs": [
     [
      "3.3",
@@ -1593,29 +1593,29 @@
     ],
     [
      "3.11",
-     "Unverified"
+     "Absent"
     ],
     [
      "4.5",
-     "Unverified"
+     "Absent"
     ],
     [
      "7.12",
      "Present"
     ]
    ],
-   "n_bearing": 16,
+   "n_bearing": 20,
    "basis": {
     "need": 0,
     "outcome": 1,
-    "enabler": 15
+    "enabler": 19
    },
-   "mean_enabler": 2.8,
+   "mean_enabler": 2.47,
    "mean_driven": false
   }
  },
  "leapfrog": {
-  "gap": -0.94,
+  "gap": -0.64,
   "flag": false,
   "reading": "No structural flag"
  },
@@ -1626,6 +1626,27 @@
    "level": 1,
    "pillar": "A1",
    "prereq": false
+  },
+  {
+   "id": "3.11",
+   "name": "Agricultural data interoperability standards",
+   "level": 1,
+   "pillar": "C2",
+   "prereq": true
+  },
+  {
+   "id": "4.5",
+   "name": "Agricultural data governance framework",
+   "level": 1,
+   "pillar": "C3",
+   "prereq": true
+  },
+  {
+   "id": "5.7",
+   "name": "MoAg digital/AI unit",
+   "level": 1,
+   "pillar": "C4",
+   "prereq": true
   },
   {
    "id": "6.1",
@@ -1670,38 +1691,17 @@
    "prereq": false
   },
   {
-   "id": "8.1",
-   "name": "Prevalence of undernourishment (%)",
+   "id": "6.12",
+   "name": "Digital public goods adopted",
    "level": 2,
-   "pillar": "A1",
-   "prereq": false
-  },
-  {
-   "id": "2.4",
-   "name": "Individuals using the Internet (%)",
-   "level": 3,
-   "pillar": "C1",
-   "prereq": false
-  },
-  {
-   "id": "3.1",
-   "name": "UN E-Government Development Index",
-   "level": 3,
-   "pillar": "C2",
-   "prereq": false
-  },
-  {
-   "id": "3.10",
-   "name": "Agricultural e-commerce platforms",
-   "level": 3,
    "pillar": "E1",
    "prereq": false
   },
   {
-   "id": "3.6",
-   "name": "Weather/climate data infrastructure",
-   "level": 3,
-   "pillar": "C2",
+   "id": "8.1",
+   "name": "Prevalence of undernourishment (%)",
+   "level": 2,
+   "pillar": "A1",
    "prereq": false
   }
  ],
@@ -1732,7 +1732,7 @@
    "name": "Prevalence of undernourishment (%)",
    "value": 20.0,
    "year": 2023,
-   "src": "World Bank, Prevalence of undernourishment (% of population) - Nigeria"
+   "src": "World Bank Data \u2014 Prevalence of undernourishment (% of population) - Nigeria"
   },
   {
    "id": "8.2",
@@ -1779,11 +1779,6 @@
    "cls": "Judged"
   },
   {
-   "id": "3.11",
-   "name": "Agricultural data interoperability standards",
-   "cls": "Gap"
-  },
-  {
    "id": "4.2",
    "name": "Cybersecurity framework (ITU GCI)",
    "cls": "Gap"
@@ -1791,16 +1786,6 @@
   {
    "id": "4.3",
    "name": "Government AI Readiness Index",
-   "cls": "Gap"
-  },
-  {
-   "id": "4.5",
-   "name": "Agricultural data governance framework",
-   "cls": "Gap"
-  },
-  {
-   "id": "4.7",
-   "name": "Digital ID coverage (%)",
    "cls": "Gap"
   },
   {
@@ -1814,11 +1799,6 @@
    "cls": "Gap"
   },
   {
-   "id": "5.7",
-   "name": "MoAg digital/AI unit",
-   "cls": "Gap"
-  },
-  {
    "id": "5.12",
    "name": "Gender balance in digital-ag workforce (%)",
    "cls": "Gap"
@@ -1826,11 +1806,6 @@
   {
    "id": "6.3",
    "name": "Business Ready (B-READY)",
-   "cls": "Gap"
-  },
-  {
-   "id": "6.9",
-   "name": "Public-private partnerships in digital ag",
    "cls": "Gap"
   },
   {
@@ -1876,18 +1851,23 @@
    "year": 2020
   },
   {
+   "id": "3.11",
+   "name": "Agricultural data interoperability standards",
+   "year": 2016
+  },
+  {
    "id": "4.4",
    "name": "National digital agriculture strategy",
    "year": 2020
   },
   {
-   "id": "5.5",
-   "name": "Digital extension capability",
-   "year": 2017
-  },
-  {
    "id": "6.4",
    "name": "Agtech venture ecosystem",
+   "year": 2020
+  },
+  {
+   "id": "6.9",
+   "name": "Public-private partnerships in digital ag",
    "year": 2020
   },
   {
@@ -1903,12 +1883,12 @@
  ],
  "counts": {
   "Measured": 10,
-  "Documented": 24,
+  "Documented": 29,
   "Judged": 1,
-  "Gap": 22
+  "Gap": 17
  },
- "held": 7,
- "rated": 28,
+ "held": 8,
+ "rated": 32,
  "candidates": {
   "A1-CAND-IMP": {
    "value": "DATA GAP \u2014 1) Source 2 (data.un.org, FAOSTAT itemCode 21035) \u2014 the exact named construct; scanned the record table for a Nigeria row: table is truncated at 'Page 1 of 81' and shows only Afghanistan (19 years), Africa aggregate and part of Albania. Nigeria appears solely in the 'Country or Area (226)' filter list, unaccompanied by any number. 2) Source 4 (openknowledge.fao.org Figure 52, cereal import dependency ratio top countries 2020\u20132022) \u2014 checked the plotted country labels; the twenty listed are small island states and Gulf/North African states in the 90\u2013100 percent band; Nigeria absent. 3) Source 1 (FAOSTAT home) \u2014 navigation and database update log only, no country values. 4) Source 3 (FAO data catalog metadata for the Suite of Food Security Indicators) \u2014 dataset description and licensing only, no figures. 5) Source 5 (USDA ERS, The Agricultural Economy of Nigeria, 1972) \u2014 Nigeria-specific but a 1970s narrative on cocoa, peanuts, wheat imports; no cereal import dependency ratio, and half a century out of date. 6) Source 6 (Foods 2025 beta regression on food insecurity) \u2014 only front matter and abstract retrieved; no Nigeria-specific cereal import dependency figure in the supplied text. 7) Source 7 (Food Systems Dashboard) \u2014 returned an HTTP 429 security checkpoint with no content, and is T5 in any case. Conclusion: the figure is almost certainly published by FAOSTAT for Nigeria, but it is not present in any supplied page text, so recording a number would require fabricating it.",

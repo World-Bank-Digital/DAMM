@@ -80,7 +80,12 @@ class Ledger:
         self._t0 = time.time()
         # Fetches and vendor calls run concurrently, so the counter is shared state.
         # Without the lock two callers can both pass `check` on the last dollar.
-        self._lock = threading.Lock()
+        #
+        # RLock, not Lock: `save` holds the lock while calling `summary`, which calls
+        # `spent`, which takes the lock again. With a plain Lock that deadlocks, and it
+        # deadlocks at the first checkpoint of every run rather than rarely.
+        self._lock = threading.RLock()
+        self._carried_s = 0.0
 
     # -- pricing ---------------------------------------------------
     @staticmethod
@@ -124,7 +129,7 @@ class Ledger:
             raise BudgetExhausted(pass_name, self.spent(pass_name), self.cap(pass_name))
 
     def elapsed(self):
-        return round(time.time() - self._t0, 1)
+        return round(time.time() - self._t0 + self._carried_s, 1)
 
     def summary(self):
         by_pass, by_vendor = {}, {}
@@ -136,8 +141,30 @@ class Ledger:
                     by_pass=by_pass, by_vendor=by_vendor)
 
     def save(self, path):
-        json.dump(dict(summary=self.summary(), calls=self.calls),
-                  open(path, "w"), indent=1)
+        with self._lock:
+            json.dump(dict(summary=self.summary(), calls=list(self.calls)),
+                      open(path, "w"), indent=1)
+
+    def load(self, path):
+        """Carry a previous ledger forward, for a resumed run.
+
+        A resume used to start the counter at zero and then overwrite the saved ledger,
+        so a run finished in two sittings reported only the second one: Egypt's first
+        pass read $0.26 when it had cost $15.75. Worse than the misreporting, the
+        ceiling stopped binding — decision G2 caps a country at $500, and a counter that
+        resets on resume could be walked past that cap indefinitely by stopping and
+        starting.
+        """
+        if not os.path.exists(path):
+            return 0
+        saved = json.load(open(path))
+        prior = saved.get("calls", [])
+        with self._lock:
+            self.calls = prior + self.calls
+        # Elapsed is wall-clock for this sitting, so the earlier sitting's seconds are
+        # carried separately and added back by `elapsed`.
+        self._carried_s = saved.get("summary", {}).get("elapsed_s", 0) or 0
+        return len(prior)
 
 
 # ---------------------------------------------------------------- http

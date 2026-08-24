@@ -451,10 +451,13 @@ def main():
     llm = V.LLM(vendor, ledger, model=mname or None)
 
     state_path = os.path.join(LOOP1, f"{args.run}_g2_state.json")
+    spend_path = os.path.join(LOOP1, f"{args.run}_g2_spend.json")
     state = {"findings": {}}
     if args.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
-        print(f"resuming — {len(state['findings'])} rows already reviewed")
+        carried = ledger.load(spend_path)
+        print(f"resuming — {len(state['findings'])} rows already reviewed, "
+              f"{carried} earlier vendor calls carried (${ledger.spent():.2f} spent)")
 
     if args.reapply:
         findings = json.load(open(os.path.join(LOOP1, f"{args.run}_g2_findings.json")))

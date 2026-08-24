@@ -7,36 +7,36 @@ The same comparison against the same verified assessment, before and after the s
 
 | | first pass | Gate 2 | Gate 2 as a share |
 |---|---|---|---|
-| cost | $15.49 | $6.39 | 29% of the two passes together |
-| rows | 57 | 38 | 67% of the register |
-| minutes | 24 | 14 | |
+| cost | $0.26 | $6.35 | 96% of the two passes together |
+| rows | 57 | 36 | 63% of the register |
+| minutes | 2 | 13 | |
 
-Decision G3 reserves 15% of the country budget for Gate 2 — $75 of $500. It spent **$6.39**, which is 9% of that allocation.
+Decision G3 reserves 15% of the country budget for Gate 2 — $75 of $500. It spent **$6.35**, which is 8% of that allocation.
 
 
 ## What it changed
 
 | outcome | rows |
 |---|---|
-| filled | 3 |
-| adjusted | 2 |
-| upheld | 33 |
+| filled | 4 |
+| adjusted | 3 |
+| upheld | 29 |
 
-**3 rows** had their level changed by the second review (3 filled, 0 withdrawn, 0 relevelled). That figure, not the upheld count, is what the 15% buys.
+**4 rows** had their level changed by the second review (4 filled, 0 withdrawn, 0 relevelled). That figure, not the upheld count, is what the 15% buys.
 
 
 ## Whether it moved the assessment toward the verified one
 
 | measure | before Gate 2 | after | change |
 |---|---|---|---|
-| rows at the verified level (of 57) | 24 | 24 | no change |
-| prerequisites matching (of 12) | 4 | 5 | +1 ✓ |
-| recorded gaps | 22 | 20 | -2 ✓ (the verified assessment records 5) |
-| ratification holds | 11 | 10 | -1 ✓ (the verified assessment records 5) |
-| rows both assessments levelled | 23 | 26 | +3 ✓ |
-| of those, exactly equal | 15 | 15 | no change |
+| rows at the verified level (of 57) | 27 | 29 | +2 ✓ |
+| prerequisites matching (of 12) | 7 | 8 | +1 ✓ |
+| recorded gaps | 15 | 14 | -1 ✓ (the verified assessment records 5) |
+| ratification holds | 13 | 10 | -3 ✓ (the verified assessment records 5) |
+| rows both assessments levelled | 28 | 32 | +4 ✓ |
+| of those, exactly equal | 18 | 20 | +2 ✓ |
 
-Gaps Gate 2 closed: 4.9, 8.4.
+Gaps Gate 2 closed: 4.9.
 
 
 ## Reading this

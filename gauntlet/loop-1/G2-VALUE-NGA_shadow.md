@@ -7,35 +7,35 @@ The same comparison against the same verified assessment, before and after the s
 
 | | first pass | Gate 2 | Gate 2 as a share |
 |---|---|---|---|
-| cost | $15.32 | $6.14 | 29% of the two passes together |
+| cost | $1.60 | $5.99 | 79% of the two passes together |
 | rows | 57 | 36 | 63% of the register |
-| minutes | 25 | 12 | |
+| minutes | 4 | 11 | |
 
-Decision G3 reserves 15% of the country budget for Gate 2 — $75 of $500. It spent **$6.14**, which is 8% of that allocation.
+Decision G3 reserves 15% of the country budget for Gate 2 — $75 of $500. It spent **$5.99**, which is 8% of that allocation.
 
 
 ## What it changed
 
 | outcome | rows |
 |---|---|
-| filled | 2 |
+| filled | 4 |
 | relevelled | 1 |
-| adjusted | 1 |
-| upheld | 32 |
+| adjusted | 3 |
+| upheld | 28 |
 
-**3 rows** had their level changed by the second review (2 filled, 0 withdrawn, 1 relevelled). That figure, not the upheld count, is what the 15% buys.
+**5 rows** had their level changed by the second review (4 filled, 0 withdrawn, 1 relevelled). That figure, not the upheld count, is what the 15% buys.
 
 
 ## Whether it moved the assessment toward the verified one
 
 | measure | before Gate 2 | after | change |
 |---|---|---|---|
-| rows at the verified level (of 57) | 28 | 30 | +2 ✓ |
-| prerequisites matching (of 12) | 4 | 5 | +1 ✓ |
-| recorded gaps | 24 | 22 | -2 ✓ (the verified assessment records 4) |
-| ratification holds | 7 | 7 | no change (the verified assessment records 7) |
-| rows both assessments levelled | 25 | 27 | +2 ✓ |
-| of those, exactly equal | 18 | 20 | +2 ✓ |
+| rows at the verified level (of 57) | 30 | 33 | +3 ✓ |
+| prerequisites matching (of 12) | 6 | 8 | +2 ✓ |
+| recorded gaps | 19 | 17 | -2 ✓ (the verified assessment records 4) |
+| ratification holds | 10 | 8 | -2 ✓ (the verified assessment records 7) |
+| rows both assessments levelled | 27 | 31 | +4 ✓ |
+| of those, exactly equal | 20 | 23 | +3 ✓ |
 
 Gaps Gate 2 closed: 4.9, 8.1.
 

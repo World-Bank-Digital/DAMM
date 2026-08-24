@@ -236,6 +236,37 @@ check("a gap the reviewer filled becomes evidence",
                                    reason="r", gate_verdict="pass",
                                    proposed_row=dict(ROW, level=3)))[0], "filled")
 
+# ---------------------------------------------------------------- the spend counter
+section("The spend counter survives a resume")
+import json as _json, os as _os, tempfile as _tf
+
+# A resume used to start the counter at zero and overwrite the saved ledger, so a run
+# finished in two sittings reported only the second: Egypt's first pass read $0.26 when
+# it had cost $15.75. The ceiling stopped binding too, since it could be walked past by
+# stopping and starting. And wrapping `save` in a plain Lock deadlocked it against
+# `spent`, at the first checkpoint of every run.
+_led = V.Ledger(ceiling=500, label="t"); _led.record("exa", "research", searches=3)
+_f = _tf.mktemp(suffix=".json"); _led.save(_f)
+_l2 = V.Ledger(ceiling=500, label="t")
+check("a resume carries the earlier calls", _l2.load(_f), 1)
+_l2.record("exa", "research", searches=2)
+check("and the counter accumulates", round(_l2.spent(), 6), 0.025)
+check("the summary counts both sittings", _l2.summary()["calls"], 2)
+_l2.save(_f)
+check("saving does not drop the carried calls", len(_json.load(open(_f))["calls"]), 2)
+
+_l3 = V.Ledger(ceiling=0.02, label="t"); _l3.load(_f)
+try:
+    _l3.check("research")
+    check("the ceiling binds across a resume", "no raise", "BudgetExhausted")
+except V.BudgetExhausted:
+    check("the ceiling binds across a resume", "BudgetExhausted", "BudgetExhausted")
+_os.unlink(_f)
+
+# Per-pass caps only bound the total if the allocations exhaust the ceiling (decision G3).
+check("the per-pass allocations sum to the whole ceiling",
+      round(sum(v for k, v in V.Ledger.ALLOCATION.items() if k != "audition"), 6), 1.0)
+
 # ---------------------------------------------------------------- report
 print()
 if FAIL:

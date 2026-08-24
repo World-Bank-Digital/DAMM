@@ -5,11 +5,11 @@
 
 ## The five questions
 
-**1. How many of the 57 rows land on the same level?** **30 of 57** (53%). Of the 27 rows where both assessments set a level at all, 20 agree exactly (74%) and 25 are within one level (93%).
+**1. How many of the 57 rows land on the same level?** **33 of 57** (58%). Of the 31 rows where both assessments set a level at all, 23 agree exactly (74%) and 29 are within one level (94%).
 
-**2. Do all twelve prerequisites match?** **5 of 12** carry the same status. The divergences are listed below; each one moves at least one column of the readiness matrix.
+**2. Do all twelve prerequisites match?** **8 of 12** carry the same status. The divergences are listed below; each one moves at least one column of the readiness matrix.
 
-**3. Gaps.** The verified assessment records **4** (5.12, 6.3, 8.11, 8.17). The shadow run records **22**, of which it found **4** of the recorded ones and raised **18** the verified assessment does not carry. It also set **7** ratification holds against the verified assessment's 7.
+**3. Gaps.** The verified assessment records **4** (5.12, 6.3, 8.11, 8.17). The shadow run records **17**, of which it found **4** of the recorded ones and raised **13** the verified assessment does not carry. It also set **8** ratification holds against the verified assessment's 7.
 
 **4. The rural/national trap at 2.1.** **Avoided.** The shadow run recorded 2.1 as `Gap` with no level; gate verdict `gap`. It did not record a national coverage figure against an indicator naming rural coverage — the error that passed an assessor gate and an initial peer review before an audit caught it.
   
@@ -22,7 +22,7 @@
   Recorded value: `DATA GAP — 1) ITU Digital Development Dashboard for Nigeria (ddd_NGA.pdf, T1) — found national coverage: 94% mobile-cellular, 87% at-least-3G, 81% at-least-4G (2022); the only rural-tagged row is households with Internet access at home, rural (2017) 2%, a different construct. No rural coverage spli…`
 
 
-**5. Cost and time.** **$21.47** across 1616 vendor calls in 37 minutes, against a $500 country ceiling — 4.3% of it, across 2 passes (NGA_shadow, NGA_shadow_g2). By vendor: anthropic $11.39, openai $3.70, perplexity $3.54, exa $1.90, jina $0.95.
+**5. Cost and time.** **$7.58** across 706 vendor calls in 15 minutes, against a $500 country ceiling — 1.5% of it, across 2 passes (NGA_shadow, NGA_shadow_g2). By vendor: openai $3.83, perplexity $1.28, anthropic $1.21, exa $0.84, jina $0.42.
 
 
 ## Prerequisites — the twelve rows that gate the matrix
@@ -32,13 +32,13 @@
 | 2.1 | Rural mobile broadband coverage (3 | Present | **Unverified** | L3 → no level | 1) ITU Digital Development Dashboard for Nigeria (ddd_NGA.pdf, T1) — found national coverage: 94% mobile-cell… |
 | 2.9 | Rural electricity access (%) | Present (narrow) | Present (narrow) | L2 → L2 |  |
 | 3.3 | National farmer registry | Present (narrow) | Present (narrow) | L2 → L2 |  |
-| 3.11 | Agricultural data interoperability | Absent | **Unverified** | L1 → no level | Order of inspection: (1) NITDA 'DATA INTEROPERABILITY STANDARDS, 2016' PDF — read preliminaries, arrangement … |
+| 3.11 | Agricultural data interoperability | Absent | Absent | L1 → L1 |  |
 | 4.1 | Data protection/privacy law | Present | Present | L4 → L3 |  |
-| 4.5 | Agricultural data governance frame | Absent | **Unverified** | L1 → no level | 1) FAO Global Strategy to Improve Agricultural and Rural Statistics country page for Nigeria (T1) — checked f… |
-| 4.7 | Digital ID coverage (%) | Present | **Unverified** | L4 → no level | Started with ID4D as the canonical publisher: id4d.worldbank.org/global-dataset (T1) — describes the 2025 dat… |
-| 4.9 | Inter-ministerial coordination mec | Absent | **Present** | L1 → L3 | The National Authority organizes meetings of the Inter-Ministerial Committee on Chemical and Biological Weapo… |
+| 4.5 | Agricultural data governance frame | Absent | Absent | L1 → L1 |  |
+| 4.7 | Digital ID coverage (%) | Present | **Unverified** | L4 → no level | The indicator name asks for digital ID coverage as a percentage. The best T1/T3 evidence available for Nigeri… |
+| 4.9 | Inter-ministerial coordination mec | Absent | **Present** | L1 → L3 | The Vice President, Senator Kashim Shettima, has inaugurated the Interministerial Committee on Research and I… |
 | 5.5 | Digital extension capability | Present | Present | L3 → L3 |  |
-| 5.7 | MoAg digital/AI unit | Absent | **Unverified** | L1 → no level | 1) Checked the two Nigeria government-domain sources first, as the only T3 candidates that could carry an org… |
+| 5.7 | MoAg digital/AI unit | Absent | Absent | L1 → L1 |  |
 | 6.14 | Agri-fintech rails for smallholder | Present | **Unverified** | L3 → no level | The ABP is explicitly and exclusively addressed to smallholders ('Create an Ecosystem to link out-growers (Sm… |
 | 7.12 | Responsible-AI safeguards (consent | Present | Present | L3 → L3 |  |
 
@@ -51,7 +51,7 @@
 | MKT | Partial | Unverified | **differs** |
 | SCM | Partial | Unverified | **differs** |
 | FIN | Partial | Unverified | **differs** |
-| AGI | Blocked | Unverified | **differs** |
+| AGI | Blocked | Blocked | match |
 
 ## Pillars
 
@@ -59,23 +59,24 @@
 |---|---|---|---|---|
 | A1 | 2.25 (Emerging) | 8/2 | 2.33 (Emerging) | 6/0 |
 | C1 | 2.83 (Established) | 6/0 | 3.0 (Established) | 3/1 |
-| C2 | 2.57 (Emerging) | 7/1 | 2.8 (Established) | 5/2 |
-| C3 | 2.88 (Established) | 8/0 | 2.75 (Established) | 4/0 |
-| C4 | 2.5 (Emerging) | 4/2 | 3.0 (Established) | 2/1 |
-| E1 | 2.56 (Emerging) | 9/1 | 3.0 (Established) | 6/3 |
+| C2 | 2.57 (Emerging) | 7/1 | 2.5 (Emerging) | 6/2 |
+| C3 | 2.88 (Established) | 8/0 | 2.4 (Emerging) | 5/1 |
+| C4 | 2.5 (Emerging) | 4/2 | 2.33 (Emerging) | 3/1 |
+| E1 | 2.56 (Emerging) | 9/1 | 2.86 (Established) | 7/3 |
 | O1 | 3.25 (Established) | 4/1 | 3.5 (Advanced) | 2/0 |
 
 ## Which direction the divergences run
 
 This is the part to read first. A shadow run that withholds a level where the verified assessment set one costs coverage; a shadow run that sets a level *higher* than the verified assessment is claiming readiness the evidence may not carry, and that is the failure that matters.
 
-- **4 rows read higher** than the verified assessment.
-  - **4.9 Inter-ministerial coordination mechanism** — L1 to L3. The National Authority organizes meetings of the Inter-Ministerial Committee on Chemical and Biological Weapons Conventions quarterly or bi-annually, and its membership includes the Federal Ministry …
+- **5 rows read higher** than the verified assessment.
+  - **4.9 Inter-ministerial coordination mechanism** — L1 to L3. The Vice President, Senator Kashim Shettima, has inaugurated the Interministerial Committee on Research and Innovation with a charge to its members to ensure food security in Nigeria, energy security…
   - **6.4 Agtech venture ecosystem** — L3 to L4. Nigeria has an operating agritech venture ecosystem of digital solution providers for smallholder farmers, supported by incubators, accelerators, angel investors and donors, but only a handful of sta…
+  - **6.12 Digital public goods adopted** — L1 to L2. The indicator name ("Digital public goods adopted") is ambiguous per the census note. The best available evidence sits on the POLICY-ADOPTION side of that question: Nigeria joining the DPGA and commi…
   - **7.2 AI-enabled agricultural solutions deployed** — L2 to L3. FAO's Science, Technology and Innovation Portal records the AKILIMO Nigeria Integrated Digital Agronomic Solution — classified as an artificial intelligence (AI) digital technology — as adopted in Ni…
   - **8.12 Documented impact evidence (yield/income)** — L3 to L4. A randomized controlled trial of the RiceAdvice digital personalized-extension app in Nigeria found that farm households receiving personalized advice increased their yield by 7% and their profit by …
 - **3 rows read lower.** 1.5 (L3→L1), 3.6 (L4→L3), 4.1 (L4→L3)
-- **19 rows withheld a level** the verified assessment set: 1.1, 1.6, 1.7, 2.1, 2.7, 2.11, 3.4, 3.11, 4.2, 4.3, 4.5, 4.7, 5.7, 5.8, 6.9, 6.12, 6.14, 8.4, 8.6.
+- **15 rows withheld a level** the verified assessment set: 1.1, 1.6, 1.7, 2.1, 2.7, 2.11, 3.4, 4.2, 4.3, 4.7, 5.8, 6.9, 6.14, 8.4, 8.6.
 - **1 row set a level** the verified assessment withheld: 8.5.
 
 The asymmetry between the last two is the abstention threshold, stated as a number. It is the figure to tune, and tuning it in either direction moves the first bullet — which is the one that decides whether a machine-set readiness matrix can be trusted.
@@ -87,13 +88,13 @@ Each gate below is a design decision doing its job. A row that reaches a gate ke
 
 | gate | rows |
 |---|---|
-| construct (hold) | 5 |
+| construct (hold) | 8 |
 | tier (hold) | 1 |
 | coherence (hold) | 1 |
 
 ## Independent corroboration
 
-11 rows are also covered by a machine-fetchable T1 series, fetched separately and never substituted for the research lane's own answer. **7 of 11** research values agree with the independent series within 2%.
+12 rows are also covered by a machine-fetchable T1 series, fetched separately and never substituted for the research lane's own answer. **7 of 12** research values agree with the independent series within 2%.
 
 
 ## Every row
@@ -123,27 +124,27 @@ Each gate below is a design decision doing its job. A row that reaches a gate ke
 | 3.6 | Weather/climate data infrastructure | Documented L4 | Documented L3 | **differs** | 88 |
 | 3.7 | Satellite/EO data integration | Documented L3 | Documented L3 | match |  |
 | 3.8 | National soil map/database | Documented L3 | Documented L3 | match |  |
-| 3.11 ⚑ | Agricultural data interoperability s | Documented L1 | Gap no level | **differs** | Order of inspection: (1) NITDA 'DATA INTEROPERABILITY STANDARDS, 2016' PDF — read preliminaries, ar… |
+| 3.11 ⚑ | Agricultural data interoperability s | Documented L1 | Documented L1 | match |  |
 | 4.1 ⚑ | Data protection/privacy law | Documented L4 | Documented L3 | **differs** | Nigeria has a comprehensive data protection law, the Nigeria Data Protection Act (NDP Act) 2023, wh… |
 | 4.2 | Cybersecurity framework (ITU GCI) | Measured L5 | Gap no level | **differs** | 1) ITU GCI 2024 e-publication (English and Chinese-interface renderings, Sources 1 and 5) — read fo… |
 | 4.3 | Government AI Readiness Index | Measured L3 | Gap no level | **differs** | 1) Oxford Insights 2025 index page (primary publisher) - Nigeria appears only in the country-select… |
 | 4.4 | National digital agriculture strateg | Documented L2 | Documented L2 | match |  |
-| 4.5 ⚑ | Agricultural data governance framewo | Documented L1 | Gap no level | **differs** | 1) FAO Global Strategy to Improve Agricultural and Rural Statistics country page for Nigeria (T1) —… |
+| 4.5 ⚑ | Agricultural data governance framewo | Documented L1 | Documented L1 | match |  |
 | 4.6 | National AI strategy with agricultur | Documented L3 | Documented L3 | match |  |
-| 4.7 ⚑ | Digital ID coverage (%) | Measured L4 | Gap no level | **differs** | Started with ID4D as the canonical publisher: id4d.worldbank.org/global-dataset (T1) — describes th… |
-| 4.9 ⚑ | Inter-ministerial coordination mecha | Documented L1 | Documented L3 | **differs** | The National Authority organizes meetings of the Inter-Ministerial Committee on Chemical and Biolog… |
+| 4.7 ⚑ | Digital ID coverage (%) | Measured L4 | Documented no level | **differs** | The indicator name asks for digital ID coverage as a percentage. The best T1/T3 evidence available … |
+| 4.9 ⚑ | Inter-ministerial coordination mecha | Documented L1 | Documented L3 | **differs** | The Vice President, Senator Kashim Shettima, has inaugurated the Interministerial Committee on Rese… |
 | 5.2 | Adult literacy rate (%) | Measured L3 | Measured L3 | match |  |
 | 5.3 | Tertiary STEM enrollment (% gross) | Measured no level | Gap no level | match |  |
 | 5.4 | Digital literacy among farmers (%) | Documented no level | Gap no level | match |  |
 | 5.5 ⚑ | Digital extension capability | Documented L3 | Documented L3 | match |  |
-| 5.7 ⚑ | MoAg digital/AI unit | Documented L1 | Gap no level | **differs** | 1) Checked the two Nigeria government-domain sources first, as the only T3 candidates that could ca… |
+| 5.7 ⚑ | MoAg digital/AI unit | Documented L1 | Documented L1 | match |  |
 | 5.8 | Agtech/data-science training pipelin | Documented L3 | Documented no level | **differs** | The indicator names an 'Agtech/data-science' pipeline. The evidence quoted (3MTT, and its DeepTech_… |
 | 5.12 | Gender balance in digital-ag workfor | Gap no level | Gap no level | match |  |
 | 6.1 | Global Innovation Index | Measured L1 | Documented L1 | match |  |
 | 6.3 | Business Ready (B-READY) | Gap no level | Gap no level | match |  |
 | 6.4 | Agtech venture ecosystem | Documented L3 | Documented L4 | **differs** | Nigeria has an operating agritech venture ecosystem of digital solution providers for smallholder f… |
-| 6.9 | Public-private partnerships in digit | Documented L3 | Gap no level | **differs** | Order of examination: (1) NITDA Nigeria Digital Agriculture Strategy 2020-2030 draft (T3, nitda.gov… |
-| 6.12 | Digital public goods adopted | Documented L1 | Documented no level | **differs** | The indicator name ("Digital public goods adopted") is ambiguous per the census note. The best avai… |
+| 6.9 | Public-private partnerships in digit | Documented L3 | Documented no level | **differs** | The indicator name asserts OPERATING public-private partnerships in digital agriculture. The strong… |
+| 6.12 | Digital public goods adopted | Documented L1 | Documented L2 | **differs** | The indicator name ("Digital public goods adopted") is ambiguous per the census note. The best avai… |
 | 6.13 | SME/agribusiness adoption of digital | Documented no level | Documented no level | match |  |
 | 6.14 ⚑ | Agri-fintech rails for smallholders | Documented L3 | Documented no level | **differs** | The ABP is explicitly and exclusively addressed to smallholders ('Create an Ecosystem to link out-g… |
 | 3.9 | Digital advisory platforms at scale | Documented L4 | Documented L4 | match |  |
@@ -165,5 +166,5 @@ Each gate below is a design decision doing its job. A row that reaches a gate ke
 
 Divergence here is the expected result. The verified assessments came from sustained human-directed searching under the full tiered protocol — Nigeria went from 21 recorded gaps to 4 that way — and this pass runs once, on a budget, without the Gate 2 refutation round that found four of those gap refutations. More gaps and more holds are the honest output of a first automated pass, not a regression.
 
-The number to act on is the **abstention rate**: 7 holds and 22 gaps against the verified 7 and 4. Too loose and everything reads Ready; too tight and everything reads Unverified. These figures are what that threshold should be tuned against, and they should be kept — when automated Gate 2 arrives, re-running this comparison is what tells you whether it earns its 15% of the budget.
+The number to act on is the **abstention rate**: 8 holds and 17 gaps against the verified 7 and 4. Too loose and everything reads Ready; too tight and everything reads Unverified. These figures are what that threshold should be tuned against, and they should be kept — when automated Gate 2 arrives, re-running this comparison is what tells you whether it earns its 15% of the budget.
 
