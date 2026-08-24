@@ -252,6 +252,94 @@
    "tier": "",
    "tier_detail": "",
    "url": ""
+  },
+  "4.1": {
+   "value": "DATA GAP \u2014 Started with the World Bank GovTech pages supplied (GTMI main page, GTMI 2025 update, 2025 GTMI survey guidance note, GovTech data page, 2025 GTMI Brief): all describe the index and its 'laws and regulations' enabler component but none of the retrieved text contains any Egypt-specific data protection value or statement, so none could be quoted for this cell. Checked the World Bank Digital Business Indicators 'Data Privacy and Security' brief: it describes the indicator and links to an Excel download, but the retrieved page text carries no Egypt figure. Then went to the primary legal artifact: the full English text of Law No. 151 of 2020 on ILO NATLEX (Source 7), corroborated by identical text on acc.com (Source 9) and a law-firm translation (Source 10, T5, not used for the quote). The NATLEX record landing page (Source 8) returned only a Cloudflare bot-verification screen and carried no usable text. Quoted the NATLEX-hosted law text. Dead ends: no Egyptian Official Gazette page, no MCIT page on the Executive Regulations, and no Personal Data Protection Center page were among the retrieved sources, which is why the Operating rung could not be tested and why quality and scale fields are left empty.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Unofficial English translation of the Arabic text; the crawler labelled the natlex.ilo.org domain T5, but the document quoted is the national legal instrument itself, reproduced in the ILO's NATLEX national legislation database, hence tiered T3 as a government legal artifact. The indicator names a data protection/privacy law; the quoted artifact is Egypt's economy-wide personal data protection statute (Law 151/2020). It is general-purpose, not agriculture-specific, and by its Article 3 excludes data held by national security authorities, the Central Bank, and data processed for official statistical purposes.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "3.4": {
+   "value": "DATA GAP \u2014 Started with the World Bank Modernization of Egyptian Property Registration Project PID (P177720, T1) \u2014 confirms a national land administration modernisation operation and a new-urban-communities focus, but the retrieved text carries no coverage or performance statistic. Checked the World Bank 'Assessment of Land Governance in Egypt' PDF \u2014 retrieved text is only the acronym list and acknowledgements, no substantive findings quotable. Checked the 2007 IFC SmartLessons brief on property registration reform (fee reform, deeds per month) \u2014 that is a pre-digital fee reform, not digital registration, so not used as the anchor. Discarded the Bosnia and Herzegovina Real Estate Registration Project PID as another country. Then went to Egyptian government artifacts: Ministry of Justice sector page (digital transformation and mechanisation mandate), MCIT press release of 30 Jan 2012 (mechanisation programme scale figures, link to the agricultural sijil ayni geographic databases), Cabinet news 24902 (nationwide elimination of handwriting, branch counts, first phase of the agricultural sijil ayni), and Cabinet news 82685 of 17 July 2025 (paperless G2G registration launched in 16 new-city registry offices under Law 27/2018 as amended by Law 177/2022). A T5 newspaper text of the draft unified national property-ID law was read for context only and not cited for any statistic. Dead end: no source in the set gives a figure for the share of agricultural plots or holdings digitally registered, and no independent evaluation or audit of registry performance was retrieved.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Operating and coverage statements come from government/implementer press releases (Cabinet, MCIT); no independent audit or evaluation of registry performance was retrieved, and no published coverage figures exist for the agricultural cadastre specifically. The indicator name reads generically as 'Digital land/plot registration', and the operating evidence is for Egypt's economy-wide real-estate registration and notarisation system (Shahr Aqari / sijil ayni), which is dominated by urban and new-urban-community property: the July 2025 G2G paperless launch covers 16 registry offices in new cities (Alamein, New Administrative Capital, 6th of October, etc.), and the 2021 World Bank project (P177720) frames the objective as scaling up registration 'in selected new urban communities'. The specifically agricultural register \u2014 al-sijil al-'ayni al-zira'i \u2014 appears in the same government sources only as a geographic database linked to the notarisation system (MCIT 2012) and as 'first phase' development (Cabinet). So the evidence sits on the all-property/urban side of the unresolved definitional question; if this row is later ratified to mean digital registration of agricultural holdings or usufruct specifically, the rung would need to be re-scored downward, as no operating national agricultural digital cadastre with published coverage was found in these pages.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "4.3": {
+   "value": "DATA GAP \u2014 1) MCIT press release 'ICT Sector Achievements in 2025' (mcit.gov.eg, T3) \u2014 the only government/official page retrieved; it names the Government AI Readiness Index but reports only a 60-place rise since 2019, no score, no current rank. 2) Oxford Insights 'Government AI Readiness Report 2025' PDF (oxfordinsights.com) \u2014 retrieved text stops after acknowledgements, contents and introduction; the 'Full rankings' section (p.59) and the MENA regional report (p.38), which would carry Egypt's score, are not in the supplied text. 3) Oxford Insights '2024 Government AI Readiness Index' PDF \u2014 same problem: table of contents and findings only; 'Full rankings' (p.41) not in supplied text; Egypt is not named anywhere in the retrieved portion. 4) Statista 'Government AI readiness index by category Egypt 2024' \u2014 paywalled, rank and overall score both masked ('*****'), and T5 in any case. 5) KAI LAB blog (T5) \u2014 gives Egypt 2024 overall 55.63, rank 65, plus pillar scores; blog, not admissible for a statistic. 6) Ahram Online (three URLs, same article, T5) \u2014 gives Egypt 2025 overall 57.5, rank 51/195, and all six pillar scores, sourced to an MCIT statement; news, not admissible for a statistic. Dead end: no T1/T2/T3/T4 page in this set reproduces the score, so the cell is held rather than scored off T5 numbers.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Admissible-tier evidence is a government press release reporting a rank movement, not a score; the score itself is available only through secondary news/blog reporting of an MCIT statement. The named construct is the Oxford Insights Government AI Readiness Index for Egypt. On the census's open question: the 2025 (8th) edition, per the Oxford Insights report retrieved here, rebuilt the framework around 69 indicators in six pillars (Policy Capacity, Governance, AI Infrastructure, Public Sector Adoption, Development and Diffusion, Resilience), and secondary reporting of the MCIT statement does quote an overall 2025 figure of 57.5 (rank 51/195), so an overall score appears to exist for 2025 rather than having been dropped \u2014 but that figure sits on the wrong side of the tier line here (T5 news only). Context figures that could NOT be admitted: 2025 overall 57.5 with pillar scores 100 Policy Capacity, 62.5 Governance, 46.06 AI Infrastructure, 60.07 Public Sector Adoption, 45.41 Development and Diffusion, 62.81 Resilience (Ahram Online, T5); 2024 overall 55.63, rank 65/188, with pillars Government 68.98, Technology Sector 42.13 (KAI LAB blog, T5); Statista's 2024 Egypt figure is paywalled and masked.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "4.2": {
+   "value": "DATA GAP \u2014 Started with the ITU GCI publication landing pages (itu.int/pub and itu.int/epublications) - both carry front matter, acknowledgements, foreword and disclaimers only; neither retrieved page contains any country score table, so Egypt's 2024 figure could not be quoted from ITU. Checked the ITU-D GCI programme page (two variants) - describes the five pillars, the tier-based 5th edition and links to the GCI 2024 report, but carries no per-country data. Checked the ITU news item 'Egypt Ranked Ninth at Global Cybersecurity Index' - this is the 2014 first edition (rank 27th of 193 per that page's own text) and is a decade out of date, so not used as the value. Checked the Belgian CCB mirror of the GCI 2024 PDF - the retrieved extract stops at the foreword and contains no country tables. Checked Egypt's NTRA (tra.gov.eg) page - title asserts Tier 1 but the retrieved body was 'undefined', so not quotable. Settled on the MCIT (Egyptian ICT ministry) Cyber Security page, a T3 government artifact, which states the Tier 1 / perfect score GCI 2024 result verbatim. Recorded as a statement rather than a number because ITU GCI 2024 publishes tiers and 0-100 pillar scores, not a 0-1 overall index score of the kind the register's cut points assume.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Government self-report of an ITU classification; the ITU GCI 2024 report page carrying Egypt's own country profile/score was not among the retrieved sources, so the figure could not be quote-verified from ITU itself. A second government source (NTRA, tra.gov.eg) carries the same Tier 1 claim in its page title but the retrieved body text was empty. The indicator is named 'Cybersecurity framework (ITU GCI)'. The evidence is the GCI 2024 result for Egypt. Note the census question flagged for this row: ITU's GCI 2024 moved to a tier-based model and does not publish a single overall 0-1 index score per country; scores in that edition are expressed out of 100 (and the register's Egypt entry of '100' is on that 0-100 scale, not the 0-1 scale implied by the cut points, while Nigeria's 0.824 is on a 0-1 scale). The two register entries are therefore indeed incommensurable. The evidence here sits on the 0-100 / tier side of that question. Normalised (100/100 = 1.0), Egypt still clears the top cut point of 0.8, so the ambiguity does not change the level for this country, but it does mean the recorded 'value' is a tier/statement rather than an ITU-published 0-1 overall score.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "4.4": {
+   "value": "DATA GAP \u2014 1) ITU e-Agriculture Strategies page (T1) \u2014 checked the list of countries with dedicated e-agriculture strategies; Egypt not listed. 2) FAO openknowledge NENA 'Digital Agriculture Strategy' leaflet (T2) \u2014 generic guidance and roadmap for the region, no Egypt country strategy named. 3) Egypt MoALR official site, Welcome Message (T3) \u2014 nearest adjacent instrument: Agricultural Development Strategy aligned with NDP 2030 including a digital transformation programme; no dedicated digital-ag strategy document or link found on the site's Laws and regulations / Publications navigation as rendered. 4) ICARDA 'Current Situation of Digital Agriculture in Egypt' (2023, T2, limited access) \u2014 abstract describes tool categories and government apps under development, no national digital agriculture strategy mentioned. 5) FAO e-Agriculture news item on Egypt (2019, T1) \u2014 project-level digital extension model, not a strategy. 6) World Bank programmatic support to MALR (2021, T1) \u2014 only a table-of-contents section 5.5 'Digital Technologies' was in the retrieved text; no strategy statement quotable. 7) SIS story on Food Security and Agricultural Innovation Strategy \u2014 404, dead end. 8) UNESCWA Arab National Development Planning Portal \u2014 blocked by Cloudflare bot check, dead end. Domain was searchable; the named instrument was not found in it, hence Absent rather than a data gap.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Ministry website is labelled \"Beta Version\"; no strategy document text or adoption instrument is published on the page. The indicator names a national DIGITAL AGRICULTURE strategy. The best Egypt-specific evidence retrieved is a broader Agricultural Development Strategy (aligned to NDP 2030) that merely 'is including number of programmes, & a digital transformation programme in the agricultural sector' \u2014 i.e. a digital-ag component embedded in a general sector strategy, not a dedicated digital-agriculture strategy document. This sits on the 'embedded component' side of the unresolved definitional question flagged in the indicator census. Under the name as written (a dedicated national digital agriculture strategy) the instrument is absent; under the broader reading that credits embedded components, Egypt would instead sit at 'Adopted'. Ratifiers should note the score would change with the definition. The ITU e-agriculture strategies page, which names the countries that have adopted dedicated e-agriculture strategies (Afghanistan, Bhutan, Fiji, Papua New Guinea, The Philippines, Sri Lanka), does not include Egypt.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "4.5": {
+   "value": "DATA GAP \u2014 Started with the sector-specific sources: FAO GSARS Egypt country page (Source 5) and its three Egypt news items (Sources 1, 3, 4) \u2014 these document 2023-24 training workshops on dissemination, open data standards and CAADP indicator computation with MoALR and CAPMAS, but no policy instrument. Checked the GSARS 'Sustainable Statistical Systems' page (Source 6) for whether Egypt had adopted SPARS, the nearest sectoral governance/planning instrument; the adopters list names seven countries and Egypt is not among them. Then examined the national data-governance domain: Egypt's Open Data Policy 2025 issued by the National Council for AI (Source 9, T3) \u2014 the governing horizontal instrument, which covers all public institutions and flags a forthcoming Data Governance Law, but has no agricultural provisions. Then the national statistics domain: CAPMAS's own statement of mandate and strategic objectives to UNSD (Source 2, T1), which describes coordination gaps and duplication between CAPMAS, MoALR and IDSC but no agricultural data governance rules; and the PARIS21 NSS assessment of Egypt (Source 10, T5, not usable for a prerequisite row anyway). Finally checked the two agricultural-policy analyses: OECD's 2026 Policies for the Future of Farming and Food in Egypt (Source 7) \u2014 only front matter, foreword and acknowledgements were retrieved, with no text on data governance \u2014 and a 2001 World Bank export-strategy record (Source 8), which is a catalog page only. Dead ends: no MoALR decree, no national agricultural data strategy, and no agricultural data-sharing regulation surfaced in any retrieved page.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. The quoted instrument is a whole-of-government open data policy issued by the National Council for Artificial Intelligence; it is sector-agnostic and contains no agriculture-specific provisions (no farm data, no agricultural registry, no MoALR-specific data governance rules). It is cited as evidence that the national data-governance domain was examined and that no agricultural data governance framework sits within it, not as a measure of the named construct. The adjacent sector instrument examined, FAO's GSARS country page for Egypt, lists only capacity-building activities and explicitly names the SPARS adopters as 'Angola, Madagascar, Mozambique, Tanzania, Togo, Liberia, Zimbabwe' \u2014 Egypt is not among them.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "4.7": {
+   "value": "DATA GAP \u2014 1) ID4D DataBank source landing page (Source 1) \u2014 variable pickers only, no data rendered. 2) ID4D global dataset page (Source 2) \u2014 global headlines (800 million without official ID; 2.8 billion without digital ID for online transactions; ~45 percent of countries offer a digital ID credential) but no country rows. 3) Data360 dataset page (Source 3) and Data Catalog entry (Source 4) \u2014 metadata and coverage descriptions only. 4) DataBank saved report (Source 5) \u2014 the only page with actual series values; contains the correct series names including 'Digital ID verification (1 = yes; 0 = no)' and 'ID ownership, total (% of population ages 15+)', but the rows are not labelled with a country and the panel has all 199 economies selected, so the 71.4/87.4 values cannot be assigned to Egypt; the 2017 female 48.4 / male 94.2 split argues against Egypt. 5) Findex 2025 Egypt microdata study description (Source 6) and its data dictionary (Source 7) \u2014 confirm the ID4D module variables (fin46-fin51) were added to the Egypt file, but publish no tabulated Egypt percentage. 6) ID4D 2021 Volume 1 document page (Source 8) \u2014 abstract and citation metadata only, no country table in the retrieved text. 7) Global Digital Identity Index Egypt page (Source 9) \u2014 Egypt-specific but T5 and a composite score, inadmissible for a UC:FIN prerequisite. Dead end: no Egypt-attributed digital-ID coverage percentage in any supplied page.",
+   "cls": "Gap",
+   "level": null,
+   "year": 2026,
+   "src": "Automated source search, 25 August 2026",
+   "note": "Next level not proposed: Not applicable \u2014 the level is withheld rather than set below 5. The specific missing item is an Egypt-row value from the ID4D digital-ID series (or a national/regulator publication of the share of Egyptians holding a digitally verifiable/online-authenticating credential) that can be copied verbatim from a fetched page. The indicator name is 'Digital ID coverage (%)'. Two distinct ID4D constructs are in play and the supplied pages confirm they are different things: (a) foundational ID ownership, published as 'ID ownership, total (% of population ages 15+)' \u2014 a card/credential ownership measure that is NOT a digital ID measure; and (b) digital ID, which ID4D describes as 'a government-recognized digital identity to securely transact online' and reports as country-level availability ('people in approximately 45 percent of countries can obtain at least one government-recognized digital identity credential'), plus binary supply-side flags such as 'Digital ID verification (1 = yes; 0 = no)'. Judged against the name as written, the correct series is the digital-ID one, and for Egypt no value of either series is present in the retrieved pages. Context, not evidence for this cell: the T5 Global Digital Identity Index page asserts for Egypt 'Online Digital Identity: No', i.e. no online-authentication digital credential \u2014 which, if it were admissible, would point to a very low digital-ID coverage rather than the high foundational-ID ownership figure the census flags as having been used. The census's observation therefore stands: the recorded Egypt series is on the wrong side of the naming question, and it is also on a different denominator (% of adults 15+) from the comparator country. An independent T1 series (World Bank WDI ID.OWN.TOTL.ZS (World Bank Identification for Development (ID4D))) reports 98.78 for 2024.",
+   "tier": "",
+   "tier_detail": "",
+   "url": ""
+  },
+  "5.2": {
+   "value": 79.0,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2022,
+   "src": "World Bank Open Data \u2014 Literacy rate, adult total (% of people ages 15 and above), Egypt, Arab Rep. (source: UNESCO Institute for Statistics)",
+   "note": "Most recent available observation is 2022; UIS literacy figures for Egypt derive from census/survey self-reported literacy rather than direct assessment. Next level not proposed: Level 4 would require a published adult literacy rate above 80 percent. Egypt's most recent published figure is 79 percent (unrounded 79.45316 percent for 2022), which falls short of the 80 cut point. No admissible source in the retrieved pages publishes an Egyptian adult literacy figure at or above 80; the only above-80 figure available is the male-only subgroup rate (85.3%), which is a different construct and cannot be used to raise the national total. The World Bank/UIS series SE.ADT.LITR.ZS is exactly the adult literacy rate: percentage of people ages 15 and above who can, with understanding, read and write a short simple statement about their everyday life. National (not rural-specific) coverage, which matches the indicator as named. Cross-checks: FRED (T5, restating World Bank/WDI) reports 79.45316 for 2022, and the World Bank Gender Data Portal reports the same 2022 reference year disaggregated as 85.3% male / 73.3% female. Corroborated by an independent T1 series (World Bank WDI SE.ADT.LITR.ZS): 79.45 for 2022.",
+   "tier": "T1",
+   "tier_detail": "Most recent available observation is 2022; UIS literacy figures for Egypt derive from census/survey self-reported literacy rather than direct assessment",
+   "url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=EG"
   }
  },
  "records": {
@@ -3682,6 +3770,1128 @@
     }
    ],
    "wdi_corroboration": null
+  },
+  "4.1": {
+   "id": "4.1",
+   "name": "Data protection/privacy law",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Egypt has an enacted general data protection statute: Law No. 151 of 2020 promulgating the Personal Data Protection Law, issued by the President on 13 July 2020, which applies to personal data processed electronically by any holder, controller or processor and entered into force three months after publication in the Official Gazette; the law itself provides that the Minister of Communications and Information Technology must issue its Executive Regulations within six months, and no evidence of those regulations or of an operating supervisory authority appears in the pages retrieved.",
+    "unit": "",
+    "year": 2020,
+    "source_title": "Arab Republic of Egypt, Law No. 151 of 2020 Promulgating the Personal Data Protection Law (English text hosted on ILO NATLEX)",
+    "source_url": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/111246/EGY111246%20Eng.pdf",
+    "proposed_tier": "T3",
+    "quote": "This law shall be published in the Official Gazette and shall come into force after three (3) months from the following day of its publication.",
+    "data_quality_flag": "Unofficial English translation of the Arabic text; the crawler labelled the natlex.ilo.org domain T5, but the document quoted is the national legal instrument itself, reproduced in the ILO's NATLEX national legislation database, hence tiered T3 as a government legal artifact.",
+    "construct_match": "measures the named construct",
+    "construct_note": "The indicator names a data protection/privacy law; the quoted artifact is Egypt's economy-wide personal data protection statute (Law 151/2020). It is general-purpose, not agriculture-specific, and by its Article 3 excludes data held by national security authorities, the Central Bank, and data processed for official statistical purposes.",
+    "presence_rung": "Adopted",
+    "quality_evidence": "",
+    "scale_evidence": "",
+    "proposed_level": 3,
+    "rung_argument": "Absent is ruled out: a named instrument exists and its text is retrievable (Law No. 151 of 2020, signed 13 July 2020). Announced is exceeded: this is not a draft or a stated intention but a law passed by the House of Representatives and promulgated by the President, published in the Official Gazette and in force three months later, with defined scope, definitions of controller/processor/data subject, and jurisdiction assigned to the economic courts. Adopted is therefore established on the face of the instrument. Level = 3 for Adopted; quality_evidence and scale_evidence are both empty, so no increment applies.",
+    "negative_finding": "Operating was not proposed. Nothing in the retrieved pages evidences implementation: Article 4 of Law 151/2020 makes the annexed law's operation contingent on Executive Regulations to be issued by the Minister of Communications and Information Technology, and Article 6 gives addressees one year from the issuance of those Regulations to comply \u2014 no retrieved source shows that those Executive Regulations have been issued, that the Personal Data Protection Center referred to in Article 3 is constituted and staffed, or that any registration, licensing, complaint-handling or enforcement activity has occurred. No evaluation, audit or performance report was retrieved (hence quality_evidence empty), and no figures on registrations, complaints, or enforcement actions were retrieved (hence scale_evidence empty).",
+    "search_trail": "Started with the World Bank GovTech pages supplied (GTMI main page, GTMI 2025 update, 2025 GTMI survey guidance note, GovTech data page, 2025 GTMI Brief): all describe the index and its 'laws and regulations' enabler component but none of the retrieved text contains any Egypt-specific data protection value or statement, so none could be quoted for this cell. Checked the World Bank Digital Business Indicators 'Data Privacy and Security' brief: it describes the indicator and links to an Excel download, but the retrieved page text carries no Egypt figure. Then went to the primary legal artifact: the full English text of Law No. 151 of 2020 on ILO NATLEX (Source 7), corroborated by identical text on acc.com (Source 9) and a law-firm translation (Source 10, T5, not used for the quote). The NATLEX record landing page (Source 8) returned only a Cloudflare bot-verification screen and carried no usable text. Quoted the NATLEX-hosted law text. Dead ends: no Egyptian Official Gazette page, no MCIT page on the Executive Regulations, and no Personal Data Protection Center page were among the retrieved sources, which is why the Operating rung could not be tested and why quality and scale fields are left empty."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 Started with the World Bank GovTech pages supplied (GTMI main page, GTMI 2025 update, 2025 GTMI survey guidance note, GovTech data page, 2025 GTMI Brief): all describe the index and its 'laws and regulations' enabler component but none of the retrieved text contains any Egypt-specific data protection value or statement, so none could be quoted for this cell. Checked the World Bank Digital Business Indicators 'Data Privacy and Security' brief: it describes the indicator and links to an Excel download, but the retrieved page text carries no Egypt figure. Then went to the primary legal artifact: the full English text of Law No. 151 of 2020 on ILO NATLEX (Source 7), corroborated by identical text on acc.com (Source 9) and a law-firm translation (Source 10, T5, not used for the quote). The NATLEX record landing page (Source 8) returned only a Cloudflare bot-verification screen and carried no usable text. Quoted the NATLEX-hosted law text. Dead ends: no Egyptian Official Gazette page, no MCIT page on the Executive Regulations, and no Personal Data Protection Center page were among the retrieved sources, which is why the Operating rung could not be tested and why quality and scale fields are left empty.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Unofficial English translation of the Arabic text; the crawler labelled the natlex.ilo.org domain T5, but the document quoted is the national legal instrument itself, reproduced in the ILO's NATLEX national legislation database, hence tiered T3 as a government legal artifact. The indicator names a data protection/privacy law; the quoted artifact is Egypt's economy-wide personal data protection statute (Law 151/2020). It is general-purpose, not agriculture-specific, and by its Article 3 excludes data held by national security authorities, the Central Bank, and data processed for official statistical purposes.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "Egypt Personal Data Protection Law No. 151 of 2020 official gazette text",
+    "UNCTAD data protection and privacy legislation worldwide Egypt",
+    "Egypt data protection law World Bank GovTech / DataTech indicator"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://www.worldbank.org/en/programs/govtech/gtmi",
+     "title": "GTMI",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.worldbank.org/en/programs/govtech/gtmi-2025-update",
+     "title": "GTMI 2025 Update",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://thedocs.worldbank.org/en/doc/8218575fa324a97607814ead723d2423-0350052025/original/2025-GTMI-Online-Survey-Guidance-Note-eng-update.pdf",
+     "title": "2025 Central Government GovTech Maturity Index Online Survey",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.worldbank.org/en/programs/govtech/knowledge-and-innovation/data",
+     "title": "Data",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://thedocs.worldbank.org/en/doc/6c6039890ded13838f604eff31f3aa88-0350092025/original/2025-GTMI-Brief.pdf",
+     "title": "Prosperity Insight Series",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.worldbank.org/en/research/brief/digital-business-indicators-data-privacy-and-security",
+     "title": "Digital Business Indicators\u2014Data Privacy and Security",
+     "published": "2021-11-10T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/111246/EGY111246%20Eng.pdf",
+     "title": "KNOWLEDGE MANAGEMENT",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://natlex.ilo.org/dyn/natlex2/r/natlex/fe/details?p3_isn=111246&cs=1cC2P3AfHgLTzjaCaGdWFAqxMoyyVTno2m6emtknnETzOR4L35fstMiJNV2Ld5berdxzVg1ra8tYsrtqkzSg7-g",
+     "title": "Law 151/2020 on the Protection of Personal Data.",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.acc.com/sites/default/files/program-materials/upload/Data%20Protection%20Law%20-%20Egypt%20-%20EN%20-%20MBH.PDF",
+     "title": "[PDF] Law No. 151 of 2020 Promulgating the Personal Data Protection Law",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://youssrysaleh.com/en/egypts-personal-data-protection-law-pdpl-english-translation/",
+     "title": "Egypt's Personal Data Protection Law (PDPL): English Translation \u2014 Youssry Saleh Law Firm",
+     "published": "2026-08-18T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "3.4": {
+   "id": "3.4",
+   "name": "Digital land/plot registration",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": false,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Egypt operates a digitised property registration system under the Ministry of Justice's Real Estate Publicity and Notarization Authority \u2014 handwritten entry was eliminated in all branches nationwide by end-2021, offices use electronic ledgers and the Digital Egypt platform, and in July 2025 a paperless G2G-integrated property registration system was launched in 16 new-urban-community registry offices \u2014 while the agricultural real-property register (al-sijil al-'ayni al-zira'i) is reported only as having had its 'first phase' developed.",
+    "unit": "",
+    "year": 2022,
+    "source_title": "Egyptian Cabinet (Presidency of the Council of Ministers), news item on the Prime Minister's inspection of the Real Estate Publicity and Notarization Authority headquarters in Ramses, Cairo",
+    "source_url": "https://cabinet.gov.eg/News/Details/24902",
+    "proposed_tier": "T3",
+    "quote": "\u0648\u062a\u0637\u0648\u064a\u0631 \u0639\u062f\u062f \u0645\u0646 \u0645\u0643\u0627\u062a\u0628 \u0627\u0644\u0633\u062c\u0644 \u0627\u0644\u0639\u064a\u0646\u064a\u060c \u0648\u0625\u062f\u0627\u0631\u0627\u062a \u0627\u0644\u0633\u062c\u0644 \u0627\u0644\u0639\u064a\u0646\u064a \u0628\u0627\u0644\u0645\u0643\u0627\u062a\u0628 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629 \u0644\u0644\u0634\u0647\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a \u0648\u0645\u0623\u0645\u0648\u0631\u064a\u0627\u062a \u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a\u060c \u0648\u0627\u0641\u062a\u062a\u0627\u062d \u0645\u0623\u0645\u0648\u0631\u064a\u0627\u062a \u0634\u0647\u0631 \u0639\u0642\u0627\u0631\u064a \u0641\u064a \u0643\u0644 \u062a\u062c\u0645\u0639 \u0639\u0645\u0631\u0627\u0646\u064a \u062c\u062f\u064a\u062f\u060c \u0648\u0631\u0628\u0637 \u0645\u0643\u0627\u062a\u0628 \u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a \u0628\u0627\u0644\u062c\u0647\u0627\u062a \u0627\u0644\u062d\u0643\u0648\u0645\u064a\u0629\u060c \u0648\u062a\u0637\u0648\u064a\u0631 \u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u0627\u0644\u0623\u0648\u0644\u0649 \u0645\u0646 \u0627\u0644\u0633\u062c\u0644 \u0627\u0644\u0639\u064a\u0646\u064a \u0627\u0644\u0632\u0631\u0627\u0639\u064a",
+    "data_quality_flag": "Operating and coverage statements come from government/implementer press releases (Cabinet, MCIT); no independent audit or evaluation of registry performance was retrieved, and no published coverage figures exist for the agricultural cadastre specifically",
+    "construct_match": "measures the named construct",
+    "construct_note": "The indicator name reads generically as 'Digital land/plot registration', and the operating evidence is for Egypt's economy-wide real-estate registration and notarisation system (Shahr Aqari / sijil ayni), which is dominated by urban and new-urban-community property: the July 2025 G2G paperless launch covers 16 registry offices in new cities (Alamein, New Administrative Capital, 6th of October, etc.), and the 2021 World Bank project (P177720) frames the objective as scaling up registration 'in selected new urban communities'. The specifically agricultural register \u2014 al-sijil al-'ayni al-zira'i \u2014 appears in the same government sources only as a geographic database linked to the notarisation system (MCIT 2012) and as 'first phase' development (Cabinet). So the evidence sits on the all-property/urban side of the unresolved definitional question; if this row is later ratified to mean digital registration of agricultural holdings or usufruct specifically, the rung would need to be re-scored downward, as no operating national agricultural digital cadastre with published coverage was found in these pages.",
+    "presence_rung": "Operating",
+    "quality_evidence": "",
+    "scale_evidence": "Cabinet (2022): 110 notarisation branches opened inside post offices and 103 outside them; phases 1 and 2 completed for 230 of 250 targeted notarisation premises; 1,102 staff transferred of whom 975 took up posts; handwritten entry eliminated in all branches nationwide by end-2021. Cabinet (17 July 2025): the Ministry of Justice\u2013NUCA G2G integrated registration system launched simultaneously in 16 new-urban-community registry offices listed by city across the country. MCIT (2012): 100 of 350 notarisation offices mechanised, main information centre operating, project database containing more than 3.5 million mechanised transactions and about 100,000 mechanised powers of attorney issued monthly.",
+    "proposed_level": 4,
+    "rung_argument": "Absent is ruled out: a national land/plot registration register exists and is being digitised \u2014 the Ministry of Justice's own sector page names supervision of 'the digital transformation strategy and mechanisation of all services provided to citizens at notarisation, real estate publicity and sijil ayni offices' as a standing function. Announced is exceeded: the digitisation is not a plan but a funded, legislated programme (Law 27/2018 as amended by Law 177/2022 on real estate registration in new urban communities, and the 2022 amendment of Law 114/1946). Adopted is exceeded: the system is not merely adopted on paper \u2014 Cabinet reports that handwritten entry was eliminated in all branches nationwide by end-2021, that electronic ledgers have replaced paper registers in upgraded offices, that services are delivered through the Digital Egypt platform, and MCIT reports a live central information centre linked to the national ID and to the agricultural sijil ayni geographic databases. Operating is therefore established. Scale evidence is filled with published reach figures (numbers of mechanised/upgraded offices, 16 G2G-integrated new-city registry offices, 3.5 million mechanised transactions), giving 3 + 1 = 4.",
+    "negative_finding": "Level 5 was not proposed because quality_evidence is empty: nothing retrieved is an independent or official evaluation, audit or performance report on how well the digital registry works. The only performance-flavoured statements (transactions completed within ten minutes, improved accuracy) are the implementers' own descriptions in MCIT and Cabinet press releases, which are design/self-report, not evaluation. On the contrary, the World Bank's 2021 concept-stage PID for the Modernization of Egyptian Property Registration Project states the objective is 'to establish the foundations of a modern and efficient land administration and management system at national level', implying those foundations were not yet in place, which argues against crediting quality.",
+    "search_trail": "Started with the World Bank Modernization of Egyptian Property Registration Project PID (P177720, T1) \u2014 confirms a national land administration modernisation operation and a new-urban-communities focus, but the retrieved text carries no coverage or performance statistic. Checked the World Bank 'Assessment of Land Governance in Egypt' PDF \u2014 retrieved text is only the acronym list and acknowledgements, no substantive findings quotable. Checked the 2007 IFC SmartLessons brief on property registration reform (fee reform, deeds per month) \u2014 that is a pre-digital fee reform, not digital registration, so not used as the anchor. Discarded the Bosnia and Herzegovina Real Estate Registration Project PID as another country. Then went to Egyptian government artifacts: Ministry of Justice sector page (digital transformation and mechanisation mandate), MCIT press release of 30 Jan 2012 (mechanisation programme scale figures, link to the agricultural sijil ayni geographic databases), Cabinet news 24902 (nationwide elimination of handwriting, branch counts, first phase of the agricultural sijil ayni), and Cabinet news 82685 of 17 July 2025 (paperless G2G registration launched in 16 new-city registry offices under Law 27/2018 as amended by Law 177/2022). A T5 newspaper text of the draft unified national property-ID law was read for context only and not cited for any statistic. Dead end: no source in the set gives a figure for the share of agricultural plots or holdings digitally registered, and no independent evaluation or audit of registry performance was retrieved."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 Started with the World Bank Modernization of Egyptian Property Registration Project PID (P177720, T1) \u2014 confirms a national land administration modernisation operation and a new-urban-communities focus, but the retrieved text carries no coverage or performance statistic. Checked the World Bank 'Assessment of Land Governance in Egypt' PDF \u2014 retrieved text is only the acronym list and acknowledgements, no substantive findings quotable. Checked the 2007 IFC SmartLessons brief on property registration reform (fee reform, deeds per month) \u2014 that is a pre-digital fee reform, not digital registration, so not used as the anchor. Discarded the Bosnia and Herzegovina Real Estate Registration Project PID as another country. Then went to Egyptian government artifacts: Ministry of Justice sector page (digital transformation and mechanisation mandate), MCIT press release of 30 Jan 2012 (mechanisation programme scale figures, link to the agricultural sijil ayni geographic databases), Cabinet news 24902 (nationwide elimination of handwriting, branch counts, first phase of the agricultural sijil ayni), and Cabinet news 82685 of 17 July 2025 (paperless G2G registration launched in 16 new-city registry offices under Law 27/2018 as amended by Law 177/2022). A T5 newspaper text of the draft unified national property-ID law was read for context only and not cited for any statistic. Dead end: no source in the set gives a figure for the share of agricultural plots or holdings digitally registered, and no independent evaluation or audit of registry performance was retrieved.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Operating and coverage statements come from government/implementer press releases (Cabinet, MCIT); no independent audit or evaluation of registry performance was retrieved, and no published coverage figures exist for the agricultural cadastre specifically. The indicator name reads generically as 'Digital land/plot registration', and the operating evidence is for Egypt's economy-wide real-estate registration and notarisation system (Shahr Aqari / sijil ayni), which is dominated by urban and new-urban-community property: the July 2025 G2G paperless launch covers 16 registry offices in new cities (Alamein, New Administrative Capital, 6th of October, etc.), and the 2021 World Bank project (P177720) frames the objective as scaling up registration 'in selected new urban communities'. The specifically agricultural register \u2014 al-sijil al-'ayni al-zira'i \u2014 appears in the same government sources only as a geographic database linked to the notarisation system (MCIT 2012) and as 'first phase' development (Cabinet). So the evidence sits on the all-property/urban side of the unresolved definitional question; if this row is later ratified to mean digital registration of agricultural holdings or usufruct specifically, the rung would need to be re-scored downward, as no operating national agricultural digital cadastre with published coverage was found in these pages.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "\"\u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0642\u0648\u0645\u064a \u0644\u0644\u0639\u0642\u0627\u0631\" \u0642\u0627\u0646\u0648\u0646 \u0627\u0644\u062c\u0631\u064a\u062f\u0629 \u0627\u0644\u0631\u0633\u0645\u064a\u0629 \u0645\u062c\u0644\u0633 \u0627\u0644\u0648\u0632\u0631\u0627\u0621 \u0627\u0644\u0645\u0635\u0631\u064a \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u0639\u0642\u0627\u0631\u0627\u062a",
+    "\"\u0645\u0635\u0644\u062d\u0629 \u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a \u0648\u0627\u0644\u062a\u0648\u062b\u064a\u0642\" \u0648\u0632\u0627\u0631\u0629 \u0627\u0644\u0639\u062f\u0644 \u0627\u0644\u0645\u0635\u0631\u064a\u0629 \u0627\u0644\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u0639\u0642\u0627\u0631\u064a \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a \u0645\u064a\u0643\u0646\u0629 site:gov.eg",
+    "World Bank Egypt land registration digitization project appraisal document real estate registry"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://documents1.worldbank.org/curated/en/099515111242154899/txt/Concept0Projec0n0Project000P177720.txt",
+     "title": "",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents1.worldbank.org/curated/en/809671644219582056/pdf/Assessment-of-Land-Governance-in-Egypt.pdf",
+     "title": "dezirohtuA erusolcsiD cilbuP dezirohtuA erusolcsiD cilbuP dezirohtuA erusolcsiD cilbuP dezirohtuA erusolcsiD cilbuP",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/257861468234306876",
+     "title": "How efficiently is capital created? Evidence from property registration reform in Egypt",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/ae4cc973-9d19-5735-b8a3-353d8452c4c5/content",
+     "title": "World Bank Document",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/696641468767973505",
+     "title": "Project Information Document (Appraisal Stage) - REAL ESTATE REGISTRATION PROJECT - P128950",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://moj.gov.eg/department/%D9%82%D8%B7%D8%A7%D8%B9-%D8%A7%D9%84%D8%B4%D9%87%D8%B1-%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A-%D9%88%D8%A7%D9%84%D8%AA%D9%88%D8%AB%D9%8A%D9%82",
+     "title": "\u0642\u0637\u0627\u0639 \u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a \u0648\u0627\u0644\u062a\u0648\u062b\u064a\u0642",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://cabinet.gov.eg/News/Details/24902",
+     "title": "\u0631\u0626\u0627\u0633\u0629 \u0645\u062c\u0644\u0633 \u0627\u0644\u0648\u0632\u0631\u0627\u0621",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://mcit.gov.eg/Ar/Media_Center/Press_Room/Press_Releases/2201",
+     "title": "\u0648\u0632\u0627\u0631\u0629 \u0627\u0644\u0627\u062a\u0635\u0627\u0644\u0627\u062a \u0648\u062a\u0643\u0646\u0648\u0644\u0648\u062c\u064a\u0627 \u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://cabinet.gov.eg/News/Details/82685",
+     "title": "\u0631\u0626\u0627\u0633\u0629 \u0645\u062c\u0644\u0633 \u0627\u0644\u0648\u0632\u0631\u0627\u0621",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.almasryalyoum.com/news/details/3437387",
+     "title": "\u0631\u0642\u0645 \u0642\u0648\u0645\u064a \u0645\u0648\u062d\u062f \u0644\u0643\u0644 \u0639\u0642\u0627\u0631.. \u062a\u0641\u0627\u0635\u064a\u0644 \u0645\u0634\u0631\u0648\u0639 \u0642\u0627\u0646\u0648\u0646 \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u0634\u0642\u0642 ...",
+     "published": "2025-04-28T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "4.3": {
+   "id": "4.3",
+   "name": "Government AI Readiness Index",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": true,
+    "abstain_reason": "An admissible-tier source (MCIT, T3) confirms Egypt is scored in the Oxford Insights Government AI Readiness Index, but states only a rank movement ('60 spots since 2019'), not a score. The only pages in this retrieval that carry Egypt's overall index score (57.5 for 2025; 55.63/55.6 for 2024) are T5 material \u2014 Ahram Online news, the KAI LAB blog, and a paywalled Statista page whose figure is masked as '*****'. Rule 4 permits T5 for existence facts only, never for a statistic. The Oxford Insights 2025 and 2024 report PDFs were retrieved but the supplied text covers only the credits, introduction, framework and table of contents; the Egypt row of the full rankings is not in the fetched text, so the primary figure cannot be quote-verified. Hold pending retrieval of the Oxford Insights full-rankings pages.",
+    "value_kind": "statement",
+    "value": "Egypt is covered and ranked in the Oxford Insights Government AI Readiness Index, and Egypt's Ministry of Communications and Information Technology states the country has risen 60 places in the index since 2019; no overall score for Egypt is quotable from an admissible-tier page in this retrieval.",
+    "unit": "",
+    "year": 2025,
+    "source_title": "Arab Republic of Egypt, Ministry of Communications and Information Technology \u2014 Press Release: ICT Sector Achievements in 2025",
+    "source_url": "http://mcit.gov.eg/en/Media_Center/Press_Room/Press_Releases/98928",
+    "proposed_tier": "T3",
+    "quote": "Egypt moved up 60 spots in the Government AI Readiness Index issued by Oxford Insights since 2019.",
+    "data_quality_flag": "Admissible-tier evidence is a government press release reporting a rank movement, not a score; the score itself is available only through secondary news/blog reporting of an MCIT statement",
+    "construct_match": "measures the named construct",
+    "construct_note": "The named construct is the Oxford Insights Government AI Readiness Index for Egypt. On the census's open question: the 2025 (8th) edition, per the Oxford Insights report retrieved here, rebuilt the framework around 69 indicators in six pillars (Policy Capacity, Governance, AI Infrastructure, Public Sector Adoption, Development and Diffusion, Resilience), and secondary reporting of the MCIT statement does quote an overall 2025 figure of 57.5 (rank 51/195), so an overall score appears to exist for 2025 rather than having been dropped \u2014 but that figure sits on the wrong side of the tier line here (T5 news only). Context figures that could NOT be admitted: 2025 overall 57.5 with pillar scores 100 Policy Capacity, 62.5 Governance, 46.06 AI Infrastructure, 60.07 Public Sector Adoption, 45.41 Development and Diffusion, 62.81 Resilience (Ahram Online, T5); 2024 overall 55.63, rank 65/188, with pillars Government 68.98, Technology Sector 42.13 (KAI LAB blog, T5); Statista's 2024 Egypt figure is paywalled and masked.",
+    "presence_rung": "",
+    "quality_evidence": "The index is a long-running annual benchmark (8th edition in 2025) produced by Oxford Insights and referenced by UNESCO and the G20 per the publisher's own report; Egypt's inclusion and improvement are independently confirmed by the national ICT ministry (T3). However, no admissible-tier page in this retrieval reproduces Egypt's overall score or pillar scores, so the numeric value cannot be ratified.",
+    "scale_evidence": "Coverage is global (188 countries in 2024, 195 in 2025 per secondary reporting); Egypt is included in every edition referenced. Scale of the index is not in doubt; only the country value's provenance is.",
+    "proposed_level": 0,
+    "rung_argument": "Level withheld. Level 1 (below 20) and level 2 (20-40) are clearly not the situation: the T3 MCIT statement of a 60-place rise since 2019 and Egypt's first-in-Africa positioning are inconsistent with a bottom-band score, and every secondary figure seen sits in the 40-60 band. Level 3 (40-60) is what the available figures (55.63 for 2024, 57.5 for 2025) would imply, and both editions agree on that band, so level 3 is the likely ratified outcome. But the arithmetic that produces level 3 rests entirely on a statistic taken from T5 news and blog pages, which the tier rules forbid using as a statistic; the T3 page I can quote carries no score at all. Rather than convert a tier gap into a scored cell, the level is withheld until the Oxford Insights full-rankings page carrying Egypt's row is fetched and quoted.",
+    "negative_finding": "Level 4 (above 60) is not supported by anything in the retrieved pages: no source, at any tier, reports an Egypt overall score above 60 \u2014 the highest overall figure reported anywhere here is 57.5 for 2025, and Egypt's above-60 results are pillar scores (Policy Capacity 100, Governance 62.5, Public Sector Adoption 60.07, Resilience 62.81), not the composite the indicator names. Equally, level 3 is not proposed because no admissible-tier (T1-T4) page in this retrieval states any overall score for Egypt.",
+    "search_trail": "1) MCIT press release 'ICT Sector Achievements in 2025' (mcit.gov.eg, T3) \u2014 the only government/official page retrieved; it names the Government AI Readiness Index but reports only a 60-place rise since 2019, no score, no current rank. 2) Oxford Insights 'Government AI Readiness Report 2025' PDF (oxfordinsights.com) \u2014 retrieved text stops after acknowledgements, contents and introduction; the 'Full rankings' section (p.59) and the MENA regional report (p.38), which would carry Egypt's score, are not in the supplied text. 3) Oxford Insights '2024 Government AI Readiness Index' PDF \u2014 same problem: table of contents and findings only; 'Full rankings' (p.41) not in supplied text; Egypt is not named anywhere in the retrieved portion. 4) Statista 'Government AI readiness index by category Egypt 2024' \u2014 paywalled, rank and overall score both masked ('*****'), and T5 in any case. 5) KAI LAB blog (T5) \u2014 gives Egypt 2024 overall 55.63, rank 65, plus pillar scores; blog, not admissible for a statistic. 6) Ahram Online (three URLs, same article, T5) \u2014 gives Egypt 2025 overall 57.5, rank 51/195, and all six pillar scores, sourced to an MCIT statement; news, not admissible for a statistic. Dead end: no T1/T2/T3/T4 page in this set reproduces the score, so the cell is held rather than scored off T5 numbers."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 1) MCIT press release 'ICT Sector Achievements in 2025' (mcit.gov.eg, T3) \u2014 the only government/official page retrieved; it names the Government AI Readiness Index but reports only a 60-place rise since 2019, no score, no current rank. 2) Oxford Insights 'Government AI Readiness Report 2025' PDF (oxfordinsights.com) \u2014 retrieved text stops after acknowledgements, contents and introduction; the 'Full rankings' section (p.59) and the MENA regional report (p.38), which would carry Egypt's score, are not in the supplied text. 3) Oxford Insights '2024 Government AI Readiness Index' PDF \u2014 same problem: table of contents and findings only; 'Full rankings' (p.41) not in supplied text; Egypt is not named anywhere in the retrieved portion. 4) Statista 'Government AI readiness index by category Egypt 2024' \u2014 paywalled, rank and overall score both masked ('*****'), and T5 in any case. 5) KAI LAB blog (T5) \u2014 gives Egypt 2024 overall 55.63, rank 65, plus pillar scores; blog, not admissible for a statistic. 6) Ahram Online (three URLs, same article, T5) \u2014 gives Egypt 2025 overall 57.5, rank 51/195, and all six pillar scores, sourced to an MCIT statement; news, not admissible for a statistic. Dead end: no T1/T2/T3/T4 page in this set reproduces the score, so the cell is held rather than scored off T5 numbers.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Admissible-tier evidence is a government press release reporting a rank movement, not a score; the score itself is available only through secondary news/blog reporting of an MCIT statement. The named construct is the Oxford Insights Government AI Readiness Index for Egypt. On the census's open question: the 2025 (8th) edition, per the Oxford Insights report retrieved here, rebuilt the framework around 69 indicators in six pillars (Policy Capacity, Governance, AI Infrastructure, Public Sector Adoption, Development and Diffusion, Resilience), and secondary reporting of the MCIT statement does quote an overall 2025 figure of 57.5 (rank 51/195), so an overall score appears to exist for 2025 rather than having been dropped \u2014 but that figure sits on the wrong side of the tier line here (T5 news only). Context figures that could NOT be admitted: 2025 overall 57.5 with pillar scores 100 Policy Capacity, 62.5 Governance, 46.06 AI Infrastructure, 60.07 Public Sector Adoption, 45.41 Development and Diffusion, 62.81 Resilience (Ahram Online, T5); 2024 overall 55.63, rank 65/188, with pillars Government 68.98, Technology Sector 42.13 (KAI LAB blog, T5); Statista's 2024 Egypt figure is paywalled and masked.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "Oxford Insights Government AI Readiness Index 2024 Egypt score",
+    "Government AI Readiness Index 2025 Oxford Insights report Egypt rank pillar scores",
+    "site:oxfordinsights.com Government AI Readiness Index Egypt"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "http://mcit.gov.eg/en/Media_Center/Press_Room/Press_Releases/98928",
+     "title": "Ministry of Communications and Information Technology",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://oxfordinsights.com/wp-content/uploads/2025/06/2024-Government-AI-Readiness-Index.pdf?utm=",
+     "title": "2024 Government AI Readiness Index",
+     "published": "2024-12-20T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.statista.com/statistics/1617965/egypt-government-ai-readiness-index-by-category/",
+     "title": "Government AI readiness index by category Egypt 2024| Statista",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://kailab.tech/2025/02/21/government-ai-readiness-Evie.html",
+     "title": "2024 Government AI Readiness Index: Which IndabaX Countries Are Most Prepared to Use AI? | KAI LAB",
+     "published": "2025-02-21T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://oxfordinsights.com/ai-readiness/",
+     "title": "AI Readiness - Oxford Insights",
+     "published": "2023-11-28T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://english.ahram.org.eg/News/560268.aspx",
+     "title": "Egypt tops Africa in AI readiness, ranks 51st globally - Tech - Business - Ahram Online",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://english.ahram.org.eg/NewsContent/3/1239/560268/Business/Tech/Egypt-tops-Africa-in-AI-readiness,-ranks-st-global.aspx",
+     "title": "Egypt tops Africa in AI readiness, ranks 51st globally - Tech - Business - Ahram Online",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://oxfordinsights.com/wp-content/uploads/2026/01/Government-AI-Readiness-Report-2025-1.pdf",
+     "title": "Updated Webpage Report",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://english.ahram.org.eg/UI/Front/Inner.aspx?NewsContentID=560268",
+     "title": "Egypt tops Africa in AI readiness, ranks 51st globally - Tech - Business - Ahram Online",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "4.2": {
+   "id": "4.2",
+   "name": "Cybersecurity framework (ITU GCI)",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Egypt is placed in Tier 1, the top tier of the ITU Global Cybersecurity Index 2024, with a perfect score, as stated by Egypt's Ministry of Communications and Information Technology.",
+    "unit": "GCI 2024 tier classification (five-tier model; score reported on a 0-100 scale)",
+    "year": 2024,
+    "source_title": "Arab Republic of Egypt, Ministry of Communications and Information Technology - Telecommunications / Industry / Cyber Security",
+    "source_url": "https://mcit.gov.eg/en/TeleCommunications/Industry/Cyber_Security",
+    "proposed_tier": "T3",
+    "quote": "Tier 1 ranking with a perfect score in the ITU",
+    "data_quality_flag": "Government self-report of an ITU classification; the ITU GCI 2024 report page carrying Egypt's own country profile/score was not among the retrieved sources, so the figure could not be quote-verified from ITU itself. A second government source (NTRA, tra.gov.eg) carries the same Tier 1 claim in its page title but the retrieved body text was empty.",
+    "construct_match": "measures the named construct",
+    "construct_note": "The indicator is named 'Cybersecurity framework (ITU GCI)'. The evidence is the GCI 2024 result for Egypt. Note the census question flagged for this row: ITU's GCI 2024 moved to a tier-based model and does not publish a single overall 0-1 index score per country; scores in that edition are expressed out of 100 (and the register's Egypt entry of '100' is on that 0-100 scale, not the 0-1 scale implied by the cut points, while Nigeria's 0.824 is on a 0-1 scale). The two register entries are therefore indeed incommensurable. The evidence here sits on the 0-100 / tier side of that question. Normalised (100/100 = 1.0), Egypt still clears the top cut point of 0.8, so the ambiguity does not change the level for this country, but it does mean the recorded 'value' is a tier/statement rather than an ITU-published 0-1 overall score.",
+    "presence_rung": "",
+    "quality_evidence": "The GCI is described by ITU as measuring 'the commitment of countries to cybersecurity' across five pillars - Legal, Technical, Organizational, Capacity Development and Cooperation - aggregated into an overall score (ITU GCI landing page, T1). ITU states the 5th edition was built on review of over 30,000 URLs and more than 1,000 PDFs, with each country submission independently verified. The specific Egypt result, however, is quoted here from the Egyptian ICT ministry rather than from an ITU page carrying Egypt's profile.",
+    "scale_evidence": "Tier 1 in GCI 2024 is the highest of the five tiers (role-modelling countries). The same MCIT page evidences the underlying institutional apparatus consistent with a top-tier score: the Egyptian Supreme Cybersecurity Council as highest national authority, EG-CERT as national technical authority and executive arm, a first National Cybersecurity Strategy (2017-2021) and a current strategy (2023-2027) in force. ITU's own page separately records Egypt's earlier GCI history (ranked in 2014 edition).",
+    "proposed_level": 5,
+    "rung_argument": "Level 1 (below 0.2): ruled out - Egypt has a legally constituted national cybersecurity authority (ESCC), an operating national CERT (EG-CERT) and successive national strategies, far beyond a near-zero commitment score. Level 2 (0.2-0.4) and level 3 (0.4-0.6): ruled out - all five GCI pillars are evidenced (legal instruments including accession to the UN Convention against Cybercrime, technical measures via EG-CERT incident response and forensics, organisational measures via ESCC and the 2023-2027 strategy, capacity development via training/cyberdrills/awareness academies, and cooperation via Arab and ITU cyberdrill participation). Level 4 (0.6-0.8): ruled out - a Tier 1 placement in GCI 2024 corresponds to the highest band of the index, which on any normalisation exceeds 0.8. Level 5: the government source states a 'perfect score' and Tier 1 placement, i.e. the maximum attainable on the published scale (100/100, equivalently 1.0 on a 0-1 basis), which is above the top cut point of 0.8. The argument here is about the VALUE and its construct match, not arithmetic: the value is a tier plus a reported perfect score rather than an ITU-published 0-1 figure, and that is the correct characterisation of what GCI 2024 actually publishes.",
+    "negative_finding": "Level 5 is proposed, so no higher rung exists. The residual weakness to record instead: the ITU pages retrieved do not themselves carry Egypt's GCI 2024 score or tier, so the top-of-scale placement rests on a T3 national-government statement rather than a T1 quote from the ITU report; and no ITU-published single 0-1 overall score for Egypt exists to place directly against these cut points.",
+    "search_trail": "Started with the ITU GCI publication landing pages (itu.int/pub and itu.int/epublications) - both carry front matter, acknowledgements, foreword and disclaimers only; neither retrieved page contains any country score table, so Egypt's 2024 figure could not be quoted from ITU. Checked the ITU-D GCI programme page (two variants) - describes the five pillars, the tier-based 5th edition and links to the GCI 2024 report, but carries no per-country data. Checked the ITU news item 'Egypt Ranked Ninth at Global Cybersecurity Index' - this is the 2014 first edition (rank 27th of 193 per that page's own text) and is a decade out of date, so not used as the value. Checked the Belgian CCB mirror of the GCI 2024 PDF - the retrieved extract stops at the foreword and contains no country tables. Checked Egypt's NTRA (tra.gov.eg) page - title asserts Tier 1 but the retrieved body was 'undefined', so not quotable. Settled on the MCIT (Egyptian ICT ministry) Cyber Security page, a T3 government artifact, which states the Tier 1 / perfect score GCI 2024 result verbatim. Recorded as a statement rather than a number because ITU GCI 2024 publishes tiers and 0-100 pillar scores, not a 0-1 overall index score of the kind the register's cut points assume."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 Started with the ITU GCI publication landing pages (itu.int/pub and itu.int/epublications) - both carry front matter, acknowledgements, foreword and disclaimers only; neither retrieved page contains any country score table, so Egypt's 2024 figure could not be quoted from ITU. Checked the ITU-D GCI programme page (two variants) - describes the five pillars, the tier-based 5th edition and links to the GCI 2024 report, but carries no per-country data. Checked the ITU news item 'Egypt Ranked Ninth at Global Cybersecurity Index' - this is the 2014 first edition (rank 27th of 193 per that page's own text) and is a decade out of date, so not used as the value. Checked the Belgian CCB mirror of the GCI 2024 PDF - the retrieved extract stops at the foreword and contains no country tables. Checked Egypt's NTRA (tra.gov.eg) page - title asserts Tier 1 but the retrieved body was 'undefined', so not quotable. Settled on the MCIT (Egyptian ICT ministry) Cyber Security page, a T3 government artifact, which states the Tier 1 / perfect score GCI 2024 result verbatim. Recorded as a statement rather than a number because ITU GCI 2024 publishes tiers and 0-100 pillar scores, not a 0-1 overall index score of the kind the register's cut points assume.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Government self-report of an ITU classification; the ITU GCI 2024 report page carrying Egypt's own country profile/score was not among the retrieved sources, so the figure could not be quote-verified from ITU itself. A second government source (NTRA, tra.gov.eg) carries the same Tier 1 claim in its page title but the retrieved body text was empty. The indicator is named 'Cybersecurity framework (ITU GCI)'. The evidence is the GCI 2024 result for Egypt. Note the census question flagged for this row: ITU's GCI 2024 moved to a tier-based model and does not publish a single overall 0-1 index score per country; scores in that edition are expressed out of 100 (and the register's Egypt entry of '100' is on that 0-100 scale, not the 0-1 scale implied by the cut points, while Nigeria's 0.824 is on a 0-1 scale). The two register entries are therefore indeed incommensurable. The evidence here sits on the 0-100 / tier side of that question. Normalised (100/100 = 1.0), Egypt still clears the top cut point of 0.8, so the ambiguity does not change the level for this country, but it does mean the recorded 'value' is a tier/statement rather than an ITU-published 0-1 overall score.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "ITU Global Cybersecurity Index 2024 Egypt score report PDF",
+    "site:itu.int Global Cybersecurity Index 2024 country profile Egypt",
+    "Global Cybersecurity Index 2024 Egypt tier 1 role-modelling 100 pillar scores"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://www.itu.int/pub/publications.aspx?lang=en&parent=D-HDB-GCI.01-2024",
+     "title": "Global Cybersecurity Index",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.itu.int/epublications/zh/publication/global-cybersecurity-index-2024/en",
+     "title": "Global Cybersecurity Index 2024 - ITU",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.itu.int/en/itu-d/cybersecurity/pages/global-cybersecurity-index.aspx",
+     "title": "Global Cybersecurity Index",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.itu.int/en/ITU-D/Cybersecurity/Pages/Egypt-Ranked-Ninth-at-Global-Cybersecurity-Index.aspx",
+     "title": "Egypt Ranked Ninth at Global Cybersecurity Index",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.itu.int/en/ITU-D/Cybersecurity/Pages/global-cybersecurity-index.aspx",
+     "title": "Global Cybersecurity Index",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.tra.gov.eg/en/egypt-classified-in-tier-1-according-to-itu-global-cybersecurity-index/",
+     "title": "Egypt classified in Tier 1 according to ITU-Global Cybersecurity Index - National Telecom Regulatory Authority",
+     "published": "2024-09-18T00:00:00.000Z",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://mcit.gov.eg/en/TeleCommunications/Industry/Cyber_Security",
+     "title": "Ministry of Communications and Information Technology",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://ccb.belgium.be/sites/default/files/2025-01/2401416_1b_Global-Cybersecurity-Index-E.pdf",
+     "title": "Global Cybersecurity Index 2024",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "4.4": {
+   "id": "4.4",
+   "name": "National digital agriculture strategy",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Egypt has no dedicated national digital agriculture (e-agriculture) strategy document: the closest adopted instrument is the Ministry of Agriculture and Land Reclamation's Agricultural Development Strategy aligned to Egypt's NDP 2030, which contains a digital transformation programme for the agricultural sector as one component, and several government digital-agriculture tools (Hodhod/Al Mufeed extension apps, DAIRS climate early warning) are reported as under development, while Egypt does not appear on ITU's list of countries that have adopted a dedicated e-agriculture strategy.",
+    "unit": "",
+    "year": 0,
+    "source_title": "Ministry of Agriculture and Land Reclamation (Egypt), Welcome Message",
+    "source_url": "https://moa.gov.eg/en/about/welcomemessage/",
+    "proposed_tier": "T3",
+    "quote": "The Ministry of Agriculture has launched the Agricultural Development Strategy, which goes in line with Egypt's NDP goals 2030.",
+    "data_quality_flag": "Ministry website is labelled \"Beta Version\"; no strategy document text or adoption instrument is published on the page.",
+    "construct_match": "measures a different construct",
+    "construct_note": "The indicator names a national DIGITAL AGRICULTURE strategy. The best Egypt-specific evidence retrieved is a broader Agricultural Development Strategy (aligned to NDP 2030) that merely 'is including number of programmes, & a digital transformation programme in the agricultural sector' \u2014 i.e. a digital-ag component embedded in a general sector strategy, not a dedicated digital-agriculture strategy document. This sits on the 'embedded component' side of the unresolved definitional question flagged in the indicator census. Under the name as written (a dedicated national digital agriculture strategy) the instrument is absent; under the broader reading that credits embedded components, Egypt would instead sit at 'Adopted'. Ratifiers should note the score would change with the definition. The ITU e-agriculture strategies page, which names the countries that have adopted dedicated e-agriculture strategies (Afghanistan, Bhutan, Fiji, Papua New Guinea, The Philippines, Sri Lanka), does not include Egypt.",
+    "presence_rung": "Absent",
+    "quality_evidence": "",
+    "scale_evidence": "",
+    "proposed_level": 1,
+    "rung_argument": "Absent: no dedicated national digital agriculture / e-agriculture strategy for Egypt appears in any of the retrieved sources. The FAO/ITU regional guidance leaflet for Near East and North Africa only explains why such a strategy is needed and how to develop one; the ITU global page names the six countries that have adopted a dedicated e-agriculture strategy and Egypt is not among them. The Egyptian ministry's own site announces an Agricultural Development Strategy containing a digital transformation programme, i.e. a component of a broader strategy rather than the named instrument. The ICARDA situation report (2023) describes government apps (Al Mufeed, Hodhud, DAIRS) as 'under development' and frames constraints on adoption, without reference to a national digital agriculture strategy. That is the correct place to look and the named instrument is not there, so the rung is Absent, which scores level 1. No quality_evidence (no evaluation or audit of a strategy exists, since no strategy is identified) and no scale_evidence (no reach figures), so no additions.",
+    "negative_finding": "Announced (level 2) was not reached because nothing in the retrieved sources records a government announcement, ministerial decree, drafting process or FAO/ITU country engagement to prepare a dedicated national digital agriculture strategy for Egypt. The FAO/ITU brochure is generic regional guidance with no Egypt-specific commitment, and the 2019 FAO news item reports a digital extension model project, not a strategy under preparation. Adopted was likewise not reached for the dedicated document, only for the broader Agricultural Development Strategy that contains a digital component.",
+    "search_trail": "1) ITU e-Agriculture Strategies page (T1) \u2014 checked the list of countries with dedicated e-agriculture strategies; Egypt not listed. 2) FAO openknowledge NENA 'Digital Agriculture Strategy' leaflet (T2) \u2014 generic guidance and roadmap for the region, no Egypt country strategy named. 3) Egypt MoALR official site, Welcome Message (T3) \u2014 nearest adjacent instrument: Agricultural Development Strategy aligned with NDP 2030 including a digital transformation programme; no dedicated digital-ag strategy document or link found on the site's Laws and regulations / Publications navigation as rendered. 4) ICARDA 'Current Situation of Digital Agriculture in Egypt' (2023, T2, limited access) \u2014 abstract describes tool categories and government apps under development, no national digital agriculture strategy mentioned. 5) FAO e-Agriculture news item on Egypt (2019, T1) \u2014 project-level digital extension model, not a strategy. 6) World Bank programmatic support to MALR (2021, T1) \u2014 only a table-of-contents section 5.5 'Digital Technologies' was in the retrieved text; no strategy statement quotable. 7) SIS story on Food Security and Agricultural Innovation Strategy \u2014 404, dead end. 8) UNESCWA Arab National Development Planning Portal \u2014 blocked by Cloudflare bot check, dead end. Domain was searchable; the named instrument was not found in it, hence Absent rather than a data gap."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 1) ITU e-Agriculture Strategies page (T1) \u2014 checked the list of countries with dedicated e-agriculture strategies; Egypt not listed. 2) FAO openknowledge NENA 'Digital Agriculture Strategy' leaflet (T2) \u2014 generic guidance and roadmap for the region, no Egypt country strategy named. 3) Egypt MoALR official site, Welcome Message (T3) \u2014 nearest adjacent instrument: Agricultural Development Strategy aligned with NDP 2030 including a digital transformation programme; no dedicated digital-ag strategy document or link found on the site's Laws and regulations / Publications navigation as rendered. 4) ICARDA 'Current Situation of Digital Agriculture in Egypt' (2023, T2, limited access) \u2014 abstract describes tool categories and government apps under development, no national digital agriculture strategy mentioned. 5) FAO e-Agriculture news item on Egypt (2019, T1) \u2014 project-level digital extension model, not a strategy. 6) World Bank programmatic support to MALR (2021, T1) \u2014 only a table-of-contents section 5.5 'Digital Technologies' was in the retrieved text; no strategy statement quotable. 7) SIS story on Food Security and Agricultural Innovation Strategy \u2014 404, dead end. 8) UNESCWA Arab National Development Planning Portal \u2014 blocked by Cloudflare bot check, dead end. Domain was searchable; the named instrument was not found in it, hence Absent rather than a data gap.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. Ministry website is labelled \"Beta Version\"; no strategy document text or adoption instrument is published on the page. The indicator names a national DIGITAL AGRICULTURE strategy. The best Egypt-specific evidence retrieved is a broader Agricultural Development Strategy (aligned to NDP 2030) that merely 'is including number of programmes, & a digital transformation programme in the agricultural sector' \u2014 i.e. a digital-ag component embedded in a general sector strategy, not a dedicated digital-agriculture strategy document. This sits on the 'embedded component' side of the unresolved definitional question flagged in the indicator census. Under the name as written (a dedicated national digital agriculture strategy) the instrument is absent; under the broader reading that credits embedded components, Egypt would instead sit at 'Adopted'. Ratifiers should note the score would change with the definition. The ITU e-agriculture strategies page, which names the countries that have adopted dedicated e-agriculture strategies (Afghanistan, Bhutan, Fiji, Papua New Guinea, The Philippines, Sri Lanka), does not include Egypt.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "Egypt national digital agriculture strategy FAO ITU report",
+    "\"digital agriculture\" strategy Egypt Ministry of Agriculture and Land Reclamation site:gov.eg",
+    "Egypt Sustainable Agricultural Development Strategy 2030 digital agriculture ICT component World Bank"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://www.itu.int/en/ITU-D/ICT-Applications/Pages/e-agriculture-strategies.aspx",
+     "title": "E-Agriculture Strategies",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/e-agriculture/news/egypt-turns-fao-digital-transformation-agriculture",
+     "title": "Egypt turns to FAO for digital transformation in agriculture | e-Agriculture | Food and Agriculture Organization of the United Nations",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents1.worldbank.org/curated/en/259611625118209081/pdf/Egypt-Arab-Republic-of-Programmatic-Support-to-MALR-Accelerating-the-Transformation-of-Agri-Food-System-Impact-of-Investments-in-Selected-Value-Chains.pdf",
+     "title": "World Bank Document",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents1.worldbank.org/curated/en/259611625118209081/Egypt-Arab-Republic-of-Programmatic-Support-to-MALR-Accelerating-the-Transformation-of-Agri-Food-System-Impact-of-Investments-in-Selected-Value-Chains.docx",
+     "title": "[DOC] https://documents1.worldbank.org/curated/en/259611...",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://cgspace.cgiar.org/items/bbc4af9b-9c5b-42b4-8c95-997b40890722",
+     "title": "Current Situation of Digital Agriculture in Egypt",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://openknowledge.fao.org/server/api/core/bitstreams/85beff03-97ff-472b-b0e3-09136692338d/content",
+     "title": "",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://moa.gov.eg/en/about/welcomemessage/",
+     "title": "Ministry of Agriculture and Land Reclamation - Welcome Message",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.sis.gov.eg/Story/181587/Food-Security-and-Agricultural-Innovation-Strategy?lang=en-us",
+     "title": "Food Security and Agricultural Innovation Strategy-SIS",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://andp.unescwa.org/index.php/plans/1137",
+     "title": "Arab National Development Planning Portal",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "4.5": {
+   "id": "4.5",
+   "name": "Agricultural data governance framework",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "reject",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "reject",
+     "reason": "the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep."
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "statement",
+    "value": "Egypt has no dedicated agricultural data governance framework: the applicable instruments found are cross-government ones \u2014 the National Council for Artificial Intelligence's Open Data Policy (2025), which governs open data across all public institutions pending a forthcoming Data Governance Law and establishes the Egyptian Data Governance Authority, and CAPMAS's general statistical mandate \u2014 while FAO's GSARS lists Egypt as receiving agricultural-statistics training (dissemination, CAPI, master sampling frame, CAADP indicators) but does not list Egypt among the countries that adopted the Strategic Plan for Agricultural Statistics (SPARS) package; no agriculture-specific data policy, farm-data sharing rule or agricultural data governance instrument appears in any of the retrieved sources.",
+    "unit": "",
+    "year": 2025,
+    "source_title": "National Council for Artificial Intelligence, Arab Republic of Egypt \u2014 Open Data Policy (2025)",
+    "source_url": "https://ai.gov.eg/SynchedFiles/en/Resources/Open%20Data%20Policy.pdf",
+    "proposed_tier": "T3",
+    "quote": "This policy outlines Egypt\u2019s roadmap to promote and expand open data practices throughout the public sector during the transitional period preceding the enactment of the forthcoming Data Governance Law, its executive regulations, and the accompanying data classification framework.",
+    "data_quality_flag": "",
+    "construct_match": "measures a different construct",
+    "construct_note": "The quoted instrument is a whole-of-government open data policy issued by the National Council for Artificial Intelligence; it is sector-agnostic and contains no agriculture-specific provisions (no farm data, no agricultural registry, no MoALR-specific data governance rules). It is cited as evidence that the national data-governance domain was examined and that no agricultural data governance framework sits within it, not as a measure of the named construct. The adjacent sector instrument examined, FAO's GSARS country page for Egypt, lists only capacity-building activities and explicitly names the SPARS adopters as 'Angola, Madagascar, Mozambique, Tanzania, Togo, Liberia, Zimbabwe' \u2014 Egypt is not among them.",
+    "presence_rung": "Absent",
+    "quality_evidence": "",
+    "scale_evidence": "",
+    "proposed_level": 1,
+    "rung_argument": "Absent (level 1): the named instrument \u2014 a framework governing the collection, sharing, licensing, protection and reuse of agricultural data in Egypt \u2014 does not appear in any retrieved source. Rung 'Announced' would require a government or ministry statement of intent to create such a framework; the only announced forthcoming instrument is the general Data Governance Law referenced in the Open Data Policy, which is not agricultural. Rung 'Adopted' would require an issued agricultural data policy, decree or strategy; the FAO GSARS country page for Egypt lists only training packages (basic training, HR policies, master sampling frame, CAPI, dissemination, CAADP indicators) and shows Egypt is not among the countries that adopted SPARS, which is the standard sectoral planning/governance instrument for agricultural statistics. Rung 'Operating' would additionally require evidence of the framework functioning; none exists because no framework exists. Since the rung is Absent, quality_evidence and scale_evidence are not applicable and are left empty, giving level 1.",
+    "negative_finding": "'Announced' was not proposed because nothing in the retrieved T1-T3 material contains a Government of Egypt announcement of an agriculture-specific data governance framework. The forthcoming Data Governance Law and the Egyptian Data Governance Authority referenced in the 2025 Open Data Policy are horizontal, cross-sector instruments with no agricultural scope, and the FAO GSARS Egypt page describes only statistical capacity-building workshops rather than any commitment to draft or issue an agricultural data governance instrument.",
+    "search_trail": "Started with the sector-specific sources: FAO GSARS Egypt country page (Source 5) and its three Egypt news items (Sources 1, 3, 4) \u2014 these document 2023-24 training workshops on dissemination, open data standards and CAADP indicator computation with MoALR and CAPMAS, but no policy instrument. Checked the GSARS 'Sustainable Statistical Systems' page (Source 6) for whether Egypt had adopted SPARS, the nearest sectoral governance/planning instrument; the adopters list names seven countries and Egypt is not among them. Then examined the national data-governance domain: Egypt's Open Data Policy 2025 issued by the National Council for AI (Source 9, T3) \u2014 the governing horizontal instrument, which covers all public institutions and flags a forthcoming Data Governance Law, but has no agricultural provisions. Then the national statistics domain: CAPMAS's own statement of mandate and strategic objectives to UNSD (Source 2, T1), which describes coordination gaps and duplication between CAPMAS, MoALR and IDSC but no agricultural data governance rules; and the PARIS21 NSS assessment of Egypt (Source 10, T5, not usable for a prerequisite row anyway). Finally checked the two agricultural-policy analyses: OECD's 2026 Policies for the Future of Farming and Food in Egypt (Source 7) \u2014 only front matter, foreword and acknowledgements were retrieved, with no text on data governance \u2014 and a 2001 World Bank export-strategy record (Source 8), which is a catalogue page only. Dead ends: no MoALR decree, no national agricultural data strategy, and no agricultural data-sharing regulation surfaced in any retrieved page."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 Started with the sector-specific sources: FAO GSARS Egypt country page (Source 5) and its three Egypt news items (Sources 1, 3, 4) \u2014 these document 2023-24 training workshops on dissemination, open data standards and CAADP indicator computation with MoALR and CAPMAS, but no policy instrument. Checked the GSARS 'Sustainable Statistical Systems' page (Source 6) for whether Egypt had adopted SPARS, the nearest sectoral governance/planning instrument; the adopters list names seven countries and Egypt is not among them. Then examined the national data-governance domain: Egypt's Open Data Policy 2025 issued by the National Council for AI (Source 9, T3) \u2014 the governing horizontal instrument, which covers all public institutions and flags a forthcoming Data Governance Law, but has no agricultural provisions. Then the national statistics domain: CAPMAS's own statement of mandate and strategic objectives to UNSD (Source 2, T1), which describes coordination gaps and duplication between CAPMAS, MoALR and IDSC but no agricultural data governance rules; and the PARIS21 NSS assessment of Egypt (Source 10, T5, not usable for a prerequisite row anyway). Finally checked the two agricultural-policy analyses: OECD's 2026 Policies for the Future of Farming and Food in Egypt (Source 7) \u2014 only front matter, foreword and acknowledgements were retrieved, with no text on data governance \u2014 and a 2001 World Bank export-strategy record (Source 8), which is a catalog page only. Dead ends: no MoALR decree, no national agricultural data strategy, and no agricultural data-sharing regulation surfaced in any retrieved page.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "EVIDENCE REJECTED \u2014 the recorded evidence attributes its facts to Egypt rather than to Egypt, Arab Rep. The quoted instrument is a whole-of-government open data policy issued by the National Council for Artificial Intelligence; it is sector-agnostic and contains no agriculture-specific provisions (no farm data, no agricultural registry, no MoALR-specific data governance rules). It is cited as evidence that the national data-governance domain was examined and that no agricultural data governance framework sits within it, not as a measure of the named construct. The adjacent sector instrument examined, FAO's GSARS country page for Egypt, lists only capacity-building activities and explicitly names the SPARS adopters as 'Angola, Madagascar, Mozambique, Tanzania, Togo, Liberia, Zimbabwe' \u2014 Egypt is not among them.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "Egypt agricultural statistics data governance framework CAPMAS Ministry of Agriculture",
+    "FAO Egypt country assessment agricultural statistics strategic plan SSPARS",
+    "World Bank Egypt agriculture data governance national strategy statistics report"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://www.fao.org/in-action/global-strategy-agricultural-statistics/news-and-events/news-detail/the-global-strategy-builds-statistical-data-dissemination-capacity-in-egypt/en",
+     "title": "News detail",
+     "published": "2023-04-12T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://unstats.un.org/unsd/statcom/statcom_seminar/Egypt.pdf",
+     "title": "System of Official Statistics in Egypt: Strategic Objectives",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/in-action/global-strategy-agricultural-statistics/news-and-events/news-detail/the-global-strategy-continues-to-enhance-statistical-data-dissemination-capacity-in-egypt--with-a-focus-on-aggregated-statistical-data-and-data-release-via-interactive-data-portals/en",
+     "title": "News detail",
+     "published": "2023-06-21T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/in-action/global-strategy-agricultural-statistics/news-and-events/news-detail/gsarsii-workshop-strengthens-agricultural-data-analysis-in-egypt/en",
+     "title": "News detail",
+     "published": "2024-03-13T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/in-action/global-strategy-agricultural-statistics/countries/EGY/en",
+     "title": "Egypt",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fao.org/in-action/global-strategy-agricultural-statistics/areas-of-work/strategic-planning/en",
+     "title": "Sustainable Statistical Systems",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2026/03/policies-for-the-future-of-farming-and-food-in-egypt_6392e0d9/cab0cefd-en.pdf",
+     "title": "Policies for the Future of Farming and Food in Egypt (EN)",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/582351468770335332",
+     "title": "Egypt - Toward agricultural competitiveness in the 21st century - an agricultural export-oriented strategy",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://ai.gov.eg/SynchedFiles/en/Resources/Open%20Data%20Policy.pdf",
+     "title": "Open Data Policy",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.paris21.org/sites/default/files/NSS-Assessment-Egypt_2015.pdf",
+     "title": "EGYPT",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": null
+  },
+  "4.7": {
+   "id": "4.7",
+   "name": "Digital ID coverage (%)",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "gap",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "quote",
+     "verdict": "pass",
+     "reason": "no value asserted"
+    }
+   ],
+   "quote_verified": false,
+   "answer": {
+    "found": false,
+    "abstain": true,
+    "abstain_reason": "None of the supplied pages carries a quote-verifiable, Egypt-attributed figure for digital ID coverage. The ID4D DataBank landing pages (Sources 1, 5) render only the variable/country pickers; the one page with actual series values (Source 5) shows an unlabelled country panel whose figures (ID ownership, total 71.4 in 2017 and 87.4 in 2021, female 48.4 vs male 94.2 in 2017) cannot be attributed to Egypt from the page text \u2014 the country list is 199-selected and the displayed rows carry no country header, and the extreme 2017 gender gap is inconsistent with Egypt. The ID4D global pages (Sources 2, 3, 4, 8) describe the dataset and global headlines only, with no Egypt row. The only Egypt-specific digital-identity page (Source 9, digitalidentityindex.com) is T5 and is inadmissible for this prerequisite row, and its 56.97 'Digital Identity Score' is a composite readiness index, not a coverage percentage. Recording a number here would require either fabricating it or misattributing another country's series, both of which are barred.",
+    "value_kind": "none",
+    "value": "",
+    "unit": "",
+    "year": 0,
+    "source_title": "",
+    "source_url": "",
+    "proposed_tier": "",
+    "quote": "",
+    "data_quality_flag": "",
+    "construct_match": "unclear",
+    "construct_note": "The indicator name is 'Digital ID coverage (%)'. Two distinct ID4D constructs are in play and the supplied pages confirm they are different things: (a) foundational ID ownership, published as 'ID ownership, total (% of population ages 15+)' \u2014 a card/credential ownership measure that is NOT a digital ID measure; and (b) digital ID, which ID4D describes as 'a government-recognized digital identity to securely transact online' and reports as country-level availability ('people in approximately 45 percent of countries can obtain at least one government-recognized digital identity credential'), plus binary supply-side flags such as 'Digital ID verification (1 = yes; 0 = no)'. Judged against the name as written, the correct series is the digital-ID one, and for Egypt no value of either series is present in the retrieved pages. Context, not evidence for this cell: the T5 Global Digital Identity Index page asserts for Egypt 'Online Digital Identity: No', i.e. no online-authentication digital credential \u2014 which, if it were admissible, would point to a very low digital-ID coverage rather than the high foundational-ID ownership figure the census flags as having been used. The census's observation therefore stands: the recorded Egypt series is on the wrong side of the naming question, and it is also on a different denominator (% of adults 15+) from the comparator country.",
+    "presence_rung": "",
+    "quality_evidence": "Admissible tiers present (T1 World Bank DataBank, Data360, Data Catalog, Microdata Library; T2 ID4D Volume 1 report) but none of these pages exposes an Egypt-level value in its retrieved text. The only Egypt-specific numbers retrieved sit on a T5 aggregator page, which this prerequisite row explicitly excludes.",
+    "scale_evidence": "No Egypt-level coverage percentage, count of credential holders, or population share was retrievable from the supplied pages for either the foundational-ID or the digital-ID construct.",
+    "proposed_level": 0,
+    "rung_argument": "No level is proposed. A threshold level here would have to rest on an Egypt-specific percentage; the retrieved pages contain no such percentage that can be quoted and attributed to Egypt. Scoring level 5 off the unlabelled 87.4 figure in Source 5 would be exactly the failure mode of misattributing another jurisdiction's series, and scoring anything off Source 9's 56.97 would be substituting a composite readiness index for a coverage rate at an inadmissible tier.",
+    "negative_finding": "Not applicable \u2014 the level is withheld rather than set below 5. The specific missing item is an Egypt-row value from the ID4D digital-ID series (or a national/regulator publication of the share of Egyptians holding a digitally verifiable/online-authenticating credential) that can be copied verbatim from a fetched page.",
+    "search_trail": "1) ID4D DataBank source landing page (Source 1) \u2014 variable pickers only, no data rendered. 2) ID4D global dataset page (Source 2) \u2014 global headlines (800 million without official ID; 2.8 billion without digital ID for online transactions; ~45 percent of countries offer a digital ID credential) but no country rows. 3) Data360 dataset page (Source 3) and Data Catalog entry (Source 4) \u2014 metadata and coverage descriptions only. 4) DataBank saved report (Source 5) \u2014 the only page with actual series values; contains the correct series names including 'Digital ID verification (1 = yes; 0 = no)' and 'ID ownership, total (% of population ages 15+)', but the rows are not labelled with a country and the panel has all 199 economies selected, so the 71.4/87.4 values cannot be assigned to Egypt; the 2017 female 48.4 / male 94.2 split argues against Egypt. 5) Findex 2025 Egypt microdata study description (Source 6) and its data dictionary (Source 7) \u2014 confirm the ID4D module variables (fin46-fin51) were added to the Egypt file, but publish no tabulated Egypt percentage. 6) ID4D 2021 Volume 1 document page (Source 8) \u2014 abstract and citation metadata only, no country table in the retrieved text. 7) Global Digital Identity Index Egypt page (Source 9) \u2014 Egypt-specific but T5 and a composite score, inadmissible for a UC:FIN prerequisite. Dead end: no Egypt-attributed digital-ID coverage percentage in any supplied page."
+   },
+   "row": {
+    "value": "DATA GAP \u2014 1) ID4D DataBank source landing page (Source 1) \u2014 variable pickers only, no data rendered. 2) ID4D global dataset page (Source 2) \u2014 global headlines (800 million without official ID; 2.8 billion without digital ID for online transactions; ~45 percent of countries offer a digital ID credential) but no country rows. 3) Data360 dataset page (Source 3) and Data Catalog entry (Source 4) \u2014 metadata and coverage descriptions only. 4) DataBank saved report (Source 5) \u2014 the only page with actual series values; contains the correct series names including 'Digital ID verification (1 = yes; 0 = no)' and 'ID ownership, total (% of population ages 15+)', but the rows are not labelled with a country and the panel has all 199 economies selected, so the 71.4/87.4 values cannot be assigned to Egypt; the 2017 female 48.4 / male 94.2 split argues against Egypt. 5) Findex 2025 Egypt microdata study description (Source 6) and its data dictionary (Source 7) \u2014 confirm the ID4D module variables (fin46-fin51) were added to the Egypt file, but publish no tabulated Egypt percentage. 6) ID4D 2021 Volume 1 document page (Source 8) \u2014 abstract and citation metadata only, no country table in the retrieved text. 7) Global Digital Identity Index Egypt page (Source 9) \u2014 Egypt-specific but T5 and a composite score, inadmissible for a UC:FIN prerequisite. Dead end: no Egypt-attributed digital-ID coverage percentage in any supplied page.",
+    "cls": "Gap",
+    "level": null,
+    "year": 2026,
+    "src": "Automated source search, 25 August 2026",
+    "note": "Next level not proposed: Not applicable \u2014 the level is withheld rather than set below 5. The specific missing item is an Egypt-row value from the ID4D digital-ID series (or a national/regulator publication of the share of Egyptians holding a digitally verifiable/online-authenticating credential) that can be copied verbatim from a fetched page. The indicator name is 'Digital ID coverage (%)'. Two distinct ID4D constructs are in play and the supplied pages confirm they are different things: (a) foundational ID ownership, published as 'ID ownership, total (% of population ages 15+)' \u2014 a card/credential ownership measure that is NOT a digital ID measure; and (b) digital ID, which ID4D describes as 'a government-recognized digital identity to securely transact online' and reports as country-level availability ('people in approximately 45 percent of countries can obtain at least one government-recognized digital identity credential'), plus binary supply-side flags such as 'Digital ID verification (1 = yes; 0 = no)'. Judged against the name as written, the correct series is the digital-ID one, and for Egypt no value of either series is present in the retrieved pages. Context, not evidence for this cell: the T5 Global Digital Identity Index page asserts for Egypt 'Online Digital Identity: No', i.e. no online-authentication digital credential \u2014 which, if it were admissible, would point to a very low digital-ID coverage rather than the high foundational-ID ownership figure the census flags as having been used. The census's observation therefore stands: the recorded Egypt series is on the wrong side of the naming question, and it is also on a different denominator (% of adults 15+) from the comparator country. An independent T1 series (World Bank WDI ID.OWN.TOTL.ZS (World Bank Identification for Development (ID4D))) reports 98.78 for 2024.",
+    "tier": "",
+    "tier_detail": "",
+    "url": ""
+   },
+   "queries": [
+    "ID4D Global Dataset Egypt national ID ownership percentage adults",
+    "World Bank ID4D digital ID coverage Egypt data",
+    "Egypt national ID card ownership Findex 2021 percent adults 15+"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://databank.worldbank.org/source/identification-for-development-(id4d)-data",
+     "title": "Identification for Development (ID4D) Data | DataBank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://id4d.worldbank.org/global-dataset",
+     "title": "Data | Identification for Development - ID4D - World Bank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://data360.worldbank.org/en/dataset/WB_ID4D",
+     "title": "Identification for Development (ID4D) Global Dataset",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://datacatalog.worldbank.org/search/dataset/0040787/identification-for-development-id4d-global-dataset",
+     "title": "Identification for Development (ID4D) Global Dataset - World B...",
+     "published": "2015-04-30T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://databank.worldbank.org/ID4D/id/99075b0c",
+     "title": "Identification for Development (ID4D) Data - DataBank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://microdata.worldbank.org/catalog/7897/study-description",
+     "title": "Egypt, Arab Rep. - The Global Findex Database 2025: Connectivity and Financial Inclusion in the Digital Economy",
+     "published": "2025-10-01T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://microdata.worldbank.org/catalog/7897/data-dictionary/F1?file_name=Findex_Microdata_2025_updateEgypt%2C+Arab+Rep.",
+     "title": "Egypt, Arab Rep. - The Global Findex Database 2025: Connectivity and Financial Inclusion in the Digital Economy",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/099705012232226786",
+     "title": "ID4D Global Dataset 2021 : Volume 1 - Global ID Coverage Estimates",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://digitalidentityindex.com/countries/egypt-arab-rep/",
+     "title": "Egypt, Arab Rep. - The Global Digital Identity Index",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": {
+    "status": "ok",
+    "value": 98.7781785562663,
+    "year": 2024,
+    "src": "World Bank WDI ID.OWN.TOTL.ZS (World Bank Identification for Development (ID4D))",
+    "url": "https://api.worldbank.org/v2/country/EGY/indicator/ID.OWN.TOTL.ZS?format=json&mrnev=1&per_page=5&source=89",
+    "tier": "T1",
+    "note": "World Bank Identification for Development (ID4D)",
+    "access": "2026-08-25"
+   }
+  },
+  "5.2": {
+   "id": "5.2",
+   "name": "Adult literacy rate (%)",
+   "country": "Egypt, Arab Rep.",
+   "verdict": "pass",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "quote",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "tier",
+     "verdict": "pass",
+     "reason": "recorded at T1"
+    },
+    {
+     "gate": "construct",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "prerequisite",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "coherence",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "currency",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "argument",
+     "verdict": "pass",
+     "reason": ""
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "number",
+    "value": "79",
+    "unit": "% of people ages 15 and above",
+    "year": 2022,
+    "source_title": "World Bank Open Data \u2014 Literacy rate, adult total (% of people ages 15 and above), Egypt, Arab Rep. (source: UNESCO Institute for Statistics)",
+    "source_url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=EG",
+    "proposed_tier": "T1",
+    "quote": "Egypt, Arab Rep.\t2022\t79",
+    "data_quality_flag": "Most recent available observation is 2022; UIS literacy figures for Egypt derive from census/survey self-reported literacy rather than direct assessment",
+    "construct_match": "measures the named construct",
+    "construct_note": "The World Bank/UIS series SE.ADT.LITR.ZS is exactly the adult literacy rate: percentage of people ages 15 and above who can, with understanding, read and write a short simple statement about their everyday life. National (not rural-specific) coverage, which matches the indicator as named. Cross-checks: FRED (T5, restating World Bank/WDI) reports 79.45316 for 2022, and the World Bank Gender Data Portal reports the same 2022 reference year disaggregated as 85.3% male / 73.3% female.",
+    "presence_rung": "",
+    "quality_evidence": "T1 publisher (World Bank Open Data, sourced from the UNESCO Institute for Statistics API, published 2026-02, CC BY-4.0). The value appears in the country-selected page for Egypt, Arab Rep. and is consistent with the same figure in the all-economies table and with the FRED restatement of the WDI series (79.45316 for 2022).",
+    "scale_evidence": "National-level estimate covering the whole population aged 15 and above; reference year 2022, the most recent observation in the series (series span for Egypt: 1976 - 2022).",
+    "proposed_level": 3,
+    "rung_argument": "The recorded value is the published national adult literacy rate for Egypt, Arab Rep.: 79 percent for reference year 2022, taken from the World Bank/UIS series SE.ADT.LITR.ZS. Construct match is exact \u2014 the series definition is the adult (15+) literacy rate, the same construct the indicator names, and the row quoted is for Egypt, Arab Rep. and no other economy. Against the cut points (50/65/80/90): 79 clears 50 (level 2), clears 65 (level 3), and does not clear 80, so the arithmetic outcome is level 3. The value is corroborated by the unrounded WDI figure of 79.45316 percent for the same year, which also falls below 80.",
+    "negative_finding": "Level 4 would require a published adult literacy rate above 80 percent. Egypt's most recent published figure is 79 percent (unrounded 79.45316 percent for 2022), which falls short of the 80 cut point. No admissible source in the retrieved pages publishes an Egyptian adult literacy figure at or above 80; the only above-80 figure available is the male-only subgroup rate (85.3%), which is a different construct and cannot be used to raise the national total.",
+    "search_trail": "1) World Bank Open Data indicator page for SE.ADT.LITR.ZS filtered to Egypt (Source 3) \u2014 found 'Egypt, Arab Rep. 2022 79' in both the selected-economies and all-economies tables; used as the value of record (T1). 2) Cross-checked the unfiltered World Bank pages (Sources 1 and 4), which carry the identical Egypt row. 3) FRED (Source 7, T5) restating the World Bank WDI series gives 79.45316 for 2022 \u2014 used only as a consistency check, not as the cited value, since T5 may not carry a statistic. 4) World Bank Gender Data Portal (Source 6, T1) gives 2022 adult literacy by sex (85.3% / 73.3%) \u2014 a sex-disaggregated construct, not the total, so not recorded as the value but noted as corroboration of the reference year. 5) CAPMAS microdata catalogue entry (Source 2) is a bulletin landing page only and carries no literacy figure. 6) Egypt Independent (Source 8, T5) reports CAPMAS 2017 illiteracy of 25.8% (implying ~74.2% literacy) plus rural 32.2% / urban 17.7% illiteracy \u2014 news tier, older reference year, and expressed as illiteracy, so not used. 7) Macrotrends (Source 9, T5) is a scraper of the same World Bank series and is not admissible for a statistic. 8) DataBank query URL (Source 5) returned a server error and yielded nothing."
+   },
+   "row": {
+    "value": 79.0,
+    "cls": "Measured",
+    "level": 3,
+    "year": 2022,
+    "src": "World Bank Open Data \u2014 Literacy rate, adult total (% of people ages 15 and above), Egypt, Arab Rep. (source: UNESCO Institute for Statistics)",
+    "note": "Most recent available observation is 2022; UIS literacy figures for Egypt derive from census/survey self-reported literacy rather than direct assessment. Next level not proposed: Level 4 would require a published adult literacy rate above 80 percent. Egypt's most recent published figure is 79 percent (unrounded 79.45316 percent for 2022), which falls short of the 80 cut point. No admissible source in the retrieved pages publishes an Egyptian adult literacy figure at or above 80; the only above-80 figure available is the male-only subgroup rate (85.3%), which is a different construct and cannot be used to raise the national total. The World Bank/UIS series SE.ADT.LITR.ZS is exactly the adult literacy rate: percentage of people ages 15 and above who can, with understanding, read and write a short simple statement about their everyday life. National (not rural-specific) coverage, which matches the indicator as named. Cross-checks: FRED (T5, restating World Bank/WDI) reports 79.45316 for 2022, and the World Bank Gender Data Portal reports the same 2022 reference year disaggregated as 85.3% male / 73.3% female. Corroborated by an independent T1 series (World Bank WDI SE.ADT.LITR.ZS): 79.45 for 2022.",
+    "tier": "T1",
+    "tier_detail": "Most recent available observation is 2022; UIS literacy figures for Egypt derive from census/survey self-reported literacy rather than direct assessment",
+    "url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=EG"
+   },
+   "queries": [
+    "Egypt adult literacy rate population 15+ CAPMAS statistics",
+    "UNESCO Institute for Statistics Egypt adult literacy rate 15 and above",
+    "World Bank data Egypt literacy rate adult total % of people ages 15 and above"
+   ],
+   "perplexity_citations": [],
+   "perplexity_lead": "",
+   "perplexity_error": "401 https://api.perplexity.ai/chat/completions :: {\"error\":{\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information, visit https://www.perplexity.a",
+   "pack": [
+    {
+     "url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=",
+     "title": "Literacy rate, adult total (% of people ages 15 and above)",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-en-v4.2/index.php/catalog/801",
+     "title": "Arab Republic of Egypt - Informatics bulletin monthly January 2025",
+     "published": "2025-10-02T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=EG",
+     "title": "Literacy rate, adult total (% of people ages 15 and above)",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS",
+     "title": "Literacy rate, adult total (% of people ages 15 and above)",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "http://databank.worldbank.org/data/reports.aspx?country=EGY%2CBHS&series=SE.ADT.LITR.ZS",
+     "title": "World Development Indicators | DataBank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://genderdata.worldbank.org/en/economies/egypt-arab-rep",
+     "title": "Egypt, Arab Rep. | World Bank Gender Data Portal",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://fred.stlouisfed.org/series/SEADTLITRZSEGY",
+     "title": "Literacy Rate, Adult Total for Egypt (SEADTLITRZSEGY) | FRED",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.egyptindependent.com/egypts-illiteracy-rates-stand-at-25-8-in-2017-capmas/",
+     "title": "Egypt's illiteracy rates stand at 25.8% in 2017: CAPMAS",
+     "published": "2018-09-08T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.macrotrends.net/global-metrics/countries/egy/egypt/literacy-rate",
+     "title": "Egypt Literacy Rate | Historical Chart & Data",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": {
+    "status": "ok",
+    "value": 79.4531619498685,
+    "year": 2022,
+    "src": "World Bank WDI SE.ADT.LITR.ZS",
+    "url": "https://api.worldbank.org/v2/country/EGY/indicator/SE.ADT.LITR.ZS?format=json&mrnev=1&per_page=5",
+    "tier": "T1",
+    "note": "",
+    "access": "2026-08-25"
+   }
   }
  }
 }
