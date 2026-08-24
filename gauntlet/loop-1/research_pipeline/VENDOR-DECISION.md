@@ -29,6 +29,17 @@ Opus-tier so the counter cannot read low. Comparing a real price against a place
 would be a measurement of the placeholder. The recorded token counts make the
 comparison exact the moment the real rates are entered.
 
+**The one tier failure left standing is real, and it errs safely.** After the two
+scoring corrections, a single non-compliance survives: `gpt-5.6-luna` cited the UN
+E-Government Knowledgebase — the correct source, correctly quoted, correctly valued —
+and proposed **T5** for it. That is an official UN statistical database being filed as
+news and vendor material. Under-tiering never inflates a claim; what it does under this
+pipeline's own rules is worse than harmless and better than the alternative — a T5
+citation cannot yield `Documented`, so the row would fall to `Judged`, and on a
+prerequisite it would fail the C4 bar and be held. The failure mode is lost coverage,
+not false confidence. It is still the reason terra and sol are preferred within the
+family.
+
 **Independence is by vendor, not by model.** The three gpt-5.6 siblings behaved almost
 identically across all thirteen cells — they abstained on the same four known cells and
 detected all three absences — which is what one would expect of models sharing a

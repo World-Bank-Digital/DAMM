@@ -1,6 +1,6 @@
 # Vendor audition — results
 
-Run 24 August 2026, 06:14. Thirteen cells, ten with known answers and three naming things that verifiably do not exist, from the verified Egypt and Nigeria assessments. Standing decision 4 fixed this method; this is the first time it has been run.
+Run 24 August 2026, 07:17. Thirteen cells, ten with known answers and three naming things that verifiably do not exist, from the verified Egypt and Nigeria assessments. Standing decision 4 fixed this method; this is the first time it has been run.
 
 Total spend **$8.77**, 467 vendor calls, 1258 seconds. Shared retrieval: 120 pages fetched once and given identically to every entrant.
 
