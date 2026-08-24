@@ -41,7 +41,8 @@ question the design record called the highest-leverage one in the system —
 | **Pipeline** | `gauntlet/loop-1/` — engine, renderer, workbook builder, verifier |
 | **The new subsystem** | `gauntlet/loop-1/research_pipeline/` — read its `README.md` first |
 | **Verified assessments** | `gauntlet/loop-1/{EGY,NGA}_v17.json` — **the test oracle. Do not overwrite.** |
-| **The shadow run** | `gauntlet/loop-1/EGY_shadow*.json` + `SHADOW-COMPARISON-EGY_shadow.md` |
+| **The automated runs** | `gauntlet/loop-1/{EGY,NGA}_shadow*.json`, their comparisons, and `CALIBRATION.md` |
+| **Evidence package for Katreyna** | `Katreyna-Pipeline-Evidence-2026-08-24/` — sent 24 August 2026, rebuilt by `build_evidence_package.sh`. Do not modify after sending. |
 | **Vendor keys** | `.env` (gitignored). Six keys. Never print them, never put them in chat. |
 | **Vendor SDKs** | `.venv` (gitignored). The rest of the pipeline still runs on system `python3`. |
 
@@ -273,6 +274,21 @@ live spend counter (G2), plus adding Perplexity to the app's provider set.
   applied with `--rescore` for free.
 - **After regenerating the model, re-copy** `model/DAMM-v1.7-model.json` →
   `~/Projects/dar-studio-v2/src/data/model_v1_7.json` and re-run the app tests.
+
+---
+
+## What is waiting on a person
+
+The pipeline is built, measured, and idle, and the thing that releases it is not more
+engineering. `Katreyna-Pipeline-Evidence-2026-08-24/` puts the case to her: all six rows
+where the automated runs read above the verified assessments carry an open definitional
+question, so a ruling on **13.5**, taken with the tier assignment in **13.8** and the
+binding rules in **13.4**, decides whether an automated national assessment reads
+conservatively or generously, once, for every country.
+
+Until those land, be careful what you build. The two scans feed the DAR, the DAR is
+Thread 4, and Thread 4 rests on definitions that a ruling may move. The retrieval work
+below is the exception: a source reached is a source reached however 13.5 lands.
 
 ---
 
