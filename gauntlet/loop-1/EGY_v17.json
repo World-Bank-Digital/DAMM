@@ -1309,6 +1309,7 @@
    "held": 2,
    "mean": 3.0,
    "band": "Established",
+   "margin": 0.0,
    "weak": false,
    "comp": {
     "Measured": 6,
@@ -1324,6 +1325,7 @@
    "held": 0,
    "mean": 3.8,
    "band": "Advanced",
+   "margin": -0.2,
    "weak": false,
    "comp": {
     "Measured": 4,
@@ -1339,6 +1341,7 @@
    "held": 0,
    "mean": 2.88,
    "band": "Established",
+   "margin": -0.12,
    "weak": false,
    "comp": {
     "Measured": 1,
@@ -1354,6 +1357,7 @@
    "held": 0,
    "mean": 3.25,
    "band": "Established",
+   "margin": 0.25,
    "weak": false,
    "comp": {
     "Measured": 3,
@@ -1369,6 +1373,7 @@
    "held": 3,
    "mean": 3.33,
    "band": "Established",
+   "margin": 0.33,
    "weak": true,
    "comp": {
     "Measured": 2,
@@ -1384,6 +1389,7 @@
    "held": 0,
    "mean": 3.11,
    "band": "Established",
+   "margin": 0.11,
    "weak": false,
    "comp": {
     "Measured": 1,
@@ -1399,6 +1405,7 @@
    "held": 0,
    "mean": 2.67,
    "band": "Established",
+   "margin": -0.33,
    "weak": false,
    "comp": {
     "Measured": 3,

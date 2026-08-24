@@ -274,7 +274,9 @@ CANDIDATE_INDICATORS = {
 }
 
 OPEN_DECISIONS = [
-    {"id": "13.1",  "title": "Band edges", "governs": ["bands"]},
+    {"id": "13.1",  "title": "Band edges", "governs": ["bands"],
+     "ruled": "Recut to midpoint boundaries. The band is the level the pillar mean rounds "
+              "to, and a signed margin from that level is printed beside it."},
     {"id": "13.2",  "title": "A1 additions (cereal import dependency, irrigation)", "governs": ["candidates"]},
     {"id": "13.3",  "title": "Per-use-case prerequisite mapping", "governs": ["indicators[].prerequisite", "binding_rules"]},
     {"id": "13.4",  "title": "The three binding rules in force", "governs": ["binding_rules"]},
@@ -326,7 +328,9 @@ def build(defnotes):
         "model": "DAMM",
         "title": "Digital Agriculture Maturity Model",
         "version": "1.7",
-        "revision": 1,
+        # Bumped by the section 13 rulings of 25 August 2026. Revision 2 carries the band
+        # recut (13.1) and the rulings recorded in DECISIONS-13.md. Consumers pin on this.
+        "revision": 2,
         "status": "draft for review",
         "ratified": False,
         "ratification_note": (

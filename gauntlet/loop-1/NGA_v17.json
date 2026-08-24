@@ -1309,6 +1309,7 @@
    "held": 2,
    "mean": 2.25,
    "band": "Emerging",
+   "margin": 0.25,
    "weak": false,
    "comp": {
     "Measured": 5,
@@ -1324,6 +1325,7 @@
    "held": 0,
    "mean": 2.83,
    "band": "Established",
+   "margin": -0.17,
    "weak": false,
    "comp": {
     "Measured": 4,
@@ -1338,7 +1340,8 @@
    "rated": 7,
    "held": 1,
    "mean": 2.57,
-   "band": "Emerging",
+   "band": "Established",
+   "margin": -0.43,
    "weak": false,
    "comp": {
     "Measured": 1,
@@ -1354,6 +1357,7 @@
    "held": 0,
    "mean": 2.88,
    "band": "Established",
+   "margin": -0.12,
    "weak": false,
    "comp": {
     "Measured": 3,
@@ -1368,7 +1372,8 @@
    "rated": 4,
    "held": 2,
    "mean": 2.5,
-   "band": "Emerging",
+   "band": "Established",
+   "margin": -0.5,
    "weak": false,
    "comp": {
     "Measured": 2,
@@ -1383,7 +1388,8 @@
    "rated": 9,
    "held": 1,
    "mean": 2.56,
-   "band": "Emerging",
+   "band": "Established",
+   "margin": -0.44,
    "weak": false,
    "comp": {
     "Measured": 1,
@@ -1399,6 +1405,7 @@
    "held": 1,
    "mean": 3.25,
    "band": "Established",
+   "margin": 0.25,
    "weak": false,
    "comp": {
     "Measured": 3,

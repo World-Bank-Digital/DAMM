@@ -89,7 +89,18 @@ def tlevel(v, d, th):
     return ls
 
 # ---------- compute ----------
-BANDS=[(1,1.8,'Nascent'),(1.8,2.6,'Emerging'),(2.6,3.4,'Established'),(3.4,4.2,'Advanced'),(4.2,5.01,'Transformative')]
+# Ruling 13.1: the band is the level the pillar rounds to. Cuts sit at the midpoints
+# between levels, not at arbitrary fifths of the 1-5 range. The previous edges
+# (1.8/2.6/3.4/4.2) were inherited from v1.5 with no rationale on record, and their
+# tolerance rose with the band: Established was reachable 0.4 below level 3, Advanced 0.6
+# below level 4, Transformative 0.8 below level 5. Midpoint cuts make that a flat 0.5 and
+# put every level at the centre of the band that carries its name.
+BANDS=[(1,1.5,'Nascent'),(1.5,2.5,'Emerging'),(2.5,3.5,'Established'),(3.5,4.5,'Advanced'),(4.5,5.01,'Transformative')]
+# The level each band is named for. The margin is measured from this rather than from the
+# interval midpoint: the two end bands are half-width, so their midpoints are 1.25 and
+# 4.75, and a pillar with every row at level 1 would read -0.25 instead of the +0.00 that
+# makes the figure mean what it looks like it means.
+BAND_LEVEL={'Nascent':1,'Emerging':2,'Established':3,'Advanced':4,'Transformative':5}
 def band(x):
     for lo,hi,n in BANDS:
         if lo<=x<hi: return n
@@ -115,8 +126,14 @@ def run(country, D, refyear=2026):
         # they did not, so a pillar hollowed out by ratification holds could never flag.
         weak = (judged_rated + comp['Gap'] + held) > (rated - judged_rated)
         mean = r2(sum(lv)/len(lv)) if lv else None
+        bnd = band(mean) if mean else 'Not rated'
+        # Ruling 13.1: the signed distance from the level the band is named for. Zero means
+        # the pillar sits squarely at that level; plus or minus 0.5 means it is on the edge
+        # of the next one. Four of fourteen pillar bands in the worked examples turned on a
+        # margin under 0.10, which the band alone never showed.
+        margin = r2(mean - BAND_LEVEL[bnd]) if mean and bnd in BAND_LEVEL else None
         out['pillars'][P]=dict(n=len(rows), rated=rated, held=held, mean=mean,
-                               band=(band(mean) if mean else 'Not rated'),
+                               band=bnd, margin=margin,
                                weak=weak, comp=comp, stale=sum(1 for r in rows if r['stale']))
     for L in ['Foundation','Enablers','Transformation','Outcomes']:
         lv=[out['indicators'][i]['level'] for i in MODEL if MODEL[i]['layer']==L and out['indicators'][i]['level'] is not None]

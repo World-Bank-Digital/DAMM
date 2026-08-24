@@ -39,7 +39,7 @@ for iso, name in (("EGY", "Egypt"), ("NGA", "Nigeria")):
 
     for p, e in eng["pillars"].items():
         g = got["pillars"][p]
-        for k in ("n", "rated", "held", "mean", "band", "weak", "stale"):
+        for k in ("n", "rated", "held", "mean", "band", "margin", "weak", "stale"):
             eq(f"{name} pillar {p}.{k}", g[k], e[k])
         for c in ("Measured", "Documented", "Judged", "Gap"):
             eq(f"{name} pillar {p}.comp.{c}", g["comp"][c], e["comp"][c])

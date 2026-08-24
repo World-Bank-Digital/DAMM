@@ -231,12 +231,12 @@ def sheet_config(wb):
         ("Staleness limit (years)", 3, "A reading older than this is flagged STALE. One rule for all indicators."),
         ("Readiness threshold", 2.6, "A use-case column whose bearing indicators average below this reads Partial."),
         ("Leapfrog threshold", 1.5, "|mean(Foundation) − mean(Transformation)| above this raises a structural flag."),
-        ("Band: Nascent", "1.0 – <1.8", "Half-open bands; a pillar band in parentheses means judged, gap and held rows "
+        ("Band: Nascent", "1.0 – <1.5", "Half-open bands; a pillar band in parentheses means judged, gap and held rows "
                                         "outnumber the levelled measured and documented ones."),
-        ("Band: Emerging", "1.8 – <2.6", ""),
-        ("Band: Established", "2.6 – <3.4", ""),
-        ("Band: Advanced", "3.4 – <4.2", ""),
-        ("Band: Transformative", "4.2 – 5.0", ""),
+        ("Band: Emerging", "1.5 – <2.5", ""),
+        ("Band: Established", "2.5 – <3.5", ""),
+        ("Band: Advanced", "3.5 – <4.5", ""),
+        ("Band: Transformative", "4.5 – 5.0", ""),
         ("Universal prerequisites", "2.1, 2.9, 4.1", "Absence blocks every use-case column. A universal prerequisite "
                                                      "at Present (narrow) caps every column at Partial."),
         ("AI-enabled services", "7.12 binds AGI", "Ruling pending ratification: the consent-and-rights prerequisite "
@@ -458,8 +458,10 @@ def sheet_scoring(wb, sheet_name, country, rows):
         put(ws, f"C{r}", f'=COUNTIFS($C${R0}:$C${RN},$A{r},$T${R0}:$T${RN},">0")', F_BODY, border=True)
         put(ws, f"D{r}", f'=IFERROR(ROUND(AVERAGEIF($C${R0}:$C${RN},$A{r},$T${R0}:$T${RN}),2),"")',
             F_BODY, border=True)
-        band = ('IF($D{r}<1.8,"Nascent",IF($D{r}<2.6,"Emerging",IF($D{r}<3.4,"Established",'
-                'IF($D{r}<4.2,"Advanced","Transformative"))))').format(r=r)
+        # Ruling 13.1: the band is the level the pillar mean rounds to. These four cuts
+        # are the same numbers as engine_v17.BANDS; verifier stage 6 holds them together.
+        band = ('IF($D{r}<1.5,"Nascent",IF($D{r}<2.5,"Emerging",IF($D{r}<3.5,"Established",'
+                'IF($D{r}<4.5,"Advanced","Transformative"))))').format(r=r)
         # Judged rows carrying a level, counted separately: a Judged row sits on the weak side of
         # the test and must not also be counted among the levelled measured/documented rows.
         jr = f'COUNTIFS($C${R0}:$C${RN},$A{r},$S${R0}:$S${RN},"Judged",$T${R0}:$T${RN},">0")'

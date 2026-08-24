@@ -53,6 +53,15 @@ class Scorer:
         y = r.get("year")
         return bool(y and cls != "Gap" and y < self.cfg["assessment_year"] - self.cfg["staleness_years"])
 
+    # Ruling 13.1. The band names a level, and the margin is measured from that level
+    # rather than from the interval midpoint, because the two end bands are half-width.
+    BAND_LEVEL = {"Nascent": 1, "Emerging": 2, "Established": 3,
+                  "Advanced": 4, "Transformative": 5}
+
+    def margin(self, x):
+        b = self.band(x)
+        return r2(x - self.BAND_LEVEL[b]) if b in self.BAND_LEVEL else None
+
     def band(self, x):
         for b in self.m["bands"]:
             if b["lo"] <= x < b["hi"]:
@@ -82,6 +91,7 @@ class Scorer:
             out["pillars"][p] = {
                 "n": len(rs), "rated": rated, "held": held, "mean": mean,
                 "band": self.band(mean) if mean else "Not rated",
+                "margin": self.margin(mean) if mean else None,
                 "weak": (jr + comp["Gap"] + held) > (rated - jr),
                 "comp": comp, "stale": sum(1 for v in rs if v["stale"]),
             }

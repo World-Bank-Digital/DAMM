@@ -3,12 +3,12 @@
   "model": "DAMM",
   "title": "Digital Agriculture Maturity Model",
   "version": "1.7",
-  "revision": 1,
+  "revision": 2,
   "status": "draft for review",
   "ratified": false,
   "ratification_note": "Twelve design decisions are open in specification section 13. Every value they can change is data in this file. A consumer must not present an unratified value as settled: see `open_decisions` for which fields each ruling governs.",
   "generated_from": "gauntlet/loop-1/engine_v17.py",
-  "generated_on": "2026-08-24",
+  "generated_on": "2026-08-25",
   "prohibitions": [
     "No cross-country ranking.",
     "No band used as a project development objective, disbursement-linked indicator or disbursement condition.",
@@ -108,26 +108,26 @@
     {
       "name": "Nascent",
       "lo": 1,
-      "hi": 1.8
+      "hi": 1.5
     },
     {
       "name": "Emerging",
-      "lo": 1.8,
-      "hi": 2.6
+      "lo": 1.5,
+      "hi": 2.5
     },
     {
       "name": "Established",
-      "lo": 2.6,
-      "hi": 3.4
+      "lo": 2.5,
+      "hi": 3.5
     },
     {
       "name": "Advanced",
-      "lo": 3.4,
-      "hi": 4.2
+      "lo": 3.5,
+      "hi": 4.5
     },
     {
       "name": "Transformative",
-      "lo": 4.2,
+      "lo": 4.5,
       "hi": 5.01
     }
   ],
@@ -1906,7 +1906,8 @@
       "title": "Band edges",
       "governs": [
         "bands"
-      ]
+      ],
+      "ruled": "Recut to midpoint boundaries. The band is the level the pillar mean rounds to, and a signed margin from that level is printed beside it."
     },
     {
       "id": "13.2",

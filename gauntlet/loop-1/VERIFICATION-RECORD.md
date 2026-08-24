@@ -1,6 +1,6 @@
 # DAMM v1.7 — end-to-end build and verification record
 
-Run 24 August 2026, 05:20. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
+Run 25 August 2026, 01:05. Every artifact below was regenerated from the sources of record and then checked; nothing was hand-edited between generation and verification.
 
 **Result: ALL CHECKS PASS**
 
@@ -66,7 +66,7 @@ Run 24 August 2026, 05:20. Every artifact below was regenerated from the sources
 
 ## 4. Report render — automated QC blocks emission on failure
 
-- PASS — Egypt: renders (QC passed) · wrote /Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/Egypt-DAR-Diagnostic.html (137,9
+- PASS — Egypt: renders (QC passed) · wrote /Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/Egypt-DAR-Diagnostic.html (138,2
 - PASS — Egypt: QC line states all checks passed
 - PASS — Egypt: standalone (no process history, no internal cross-references) · []
 - PASS — Nigeria: renders (QC passed) · wrote /Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/Nigeria-DAR-Diagnostic.html (134
@@ -100,5 +100,5 @@ Run 24 August 2026, 05:20. Every artifact below was regenerated from the sources
 
 - PASS — model exports from the engine ·   11 DAR chapters (8 prescriptive) · foresight: scenarios -> preferred future -> backcasti
 - PASS — model file alone reproduces every engine figure · DAMM-v1.7-model.json is canonical: every derived figure reproduces from the model alone.
-- PASS — model is versioned and flagged unratified · v1.7 rev1 ratified=False
+- PASS — model is versioned and flagged unratified · v1.7 rev2 ratified=False
 - PASS — every open decision names the fields it governs · 12 decisions

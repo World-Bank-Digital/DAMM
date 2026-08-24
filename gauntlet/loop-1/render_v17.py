@@ -191,11 +191,13 @@ def pillar_chart():
         weak = pd["weak"]
         cls = "bar weakbar" if weak else "bar"
         s.append(f'<rect x="{x0}" y="{y+4}" width="{bw:.1f}" height="17" rx="3" class="{cls}">'
-                 f'<title>{esc(PILLAR_NAMES[p])}: mean {pd["mean"]:.2f} — {pd["band"]}{" (weak evidence)" if weak else ""}; '
+                 f'<title>{esc(PILLAR_NAMES[p])}: mean {pd["mean"]:.2f} — {pd["band"]}{f" {pd[chr(34)+chr(34)]}" if False else ""}{" (weak evidence)" if weak else ""}; '
                  f'averaged over {pd["rated"]} of {pd["n"]} indicators'
                  f'{(", " + str(pd["held"]) + " level(s) withheld pending ratification") if pd["held"] else ""}; '
                  f'{pd["comp"].get("Measured",0)}M/{pd["comp"].get("Documented",0)}D/{pd["comp"].get("Judged",0)}J/{pd["comp"].get("Gap",0)}G</title></rect>')
-        bandtxt = f'({pd["band"]})' if weak else pd["band"]
+        _mg = pd.get("margin")
+        _mgtxt = f' {_mg:+.2f}' if _mg is not None else ''
+        bandtxt = (f'({pd["band"]}{_mgtxt})' if weak else f'{pd["band"]}{_mgtxt}')
         # The denominator travels with the mean: a band averaged over 3 of 7 rows must never be
         # readable as one averaged over 7 (defect 39).
         denom = (f'&#8202;<tspan class="dimlab">&#183; {pd["rated"]} of {pd["n"]} rated</tspan>'
@@ -891,7 +893,7 @@ document.querySelectorAll('.fbtn').forEach(function(b){
 
 HOWTO = """<div class="howto"><h3>How to read this report</h3><div class="howgrid">
 <div class="how"><h4>Evidence classes</h4><p><span class="chip chip-measured">M</span> Measured &#8212; a number was recorded &nbsp;<span class="chip chip-documented">D</span> Documented &#8212; a citable artifact &nbsp;<span class="chip chip-judged">J</span> Judged &#8212; assessor statement without artifact &nbsp;<span class="chip chip-gap">G</span> Gap &#8212; searched for and not found. The class is derived from the recorded value, never chosen.</p></div>
-<div class="how"><h4>Levels &amp; bands</h4><p>Every indicator carries a level, L1&#8211;L5. A pillar band is the plain mean of the levels actually recorded: Nascent &lt;1.8 &#8226; Emerging &lt;2.6 &#8226; Established &lt;3.4 &#8226; Advanced &lt;4.2 &#8226; Transformative &#8805;4.2. Recorded gaps and levels withheld pending ratification are not averaged in, so where a pillar has any, the count of rated rows is printed beside the mean. A band in (parentheses) rests more on judgment, gaps and withheld levels than on levelled evidence.</p></div>
+<div class="how"><h4>Levels &amp; bands</h4><p>Every indicator carries a level, L1&#8211;L5. A pillar band is the level the plain mean of its recorded levels rounds to: Nascent &lt;1.5 &#8226; Emerging &lt;2.5 &#8226; Established &lt;3.5 &#8226; Advanced &lt;4.5 &#8226; Transformative &#8805;4.5. Beside the band is a signed margin, the distance from the level the band is named for: +0.00 means the pillar sits squarely at that level, and a margin near &#177;0.5 means it is on the edge of the next one. Recorded gaps and levels withheld pending ratification are not averaged in, so where a pillar has any, the count of rated rows is printed beside the mean. A band in (parentheses) rests more on judgment, gaps and withheld levels than on levelled evidence.</p></div>
 <div class="how"><h4>Pillars</h4><p>A1 Agriculture &amp; need &#8226; C1 Connectivity &amp; access &#8226; C2 Data &amp; digital public infrastructure (DPI) &#8226; C3 Policy &amp; safeguards &#8226; C4 People &amp; institutions &#8226; E1 Innovation, solutions &amp; emerging tech &#8226; O1 Outcomes &amp; inclusion.</p></div>
 <div class="how"><h4>Use-case areas</h4><p>ADV advisory &amp; extension &#8226; SMF smart farming &#8226; MKT market linkage &amp; pricing &#8226; SCM supply chain &#8226; FIN financial services &#8226; AGI agricultural intelligence (AI-enabled analytics and decision systems).</p></div>
 <div class="how"><h4>Source tiers</h4><p>T1 official statistics &amp; international databases &#8226; T2 peer-reviewed &amp; flagship reports &#8226; T3 government legal and policy artifacts &#8226; T4 reputable grey literature &#8226; T5 news/vendor material (admitted only in the register, for existence facts). Tiers are reported, never weighted.</p></div>
