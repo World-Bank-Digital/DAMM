@@ -386,19 +386,19 @@
    "kind": "t"
   },
   "3.3": {
-   "value": "DATA GAP \u2014 1) FAO 'Situation analysis of farmer registries in the Near East and North Africa (NENA)' (fao.org, T1) \u2014 the single most on-construct source; page returned only a Cloudflare security-verification stub ('This page is displayed while the website verifies you are not a bot'), no substantive text, therefore nothing quotable. Dead end. 2) FAO Microdata, Egypt Agricultural Census 2009-2010 (T1) \u2014 read in full; it is a decennial complete enumeration of agricultural holdings run by MALR, with the holding as statistical unit; a census frame is not a farmer registry, and the last round is 2010. Off-construct. 3) FAO NERC/20/INF/21 'Digital Innovation for promoting Agriculture 4.0 in NENA' (T2) \u2014 regional framing document; the retrieved text covers the executive summary and introduction only and contains no Egypt-specific farmer-registry statement. Dead end. 4) Ministry of Agriculture and Land Reclamation homepage (moa.gov.eg, T3) \u2014 searched for registry/card language; only hit is an April 2021 news headline referring to '...speeding up the system for modernizing irrigation and collecting dairy and farmer cards'. This confirms the card scheme is on the Ministry's agenda but describes neither a registry, its legal basis, its coverage, nor its operation, so it cannot carry a rung. 5) dostor.org (T5) \u2014 carries the only concrete scale figures (8.3 million feddans, 4.8 million farmers on the smart farmer card system, attributed to an Agricultural Research Center scientist). Barred by the prerequisite rule, which admits T1-T3 only; logged in construct_note as context. No audit, evaluation or performance report on the card system was surfaced at any tier, so quality_evidence would be empty even if a rung were assignable.",
-   "cls": "Gap",
+   "value": "Egypt operates the \"Farmer Card\" (\u0643\u0627\u0631\u062a \u0627\u0644\u0641\u0644\u0627\u062d) electronic agricultural-holding system, built jointly by the Ministry of Agriculture and Land Reclamation and the Egyptian Survey Authority of the Ministry of Water Resource",
+   "cls": "Documented",
    "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: Not applicable \u2014 no level proposed. The specific bar to scoring is tier and quotability: the only scale figures are T5, and the T1 FAO farmer-registry situation analysis could not be fetched (Cloudflare interstitial). The indicator names a registry of FARMERS (individuals). The best available Egyptian evidence in these pages sits on the wrong side of that question in two ways. (a) The FAO Agricultural Census 2009-2010 metadata (T1) is explicit that 'The statistical unit was the agricultural holding, defined as an economic and technical unit comprising all livestock kept and all land used wholly or partly for agricultural production purposes' \u2014 a decennial census of HOLDINGS, not a continuously maintained register of persons. (b) The 'kart al-fallah' smart-card scheme is a subsidy-delivery instrument whose reported scale mixes non-comparable units; the only figures found (dostor.org, T5, dated June 2026) state that about 8.3 million feddans have been entered onto the smart farmer card system and about 4.8 million farmers are enrolled \u2014 an area figure and a person figure from the same sentence, with no methodology, no denominator, and no official corroboration. Recorded here as context only; not usable as the cell value at this tier.",
-   "tier": "",
-   "tier_detail": "",
-   "url": "",
+   "year": 2021,
+   "src": "Ministry of Water Resources and Irrigation (Egypt), \"\u0641\u064a \u0625\u0637\u0627\u0631 \u0627\u0644\u062a\u062d\u0648\u0644 \u0627\u0644\u0631\u0642\u0645\u064a \u0648\u0645\u064a\u0643\u0646\u0629 \u0627\u0644\u062e\u062f\u0645\u0627\u062a \u0648\u0632\u0627\u0631\u0629 \u0627\u0644\u0631\u0649 \u062a\u0648\u0627\u0635\u0644 \u0645\u062c\u0647\u0648\u062f\u0627\u062a\u0647\u0627 \u0644\u062a\u0646\u0641\u064a\u0630 \u0645\u0646\u0638\u0648\u0645\u0629 (\u0643\u0627\u0631\u062a \u0627\u0644\u0641\u0644\u0627\u062d)\"",
+   "note": "RATIFICATION HOLD \u2014 The indicator names a registry of FARMERS (individuals). The only national instrument evidenced in the retrieved pages is the \u0645\u0646\u0638\u0648\u0645\u0629 \u0627\u0644\u062d\u064a\u0627\u0632\u0629 \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a\u0629 / \u0643\u0627\u0631\u062a \u0627\u0644\u0641\u0644\u0627\u062d, whose statistical unit is the agricultural holding (\u0627\u0644\u062d\u064a\u0627\u0632\u0629 \u0627\u0644\u0632\u0631\u0627\u0639\u064a\u0629) mapped onto 1:2500 digital cadastral sheets \u2014 the MWRI page speaks of \"\u0646\u062d\u0648 \u0666 \u0645\u0644\u0627\u064a\u064a\u0646 \u062d\u064a\u0627\u0632\u0629 \u0632\u0631\u0627\u0639\u064a\u0629 \u0628\u0645\u0633\u0627\u062d\u0629 \u062a\u0635\u0644 \u0625\u0644\u0649 \u0668.\u0665\u0660 \u0645\u0644\u064a\u0648\u0646 \u0641\u062f\u0627\u0646\" and of governorate coverage in feddans, never of a count of registered farmers. The card is issued to holders, so the system functions as a de facto farmer identification instrument, but the published unit sits on the holding side of the open definitional question. The other national enumeration of the same population, the 2009-2010 Agricultural Census (FAO microdata, T1), is likewise built on \"the agricultural holding\" as statistical unit and is a decennial census, not a maintained registry.. The level is withheld and this row leaves every mean. Implementer's own progress statement; scale figures are expressed in holdings and feddans (area), not in registered individual farmers, and are not reconciled with card-issuance figures.",
+   "tier": "T3",
+   "tier_detail": "Implementer's own progress statement; scale figures are expressed in holdings and feddans (area), not in registered individual farmers, and are not reconciled with card-issuance figures",
+   "url": "https://www.mwri.gov.eg/?p=15257",
    "defnote": "The name implies a register of farmers (individuals), but Egypt's record is an agricultural holding registry embedded in a subsidy smart-card scheme, whose scale figures mix four non-comparable units \u2014 cards printed, cards distributed, farmers benefiting, and holdings registered \u2014 with no\u2026",
    "defsev": "construct-drift",
    "subs": [],
-   "stale": false,
+   "stale": true,
    "name": "National farmer registry",
    "pillar": "C2",
    "layer": "Enablers",
@@ -533,15 +533,15 @@
    "kind": "l"
   },
   "3.11": {
-   "value": "DATA GAP \u2014 Reviewed all ten supplied pages in order. (1) FAO Egypt Country Programming Framework - names SADS-2030, digitalisation and food-control/phytosanitary standard-setting, but no agricultural data interoperability standard. (2) FAO GSARS Egypt country page - lists 2021-2024 activities (Master Sampling Frame, CAPI, dissemination, CAADP indicators); capacity-building, not a standard. (3) and (5) FAO Microdata catalog entries for the Syngenta Good Growth Plan surveys in Egypt - DDI/Nesstar-style metadata for two private-sector survey datasets; this is FAO's own catalog metadata standard, not an Egyptian national agricultural data standard. (4) FAO in Egypt homepage - programme news only. (6) GSARS news detail on the Cairo dissemination workshops - mentions alignment of microdata dissemination with international standards as a training takeaway, involving MoALR and CAPMAS, but reports no adopted standard. (7) ScienceDirect - captcha wall, no usable text. (8) Egypt Open Data Policy 2025 (ai.gov.eg, T3) - the strongest artifact, but cross-government and not agriculture-specific; recorded in construct_note. (9) MCIT Digital Egypt page - national digital transformation framework and news list; no agricultural data standards content. (10) COMCEC 2014 MoALR presentation - T5 and dated, describes fragmented, conflicting agricultural data across agencies. Dead ends: no page retrieved from MoALR, CAPMAS, the Egyptian Data Governance Authority, or an agricultural data-exchange specification/e-government interoperability framework covering agriculture. Recommend targeted retrieval of EDGA publications, the Egyptian Government Interoperability Framework (if published), MoALR digital farmer-card/agricultural-census documentation, and the forthcoming Data Governance Law before ratifying this cell.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: Even the lowest scored rung ('Announced', level 2) is not proposed: the only announcement-type text available (Egypt's Open Data Policy and its metadata-standards annex, and the forthcoming Data Governance Law) is sector-neutral and never mentions agriculture, so treating it as an announcement of an agricultural interoperability standard would import a cross-government fact into an agriculture-specific row. Levels 4-5 are additionally unreachable because no evaluation/audit of any such standard and no coverage figures (agencies onboarded, datasets published under a common schema, users) appear in any supplied page. The closest admissible artifact is the Arab Republic of Egypt 'Open Data Policy' (2025), issued by the National Council for Artificial Intelligence (https://ai.gov.eg/SynchedFiles/en/Resources/Open%20Data%20Policy.pdf, T3). Its table of contents includes an 'Annex I: Metadata Standards for Open Data' and 'Annex II: Open Data Licensing Models', and it describes an institutional framework (Interagency Data Release Board, Egyptian Data Governance Authority, Open Data Officers) plus a forthcoming Data Governance Law. That is a whole-of-government open-data/DPI instrument covering all public institutions; nothing in the retrieved text names agriculture, agricultural datasets, or an agricultural data model/exchange standard. On the census's open question, this evidence sits squarely on the cross-government side, not the agriculture-specific side, and the indicator name as written ('Agricultural data interoperability standards') is agriculture-specific. Secondary context: FAO's GSARS II page for Egypt records capacity-building with MoALR and CAPMAS on microdata dissemination and documenting anonymised data using Nesstar, and states that emphasis was placed on aligning microdata dissemination with international standards orm,, not the adoption of a national agricultural data interoperability standard; and the 2014 COMCEC ministry presentation (T5, and non-quotable for statistics) explicitly notes 'the multiplicity of agencies have produced data conflicting and the lack of a good source', i.e. the absence of harmonisation rather than a standard in force.",
-   "tier": "",
+   "value": "No agriculture-specific data interoperability or data-exchange standard was found for Egypt: the domain is covered instead by cross-government instruments \u2014 Egypt's Open Data Policy (National Council for Artificial Intel",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "National Council for Artificial Intelligence, Arab Republic of Egypt \u2014 Open Data Policy (2025)",
+   "note": "Next level not proposed: Announced was not proposed because nothing retrieved contains an Egyptian government commitment to an agriculture-specific interoperability standard. The Open Data Policy does not mention agriculture at all; the OECD review instead reports the opposite condition \u2014 fragmented institutional responsibility and 'gaps in the availability and quality of policy data and information'; the only semantic-interoperability work found (Nile University's AgriSem project with ARC/CLAES) is a university research project on a T5 page, not a government announcement, and is explicitly excluded by the prerequisite T1\u2013T3 rule. The indicator names AGRICULTURAL data interoperability standards. The strongest quotable Egyptian instrument retrieved is a cross-government open-data policy (Open Data Policy 2025, incl. 'Annex I: Metadata Standards for Open Data') that is sector-neutral and makes no reference to agricultural data, agrifood value-chain data exchange, farm registries, or agricultural ontologies/vocabularies. This evidence therefore sits on the wrong side of the unratified census question: it is a cross-government open-data/DPI instrument, not an agriculture-specific standard. Two further adjacent items were examined and also fall short: (a) CAPMAS's agriculture microdata collections are documented in a catalog 'Powered by NADA 4.0 and DDI' \u2014 DDI is a generic statistical metadata standard applied to survey documentation, not an agricultural data interoperability standard adopted across the agriculture sector; (b) FAO's 2023 NENA regional regulatory framework treats agricultural data regulation as a gap area for the region (chapters on 'Insufficient legal frameworks concerning agricultural data' and 'Variety of data formats and interfaces'), and is regional rather than an Egyptian national standard. It is cited only to show the domain was searched, not as a measure of the construct.",
+   "tier": "T3",
    "tier_detail": "",
-   "url": "",
+   "url": "https://ai.gov.eg/SynchedFiles/en/Resources/Open%20Data%20Policy.pdf",
    "defnote": "Must the standard be agriculture-specific, or do cross-government open-data/DPI instruments and draft harmonisation work count as Present/Announced for this prerequisite cell?",
    "defsev": "construct-drift",
    "subs": [],
@@ -648,15 +648,15 @@
    "kind": "l"
   },
   "4.5": {
-   "value": "DATA GAP \u2014 1) FAO GSARS Egypt country page and its four Egypt news items (T1) \u2014 checked for a national agricultural data policy, dissemination policy or data governance instrument; found only workshop reports on dissemination, microdata anonymization and CAADP indicators, plus a reference to 'the dissemination strategy in Egypt' being discussed, with no document named, dated or adopted. 2) FAO (2023) 'Regulatory framework for agricultural data in the NENA region' (T2) \u2014 the most on-construct document, but the retrieved content stops at the abbreviations list; sections 6.1 (data protection laws in NENA countries) and 5.5 (insufficient legal frameworks) would be the relevant passages and are not in the supplied text, so no Egypt sentence could be quoted. 3) Egypt Open Data Policy 2025 (ai.gov.eg, T3) \u2014 read objectives, scope, institutional framework (EDGA, Interagency Data Release Board, Open Data Officers); it is general-government and pre-Data-Governance-Law, with no agricultural provision in the retrieved portion. 4) SADS toward 2030 (FAOLEX, T3) \u2014 only foreword/contents retrieved; no data governance section identifiable. 5) ICARDA 'Investment and Policy Framework Needed to Scale Digital Transformation of Egyptian Agriculture' (CGSpace, T2) \u2014 abstract only, item marked 'Limited Access'; no framework text available. 6) PARIS21/CAPMAS 2009 presentation \u2014 describes the national statistical system and CAPMAS's legal monopoly on publishing statistics, but is T5 for this purpose and predates any agricultural data governance discussion. Dead end on all routes; no admissible quotable evidence for the named construct.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: Not applicable \u2014 no level proposed. The reason no level above 0 is offered is that the pack contains no Egypt-specific, agriculture-specific data governance artifact that can be quoted verbatim at T1-T3. Context, not recorded as the value: (a) Egypt's Open Data Policy (National Council for Artificial Intelligence, 2025, T3, https://ai.gov.eg/SynchedFiles/en/Resources/Open%20Data%20Policy.pdf) is a cross-government open data policy covering the transitional period before a 'forthcoming Data Governance Law', and names an Egyptian Data Governance Authority (EDGA) and Open Data Officers \u2014 it is general public-sector data governance, with no agricultural data scope, farm-data ownership, or agri-data sharing rules visible in the retrieved text. (b) FAO's 'Regulatory framework for agricultural data in the Near East and North Africa region' (2023) addresses agricultural data governance but at NENA regional level; the retrieved text is cover, citation, license and contents only (including headings '5.5 Insufficient legal frameworks concerning agricultural data' and '6.1 Data protection laws and policies in NENA countries'), with no Egypt-specific body text available to quote. (c) FAO GSARS II activities in Egypt (2021-2024) cover agricultural statistics training, dissemination policy awareness, microdata anonymization and CAADP indicator computation with MoALR and CAPMAS \u2014 capacity building on statistical practice, not the adoption of a data governance framework. (d) Egypt's Sustainable Agricultural Development Strategy toward 2030 (2009, T3) is the sector strategy; the retrieved text is front matter and contents with no data governance chapter visible.",
-   "tier": "",
+   "value": "Egypt has general, sector-agnostic national data instruments \u2014 a 2025 Open Data Policy issued by the National Council for Artificial Intelligence, an Egyptian Data Governance Authority (EDGA), and a Data Governance Law d",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "National Council for Artificial Intelligence, Arab Republic of Egypt \u2014 Open Data Policy (2025)",
+   "note": "Next level not proposed: Announced was not proposed because no retrieved government artifact announces, commits to, or schedules an agricultural data governance framework: the Open Data Policy names only a forthcoming general Data Governance Law and its data classification framework, with no agricultural sectoral instrument named; SADS 2030's table of contents shows no data governance chapter; and no MALR or EDGA announcement of an agri-data policy appears in any retrieved page. The quoted Open Data Policy is a whole-of-government, sector-agnostic open data instrument; it is cited as the nearest adjacent national instrument examined, not as a measure of agricultural data governance. It contains no agriculture-specific provisions (no farm-data ownership, farmer consent, agri-data sharing or agri-interoperability rules) in the retrieved text, and it states that the general Data Governance Law is still forthcoming. The FAO 2023 regional paper 'Regulatory framework for agricultural data in the Near East and North Africa region' addresses the NENA region as a whole (its contents list section 5.5 'Insufficient legal frameworks concerning agricultural data' and 6.2 'Deficiencies in current data regulations with respect to agricultural data'), and the retrieved pages carry no Egypt-specific finding, so it is not used as country evidence.",
+   "tier": "T3",
    "tier_detail": "",
-   "url": "",
+   "url": "https://ai.gov.eg/SynchedFiles/en/Resources/Open%20Data%20Policy.pdf",
    "subs": [],
    "stale": false,
    "name": "Agricultural data governance framework",
@@ -694,15 +694,15 @@
    "kind": "l"
   },
   "4.7": {
-   "value": "DATA GAP \u2014 1) ID4D DataBank landing page (Source 1) \u2014 interactive shell only, no data rendered, no Egypt value. 2) Data360 ID4D dataset page (Source 2) \u2014 dataset description confirming ID4D distinguishes adult ID coverage from foundational systems' digital capabilities, and confirming adult ID ownership comes from the Findex ID module; no Egypt figure on page. 3) ID4D DataBank saved view (Source 3) \u2014 the only page with actual numbers; checked whether the rendered series block could be tied to Egypt and concluded it cannot (199 economies selected, rows unlabelled; the 19.8 birth certification and 48.4/94.2 gender split are inconsistent with Egypt and match the alphabetically first selected economy). Rejected as an Egypt source. 4) World Bank Data Catalog entry (Source 4) \u2014 metadata only. 5) ID4D Global Dataset 2021 Volume 2 abstract page (Source 5, T2) \u2014 describes the three digital-capability dimensions but the abstract carries no country values. 6) di.gov.eg (Source 6, T3) \u2014 Egypt's official unified digital identity platform; confirms existence, registration flow, optional enrollment; no user or coverage counts. 7) MCIT press release on 2025 ICT achievements (Source 7, T3) \u2014 Digital Egypt platform users 10.7 million and a digital identity verification pilot; wrong construct and no denominator. 8) Daily News Egypt (Source 8, T5) \u2014 about National Property Identification Numbers, a property identifier, not personal digital ID, and T5 is inadmissible for a statistic on this prerequisite row. Dead ends: no CAPMAS, ITIDA or Central Bank of Egypt eKYC publication in the supplied set that quantifies digital ID enrollment.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Supplied ID4D DataBank render is not country-labelled; values cannot be safely attributed to Egypt. Next level not proposed: Level 1 was not proposed either, because level 1 would still assert a measured coverage value below 20% for Egypt, and no source in the supplied set publishes any digital ID coverage percentage for Egypt. The gap is an absence of measurement, not a measured low value. To move off the hold, an auditor needs either (i) an Egypt-labelled extract of the ID4D 'digital ID' series with an explicit denominator, or (ii) an MCIT/ITIDA/CAPMAS publication stating the number of activated digital identity accounts against a stated adult population base. Two separate construct problems sit on this cell. (1) The indicator NAME is 'Digital ID coverage (%)'. The series the assessment has historically used for Egypt \u2014 ID4D 'ID ownership, total (% of population ages 15+)' \u2014 measures foundational national ID-card ownership, not possession or use of a digital identity credential. ID4D publishes separate digital-capability series ('Digital ID verification (1 = yes; 0 = no)', 'Digital data use (1 = yes; 0 = no)') which are binary system-capability flags, not a coverage percentage, so they cannot populate a % cell either. Judged against the name as written, foundational ID-card ownership measures a different construct and would overstate digital ID coverage. (2) Independently, the supplied ID4D pages do not display an Egypt-labelled value at all, so even the wrong-construct number is not quote-verifiable here. Egypt-specific context that is verifiable but off-construct: MCIT reports the Digital Egypt platform 'user base grew by 28%, rising from 8.1 million in 2024 to 10.7 million in 2025' \u2014 that is registered platform users, not digital ID enrollment, and no denominator is published; di.gov.eg states registration in the digital identity platform is currently optional ('\u0627\u0644\u062a\u0633\u062c\u064a\u0644 \u0627\u062e\u062a\u064a\u0627\u0631\u064a \u0641\u064a \u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u0627\u0644\u062d\u0627\u0644\u064a\u0629').",
-   "tier": "",
+   "value": 98.7781785562663,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2024,
+   "src": "World Bank WDI ID.OWN.TOTL.ZS (World Bank Identification for Development (ID4D))",
+   "tier": "T1",
    "tier_detail": "",
-   "url": "",
+   "url": "https://api.worldbank.org/v2/country/EGY/indicator/ID.OWN.TOTL.ZS?format=json&mrnev=1&per_page=5&source=89",
+   "note": "Recorded from the machine-readable T1 lane. The research lane did not reach a country value for this row, and the series was fetched directly from the publisher's interface. World Bank Identification for Development (ID4D)",
    "defnote": "The name asserts a digital ID, but Egypt records the World Bank ID4D foundational national-ID-card ownership series while ID4D's actual digital-ID series exists and was not used \u2014 and on top of that the two countries are recorded on different denominators (Egypt % of adults 15+, Nigeria % of\u2026",
    "defsev": "asserts-falsehood",
    "subs": [],
@@ -718,12 +718,12 @@
    "kind": "t"
   },
   "4.9": {
-   "value": "DATA GAP \u2014 Reviewed all ten supplied pages in order. Sources 1 and 2 (World Bank NSDS project paper, T1) list ministries as acronyms only and describe a statistics grant, no coordination body. Source 3 (CAPMAS paper at unstats, T1) discusses CAPMAS's legal mandate for interagency coordination in statistics and notes it 'is not yet fully materialised' \u2014 statistical, not agricultural or digital-agriculture, coordination. Sources 4 and 5 (UNSD pages) returned HTTP 404 \u2014 dead ends. Source 6 (OECD SME policy, T2) covers SME policy co-ordination arrangements, wrong sector. Source 7 (OECD Public Governance Review Egypt 2024, T2) foreword mentions whole-of-government co-ordination but the supplied extract carries no agriculture or digital-agriculture mechanism. Source 8 (ACA, T3) is a genuine standing inter-ministerial committee but for anti-corruption. Source 9 (MPED, T3) records 18-ministry collaboration on a statistics strategy. Source 10 (ekb journal) returned a bot-block page with no content. Nothing in the supplied set measures the named construct for Egypt, so found=false with a ratification hold.",
+   "value": "DATA GAP \u2014 Worked through the ten supplied pages in order. Sources 1, 2 and 10 (World Bank NSDS project paper, CAPMAS statistical system paper, PARIS21 NSS assessment) concern statistical-system coordination \u2014 source 2 notes CAPMAS's legal mandate of interagency coordination is 'not yet fully materialised', and source 10 names a Consultancy Committee for Statistical Planning and Coordination, but these are statistical, not agricultural, coordination and PARIS21 is a T5-tiered domain here in any case. Sources 3 and 4 (OECD SDG integrated governance working paper 2020; OECD Public Governance Review of Egypt 2024) are the most promising for whole-of-government co-ordination, but the retrieved text is limited to front matter and forewords and contains no description of a sectoral or agricultural coordination body I could quote. Sources 5 and 6 (MPED) yield a ministerial SDDS statistics committee and a performance-monitoring system with a coordination objective \u2014 adjacent, wrong domain. Source 7 (ACA) is an anti-corruption inter-ministerial committee \u2014 wrong domain. Source 8 returned a 404 page. Source 9 (Egypt's First BTR) shows project-based cross-ministerial participation including MALR, but for climate transparency reporting. Dead ends: no MALR document, no digital-agriculture or agri-data strategy, no Cabinet/Prime Ministerial decree establishing an agriculture or digital-agriculture committee was among the retrieved pages, so the domain in which the named instrument would live was not reached.",
    "cls": "Gap",
    "level": null,
    "year": 2026,
    "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: No level is proposed at all. Level 1 (Absent) is withheld because the search did not reach the sources that would settle absence (Egyptian Official Gazette / Cabinet decrees, MALR and MCIT sites, FAO/CAPMAS agricultural statistics governance documents); the retrieved set was dominated by statistics-system and general-governance material and cannot support a negative finding either. Closest admissible items, offered only as context, not as an answer: (1) T3 Administrative Control Authority page states the National Anti-Corruption Committee was established by Prime Minister's Decree No. 2890 of 2010, chaired by the Prime Minister with ministerial membership \u2014 a formally constituted standing inter-ministerial body, but for anti-corruption, not for agriculture, data or digitalisation. (2) T3 Ministry of Planning and Economic Development news (10 June 2024) describes a national statistics strategy prepared 'in collaboration with 18 Egyptian ministries and government and research entities' \u2014 this is project-based collaboration on statistics, not a constituted standing coordination mechanism, and again not agriculture-specific. On the census's open question: even under the looser reading (any documented recurring or project-based mechanism satisfies the indicator), the retrieved evidence still sits on the wrong side because none of it is a mechanism for the sector this indicator governs; under the stricter reading (formally constituted standing body), the ACA committee would qualify structurally but on the wrong policy domain.",
+   "note": "Next level not proposed: Not applicable: no level is proposed. The reason a rung above Absent was not reached is simply that no instrument was retrieved; the reason Absent itself was not recorded is that the agriculture-sector document space was never searched in this source set. The indicator names an inter-ministerial coordination mechanism (in the context of a digital-agriculture maturity assessment). The closest instruments in the retrieved set are: (a) the Administrative Control Authority page on the National Anti-Corruption Committee, an inter-ministerial standing body chaired by the Prime Minister \u2014 wrong policy domain; (b) the Ministry of Planning and Economic Development page on the IMF Special Data Dissemination Standard, which records a ministerial decree establishing a committee of the Ministry of Planning, the Central Bank, CAPMAS and the Ministry of Finance \u2014 an inter-agency statistical body, not an agricultural one, and it does not include the Ministry of Agriculture and Land Reclamation; (c) the MPED Performance System page, which lists 'Achieving maximum coordination between ministries and different agencies' as a strategic objective of a whole-of-government M&E tool, i.e. a design statement about a monitoring system rather than a constituted agriculture coordination body; (d) Egypt's First Biennial Transparency Report, which lists contributing ministries including the Ministry of Agriculture and Land Reclamation \u2014 a project-based reporting arrangement for climate transparency, which would sit on the 'project-based mechanism' side of the unratified definitional question, but is a climate-reporting rather than a digital-agriculture mechanism. On the census's open question (standing body vs any documented recurring/project-based mechanism): even under the looser reading, no retrieved document evidences a recurring agriculture/digital-agriculture inter-ministerial process.",
    "tier": "",
    "tier_detail": "",
    "url": "",
@@ -852,15 +852,15 @@
    "kind": "l"
   },
   "5.8": {
-   "value": "DATA GAP \u2014 Worked through all eight supplied pages in order. Sources 1, 2, 4, 6 (FAO e-Agriculture news, FAO Digital Services Portfolio country cases and project page, FAO STI story) concern the El Mufeed app and extension/ToT activity \u2014 checked for any training-pipeline figures; Source 4 gives a five-day digital-skills course for extension agents in Damas, Dakahlia, but the content is office/social-media tools plus the app, not data science, and no enrollment pipeline figures. Source 3 (FAO Egypt office) lists capacity development in aquaculture and information management but no training pipeline. Source 5 is a 404 page, no content. Source 7 (FAO/GSARS) is the closest agriculture-side data-capability training: a workshop series concluding 27-31 August 2023 with 17 national experts from MoALR and CAPMAS on microdata dissemination \u2014 agriculture-specific and data-adjacent, but a finite workshop series, not a pipeline, and no evaluation. Source 8 (MCIT, T3) is the strongest institutional pipeline evidence \u2014 NTI, ITI, EUI, Knowledge City \u2014 but searched the full text for 'agri', 'farm', 'food': none appear in a training context. Source 9 (Egypt National AI Strategy deck, T5 domain) lists ITI programmes, 9 AI faculties and the Digital Egypt Builders Initiative, and names Agriculture only among preliminary priority sectors for LLMs. Dead ends: no supplied page for MALR/ARC agricultural-informatics degree programmes, no supplied page for an agtech incubator training cohort, no supplied CAPMAS or Ministry of Higher Education enrollment statistics. Concluded found=false with a ratification hold.",
-   "cls": "Gap",
+   "value": "Egypt has large, operating generic national data-science training pipelines (MCIT's Practical Data Scientist Academy with AWS, the Digilians initiative, and Egypt FWD, which covers data analysis/data science tracks), but",
+   "cls": "Judged",
    "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: Not applicable \u2014 no level is proposed. Specifically, the customary level 3 (Adopted/Operating) was not proposed because the only operating pipeline evidenced (ITI, Digital Egypt Builders, EUI, 9 AI faculties) contains no stated agriculture component, and the only agriculture-linked training evidenced (FAO extension digital skills course; FAO/GSARS statistics workshops) is episodic capacity building rather than a pipeline. Neither quality_evidence nor scale_evidence was filled: the MCIT page is the implementer's own achievements release with no independent evaluation, and its figures (EGP 315 billion revenues, 60,000 specialists over three years) are sector-wide or forward targets, not reach figures for an agtech/data-science training pipeline. The indicator name joins two halves ('agtech' and 'data-science') with a slash whose logic is unratified, and the available Egyptian evidence sits on opposite sides of that slash, with neither side satisfying both halves. (a) Data-science/AI side, no agriculture: the MCIT press release 'ICT Sector Achievements in 2023' (T3, mcit.gov.eg) describes the Knowledge City training facility housing the National Telecommunication Institute and the Information Technology Institute, and Egypt University of Informatics as the first ICT-specialised university in Africa with faculties of computing, engineering, business informatics and digital arts; the Egypt National AI Strategy deck (hosted on ctc-n.org, T5 domain) lists ITI specialised programmes, 9 AI faculties in Egyptian universities, and the Digital Egypt Builders Initiative professional master's. None of these pages states an agriculture, agrifood or agtech track, cohort or curriculum. The AI Strategy deck lists Agriculture only as a preliminary priority sector for leveraging LLMs, not as a training stream. (b) Agriculture side, no pipeline: FAO (T1) reports a five-day digital skills course for MoALR extension agents (January 2022) covering Word, YouTube, e-mail, Facebook, WhatsApp, Zoom and the El Mufeed app \u2014 digital literacy, not data science \u2014 and a FAO/GSARS workshop series ending in Cairo 27-31 August 2023 with 17 national experts from MoALR and CAPMAS on agricultural microdata dissemination and anonymisation. These are finite donor-run events, not a training pipeline producing agtech or data-science graduates. Under a conjunctive reading the construct is unevidenced; under a purely disjunctive reading ('data-science pipeline alone counts') the MCIT/ITI/EUI material would qualify, which is precisely the unresolved definitional question flagged in the indicator census.",
-   "tier": "",
-   "tier_detail": "",
-   "url": "",
+   "year": 2023,
+   "src": "Korea Green Growth Trust Fund (World Bank), Egypt Climate Smart Agriculture Innovation and Tech-based Entrepreneurship (EgCITE), Grant K-201",
+   "note": "RATIFICATION HOLD \u2014 the only source is T5 news, vendor or market material, which carries existence facts but never a statistic. The level is withheld and this row leaves every mean. Programme description by the funding trust fund; forward-looking language ('will aim to create'), no delivery record, no independent evaluation. Domain tiered T5, so used for an existence fact only.",
+   "tier": "T5",
+   "tier_detail": "Programme description by the funding trust fund; forward-looking language ('will aim to create'), no delivery record, no independent evaluation. Domain tiered T5, so used for an existence fact only.",
+   "url": "https://www.wbgkggtf.org/node/3902",
    "defnote": "The name's \"agtech\" half is unevidenced in both countries \u2014 each level 3 is carried entirely by a generic national ICT/data-talent programme with the agriculture bridging explicitly absent \u2014 and the slash never says whether the two halves are conjunctive or disjunctive.",
    "defsev": "construct-drift",
    "subs": [],
@@ -964,19 +964,19 @@
    "kind": "l"
   },
   "6.9": {
-   "value": "DATA GAP \u2014 Read all nine supplied pages in order. Source 7 (MCIT Arabic, 2013 protocol) and Source 8 (MCIT English, 2021 parliament speech) are the strongest government artifacts on digital agriculture and were checked first for a named private partner or concession/PPP structure \u2014 both describe ministry-to-ministry cooperation and state-funded projects (EGP 370m smart card; 12 governorates; one million tenure holders), with no private counterparty named. Source 1 (IFC/World Bank Country Private Sector Diagnostic) has an appendix titled 'The Role of Public-Private Partnerships (PPPs) in Egypt' (p.115) and an agribusiness chapter, but only the front matter/contents were retrieved in the supplied text, so no PPP statement about digital agriculture is quotable from it. Source 2 (AGRIS/ICARDA, 2018) is a proposal-level paper on PPPs in extension, not digital-specific and not evidence of operation. Sources 3 and 4 (FAO) document the FAO\u2013Government El Mufeed digital extension work \u2014 partners listed are FAO, MoALR, farmers, local leaders and NGOs, not private firms. Source 5 (FAO NERC/20/INF/21) is regional and only urges members to 'provide a policy framework to tap into private sector investment', i.e. recommendation, not Egyptian PPP fact. Source 6 (IFPRI policy note, Dec 2025) discusses Egyptian app developers' dependence on NGO and donor partnerships and weak 'integration with government services' \u2014 which cuts against, rather than for, operating PPPs. Source 9 (Developing Telecoms, T5) is the only named-firm agriculture technology deal and is private\u2013private. Dead ends: no MoALR or Cabinet PPP Central Unit page, no Digital Egypt agriculture PPP contract, and no evaluation or user-count figure for any candidate partnership appears in the supplied pages, so both quality_evidence and scale_evidence are necessarily empty.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: No level was proposed at all: the retrieved corpus contains public\u2013public arrangements (MCIT\u2013MoALR), an IO\u2013government arrangement (FAO\u2013MoALR), and a private\u2013private arrangement (Vodafone\u2013Rakhaa), but no quote-verifiable public\u2013private digital-agriculture partnership. Filling the rung from any of these would score the row on the wrong construct. Nearest evidence, and why each is not the named construct: (1) MCIT (T3, English press release, 7 Feb 2021) describes 'the cooperation with the Ministry of Agriculture to develop agricultural tenure system and to issue farmer's smart card at a cost of 370 million Egyptian pounds. The project has achieved its goals in 12 governorates with a million tenure holders' \u2014 this is an inter-ministerial (public\u2013public) digital-ag programme, with no named private partner, so it cannot evidence the 'private' half. (2) MCIT (T3, Arabic, 9 Nov 2013) records a six-year cooperation protocol between the ICT and Agriculture ministries covering tenure mechanisation, digital land maps, SMS/expert systems and an agricultural call center \u2014 again ministry-to-ministry. (3) FAO pages (T1) document an FAO\u2013Government programme 2018\u20132022 and the El Mufeed extension app built with farmers, local leaders and NGOs \u2014 an international-organization/government partnership, not a PPP. (4) Developing Telecoms (T5) reports Vodafone Business entering agriculture 'through a collaboration with Rakhaa For Agriculture Investments' for IoT irrigation \u2014 a private\u2013private commercial collaboration, with no public counterparty, and in any case a T5 source usable only for existence of the deal. (5) The AGRIS/ICARDA record is an analytical paper proposing PPPs for pluralistic extension, i.e. a recommendation, not an operating arrangement, and it is not specific to digital services.",
-   "tier": "",
-   "tier_detail": "",
-   "url": "",
+   "value": "Across the pages retrieved for Egypt I found digital-agriculture collaborations that are public-public (MCIT with the Ministry of Agriculture on digital transformation services for the agriculture sector), public-interna",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2021,
+   "src": "Arab Republic of Egypt, Ministry of Communications and Information Technology \u2014 Press Release: ICT Sector Achievements in 2021",
+   "note": "Nearest-adjacent instrument cited as search evidence; it is a self-reported ministry achievement list, not an evaluation. Next level not proposed: Announced was not proposed because no retrieved page contains a public authority naming a private partner for a digital-agriculture initiative. The closest candidate, the Vodafone Business\u2013Rakhaa For Agriculture Investments IoT project, is reported only in T5 trade press and involves two private entities; the ministry-side items name only other public bodies (Ministry of Agriculture, MCIT) or FAO. quality_evidence and scale_evidence are both empty: no evaluation, audit or performance report of any Egyptian digital-ag PPP was retrieved, and no reach figures (farmers served, governorates covered, disbursements) are published in these pages for any such partnership \u2014 the only figures available (4.2 million Digital Egypt Platform subscribers, 53 million Vodafone subscribers) are not digital-agriculture PPP reach. The MCIT quote is offered as proof that the right domain was searched, not as a measure of the construct: it describes a ministry-to-ministry (MCIT\u2013Ministry of Agriculture) digital transformation collaboration, i.e. public-public, with no private counterparty. The FAO items (Sources 1, 2, 4) describe FAO\u2013government cooperation, i.e. public-international. The only private actor in the retrieved set, Vodafone Business with Rakhaa For Agriculture Investments (Source 9, T5 news), names no public counterparty and is therefore a commercial private-private arrangement, not a PPP. On the open census question, the indicator NAME asserts operating public-private partnerships; the census flags that Egypt's flagship candidate pairs ministries with state-owned financial entities, which would leave the 'private' half thin \u2014 but no document evidencing even that arrangement was retrieved here, so the finding sits below that question rather than on either side of it. Source 5 is a World Bank PPP disclosure diagnostic for Nigeria and is not evidence about Egypt.",
+   "tier": "T3",
+   "tier_detail": "Nearest-adjacent instrument cited as search evidence; it is a self-reported ministry achievement list, not an evaluation.",
+   "url": "https://mcit.gov.eg/en/Media_Center/Press_Room/Press_Releases/64908",
    "defnote": "The name asserts operating public-private partnerships, but Nigeria's level 3 rests substantially on MOUs signed days before capture (intent, not operation) and Egypt's flagship partnership pairs ministries with state-owned financial entities, leaving the \"private\" half of the construct thin.",
    "defsev": "construct-drift",
    "subs": [],
-   "stale": false,
+   "stale": true,
    "name": "Public-private partnerships in digital ag",
    "pillar": "E1",
    "layer": "Transformation",
@@ -1272,15 +1272,15 @@
    "kind": "t"
   },
   "8.12": {
-   "value": "DATA GAP \u2014 Reviewed all ten supplied pages in order. (1) IFAD Egypt CSPE 2025 executive summary \u2014 country context only; mentions the lack of digital solutions for water, soil and pest management as a smallholder constraint, no digital impact figure. (2) IOE Project Completion Report Validation for OFIDO \u2014 irrigation project, objectives include yields and income but the retrieved extract carries no digital component and no quantified yield/income result. (3) IOE news item on the Egypt CSPE \u2014 qualitative statements about contributions to household incomes and assets via rural finance; no digital attribution, no figures on yield or income. (4) COSOP 2019-2024 \u2014 forward-looking strategy, not impact evidence. (5) OFIDO 2018 supervision report \u2014 supervision ratings (Agricultural Productivity 3), not an impact measurement of a digital tool. (6) 2017 CSPE \u2014 portfolio effectiveness findings, no digital yield/income impact. (7) WorldFish/CGIAR aquaculture BMP paper \u2014 genuine impact assessment with profit figures, but the intervention is face-to-face training, not digital. (8) IFPRI Forsa midline impact evaluation \u2014 social-protection graduation programme, outcomes on livestock ownership, not digital agriculture. (9) MCIT Reports and Documents page for 'Digitization in Egypt' (IDSC) \u2014 index/landing page only; no agricultural yield or income outcome text in the retrieved content. (10) Bulgarian Journal of Agricultural Science wheat varieties paper \u2014 yield and revenue impact, but of improved seed varieties under NCUWP, not of a digital service, and the domain is tiered T5. Dead ends: no page retrieved covered an evaluation of an Egyptian digital advisory, e-extension, precision-irrigation app or agri-fintech platform with measured yield or income outcomes. Concluded the cell cannot be filled from the supplied evidence and set a ratification hold.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 24 August 2026",
-   "note": "Next level not proposed: No level was proposed at all, so no higher rung was withheld on a comparative basis. Specifically, no quality_evidence field could be filled because no independent evaluation of an Egyptian digital-agriculture service's yield or income effect appears in the supplied pages, and no scale_evidence field could be filled because the reach figures available (e.g. 124,149 OFIDO beneficiaries; 2,400+ fish farmers trained; 10,302 Forsa households with assets) all attach to non-digital interventions. The indicator name fixes the outcome as yield or income arising from digital-agriculture interventions. The closest quantified outcomes in the supplied pages are: (a) Bulgarian Journal of Agricultural Science (agrojournal.org, T5 by domain) on Egypt's National Campaign to Uprise Wheat Production, reporting an added average yield for participating farmers \u2014 an improved-seed-variety and extension programme, with no digital-service component; and (b) a WorldFish/CGIAR peer-reviewed impact assessment of aquaculture best-management-practice training in Egypt reporting significantly higher net profits on trained farms \u2014 again a face-to-face training intervention, not a digital tool. The IFAD Egypt CSPE (2017-2023) and the OFIDO project completion report validation discuss productivity and income outcomes of irrigation and rural finance investments, and the CSPE country context notes the 'lack of digital solutions for water, soil and pest management' as a gap, i.e. it describes the absence rather than the impact of digital tools. This matches the open census question: the outcome measured by the available Egyptian evidence base sits on the wrong side of the yield/income boundary named in the indicator.",
-   "tier": "",
+   "value": "Across the retrieved Egypt evidence base \u2014 IFAD's three country strategy and programme evaluations (most recently the 2024 CSPE covering 2017-2023), the UERDP supervision report with its farm-level net-benefit and increm",
+   "cls": "Documented",
+   "level": 1,
+   "year": 2025,
+   "src": "IFAD Independent Office of Evaluation \u2014 Water, land and livelihoods: IFAD's investment in Egypt's future (Egypt Country Strategy and Programme Evaluation launch)",
+   "note": "Next level not proposed: Announced (level 2) was not proposed because nothing in the retrieved pages states an intention, plan, commissioning or terms of reference for measuring yield or income impacts of digital agriculture in Egypt. The only digital-agriculture reference retrieved is a table-of-contents entry ('5.5 Digital Technologies') in the World Bank 2021 value-chain report, with no accompanying text, no announced evaluation and no yield or income figure, which is insufficient to establish even an announcement of the named instrument. The nearest adjacent evidence \u2014 the IFAD Egypt CSPE (2017-2023 portfolio, US$646.3 million, five projects) \u2014 does document income and productivity outcomes for rural households, but the attributed causes are irrigation rehabilitation, rural finance, farmer field schools and market linkages, not digital agriculture tools. The World Bank 2021 report 'Accelerating the transformation of Egypt's agri-food system' lists a section 5.5 'Digital Technologies', but the retrieved text is front matter and table of contents only and carries no yield or income figure for digital technology adoption. Judged against the indicator's name, which fixes the outcome as yield or income, none of the retrieved evidence measures the named construct for digital agriculture; the census's own caveat (that Egypt's level 3 rests on an evaluation measuring diffusion and adoption rather than yield or income) is confirmed rather than resolved by these pages.",
+   "tier": "T1",
    "tier_detail": "",
-   "url": "",
+   "url": "https://ioe.ifad.org/en/w/water-land-and-livelihoods-ifad-s-investment-in-egypt-s-future",
    "defnote": "The name's parenthetical fixes the outcome as yield or income, but Egypt's level 3 rests on an evaluation whose measured outcome is diffusion and adoption of digital tools, not yield or income.",
    "defsev": "construct-drift",
    "subs": [],
@@ -1351,40 +1351,70 @@
   },
   "C2": {
    "n": 8,
-   "rated": 2,
-   "held": 4,
-   "mean": 3.5,
-   "band": "Advanced",
+   "rated": 3,
+   "held": 5,
+   "mean": 2.67,
+   "band": "Established",
    "weak": true,
    "comp": {
     "Measured": 1,
-    "Documented": 5,
+    "Documented": 7,
     "Judged": 0,
-    "Gap": 2
+    "Gap": 0
    },
-   "stale": 1
+   "stale": 2
   },
   "C3": {
    "n": 8,
-   "rated": 4,
+   "rated": 6,
    "held": 1,
-   "mean": 3.5,
-   "band": "Advanced",
+   "mean": 3.33,
+   "band": "Established",
    "weak": false,
    "comp": {
-    "Measured": 2,
-    "Documented": 3,
+    "Measured": 3,
+    "Documented": 4,
     "Judged": 0,
-    "Gap": 3
+    "Gap": 1
    },
    "stale": 2
   },
   "C4": {
    "n": 7,
    "rated": 3,
-   "held": 0,
+   "held": 1,
    "mean": 3.0,
    "band": "Established",
+   "weak": true,
+   "comp": {
+    "Measured": 1,
+    "Documented": 2,
+    "Judged": 1,
+    "Gap": 3
+   },
+   "stale": 3
+  },
+  "E1": {
+   "n": 11,
+   "rated": 5,
+   "held": 4,
+   "mean": 2.2,
+   "band": "Emerging",
+   "weak": true,
+   "comp": {
+    "Measured": 0,
+    "Documented": 7,
+    "Judged": 2,
+    "Gap": 2
+   },
+   "stale": 2
+  },
+  "O1": {
+   "n": 7,
+   "rated": 3,
+   "held": 0,
+   "mean": 2.0,
+   "band": "Emerging",
    "weak": true,
    "comp": {
     "Measured": 1,
@@ -1392,44 +1422,14 @@
     "Judged": 0,
     "Gap": 4
    },
-   "stale": 3
-  },
-  "E1": {
-   "n": 11,
-   "rated": 4,
-   "held": 4,
-   "mean": 2.5,
-   "band": "Emerging",
-   "weak": true,
-   "comp": {
-    "Measured": 0,
-    "Documented": 6,
-    "Judged": 2,
-    "Gap": 3
-   },
-   "stale": 1
-  },
-  "O1": {
-   "n": 7,
-   "rated": 2,
-   "held": 0,
-   "mean": 2.5,
-   "band": "Emerging",
-   "weak": true,
-   "comp": {
-    "Measured": 1,
-    "Documented": 1,
-    "Judged": 0,
-    "Gap": 5
-   },
    "stale": 1
   }
  },
  "layers": {
   "Foundation": 3.78,
-  "Enablers": 3.09,
-  "Transformation": 3.0,
-  "Outcomes": 2.5
+  "Enablers": 2.93,
+  "Transformation": 2.33,
+  "Outcomes": 2.0
  },
  "prereq": {
   "2.1": {
@@ -1450,7 +1450,7 @@
   "3.11": {
    "name": "Agricultural data interoperability standards",
    "kind": "UC:AGI",
-   "status": "Unverified"
+   "status": "Absent"
   },
   "4.1": {
    "name": "Data protection/privacy law",
@@ -1460,12 +1460,12 @@
   "4.5": {
    "name": "Agricultural data governance framework",
    "kind": "UC:AGI",
-   "status": "Unverified"
+   "status": "Absent"
   },
   "4.7": {
    "name": "Digital ID coverage (%)",
    "kind": "UC:FIN",
-   "status": "Unverified"
+   "status": "Present"
   },
   "4.9": {
    "name": "Inter-ministerial coordination mechanism",
@@ -1497,68 +1497,68 @@
   "ADV": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.33,
+   "mean": 3.05,
    "prereqs": [
     [
      "5.5",
      "Present"
     ]
    ],
-   "n_bearing": 15,
+   "n_bearing": 19,
    "basis": {
     "need": 0,
-    "outcome": 0,
-    "enabler": 15
+    "outcome": 1,
+    "enabler": 18
    },
-   "mean_enabler": 3.33,
+   "mean_enabler": 3.17,
    "mean_driven": false
   },
   "SMF": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.38,
+   "mean": 3.19,
    "prereqs": [],
-   "n_bearing": 13,
+   "n_bearing": 16,
    "basis": {
     "need": 0,
-    "outcome": 0,
-    "enabler": 13
+    "outcome": 1,
+    "enabler": 15
    },
-   "mean_enabler": 3.38,
+   "mean_enabler": 3.33,
    "mean_driven": false
   },
   "MKT": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.38,
+   "mean": 3.19,
    "prereqs": [],
-   "n_bearing": 13,
+   "n_bearing": 16,
    "basis": {
     "need": 0,
-    "outcome": 0,
-    "enabler": 13
+    "outcome": 1,
+    "enabler": 15
    },
-   "mean_enabler": 3.38,
+   "mean_enabler": 3.33,
    "mean_driven": false
   },
   "SCM": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.42,
+   "mean": 3.06,
    "prereqs": [],
-   "n_bearing": 12,
+   "n_bearing": 16,
    "basis": {
     "need": 0,
-    "outcome": 0,
-    "enabler": 12
+    "outcome": 1,
+    "enabler": 15
    },
-   "mean_enabler": 3.42,
+   "mean_enabler": 3.2,
    "mean_driven": false
   },
   "FIN": {
    "status": "Unverified",
    "why": "universal unverified: 2.1",
-   "mean": 3.38,
+   "mean": 3.06,
    "prereqs": [
     [
      "3.3",
@@ -1566,26 +1566,26 @@
     ],
     [
      "4.7",
-     "Unverified"
+     "Present"
     ],
     [
      "6.14",
      "Unverified"
     ]
    ],
-   "n_bearing": 13,
+   "n_bearing": 17,
    "basis": {
     "need": 0,
-    "outcome": 1,
-    "enabler": 12
+    "outcome": 2,
+    "enabler": 15
    },
-   "mean_enabler": 3.42,
+   "mean_enabler": 3.2,
    "mean_driven": false
   },
   "AGI": {
-   "status": "Unverified",
-   "why": "universal unverified: 2.1",
-   "mean": 3.38,
+   "status": "Blocked",
+   "why": "3.11, 4.5",
+   "mean": 2.94,
    "prereqs": [
     [
      "3.3",
@@ -1593,38 +1593,66 @@
     ],
     [
      "3.11",
-     "Unverified"
+     "Absent"
     ],
     [
      "4.5",
-     "Unverified"
+     "Absent"
     ],
     [
      "7.12",
      "Present"
     ]
    ],
-   "n_bearing": 13,
+   "n_bearing": 18,
    "basis": {
     "need": 0,
-    "outcome": 0,
-    "enabler": 13
+    "outcome": 1,
+    "enabler": 17
    },
-   "mean_enabler": 3.38,
+   "mean_enabler": 3.06,
    "mean_driven": false
   }
  },
  "leapfrog": {
-  "gap": 0.78,
+  "gap": 1.45,
   "flag": false,
   "reading": "No structural flag"
  },
  "constraints": [
   {
+   "id": "3.11",
+   "name": "Agricultural data interoperability standards",
+   "level": 1,
+   "pillar": "C2",
+   "prereq": true
+  },
+  {
+   "id": "4.5",
+   "name": "Agricultural data governance framework",
+   "level": 1,
+   "pillar": "C3",
+   "prereq": true
+  },
+  {
    "id": "6.1",
    "name": "Global Innovation Index",
    "level": 1,
    "pillar": "E1",
+   "prereq": false
+  },
+  {
+   "id": "6.9",
+   "name": "Public-private partnerships in digital ag",
+   "level": 1,
+   "pillar": "E1",
+   "prereq": false
+  },
+  {
+   "id": "8.12",
+   "name": "Documented impact evidence (yield/income)",
+   "level": 1,
+   "pillar": "O1",
    "prereq": false
   },
   {
@@ -1674,34 +1702,6 @@
    "name": "Digital advisory platforms at scale",
    "level": 3,
    "pillar": "E1",
-   "prereq": false
-  },
-  {
-   "id": "4.1",
-   "name": "Data protection/privacy law",
-   "level": 3,
-   "pillar": "C3",
-   "prereq": true
-  },
-  {
-   "id": "4.3",
-   "name": "Government AI Readiness Index",
-   "level": 3,
-   "pillar": "C3",
-   "prereq": false
-  },
-  {
-   "id": "4.6",
-   "name": "National AI strategy with agriculture component",
-   "level": 3,
-   "pillar": "C3",
-   "prereq": false
-  },
-  {
-   "id": "5.2",
-   "name": "Adult literacy rate (%)",
-   "level": 3,
-   "pillar": "C4",
    "prereq": false
   }
  ],
@@ -1776,26 +1776,6 @@
    "cls": "Gap"
   },
   {
-   "id": "3.3",
-   "name": "National farmer registry",
-   "cls": "Gap"
-  },
-  {
-   "id": "3.11",
-   "name": "Agricultural data interoperability standards",
-   "cls": "Gap"
-  },
-  {
-   "id": "4.5",
-   "name": "Agricultural data governance framework",
-   "cls": "Gap"
-  },
-  {
-   "id": "4.7",
-   "name": "Digital ID coverage (%)",
-   "cls": "Gap"
-  },
-  {
    "id": "4.9",
    "name": "Inter-ministerial coordination mechanism",
    "cls": "Gap"
@@ -1813,7 +1793,7 @@
   {
    "id": "5.8",
    "name": "Agtech/data-science training pipeline",
-   "cls": "Gap"
+   "cls": "Judged"
   },
   {
    "id": "5.12",
@@ -1829,11 +1809,6 @@
    "id": "6.4",
    "name": "Agtech venture ecosystem",
    "cls": "Judged"
-  },
-  {
-   "id": "6.9",
-   "name": "Public-private partnerships in digital ag",
-   "cls": "Gap"
   },
   {
    "id": "6.12",
@@ -1861,11 +1836,6 @@
    "cls": "Gap"
   },
   {
-   "id": "8.12",
-   "name": "Documented impact evidence (yield/income)",
-   "cls": "Gap"
-  },
-  {
    "id": "8.17",
    "name": "Climate advisory reach (%)",
    "cls": "Gap"
@@ -1881,6 +1851,11 @@
    "id": "8.5",
    "name": "Women who own land (% holders)",
    "year": 2000
+  },
+  {
+   "id": "3.3",
+   "name": "National farmer registry",
+   "year": 2021
   },
   {
    "id": "3.8",
@@ -1918,19 +1893,24 @@
    "year": 2022
   },
   {
+   "id": "6.9",
+   "name": "Public-private partnerships in digital ag",
+   "year": 2021
+  },
+  {
    "id": "8.6",
    "name": "Gender gap in phone ownership (pp)",
    "year": 2018
   }
  ],
  "counts": {
-  "Measured": 13,
-  "Documented": 20,
-  "Judged": 2,
-  "Gap": 22
+  "Measured": 14,
+  "Documented": 25,
+  "Judged": 3,
+  "Gap": 15
  },
- "held": 11,
- "rated": 24,
+ "held": 13,
+ "rated": 29,
  "candidates": {
   "A1-CAND-IMP": {
    "value": "DATA GAP \u2014 1) FAO GIEWS Egypt country brief (T1) \u2014 read in full; gives 2026/27 cereal import requirements of 29 million tonnes, wheat 13.5 Mt, maize 15.5 Mt, plus 2026 wheat production ~10 Mt, but publishes no dependency ratio; a ratio derived from these would be my own arithmetic, not a published figure, so rejected. 2) UNdata mirror of FAOSTAT item 21035, 'Cereal import dependency ratio (percent) (3-year average)' (T1) \u2014 exact construct match; Egypt is listed in the 226-country filter and 19 year-windows are offered, but the rendered table shows only records 1 of 4004 through Albania 2007-2009, so the Egypt rows were not in the fetched text. Dead end for quoting. 3) FAO data catalog entry for the Suite of Food Security Indicators (T1) \u2014 metadata only, no country values. 4) FAOSTAT landing page (T1) \u2014 update log only, confirms Suite of Food Security Indicators refreshed 21 July 2026; no values. 5) FAO Statistics Country Profile Tool (T1) \u2014 describes a dashboard that would carry the Egypt value, but the page itself contains no data. 6) FAO openknowledge figure_52 PDF, 'Cereal import dependency ratio, top countries (2020-2022)' (T2) \u2014 right indicator and vintage, but the country list is the top 20 (Antigua and Barbuda, Barbados, Djibouti, Dominica, Grenada, Libya, Malta, Republic of Moldova, Solomon Islands, Bahamas, Jamaica, Micronesia, Jordan, Cyprus, United Arab Emirates, Saint Lucia, Kuwait, Trinidad and Tobago, Vanuatu, Cabo Verde); Egypt is absent. Note Libya and Jordan appear here \u2014 neighbouring-country figures, explicitly not carried across the border to Egypt. 7) CGIAR-hosted FAO RNE presentation 'Food security in Egypt' (T2) \u2014 names 'Cereal import dependency ratio (percent) (3-year average)' as an Egypt stability indicator and shows a chart with a 0-70 axis, but the underlying values are in the figure, not the extracted text; unquotable. 8) Heliyon article via PMC \u2014 concerns wheat import dependency and econometric elasticities, a different construct from the FAO cereal import dependency ratio. 9) Food Systems Dashboard table \u2014 blocked by a Vercel security checkpoint, no data returned; also T5. Conclusion: correct series located at T1, Egypt value not retrievable from supplied pages; abstaining rather than estimating.",

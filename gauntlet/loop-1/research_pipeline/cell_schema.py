@@ -152,7 +152,22 @@ def cell_prompt(country, indicator_id, indicator_name, construct, ladder_or_thre
 
 
 LADDER_TEXT = """SCORING: this is a LADDER indicator. Set `presence_rung` to one of
-Absent / Announced / Adopted / Operating. The level derives mechanically from that rung
+Absent / Announced / Adopted / Operating.
+
+ABSENT IS AN ANSWER, NOT A FAILURE TO FIND ONE. This is the rung most often missed. A
+ladder indicator asks whether a named instrument exists, and establishing that it does
+not is a finding at rung Absent, which scores level 1. It is NOT a data gap. Record it
+this way: set found=true, value_kind="statement", presence_rung="Absent", and write in
+`value` what you did find in the domain together with the fact that the named instrument
+is not among it. Cite the nearest adjacent instrument you examined, and quote it. That
+citation is not being offered as a measure of the construct; it is the evidence that you
+searched the right place and that the named thing is not there.
+
+Use found=false, and accept a data gap, only when you could not search the domain
+effectively at all: the sources were unreachable, or nothing in the field was retrieved.
+The difference is real. "I examined the national data policy and the e-government
+interoperability framework, and neither covers agricultural data" is Absent. "I could not
+reach any relevant document" is a gap. The level derives mechanically from that rung
 and from two evidence fields: Absent 1, Announced 2, Adopted 3, Operating 3, then +1 if
 `quality_evidence` is filled and +1 more if `scale_evidence` is also filled, capped at 5.
 

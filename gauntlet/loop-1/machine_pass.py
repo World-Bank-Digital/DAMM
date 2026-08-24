@@ -6,7 +6,10 @@ Includes the two spec-13.2 A1 candidates as PROVISIONAL rows (flagged).
 """
 import json, urllib.request, time, sys, datetime
 
-SERIES = {  # indicator id -> (WDI code, note)
+# indicator id -> (WDI code, note) or (WDI code, note, database source id).
+# Most series live in the default database; a few, such as ID4D, are published in a
+# separate one and need its source id passed or the query returns nothing.
+SERIES = {
  "1.1": ("NV.AGR.EMPL.KD", ""),
  "1.2": ("AG.YLD.CREL.KG", ""),
  "1.3": ("SL.AGR.EMPL.ZS", "ILO modelled estimate"),
@@ -17,14 +20,20 @@ SERIES = {  # indicator id -> (WDI code, note)
  "5.2": ("SE.ADT.LITR.ZS", ""),
  "5.3": ("SE.TER.ENRR", "PROXY: total tertiary gross enrollment, not STEM-specific — census defect logged (D3)"),
  "8.2": ("FX.OWN.TOTL.FE.ZS", "Global Findex wave"),
+ # 4.7 is a prerequisite, and both countries' verified assessments source it to the
+ # ID4D dataset. The automated research lane reached the ID4D landing pages but never a
+ # country value, because the figures sit behind a DataBank query form rather than on a
+ # page. The series itself is a plain API call once the database id is supplied.
+ "4.7": ("ID.OWN.TOTL.ZS", "World Bank Identification for Development (ID4D)", 89),
 }
 CANDIDATES = {  # spec 13.2 provisional A1 candidates
  "A1-CAND-IRR": ("AG.LND.IRIG.AG.ZS", "PROVISIONAL spec 13.2 candidate: irrigation coverage"),
 }
 ACCESS = datetime.date.today().isoformat()
 
-def fetch(iso3, code):
-    url = f"https://api.worldbank.org/v2/country/{iso3}/indicator/{code}?format=json&mrnev=1&per_page=5"
+def fetch(iso3, code, source=None):
+    url = (f"https://api.worldbank.org/v2/country/{iso3}/indicator/{code}"
+           f"?format=json&mrnev=1&per_page=5" + (f"&source={source}" if source else ""))
     for attempt in range(3):
         try:
             with urllib.request.urlopen(url, timeout=25) as r:
@@ -43,8 +52,9 @@ def fetch(iso3, code):
 # its own research on those rows.
 def fetch_country(iso3):
     rows = {}
-    for ind, (code, note) in list(SERIES.items()) + list(CANDIDATES.items()):
-        r = fetch(iso3, code)
+    for ind, spec in list(SERIES.items()) + list(CANDIDATES.items()):
+        code, note, source = (list(spec) + [None])[:3]
+        r = fetch(iso3, code, source)
         if r is None:
             rows[ind] = dict(status="no_data", code=code, note=note, access=ACCESS)
         elif "error" in r:

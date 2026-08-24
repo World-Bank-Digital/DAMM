@@ -156,6 +156,30 @@ def run_gates(ans, *, country, indicator_id, is_prerequisite, quote_ok, quote_pa
     out.append(Gate("tier", "pass", f"recorded at {effective}"))
 
     # 4. construct match — C3
+    #
+    # A row at rung Absent is exempt, and the exemption is not a loophole. Such a row
+    # claims that the named instrument does not exist and cites the nearest adjacent one
+    # as evidence of where it looked. That citation measures a different construct by
+    # design, so the ordinary construct test would hold every well-evidenced absence and
+    # the ladder's bottom rung would be unreachable. It was: neither automated country
+    # run placed a single ladder row at level 1, while neither verified assessment
+    # recorded a single ladder row as a gap. Absent scores 1, the lowest level on the
+    # ladder, so the incentive this creates runs toward under-claiming.
+    if is_ladder and ans.get("presence_rung") == "Absent":
+        out.append(Gate("construct", "pass", "rung Absent: the citation evidences the "
+                                             "search, not the construct"))
+        out.append(Gate("prerequisite", "pass", "rung Absent"))
+        out.append(Gate("coherence", "pass", ""))
+        if len((ans.get("negative_finding") or "").strip()) < 20:
+            out.append(Gate("argument", "hold",
+                            "rung Absent is proposed with no negative finding — nothing "
+                            "is recorded about what an Announced instrument would have "
+                            "looked like and why none was found"))
+            return out
+        out.append(Gate("currency", "pass", ""))
+        out.append(Gate("argument", "pass", ""))
+        return out
+
     cm = ans.get("construct_match") or "unclear"
     if cm == "measures a different construct":
         out.append(Gate("construct", "hold",

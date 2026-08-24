@@ -370,7 +370,7 @@ def row_from(spec, ans, verdict, gate, pack, corroboration, country):
 
 # ------------------------------------------------------------------ one row
 
-def research_row(spec, country, llm, ledger, wdi, log):
+def research_row(spec, country, llm, ledger, wdi, log, t1_fill=False):
     pack, plan, ppx, construct = retrieve(spec, country, llm, ledger, log)
 
     extra = ""
@@ -427,6 +427,21 @@ def research_row(spec, country, llm, ledger, wdi, log):
                              f"from the value recorded here.")
 
     row = row_from(spec, ans, verdict, gate, pack, corroboration, country)
+
+    # The research lane found nothing and a machine-readable T1 series has the figure.
+    # Filling is off by default and never silent: the row records which lane produced it,
+    # so a reader can always tell autonomous research from a curated series.
+    if t1_fill and row["cls"] == "Gap" and w and w.get("status") == "ok" \
+            and not spec["candidate"]:
+        lvl = (tlevel(w["value"], "H" if spec["direction"] == "higher-is-better" else "L",
+                      spec["thresholds"]) if spec["method"] == "threshold" else None)
+        row = dict(value=w["value"], cls="Measured", level=lvl, year=w["year"],
+                   src=americanize(standalone(w["src"])), tier="T1", tier_detail="",
+                   url=w["url"],
+                   note=americanize(standalone(
+                       "Recorded from the machine-readable T1 lane. The research lane did "
+                       "not reach a country value for this row, and the series was fetched "
+                       "directly from the publisher's interface. " + (w.get("note") or ""))))
     record = dict(id=spec["id"], name=spec["name"], country=country,
                   verdict=verdict, gates=[g.as_dict() for g in gate_list],
                   quote_verified=quote_ok, answer=ans, row=row,
@@ -450,6 +465,11 @@ def main():
     ap.add_argument("--vendor", default="anthropic/claude-opus-5")
     ap.add_argument("--rows", default="")
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--t1-fill", action="store_true",
+                    help="let the machine-readable T1 lane fill a row the research lane "
+                         "left as a gap. Off by default, because a measurement run that "
+                         "silently substituted an API figure would be measuring the API. "
+                         "On, every row it fills says so on its own face.")
     args = ap.parse_args()
 
     V.load_env()
@@ -495,7 +515,8 @@ def main():
             return
         t0 = time.time()
         try:
-            row, record = research_row(spec, args.country, llm, ledger, wdi, log)
+            row, record = research_row(spec, args.country, llm, ledger, wdi, log,
+                                       t1_fill=args.t1_fill)
         except V.BudgetExhausted as e:
             with lock:
                 stopped = str(e)

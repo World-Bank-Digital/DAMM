@@ -151,6 +151,25 @@ check("an announcement is exempt from currency",
       gates(year=2001, presence_rung="Announced", proposed_level=2, _derived=2), "pass")
 check("a level below 5 with no negative finding holds",
       gates(negative_finding=""), "hold")
+# The ladder's bottom rung was unreachable. An Absent row cites the nearest adjacent
+# instrument as evidence of where it searched, so the ordinary construct test held every
+# well-evidenced absence: neither automated country run placed a single ladder row at
+# level 1, while neither verified assessment recorded a single ladder row as a gap.
+check("a well-evidenced absence reaches the bottom rung",
+      gates(presence_rung="Absent", proposed_level=1, _derived=1,
+            construct_match="measures a different construct"), "pass")
+check("an absence on a prerequisite is not blocked by the tier bar",
+      gates(presence_rung="Absent", proposed_level=1, _derived=1, _prereq=True,
+            proposed_tier="T4", _page_tier="T4",
+            construct_match="measures a different construct"), "pass")
+check("an absence still has to say what it looked for",
+      gates(presence_rung="Absent", proposed_level=1, _derived=1,
+            negative_finding=""), "hold")
+check("an absence still cannot cite a T5 source",
+      gates(presence_rung="Absent", proposed_level=1, _derived=1,
+            proposed_tier="T5", _page_tier="T5"), "hold")
+check("an absence still cannot carry an unverifiable quote",
+      gates(presence_rung="Absent", proposed_level=1, _derived=1, _quote_ok=False), "reject")
 check("a foreign attribution is rejected",
       gates(value="Nigeria's registry covers 12 million farmers.",
             quote="Nigeria's registry covers 12 million farmers."), "reject")
