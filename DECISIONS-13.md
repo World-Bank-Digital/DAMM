@@ -1,0 +1,134 @@
+# The twelve section 13 decisions — working record
+
+*Opened 24 August 2026. Section 13 is headed "Open for review (Katreyna + Randeep)", so
+these are rulings to be taken jointly rather than requested. This file records each one
+as it is settled: the question, the evidence, the options with their consequences, the
+ruling, and what changes in the model when the ruling lands.*
+
+*A ruling here is a data change. Every value the twelve decisions can move is data in
+`model/DAMM-v1.7-model.json`, so ratifying one edits the model and bumps `revision`.
+Nothing is rebuilt.*
+
+**Order of work.** 13.11, 13.1, 13.6, 13.2, 13.12, 13.3, 13.4, 13.8, 13.7, 13.9, 13.10,
+13.5. Quick and structural first; 13.5 last, because it is 44 sub-items and every other
+ruling narrows it.
+
+| # | Title | Status |
+|---|---|---|
+| 13.11 | Bhutan out of scope | **Confirmed**, no change |
+| 13.1 | Band edges | Put for ruling — recut to 1.5/2.5/3.5/4.5 recommended |
+| 13.6 | A1 thresholds | Not yet opened |
+| 13.2 | A1 additions | Not yet opened |
+| 13.12 | Need and outcome in the readiness mean | Not yet opened |
+| 13.3 | Per-use-case prerequisite mapping | Not yet opened |
+| 13.4 | The three binding rules | Not yet opened |
+| 13.8 | Source-tier lookup | Not yet opened |
+| 13.7 | Sub-readings display | Not yet opened |
+| 13.9 | QC gate scope | Not yet opened |
+| 13.10 | Practice Library schema | Not yet opened |
+| 13.5 | Indicator definitions | Not yet opened |
+
+---
+
+## 13.11 Bhutan out of scope
+
+**The question.** Section 13 records this as a statement rather than a question: Bhutan
+is out of scope for this release, its role as a design source in section 2 stands, and no
+re-render ships.
+
+**Ruling: confirmed, no change to the model.** It duplicates standing decision 1 and
+governs no field (`governs` is empty in the model file). It is carried in section 13 for
+completeness of the record, not because anything turns on it.
+
+---
+
+## 13.1 Band edges
+
+**The question.** The five bands are cut at 1.8 / 2.6 / 3.4 / 4.2. Recut them now that
+nothing downstream consumes them, or keep them for continuity?
+
+### Why the edges are where they are
+
+The scale runs 1 to 5, so its range is 4.0, and five equal bands make each 0.8 wide. The
+specification carries them "on the v1.5 half-open edges": they are inherited from the
+previous version of the instrument, and no rationale for them is recorded anywhere in the
+repository. 0.8 was not chosen. It is what splitting the range evenly produces.
+
+### What equal fifths implies
+
+The levels are the maturity scale, and equal-fifths bands do not line up with them.
+
+| Level | Band named for it | Where the level sits inside that band |
+|---|---|---|
+| 1 | Nascent [1, 1.8) | at the floor |
+| 2 | Emerging [1.8, 2.6) | 25 percent across |
+| 3 | Established [2.6, 3.4) | at the centre |
+| 4 | Advanced [3.4, 4.2) | 75 percent across |
+| 5 | Transformative [4.2, 5] | at the ceiling |
+
+Only level 3 sits in the middle of the band named after it, because the scheme is
+symmetric about the midpoint of the whole scale rather than about each level.
+
+**This builds in a generosity gradient.** Established is reached at 2.6, which is 0.4
+below level 3. Advanced is reached at 3.4, which is 0.6 below level 4. Transformative is
+reached at 4.2, which is 0.8 below level 5. A pillar may therefore be labelled
+Transformative while averaging 4.2, closer to level 4 than to level 5, and the higher the
+band the further below its namesake level a pillar is allowed to sit.
+
+### The bands are also fragile at any cut
+
+Four of the fourteen pillar means in the two verified assessments sit within 0.10 of a
+band edge: Nigeria C2 at 2.57 (0.03), Nigeria E1 at 2.56 (0.04), Egypt C4 at 3.33 (0.07),
+and Egypt O1 at 2.67 (0.07). A pillar carries roughly seven rows, so one row moving by one
+level shifts its mean by about 0.14. Each of those four bands would flip on a single row
+being read differently, and decision 13.5 leaves 44 rows whose reading is unsettled.
+Moving the edges does not cure this; only showing the margin does.
+
+The bands also discriminate weakly in the range observed. All fourteen means fall between
+2.25 and 3.80, inside three of the five bands, and nine of the fourteen read Established.
+Neither Nascent nor Transformative was reached by any pillar in either country.
+
+### The options
+
+**(a) Keep the edges.** Continuity holds and both worked examples stand unchanged. The
+band name stays out of alignment with the level it is named for, and the generosity
+gradient stays.
+
+**(b) Recut to 1.5 / 2.5 / 3.5 / 4.5.** The rule becomes sayable in one sentence: the band
+is the level the pillar rounds to. Every level lands at the centre of its own band, the
+generosity gradient disappears, and Transformative comes to mean nearer 5 than 4. The end
+bands are half-width, which is correct, since there is no data below 1 or above 5. Cost:
+three of the fourteen pillar bands change, all Nigerian, all upward, and Nigeria's
+assessment is already with the reviewer.
+
+**(c) Recut to fit the observed level distribution.** Rejected. The only distribution
+available is 93 rows from two countries assessed by one team, and fitting to it would
+encode those two countries into the instrument.
+
+### Recommendation
+
+**(b), together with publishing the margin.**
+
+An earlier draft of this note recommended keeping the edges on the ground that equal
+fifths was the only distribution-free cut available. That was wrong. Round-to-nearest is
+equally distribution-free and better justified, because it ties each band to the maturity
+level whose name it carries rather than to an arbitrary fifth of the range. The question
+"why 0.8" has no answer in the record, and an inherited number with no rationale is a weak
+thing to leave in an instrument whose whole claim is that every figure is traceable.
+
+The three bands that move are Nigeria C4 at 2.50, E1 at 2.56, and C2 at 2.57. All three
+are inside 0.07 of a boundary under either cut, so what changes is which side of a
+coin-toss they fall, not the reading of the country. That is the argument for doing both
+things at once: recut so the band means what it says, and print the margin so a reader can
+see when a band rests on 0.03.
+
+*Dependency.* If 13.5 moves a material number of rows, the means move with them and the
+three borderline pillars should be re-read before the recut is published.
+
+**Ruling:** *awaiting*
+
+**What changes when it lands (option b):** `bands` in `model/DAMM-v1.7-model.json` and
+`BANDS` in `engine_v17.py`, which are the same four numbers in two places; the parity test
+holds them together. Three Nigerian pillar bands change and must be named in the revision
+note, since that assessment is already with the reviewer. The margin is a further
+presentation change in the engine and the renderer, overlapping decision 13.7.
