@@ -231,15 +231,19 @@ def main():
 
     if any(r["g2"] for r in runs):
         w("\n## What the second review changed, in both countries\n")
-        w("| country | filled | withdrawn | relevelled | adjusted | upheld | cost |")
-        w("|---|---|---|---|---|---|---|")
+        # Outcomes down the side rather than across the top. Seven columns rendered to
+        # PDF at portrait width break their own headers mid-word ("relevelle d"), and a
+        # reader should not have to reassemble a column name.
+        counts, spends = [], []
         for r in runs:
-            c = Counter(f["outcome"] for f in r["g2"])
+            counts.append(Counter(f["outcome"] for f in r["g2"]))
             base = r["shadow"][:-3] if r["shadow"].endswith("_g2") else r["shadow"]
-            sp = (load(base, "_g2_spend.json") or {}).get("summary", {})
-            w(f"| {r['country']} | {c.get('filled', 0)} | {c.get('withdrawn', 0)} | "
-              f"{c.get('relevelled', 0)} | {c.get('adjusted', 0)} | {c.get('upheld', 0)} | "
-              f"${sp.get('total', 0):.2f} |")
+            spends.append((load(base, "_g2_spend.json") or {}).get("summary", {}))
+        w("| outcome | " + " | ".join(r["country"] for r in runs) + " |")
+        w("|---|" + "---|" * len(runs))
+        for k in ("filled", "withdrawn", "relevelled", "adjusted", "upheld"):
+            w(f"| {k} | " + " | ".join(str(c.get(k, 0)) for c in counts) + " |")
+        w("| cost | " + " | ".join(f"${s.get('total', 0):.2f}" for s in spends) + " |")
 
     open(args.out, "w").write("\n".join(L) + "\n")
 
