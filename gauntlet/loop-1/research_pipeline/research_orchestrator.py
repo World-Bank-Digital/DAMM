@@ -44,6 +44,7 @@ from cell_schema import (CELL_SCHEMA, QUERY_SCHEMA, SYSTEM, cell_prompt,
 from engine_v17 import MODEL, tlevel
 from build_inputs import ladder_level, standalone, americanize
 import machine_pass
+import survey_pass
 
 PASS = "research"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
@@ -370,7 +371,7 @@ def row_from(spec, ans, verdict, gate, pack, corroboration, country):
 
 # ------------------------------------------------------------------ one row
 
-def research_row(spec, country, llm, ledger, wdi, log, t1_fill=False):
+def research_row(spec, country, llm, ledger, wdi, log, t1_fill=False, surveys=None):
     pack, plan, ppx, construct = retrieve(spec, country, llm, ledger, log)
 
     extra = ""
@@ -410,6 +411,22 @@ def research_row(spec, country, llm, ledger, wdi, log, t1_fill=False):
     # It is reported, never substituted: the point of the shadow run is to measure what
     # the research lane produces, and quietly swapping in an API figure would measure
     # the API instead.
+    # Where a row ends as a gap and the national survey is known to carry the construct,
+    # the gap says so. "Searched and found nothing" and "the national household survey
+    # measures this and nobody has published the cut we need" are different findings, and
+    # only the second tells anyone what to do next.
+    if row["cls"] == "Gap" and surveys:
+        loc = surveys.get(spec["id"])
+        if loc:
+            row["note"] = ((row.get("note") or "") + " WHERE THIS LIVES: "
+                           + f"{loc['survey']} ({loc['survey_years']}) collects "
+                           + f"{loc['construct']} in {loc['n_variables']} variable(s), "
+                           + f"including {', '.join(v['name'] for v in loc['variables'][:3])}. "
+                           + f"{loc['url']} "
+                           + ("That survey is too old to carry a current-state claim on "
+                              "its own. " if loc.get("stale") else "")
+                           + "No value is taken from it here.").strip()
+
     corroboration = ""
     w = wdi.get(spec["id"])
     if w and w.get("status") == "ok":
@@ -506,10 +523,24 @@ def main():
     try:
         wdi = machine_pass.fetch_country(args.iso)
         print(f"  {sum(1 for r in wdi.values() if r.get('status') == 'ok')} of "
-              f"{len(wdi)} series returned\n")
+              f"{len(wdi)} series returned")
     except Exception as e:
-        print(f"  ! machine lane unavailable ({str(e)[:100]}); rows proceed uncorroborated\n")
+        print(f"  ! machine lane unavailable ({str(e)[:100]}); rows proceed uncorroborated")
         wdi = {}
+
+    # The survey lane is independent of the machine lane, and its own failure must not
+    # cost the run the other one.
+    print("locating the national surveys that carry the household rows...")
+    try:
+        surveys, consulted, serr = survey_pass.match(args.iso, assessment_year=ASSESSMENT_YEAR)
+        if serr:
+            print(f"  ! the survey catalogue could not be read — {serr[:80]}\n")
+            surveys = {}
+        else:
+            print(f"  {len(surveys)} rows located across {len(consulted)} surveys\n")
+    except Exception as e:
+        print(f"  ! the survey lane failed ({str(e)[:80]}); gaps will not name a survey\n")
+        surveys = {}
 
     lock = threading.Lock()
     todo = [s for s in specs if s["id"] not in state["rows"]]
@@ -525,6 +556,7 @@ def main():
         t0 = time.time()
         try:
             row, record = research_row(spec, args.country, llm, ledger, wdi, log,
+                                       surveys=surveys,
                                        t1_fill=args.t1_fill)
         except V.BudgetExhausted as e:
             with lock:
