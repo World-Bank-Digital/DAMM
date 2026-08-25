@@ -132,6 +132,11 @@ LAYERS = ["Foundation","Enablers","Transformation","Outcomes"]
 # a second copy of the edges and it silently kept the pre-recut values.
 from engine_v17 import BANDS as _EB
 BANDS = [(lo, n) for lo, hi, n in _EB]
+# The caption used to restate the cut-offs as literal text. When the bands were re-cut the
+# chart moved with the model and the sentence did not, so every report drew its lines in
+# one place and told the reader they were somewhere else. Derived now, from the same list
+# the chart uses.
+BAND_CUTS = " / ".join(f"{lo:g}" for lo, _ in BANDS[1:])
 
 def tier_of(src):
     s = src.lower()
@@ -1019,7 +1024,7 @@ html_out = f"""<meta charset="utf-8">
 
 {sec(3, "Pillar profile", "Playbook 1C",
      pillar_chart()
-     + f'<p class="caption">Band cut-offs at 1.8 / 2.6 / 3.4 / 4.2 (half-open).{" Hatched bars render parenthesized: judged and gap rows outnumber measured and documented ones, so the band is a finding about the assessment as much as about the country." if _weak else ""}</p>'
+     + f'<p class="caption">Band cut-offs at {BAND_CUTS} (half-open).{" Hatched bars render parenthesized: judged and gap rows outnumber measured and documented ones, so the band is a finding about the assessment as much as about the country." if _weak else ""}</p>'
      + evidence_chart() + legend_html
      + f'<p class="caption">{EVID_NOTE}</p>')}
 
