@@ -27,6 +27,7 @@ REPO = os.path.abspath(os.path.join(LOOP1, "..", ".."))
 sys.path.insert(0, HERE)
 sys.path.insert(0, LOOP1)
 
+import vendors as V
 import engine_v17
 
 PASS = "diagnostic"
@@ -69,9 +70,8 @@ def main():
 
     # A second review, where it has run, supersedes the first pass. Preferring it is the
     # whole point of having run it.
-    reviewed = os.path.exists(os.path.join(LOOP1, f"{a.out}_g2_input.json"))
-    src = f"{a.out}_g2_input.json" if reviewed else f"{a.out}_input.json"
-    inp = os.path.join(LOOP1, src)
+    inp, reviewed = V.engine_input_for(LOOP1, a.out)
+    src = os.path.basename(inp)
     if not os.path.exists(inp):
         print(f"!! no engine input at {src}")
         print("   The diagnostic reports an assessment. Finish the research pass first.")

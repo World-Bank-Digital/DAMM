@@ -375,7 +375,9 @@ def main():
     ap.add_argument("--resume", action="store_true")
     a = ap.parse_args()
 
-    inp = os.path.join(LOOP1, f"{a.out}_input.json")
+    inp, reviewed = V.engine_input_for(LOOP1, a.out)
+    if not reviewed:
+        print("   (the second review has not run for this pass — reading the first pass)")
     if not os.path.exists(inp):
         print(f"!! no engine input at {os.path.basename(inp)}")
         print("   Foresight stands on a completed assessment. Without one it would aim "

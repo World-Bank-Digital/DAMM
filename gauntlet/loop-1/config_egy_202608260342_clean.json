@@ -1,0 +1,13 @@
+{
+ "country": "Egypt",
+ "period": "2026",
+ "assessment": "machine-assisted desk assessment",
+ "data_path": "/Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/EGY_202608260342_clean_v17.json",
+ "register_path": "/Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/EGY_202608260342_clean_register.json",
+ "out_path": "/Users/randeepsudan/DAR/Claude/DAMM/gauntlet/loop-1/EGY_202608260342_clean_diagnostic.html",
+ "gates": {
+  "G1": "machine derivation, executed by the research pass with every level derived from a recorded value and its own argument",
+  "G2": "NOT RUN for this pass \u2014 no independent second review has been applied",
+  "G3": "pending"
+ }
+}

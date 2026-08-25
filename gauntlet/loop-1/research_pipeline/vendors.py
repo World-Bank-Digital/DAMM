@@ -286,6 +286,25 @@ def tier_for_url(url, country=None):
     return "T5"
 
 
+# ---------------------------------------------------------------- which pass to read
+
+def engine_input_for(loop1_dir, basename):
+    """The engine input a downstream pass should read, and whether it was reviewed.
+
+    A second review supersedes the first pass wherever it has run. That rule was written
+    into the diagnostic and into nothing else, so the foresight and roadmap passes read
+    the unreviewed file and G2's corrections never reached a single document — the review
+    could reopen a gap, fill it, and withdraw a level, and the roadmap would still be
+    written against the row as the first pass left it.
+
+    Returns (path, reviewed).
+    """
+    g2 = os.path.join(loop1_dir, f"{basename}_g2_input.json")
+    if os.path.exists(g2):
+        return g2, True
+    return os.path.join(loop1_dir, f"{basename}_input.json"), False
+
+
 # ---------------------------------------------------------------- quote verification
 
 def _norm(s):

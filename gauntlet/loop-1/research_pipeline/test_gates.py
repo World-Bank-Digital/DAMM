@@ -302,6 +302,25 @@ check("the per-pass allocations sum to the whole ceiling",
       round(sum(v for k, v in V.Ledger.ALLOCATION.items() if k != "audition"), 6), 1.0)
 
 # ---------------------------------------------------------------- report
+
+section("A second review supersedes the first pass, for every document")
+
+import tempfile, pathlib
+
+with tempfile.TemporaryDirectory() as _d:
+    pathlib.Path(_d, "X_input.json").write_text("{}")
+    p, rev = V.engine_input_for(_d, "X")
+    check("with no review, the first pass is read", p.endswith("X_input.json"), True)
+    check("and it says it was not reviewed", rev, False)
+
+    pathlib.Path(_d, "X_g2_input.json").write_text("{}")
+    p, rev = V.engine_input_for(_d, "X")
+    # The rule lived only in the diagnostic. The foresight and roadmap passes read the
+    # unreviewed file, so a review could reopen a gap, fill it and withdraw a level, and
+    # the roadmap would still be written against the row as the first pass left it.
+    check("once reviewed, the reviewed pass is read", p.endswith("X_g2_input.json"), True)
+    check("and it says so", rev, True)
+
 print()
 if FAIL:
     print(f"FAILED {len(FAIL)} of {N[0]} checks\n")
