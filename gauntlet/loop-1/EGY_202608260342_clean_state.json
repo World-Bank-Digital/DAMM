@@ -1,0 +1,844 @@
+{
+ "rows": {
+  "1.4": {
+   "value": 109.1,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2022,
+   "src": "World Bank, World Development Indicators \u2014 Food production index (2014-2016 = 100) - Egypt, Arab Rep. (AG.PRD.FOOD.XD)",
+   "note": "FAO-compiled index; latest available reference year is 2022, series discontinued after 2022 in WDI. Next level not proposed: Level 4 would require the index to exceed 115. Egypt's published value of 109.1 (2022) falls 5.9 points short of that cut; no source in the retrieved pages reports an Egyptian food production index at or above 115 on the 2014-2016 base. (CEIC reports 124.98 for Egypt in 2016, but that is on the older 2004-2006=100 base and is therefore not comparable to this indicator's cut points, and CEIC is T5.). The quoted figure is exactly the WDI/FAO indicator AG.PRD.FOOD.XD, 'Food production index (2014-2016 = 100)', for Egypt, Arab Rep. Same base period and same definition as the indicator named in this cell. Corroborated by an independent T1 series (World Bank WDI AG.PRD.FOOD.XD): 109.07 for 2022.",
+   "tier": "T1",
+   "tier_detail": "FAO-compiled index; latest available reference year is 2022, series discontinued after 2022 in WDI",
+   "url": "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=EG"
+  },
+  "1.3": {
+   "value": 18.0,
+   "cls": "Measured",
+   "level": 3,
+   "year": 2025,
+   "src": "World Bank, World Development Indicators \u2014 Employment in agriculture (% of total employment) (modeled ILO estimate), Egypt, Arab Rep.",
+   "note": "ILO modeled estimate (ILOEST) nowcast for 2025, not a directly observed survey figure; World Bank portal displays the value rounded to whole percent. Next level not proposed: Level 4 would require the agricultural employment share to have fallen below 15 percent of total employment. It has not: the ILO modeled 2025 value is 18 (17.52 unrounded on the same ILOSTAT series per the T5 aggregator), and the observed CAPMAS 2024 survey figure is higher still at 18.7 percent. Neither the modeled nor the survey-based measure is within three points of the 15 cut, and the series is declining by roughly half a point per year, so no published figure supports the next rung. The indicator name 'Employment in agriculture (%)' omits its denominator; the quoted series is explicitly '% of total employment', which is the standard reading. The series also covers ISIC-A (agriculture, hunting, forestry and fishing), i.e. slightly broader than agriculture alone \u2014 this is the open definitional question flagged in the indicator census. The reference-year 2025 figure is an ILO MODELLED nowcast rather than an observed labor force survey result. An observed national figure sits alongside it: CAPMAS's 2024 annual labor force survey, as reported by the State Information Service (T3), states 'Agriculture and fishing remained the largest employment sectors, engaging 5.594 million workers, representing 18.7 percent of the workforce' \u2014 consistent with the modeled 18 and confirming the modeled series is not drifting from national data. A commercial T5 aggregator (statbase.org) reproduces the same ILOSTAT series at 17.52 percent for 2025 and 17.98 for 2024, i.e. the unrounded value behind the World Bank's 18. An independent T1 series (World Bank WDI SL.AGR.EMPL.ZS (ILO modeled estimate)) reports 17.52 for 2025, which differs from the value recorded here.",
+   "tier": "T1",
+   "tier_detail": "ILO modelled estimate (ILOEST) nowcast for 2025, not a directly observed survey figure; World Bank portal displays the value rounded to whole percent",
+   "url": "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=EG"
+  },
+  "1.2": {
+   "value": 7402.0,
+   "cls": "Measured",
+   "level": 5,
+   "year": 2023,
+   "src": "World Bank, World Development Indicators \u2014 Cereal yield (kg per hectare), Egypt, Arab Rep. (AG.YLD.CREL.KG)",
+   "note": "Next level not proposed: Not required: level 5 is the top rung and the published value of 7402 kg/ha lies above the highest cut point of 6000. The World Bank indicator AG.YLD.CREL.KG is precisely 'Cereal yield (kg per hectare)', sourced from FAO production data (FAOSTAT QCL), national-level, covering wheat, rice, maize, barley, oats, rye, millet, sorghum, buckwheat and mixed grains harvested for dry grain. This matches the named construct exactly; no rural/national or crop-subset mismatch arises. Corroborated by an independent T1 series (World Bank WDI AG.YLD.CREL.KG): 7402.2 for 2023.",
+   "tier": "T1",
+   "tier_detail": "",
+   "url": "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=EG"
+  },
+  "1.1": {
+   "value": 8942.42,
+   "cls": "Measured",
+   "level": 4,
+   "year": 2025,
+   "src": "World Bank, World Development Indicators \u2014 Agriculture, forestry, and fishing, value added per worker (constant 2015 US$) [NV.AGR.EMPL.KD]",
+   "note": "Denominator (agricultural employment) is an ILO modeled estimate; WDI metadata notes 'Data on employment are modeled estimates by the International Labor Organization (ILO) ILOSTAT database.'. Next level not proposed: Level 5 was not proposed because the published value, 8,942.42 constant 2015 US$, falls short of the 10000 cut point by roughly 1,058 dollars. No source in the retrieved pages publishes an Egypt figure at or above 10000 for this construct on any price basis or any reference year; the Arab World aggregate does exceed 10000 (10,945.1 in 2025) but that is a regional aggregate, not Egypt, and cannot be substituted. Should the definition be ratified as current US$ rather than constant 2015 US$, the level could move, but no current-US$ per-worker figure for Egypt was found in these pages. The indicator name reads 'Agriculture value added per worker (USD)'. The published series actually retrieved is WDI NV.AGR.EMPL.KD, whose long definition covers 'Agriculture, forestry, and fishing ... ISIC (Rev. 4) divisions 01-03' and is denominated in constant 2015 US$, not current USD. So the evidence sits on the broader-scope, constant-price side of the unratified definitional question: sector scope is wider than 'agriculture' alone (it includes forestry and fishing), and the price basis is a 2015 constant-dollar series rather than the bare 'USD' the name implies. The current-US$ counterpart (NV.AGR.TOTL.CD divided by employment) is not published as a per-worker series in these pages, so no alternative figure on the narrower reading exists here. Figure is national for Egypt, which is what the indicator asks for. Corroborated by an independent T1 series (World Bank WDI NV.AGR.EMPL.KD): 8942.42 for 2025.",
+   "tier": "T1",
+   "tier_detail": "Denominator (agricultural employment) is an ILO modelled estimate; WDI metadata notes 'Data on employment are modeled estimates by the International Labour Organization (ILO) ILOSTAT database.'",
+   "url": "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD"
+  }
+ },
+ "records": {
+  "1.4": {
+   "id": "1.4",
+   "name": "Food production index (2014-16=100)",
+   "country": "Egypt",
+   "verdict": "pass",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "quote",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "tier",
+     "verdict": "pass",
+     "reason": "recorded at T1"
+    },
+    {
+     "gate": "construct",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "prerequisite",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "coherence",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "currency",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "argument",
+     "verdict": "pass",
+     "reason": ""
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "number",
+    "value": "109.1",
+    "unit": "index (2014-2016=100)",
+    "year": 2022,
+    "source_title": "World Bank, World Development Indicators \u2014 Food production index (2014-2016 = 100) - Egypt, Arab Rep. (AG.PRD.FOOD.XD)",
+    "source_url": "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=EG",
+    "proposed_tier": "T1",
+    "quote": "Egypt, Arab Rep.\t2022\t109.1",
+    "data_quality_flag": "FAO-compiled index; latest available reference year is 2022, series discontinued after 2022 in WDI",
+    "construct_match": "measures the named construct",
+    "construct_note": "The quoted figure is exactly the WDI/FAO indicator AG.PRD.FOOD.XD, 'Food production index (2014-2016 = 100)', for Egypt, Arab Rep. Same base period and same definition as the indicator named in this cell.",
+    "presence_rung": "",
+    "quality_evidence": "T1 publisher (World Bank WDI) republishing FAO's Laspeyres-weighted net food production index; metadata page (databank.worldbank.org glossary for AG.PRD.FOOD.XD) confirms unit of measure 'index (2014-2016=100)', reference period 1961-2022, and the food-crop definition excluding coffee and tea.",
+    "scale_evidence": "National-level index covering all food commodities produced in Egypt; no sub-national disaggregation required by the construct.",
+    "proposed_level": 3,
+    "rung_argument": "The value route applies: a single published figure exists for the named construct. Construct match is exact \u2014 same indicator code, same base period (2014-2016=100), same country (Egypt, Arab Rep.), sourced from FAO via World Bank WDI. The figure is 109.1 for reference year 2022, the most recent year in the series. Applying the cut points: 109.1 exceeds 95 (level 2) and exceeds 105 (level 3).",
+    "negative_finding": "Level 4 would require the index to exceed 115. Egypt's published value of 109.1 (2022) falls 5.9 points short of that cut; no source in the retrieved pages reports an Egyptian food production index at or above 115 on the 2014-2016 base. (CEIC reports 124.98 for Egypt in 2016, but that is on the older 2004-2006=100 base and is therefore not comparable to this indicator's cut points, and CEIC is T5.)",
+    "search_trail": "1) World Bank WDI country page for AG.PRD.FOOD.XD, Egypt, Arab Rep. \u2014 carries the headline value 109.1 for 2022 in the 'Selected Countries and Economies' table; quoted from there. 2) World Bank DataBank metadata glossary for AG.PRD.FOOD.XD \u2014 confirmed definition, unit, base period and FAO methodology, but contains no country figure. 3) CAPMAS metadata catalogue pages (agricultural index bulletins 2012, 2014, 2016, 2018) \u2014 these describe a national agricultural production index series on an Egyptian base (2007/2008 agricultural years), not the 2014-2016 FAO base, and the catalogue pages carry no index values; not usable for this construct. 4) CAPMAS Statistical Yearbook 2017 press release \u2014 announcement text only, no index figure. 5) USDA FAS Egypt production page \u2014 commodity-level tonnages and yields only, no food production index. 6) CEIC Egypt Agricultural Production Index \u2014 carries 2014-2016-based crop index (105.25, 2022) and older 2004-2006-based food index values, but is a T5 vendor page and its 2014-2016-based food index figure was truncated from the retrieved text; not relied on."
+   },
+   "row": {
+    "value": 109.1,
+    "cls": "Measured",
+    "level": 3,
+    "year": 2022,
+    "src": "World Bank, World Development Indicators \u2014 Food production index (2014-2016 = 100) - Egypt, Arab Rep. (AG.PRD.FOOD.XD)",
+    "note": "FAO-compiled index; latest available reference year is 2022, series discontinued after 2022 in WDI. Next level not proposed: Level 4 would require the index to exceed 115. Egypt's published value of 109.1 (2022) falls 5.9 points short of that cut; no source in the retrieved pages reports an Egyptian food production index at or above 115 on the 2014-2016 base. (CEIC reports 124.98 for Egypt in 2016, but that is on the older 2004-2006=100 base and is therefore not comparable to this indicator's cut points, and CEIC is T5.). The quoted figure is exactly the WDI/FAO indicator AG.PRD.FOOD.XD, 'Food production index (2014-2016 = 100)', for Egypt, Arab Rep. Same base period and same definition as the indicator named in this cell. Corroborated by an independent T1 series (World Bank WDI AG.PRD.FOOD.XD): 109.07 for 2022.",
+    "tier": "T1",
+    "tier_detail": "FAO-compiled index; latest available reference year is 2022, series discontinued after 2022 in WDI",
+    "url": "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=EG"
+   },
+   "queries": [
+    "CAPMAS Egypt food production index 2014-2016=100 statistical yearbook agriculture",
+    "site:capmas.gov.eg \u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0642\u064a\u0627\u0633\u064a \u0644\u0644\u0625\u0646\u062a\u0627\u062c \u0627\u0644\u063a\u0630\u0627\u0626\u064a \u0645\u0635\u0631",
+    "FAOSTAT Egypt food production index 2014-2016 = 100 World Bank AG.PRD.FOOD.XD"
+   ],
+   "perplexity_citations": [
+    "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=EG",
+    "https://www.ceicdata.com/en/egypt/agricultural-production-index",
+    "https://data.un.org/_Docs/SYB/CSV/SYB68_12_202511_Agricultural%20Index.csv",
+    "https://www.theglobaleconomy.com/Egypt/crop_production_index/",
+    "https://data.un.org/_Docs/SYB/CSV/SYB66_12_202310_Agricultural%20Index.csv",
+    "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=XI",
+    "https://huggingface.co/datasets/electricsheepafrica/africa-world-bank-agriculture-and-rural-development-indicators-for-egypt-arab-rep",
+    "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=M1",
+    "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=C7",
+    "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=F1",
+    "https://data.worldbank.org/indicator/AG.PRD.CROP.XD?locations=ZH",
+    "https://data.worldbank.org/indicator/AG.PRD.CROP.XD?locations=OE",
+    "https://data.un.org/_Docs/SYB/PDFs/SYB68_12_202511_Agricultural%20Index.pdf",
+    "https://data.un.org/_Docs/SYB/PDFs/SYB67_12_202411_Agricultural%20Index.pdf",
+    "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=ZG",
+    "https://databank.worldbank.org/metadataglossary/world-development-indicators/series/AG.PRD.FOOD.XD",
+    "https://databank.worldbank.org/metadataglossary/environment-social-and-governance-(esg)-data/series/AG.PRD.FOOD.XD",
+    "https://www.fas.usda.gov/data/production/eg",
+    "https://www.indexmundi.com/facts/egypt/crop-production-index",
+    "https://observatory.sanaddata.com/en/indicators/world-bank-ag-prd-food-xd"
+   ],
+   "perplexity_lead": "Yes. The **World Bank Open Data** page for Egypt publishes **\u201cFood production index (2014-2016 = 100) - Egypt, Arab Rep.\u201d** and identifies the source as **FAO electronic files and web site, Food and Agriculture Organization of the United Nations (FAO)**.[1]\n\nA second published source, the **United Nations Statistical Yearbook** agricultural indices table, also includes Egypt and labels the same measure as **\u201cFood production (Index Base: 2014-2016 = 100)\u201d** with FAO/FAOSTAT as the source; for Egypt, the 2025 CSV shows values such as **112.0 in 2022** and **113.7 in 2023**.[3]\n\nSo, **a source does publish this exact measure for Egypt**: the World Bank indicator page, which is an FAO-based series.[1]",
+   "perplexity_error": "",
+   "pack": [
+    {
+     "url": "https://data.worldbank.org/indicator/AG.PRD.FOOD.XD?locations=EG",
+     "title": "Food production index (2014-2016 = 100) - Egypt, Arab Rep.",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://databank.worldbank.org/metadataglossary/world-development-indicators/series/AG.PRD.FOOD.XD",
+     "title": "Food production index (2014-2016 = 100) - Glossary | DataBank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-ar-v4.2/index.php/catalog/1454/overview",
+     "title": "\u062c\u0645\u0647\u0648\u0631\u064a\u0629 \u0645\u0635\u0631 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 - \u0627\u0644\u0646\u0634\u0631\u0629 \u0627\u0644\u0633\u0646\u0648\u064a\u0629 \u0644\u0644\u0627\u0631\u0642\u0627\u0645 \u0627\u0644\u0642\u064a\u0627\u0633\u064a\u0629 \u0644\u0644\u0625\u0646\u062a\u0627\u062c \u0627\u0644\u0632\u0631\u0627\u0639\u0649 2016 - overview",
+     "published": "2019-03-18T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-ar-v4.2/index.php/catalog/1103",
+     "title": "\u062c\u0645\u0647\u0648\u0631\u064a\u0629 \u0645\u0635\u0631 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 - \u0627\u0644\u0646\u0634\u0631\u0629 \u0627\u0644\u0633\u0646\u0648\u064a\u0629 \u0644\u0644\u0627\u0631\u0642\u0627\u0645 \u0627\u0644\u0642\u064a\u0627\u0633\u064a\u0629 \u0644\u0644\u0642\u0637\u0627\u0639 \u0627\u0644\u0632\u0631\u0627\u0639\u0649 2014",
+     "published": "2016-10-04T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/metadata-ar-v4.2/index.php/catalog/759",
+     "title": "\u062c\u0645\u0647\u0648\u0631\u064a\u0629 \u0645\u0635\u0631 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 - \u0627\u0644\u0646\u0634\u0631\u0629 \u0627\u0644\u0633\u0646\u0648\u064a\u0629 \u0644\u0644\u0627\u0631\u0642\u0627\u0645 \u0627\u0644\u0642\u064a\u0627\u0633\u064a\u0629 \u0644\u0644\u0642\u0637\u0627\u0639 \u0627\u0644\u0632\u0631\u0627\u0639\u06492012",
+     "published": "2016-01-24T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-Ar-v4.2/index.php/catalog/1349/download/4489",
+     "title": "\uf0b7 Central Agency for public Mobilization and statistics (CAPMAS) released \u201cStatistical Yearbook 2017\u201d (Issue no. 107) which considered a comprehensive statistical reference for all official statistics, whether economic and social statistics, produced by CAPMAS in cooperation with other ministers, authorities and all statistical stakeholders. \uf0b7 The new Release includes the latest data and statistics in a time series, includes demographic, social, economic and environmental statistics, which monitors the Egyptian society reality and changes occurred in all areas, it cover (education, labor force, health, cultural, tourism, external and internal trade, finance and banks, industry, agricultural, transportation and price statistics along with consumer & producer price indices, GDP, growth rates, communication statistics, National Accounts (NA), environmental statistics \u2026etc.) in both total governorates levels. \uf0b7 The new Release includes new data sets of labor, industry and international data. \uf0b7 The data will be available on CAPMAS website for all users starting from Thursday, September 7, 2017 www.capmas.gov.eg \uf0b7 It worth mentioning that CAPMAS provides accurate and updated data that is useful for contributing in planning, policy making and decision taking, also to fulfill the needs of data users, researchers, individuals and institutions, local, regional and international organizations.",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-ar-v4.2/index.php/catalog/1718",
+     "title": "\u062c\u0645\u0647\u0648\u0631\u064a\u0629 \u0645\u0635\u0631 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 - \u0627\u0644\u0646\u0634\u0631\u0629 \u0627\u0644\u0633\u0646\u0648\u064a\u0629 \u0644\u0644\u0627\u0631\u0642\u0627\u0645 \u0627\u0644\u0642\u064a\u0627\u0633\u064a\u0629 \u0644\u0644\u0625\u0646\u062a\u0627\u062c \u0627\u0644\u0632\u0631\u0627\u0639\u0649 2018",
+     "published": "2021-11-09T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.fas.usda.gov/data/production/eg",
+     "title": "",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.ceicdata.com/en/egypt/agricultural-production-index",
+     "title": "Egypt | Agricultural Production Index | CEIC",
+     "published": "2026-03-01T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": {
+    "status": "ok",
+    "value": 109.07,
+    "year": 2022,
+    "corroborate_only": false,
+    "src": "World Bank WDI AG.PRD.FOOD.XD",
+    "url": "https://api.worldbank.org/v2/country/EGY/indicator/AG.PRD.FOOD.XD?format=json&mrnev=1&per_page=5",
+    "tier": "T1",
+    "note": "",
+    "access": "2026-08-26"
+   }
+  },
+  "1.3": {
+   "id": "1.3",
+   "name": "Employment in agriculture (%)",
+   "country": "Egypt",
+   "verdict": "pass",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "quote",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "tier",
+     "verdict": "pass",
+     "reason": "recorded at T1"
+    },
+    {
+     "gate": "construct",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "prerequisite",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "coherence",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "currency",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "argument",
+     "verdict": "pass",
+     "reason": ""
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "number",
+    "value": "18",
+    "unit": "% of total employment",
+    "year": 2025,
+    "source_title": "World Bank, World Development Indicators \u2014 Employment in agriculture (% of total employment) (modeled ILO estimate), Egypt, Arab Rep.",
+    "source_url": "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=EG",
+    "proposed_tier": "T1",
+    "quote": "Egypt, Arab Rep.\t2025\t18",
+    "data_quality_flag": "ILO modelled estimate (ILOEST) nowcast for 2025, not a directly observed survey figure; World Bank portal displays the value rounded to whole percent",
+    "construct_match": "measures the named construct",
+    "construct_note": "The indicator name 'Employment in agriculture (%)' omits its denominator; the quoted series is explicitly '% of total employment', which is the standard reading. The series also covers ISIC-A (agriculture, hunting, forestry and fishing), i.e. slightly broader than agriculture alone \u2014 this is the open definitional question flagged in the indicator census. The reference-year 2025 figure is an ILO MODELLED nowcast rather than an observed labour force survey result. An observed national figure sits alongside it: CAPMAS's 2024 annual labour force survey, as reported by the State Information Service (T3), states 'Agriculture and fishing remained the largest employment sectors, engaging 5.594 million workers, representing 18.7 percent of the workforce' \u2014 consistent with the modelled 18 and confirming the modelled series is not drifting from national data. A commercial T5 aggregator (statbase.org) reproduces the same ILOSTAT series at 17.52 percent for 2025 and 17.98 for 2024, i.e. the unrounded value behind the World Bank's 18.",
+    "presence_rung": "",
+    "quality_evidence": "Primary value is from the World Bank WDI portal (T1) sourcing the ILO Modelled Estimates database (ILOEST), accessed January 2026, licensed CC BY-4.0. Cross-checked against an independent, survey-based national source: CAPMAS Annual Labour Force Survey 2024 reported by the Egyptian State Information Service, giving 18.7 percent of the workforce in agriculture and fishing (5.594 million of 29.928 million employed). The two agree to within one percentage point, so the modelled nowcast is not carrying the cell alone.",
+    "scale_evidence": "National coverage, all employed persons aged 15+. CAPMAS reports total employment of 29.928 million in 2024, of which 5.594 million in agriculture and fishing.",
+    "proposed_level": 3,
+    "rung_argument": "The value itself, not an aggregation, drives the score, so the argument is about whether 18 is the right number for the named construct. (1) A figure exists for Egypt specifically: World Bank/ILOEST publishes 18 for reference year 2025. (2) It is on the correct denominator \u2014 the series is titled '% of total employment', which is what the indicator name implicitly requires. (3) It is not an artefact of modelling: the independent CAPMAS 2024 labour force survey puts agriculture and fishing at 18.7 percent of the workforce, so the observed and modelled figures corroborate each other. (4) Against the cut points (lower is better: above 45 = 1, 30-45 = 2, 15-30 = 3, 5-15 = 4, below 5 = 5), 18 clears the 45 and 30 cuts and therefore sits at level 3.",
+    "negative_finding": "Level 4 would require the agricultural employment share to have fallen below 15 percent of total employment. It has not: the ILO modelled 2025 value is 18 (17.52 unrounded on the same ILOSTAT series per the T5 aggregator), and the observed CAPMAS 2024 survey figure is higher still at 18.7 percent. Neither the modelled nor the survey-based measure is within three points of the 15 cut, and the series is declining by roughly half a point per year, so no published figure supports the next rung.",
+    "search_trail": "Started with the World Bank WDI country page for SL.AGR.EMPL.ZS filtered to Egypt (T1) \u2014 carries Egypt 2025 = 18 in both the 'Selected Countries' and 'All Countries' tables, sourced to ILOEST. Attempted ILOSTAT's own data portal (ilostat.ilo.org/data/) but the retrieved page is a Cloudflare bot-verification interstitial with no data, so the ILO primary could not be quote-verified. Checked CAPMAS microdata catalogue entries for the Annual Labour Force Survey 2020, 2022 and 2024 (censusinfo.capmas.gov.eg, T1) \u2014 these are metadata/study-description pages only, listing survey objectives and sampling; they contain no employment-by-activity tabulations, so no national figure could be quoted from them. Found the sectoral breakdown instead in the State Information Service report of the CAPMAS 2024 annual LFS (T3): 18.7 percent in agriculture and fishing \u2014 used as corroboration in construct_note rather than as the recorded value, since the World Bank T1 series is the register's series. Reviewed FAOSTAT Analytical Briefs 92 and 110 (openknowledge.fao.org, T2) \u2014 both give only global and regional shares (26.1 percent globally in 2023; Africa 46 percent) with no Egypt country row in the retrieved text, so they are not evidence for this country. statbase.org (T5) reproduces the ILOSTAT series with unrounded values (17.52 for 2025) but is vendor material and cannot carry a statistic, so it is cited only as context on rounding."
+   },
+   "row": {
+    "value": 18.0,
+    "cls": "Measured",
+    "level": 3,
+    "year": 2025,
+    "src": "World Bank, World Development Indicators \u2014 Employment in agriculture (% of total employment) (modeled ILO estimate), Egypt, Arab Rep.",
+    "note": "ILO modeled estimate (ILOEST) nowcast for 2025, not a directly observed survey figure; World Bank portal displays the value rounded to whole percent. Next level not proposed: Level 4 would require the agricultural employment share to have fallen below 15 percent of total employment. It has not: the ILO modeled 2025 value is 18 (17.52 unrounded on the same ILOSTAT series per the T5 aggregator), and the observed CAPMAS 2024 survey figure is higher still at 18.7 percent. Neither the modeled nor the survey-based measure is within three points of the 15 cut, and the series is declining by roughly half a point per year, so no published figure supports the next rung. The indicator name 'Employment in agriculture (%)' omits its denominator; the quoted series is explicitly '% of total employment', which is the standard reading. The series also covers ISIC-A (agriculture, hunting, forestry and fishing), i.e. slightly broader than agriculture alone \u2014 this is the open definitional question flagged in the indicator census. The reference-year 2025 figure is an ILO MODELLED nowcast rather than an observed labor force survey result. An observed national figure sits alongside it: CAPMAS's 2024 annual labor force survey, as reported by the State Information Service (T3), states 'Agriculture and fishing remained the largest employment sectors, engaging 5.594 million workers, representing 18.7 percent of the workforce' \u2014 consistent with the modeled 18 and confirming the modeled series is not drifting from national data. A commercial T5 aggregator (statbase.org) reproduces the same ILOSTAT series at 17.52 percent for 2025 and 17.98 for 2024, i.e. the unrounded value behind the World Bank's 18. An independent T1 series (World Bank WDI SL.AGR.EMPL.ZS (ILO modeled estimate)) reports 17.52 for 2025, which differs from the value recorded here.",
+    "tier": "T1",
+    "tier_detail": "ILO modelled estimate (ILOEST) nowcast for 2025, not a directly observed survey figure; World Bank portal displays the value rounded to whole percent",
+    "url": "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=EG"
+   },
+   "queries": [
+    "CAPMAS Egypt labour force survey employment by economic activity agriculture percentage",
+    "site:capmas.gov.eg \u0627\u0644\u062c\u0647\u0627\u0632 \u0627\u0644\u0645\u0631\u0643\u0632\u064a \u0644\u0644\u062a\u0639\u0628\u0626\u0629 \u0627\u0644\u0639\u0627\u0645\u0629 \u0648\u0627\u0644\u0625\u062d\u0635\u0627\u0621 \u0628\u062d\u062b \u0627\u0644\u0642\u0648\u0649 \u0627\u0644\u0639\u0627\u0645\u0644\u0629 \u0627\u0644\u0645\u0634\u062a\u063a\u0644\u0648\u0646 \u0627\u0644\u0632\u0631\u0627\u0639\u0629 \u0646\u0633\u0628\u0629",
+    "ILOSTAT Egypt employment in agriculture % of total employment modelled estimate"
+   ],
+   "perplexity_citations": [
+    "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=EG",
+    "https://tradingeconomics.com/egypt/employment-in-agriculture-percent-of-total-employment-wb-data.html",
+    "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS",
+    "https://statbase.org/data/egy-employment-in-agriculture-share/",
+    "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=C7",
+    "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=XT",
+    "https://openknowledge.fao.org/server/api/core/bitstreams/c40c8f66-e063-434f-9b04-7eb5f6fd3747/content",
+    "https://www.theglobaleconomy.com/Egypt/Employment_in_agriculture/",
+    "https://databank.worldbank.org/metadataglossary/world-development-indicators/series/SL.AGR.EMPL.ZS",
+    "https://databank.worldbank.org/metadataglossary/sustainable-development-goals-(sdgs)/series/SL.AGR.EMPL.ZS",
+    "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=A5",
+    "https://openknowledge.fao.org/server/api/core/bitstreams/7b3af461-0c04-4465-8306-34f765c3a263/content",
+    "https://databank.worldbank.org/metadataglossary/jobs/series/SL.AGR.EMPL.MA.ZS",
+    "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=C6",
+    "https://ilostat.ilo.org/data/"
+   ],
+   "perplexity_lead": "The published source for this Egypt series is the **World Bank\u2019s World Development Indicators metadata entry for indicator SL.AGR.EMPL.ZS**, which in turn cites the **ILO Modelled Estimates (ILOEST / ILOSTAT)** as the underlying database.[9][10] This source explicitly defines both the denominator and the sector coverage, and confirms that the series is *not* \u201cagriculture alone\u201d but ISIC-A type coverage (\u201cagriculture, hunting, forestry and fishing\u201d) expressed as a **share of total employment**.\n\n### 1. What the published source says\n\nFrom the World Bank metadata glossary for **SL.AGR.EMPL.ZS (Employment in agriculture (% of total employment) (modeled ILO estimate))** for Egypt and other countries:\n\n- **Indicator name**:  \n  \u201cEmployment in agriculture (% of total employment) (modeled ILO estimate)\u201d[9][10]\n\n- **Denominator** (the \u201c%\u201d part):  \n  The metadata classifies the indicator under \u201c% of total employment.\u201d[9]  \n  This means the measure is the **share of total employment** accounted for by employment in the defined agriculture sector.\n\n- **Sector coverage (numerator)**:  \n  \u201cThe agriculture sector consists of activities in **agriculture, hunting, forestry and fishing**, in accord",
+   "perplexity_error": "",
+   "pack": [
+    {
+     "url": "https://data.worldbank.org/indicator/SL.AGR.EMPL.ZS?locations=EG",
+     "title": "Employment in agriculture (% of total employment) (modeled ILO estimate)",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://ilostat.ilo.org/data/",
+     "title": "Data tools to find and download labour statistics - ILOSTAT",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-en-v4.2/index.php/catalog/575/overview",
+     "title": "All governorates of the Republic - Annual bulletin of Labor force survey 2020 - Overview",
+     "published": "2022-05-09T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/metadata-ar-v4.2/index.php/catalog/1927/study-description",
+     "title": "\u062c\u0645\u0647\u0648\u0631\u064a\u0629 \u0645\u0635\u0631 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 - \u0627\u0644\u0646\u0634\u0631\u0629 \u0627\u0644\u0633\u0646\u0648\u064a\u0629 \u0644\u0628\u062d\u062b \u0627\u0644\u0642\u0648\u0649 \u0627\u0644\u0639\u0627\u0645\u0644\u0629 2024 - overview",
+     "published": "2025-08-03T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-ar-v4.2/index.php/catalog/1842/overview",
+     "title": "\u062c\u0645\u0647\u0648\u0631\u064a\u0629 \u0645\u0635\u0631 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 - \u0627\u0644\u0646\u0634\u0631\u0629 \u0627\u0644\u0633\u0646\u0648\u064a\u0629 \u0644\u0628\u062d\u062b \u0627\u0644\u0642\u0648\u0649 \u0627\u0644\u0639\u0627\u0645\u0644\u0629 2022, \u0627\u0644\u0642\u0648\u0649 \u0627\u0644\u0639\u0627\u0645\u0644\u0647 2022 - overview",
+     "published": "2023-07-27T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://openknowledge.fao.org/server/api/core/bitstreams/c40c8f66-e063-434f-9b04-7eb5f6fd3747/content",
+     "title": "",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://openknowledge.fao.org/server/api/core/bitstreams/7b3af461-0c04-4465-8306-34f765c3a263/content",
+     "title": "",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://sis.gov.eg/en/media-center/news/capmas-egypt-s-annual-unemployment-rate-drops-to-66-percent-in-2024/",
+     "title": "CAPMAS: Egypt's annual unemployment rate drops to 6.6 ...",
+     "published": "2025-04-26T00:00:00.000Z",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://statbase.org/data/egy-employment-in-agriculture-share/",
+     "title": "Employment in agriculture | Egypt (1991\u22122025) \u2212 Data, Charts & Analysis",
+     "published": "2026-03-10T00:00:00.000Z",
+     "tier": "T5",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": {
+    "status": "ok",
+    "value": 17.5246443528294,
+    "year": 2025,
+    "corroborate_only": false,
+    "src": "World Bank WDI SL.AGR.EMPL.ZS (ILO modelled estimate)",
+    "url": "https://api.worldbank.org/v2/country/EGY/indicator/SL.AGR.EMPL.ZS?format=json&mrnev=1&per_page=5",
+    "tier": "T1",
+    "note": "ILO modelled estimate",
+    "access": "2026-08-26"
+   }
+  },
+  "1.2": {
+   "id": "1.2",
+   "name": "Cereal yield (kg/ha)",
+   "country": "Egypt",
+   "verdict": "pass",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "quote",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "tier",
+     "verdict": "pass",
+     "reason": "recorded at T1"
+    },
+    {
+     "gate": "construct",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "prerequisite",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "coherence",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "currency",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "argument",
+     "verdict": "pass",
+     "reason": ""
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "number",
+    "value": "7402",
+    "unit": "kg per hectare",
+    "year": 2023,
+    "source_title": "World Bank, World Development Indicators \u2014 Cereal yield (kg per hectare), Egypt, Arab Rep. (AG.YLD.CREL.KG)",
+    "source_url": "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=EG",
+    "proposed_tier": "T1",
+    "quote": "Egypt, Arab Rep.\t2023\t7,402",
+    "data_quality_flag": "",
+    "construct_match": "measures the named construct",
+    "construct_note": "The World Bank indicator AG.YLD.CREL.KG is precisely 'Cereal yield (kg per hectare)', sourced from FAO production data (FAOSTAT QCL), national-level, covering wheat, rice, maize, barley, oats, rye, millet, sorghum, buckwheat and mixed grains harvested for dry grain. This matches the named construct exactly; no rural/national or crop-subset mismatch arises.",
+    "presence_rung": "",
+    "quality_evidence": "T1 publisher (World Bank WDI) reproducing FAO official production and area statistics; the country page explicitly attributes the series to 'FAO electronic files and web site, Food and Agriculture Organization of the United Nations (FAO), uri: fao.org/faostat/en/#data/QCL'. The same figure (7402 kg for 2023) is independently echoed by a T5 mirror of the World Bank series (Trading Economics), which corroborates transcription but is not relied upon as the source.",
+    "scale_evidence": "National coverage, most recent year available for Egypt in the series (2023). Series runs 1961\u20132023 for Egypt.",
+    "proposed_level": 5,
+    "rung_argument": "The value route applies: a single published figure exists for exactly this construct and country. The figure is 7,402 kg/ha for Egypt, Arab Rep., reference year 2023, published by the World Bank in WDI from FAO source data \u2014 a T1 database entry, quoted verbatim from the country indicator page. Construct match is exact (cereal yield in kg per harvested hectare, national). Against the cut points: the value exceeds 1500 (level 2), exceeds 3000 (level 3), exceeds 4500 (level 4), and exceeds 6000 (level 5). The arithmetic is therefore unambiguous; the substantive justification is that the recorded VALUE is the published national cereal yield and not a proxy such as wheat-only yield (USDA FAS reports ~9.3 MMT wheat on 1.43 million ha, a single-crop measure that was not used) or an index of agricultural production (CAPMAS bulletins).",
+    "negative_finding": "Not required: level 5 is the top rung and the published value of 7402 kg/ha lies above the highest cut point of 6000.",
+    "search_trail": "Started with the World Bank WDI country page for AG.YLD.CREL.KG, Egypt, Arab Rep. (T1) \u2014 carries the headline figure 7,402 for most recent year 2023, attributed to FAO/FAOSTAT QCL; this was taken as the source of record. Checked CAPMAS (national statistical office, T1) pages: the Annual Bulletin of Cropping Areas and Plant Production 2016/2017 front matter lists a table 'Area and Production of Cereal Crops' and 'Total Area, Yield and Field Crops Production According to Varieties', but the retrieved text is only the preface and index \u2014 no cereal yield figure in kg/ha appears in the supplied text, so it could not be quoted. CAPMAS microdata catalogue entries (Agricultural Property and Rein 2017; Agriculture collection listing; agricultural production index bulletin 2018) are metadata only and contain no yield value. Ministry of Agriculture and Land Reclamation publications page (T3) is a list of research papers with no aggregate yield statistic. USDA FAS Grain and Feed Annual EG2025-0009 (T3) gives wheat production 9.3 MMT on 1.43 million ha for MY2025/26 \u2014 a single-crop figure, a different construct from all-cereal yield, so not used. MDPI Sustainability article on Egyptian grains production (T2) discusses productivity qualitatively in the retrieved excerpt with no kg/ha figure. Trading Economics (T5) restates the World Bank 7402 kg for 2023 but T5 may not carry a statistic, so it is noted only as corroboration."
+   },
+   "row": {
+    "value": 7402.0,
+    "cls": "Measured",
+    "level": 5,
+    "year": 2023,
+    "src": "World Bank, World Development Indicators \u2014 Cereal yield (kg per hectare), Egypt, Arab Rep. (AG.YLD.CREL.KG)",
+    "note": "Next level not proposed: Not required: level 5 is the top rung and the published value of 7402 kg/ha lies above the highest cut point of 6000. The World Bank indicator AG.YLD.CREL.KG is precisely 'Cereal yield (kg per hectare)', sourced from FAO production data (FAOSTAT QCL), national-level, covering wheat, rice, maize, barley, oats, rye, millet, sorghum, buckwheat and mixed grains harvested for dry grain. This matches the named construct exactly; no rural/national or crop-subset mismatch arises. Corroborated by an independent T1 series (World Bank WDI AG.YLD.CREL.KG): 7402.2 for 2023.",
+    "tier": "T1",
+    "tier_detail": "",
+    "url": "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=EG"
+   },
+   "queries": [
+    "CAPMAS Egypt cereal yield kg per hectare annual bulletin crop production",
+    "\u0627\u0644\u062c\u0647\u0627\u0632 \u0627\u0644\u0645\u0631\u0643\u0632\u064a \u0644\u0644\u062a\u0639\u0628\u0626\u0629 \u0627\u0644\u0639\u0627\u0645\u0629 \u0648\u0627\u0644\u0625\u062d\u0635\u0627\u0621 \u0625\u0646\u062a\u0627\u062c\u064a\u0629 \u0627\u0644\u0645\u062d\u0627\u0635\u064a\u0644 \u0627\u0644\u062d\u0628\u0648\u0628 \u0643\u064a\u0644\u0648\u062c\u0631\u0627\u0645 \u0644\u0644\u0647\u0643\u062a\u0627\u0631 \u0645\u0635\u0631",
+    "Egypt Ministry of Agriculture and Land Reclamation agricultural statistics bulletin cereal production area yield"
+   ],
+   "perplexity_citations": [
+    "https://tradingeconomics.com/egypt/cereal-yield-kg-per-hectare-wb-data.html",
+    "https://www.theglobaleconomy.com/egypt/cereal_yield/",
+    "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=EG",
+    "https://www.theglobaleconomy.com/rankings/cereal_yield/WB-low-mid/",
+    "https://huggingface.co/datasets/electricsheepafrica/africa-world-bank-agriculture-and-rural-development-indicators-for-egypt-arab-rep",
+    "https://www.agricultureid.com/agricultural-data/cereal-yield",
+    "https://www.linkedin.com/posts/aolama_egypt-loses-11-billion-worth-of-wheat-every-activity-7430872666703650818-nWiZ",
+    "https://www.linkedin.com/posts/activity-7430872666703650818-rNU9",
+    "https://www.theglobaleconomy.com/rankings/cereal_yield/MENA/",
+    "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=M1",
+    "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=A9",
+    "https://macrovedia.com/series/7a88a3525044db7a/",
+    "https://www.fas.usda.gov/data/production/eg",
+    "https://data.worldbank.org/indicator/AG.YLD.CREL.KG",
+    "https://www.theglobaleconomy.com/rankings/cereal_yield/",
+    "https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Grain%20and%20Feed%20Annual_Cairo_Egypt_EG2025-0009.pdf",
+    "https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Grain+and+Feed+Annual_Cairo_Egypt_EG2026-0002",
+    "https://databank.worldbank.org/metadataglossary/africa-development-indicators/series/AG.YLD.CREL.KG",
+    "https://www.mdpi.com/2071-1050/11/16/4457",
+    "https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Grain%20and%20Feed%20Update_Cairo_Egypt_EG2025-0024.pdf"
+   ],
+   "perplexity_lead": "Yes\u2014there is a published source that states **cereal yield (kg per hectare)** for Egypt: the World Bank indicator page for Egypt, which reports **7,418 kg/ha in 2022** and says the data are compiled from the **FAO**[1][3][18].\n\nA second published source, TheGlobalEconomy.com, gives the same measure for Egypt as **7,419 kg per hectare in 2022** and notes the source is **FAO**[2].\n\nIf you want the exact wording from the World Bank metadata, it defines **\u201cCereal yield (kg per hectare)\u201d** as cereals measured in kilograms per hectare of harvested land, including wheat, rice, maize, barley, oats, rye, millet, sorghum, buckwheat, and mixed grains[18].",
+   "perplexity_error": "",
+   "pack": [
+    {
+     "url": "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=EG",
+     "title": "Cereal yield (kg per hectare) - Egypt, Arab Rep.",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-ar-v4.2/index.php/catalog/1431/download/4793",
+     "title": "",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-en-v4.2/index.php/catalog/296/overview",
+     "title": "Egypt - Agricultural Property and Rein 2017 - Overview",
+     "published": "2018-11-01T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-en-v4.2/index.php/catalog/296/study-description",
+     "title": "Egypt - Agricultural Property and Rein 2017 - Overview",
+     "published": "2018-11-01T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/metadata-en-v4.2/index.php/catalog/Agriculture",
+     "title": "Agriculture",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/Metadata-ar-v4.2/index.php/catalog/1718/overview",
+     "title": "\u062c\u0645\u0647\u0648\u0631\u064a\u0629 \u0645\u0635\u0631 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 - \u0627\u0644\u0646\u0634\u0631\u0629 \u0627\u0644\u0633\u0646\u0648\u064a\u0629 \u0644\u0644\u0627\u0631\u0642\u0627\u0645 \u0627\u0644\u0642\u064a\u0627\u0633\u064a\u0629 \u0644\u0644\u0625\u0646\u062a\u0627\u062c \u0627\u0644\u0632\u0631\u0627\u0639\u0649 2018 - overview",
+     "published": "2021-11-09T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.mdpi.com/2071-1050/11/16/4457",
+     "title": "",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://moa.gov.eg/en/publications/",
+     "title": "Ministry of Agriculture and Land Reclamation - Publications ...",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Grain+and+Feed+Annual_Cairo_Egypt_EG2025-0009.pdf",
+     "title": "Report Name: Grain and Feed Annual",
+     "published": "2025-03-27T00:00:00.000Z",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://tradingeconomics.com/egypt/cereal-yield-kg-per-hectare-wb-data.html",
+     "title": "Egypt - Cereal Yield (kg Per Hectare) - 2026 Data 2027 Forecast 1961 ...",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": {
+    "status": "ok",
+    "value": 7402.2,
+    "year": 2023,
+    "corroborate_only": false,
+    "src": "World Bank WDI AG.YLD.CREL.KG",
+    "url": "https://api.worldbank.org/v2/country/EGY/indicator/AG.YLD.CREL.KG?format=json&mrnev=1&per_page=5",
+    "tier": "T1",
+    "note": "",
+    "access": "2026-08-26"
+   }
+  },
+  "1.1": {
+   "id": "1.1",
+   "name": "Agriculture value added per worker (USD)",
+   "country": "Egypt",
+   "verdict": "pass",
+   "gates": [
+    {
+     "gate": "isolation",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "quote",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "tier",
+     "verdict": "pass",
+     "reason": "recorded at T1"
+    },
+    {
+     "gate": "construct",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "prerequisite",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "coherence",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "currency",
+     "verdict": "pass",
+     "reason": ""
+    },
+    {
+     "gate": "argument",
+     "verdict": "pass",
+     "reason": ""
+    }
+   ],
+   "quote_verified": true,
+   "answer": {
+    "found": true,
+    "abstain": false,
+    "abstain_reason": "",
+    "value_kind": "number",
+    "value": "8942.42",
+    "unit": "constant 2015 US$ per worker",
+    "year": 2025,
+    "source_title": "World Bank, World Development Indicators \u2014 Agriculture, forestry, and fishing, value added per worker (constant 2015 US$) [NV.AGR.EMPL.KD]",
+    "source_url": "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD",
+    "proposed_tier": "T1",
+    "quote": "Egypt, Arab Rep.\t2025\t8,942.42",
+    "data_quality_flag": "Denominator (agricultural employment) is an ILO modelled estimate; WDI metadata notes 'Data on employment are modeled estimates by the International Labour Organization (ILO) ILOSTAT database.'",
+    "construct_match": "measures the named construct",
+    "construct_note": "The indicator name reads 'Agriculture value added per worker (USD)'. The published series actually retrieved is WDI NV.AGR.EMPL.KD, whose long definition covers 'Agriculture, forestry, and fishing ... ISIC (Rev. 4) divisions 01-03' and is denominated in constant 2015 US$, not current USD. So the evidence sits on the broader-scope, constant-price side of the unratified definitional question: sector scope is wider than 'agriculture' alone (it includes forestry and fishing), and the price basis is a 2015 constant-dollar series rather than the bare 'USD' the name implies. The current-US$ counterpart (NV.AGR.TOTL.CD divided by employment) is not published as a per-worker series in these pages, so no alternative figure on the narrower reading exists here. Figure is national for Egypt, which is what the indicator asks for.",
+    "presence_rung": "",
+    "quality_evidence": "T1 publisher (World Bank WDI, jointly with ILOSTAT), CC BY-4.0, with full metadata glossary retrieved (Sources 2 and 3) documenting definition, aggregation method and known limitations. The figure is read directly from the country table on the indicator's own World Bank data page, not from a secondary re-publication. A French-language mirror of the same World Bank page (Source 10) carries the identical Egypt value of 8 942,42 for 2025, corroborating the read.",
+    "scale_evidence": "National coverage for Egypt, Arab Rep.; annual series 1991-2025; most recent year 2025.",
+    "proposed_level": 4,
+    "rung_argument": "The route taken is the single-published-figure route, so the argument is about the value and its construct match rather than arithmetic. (a) A named, quotable figure exists for Egypt specifically: 8,942.42 for reference year 2025, on the World Bank's own indicator page. (b) The figure is the labour-productivity ratio the indicator names \u2014 sector value added divided by sector employment \u2014 per the metadata: 'Value added per worker is calculated by dividing value added of a sector by the number employed in the sector.' (c) It is expressed in US dollars, satisfying the '(USD)' in the name, albeit constant 2015 US$. (d) It is national and current (2025), not a stale or sub-national proxy. Applying the cut points: 8942.42 clears 1000, 2500 and 5000, placing Egypt at level 4.",
+    "negative_finding": "Level 5 was not proposed because the published value, 8,942.42 constant 2015 US$, falls short of the 10000 cut point by roughly 1,058 dollars. No source in the retrieved pages publishes an Egypt figure at or above 10000 for this construct on any price basis or any reference year; the Arab World aggregate does exceed 10000 (10,945.1 in 2025) but that is a regional aggregate, not Egypt, and cannot be substituted. Should the definition be ratified as current US$ rather than constant 2015 US$, the level could move, but no current-US$ per-worker figure for Egypt was found in these pages.",
+    "search_trail": "Started at the World Bank indicator landing page for NV.AGR.EMPL.KD (Source 1), which carries an all-countries table; located the Egypt, Arab Rep. row with most recent year 2025 and value 8,942.42 and used that as the quote. Cross-checked the same value on the French mirror of the country-filtered page (Source 10, donnees.banquemondiale.org, tier-flagged T5 by domain but substantively the same World Bank series) which shows 8 942,42 for 2025 \u2014 used only as corroboration, not as the citation, since the .org data.worldbank.org page is the T1 original. Read both metadata glossary entries (Sources 2 and 3) to pin the sector scope (ISIC Rev. 4 divisions 01-03, i.e. agriculture plus forestry plus fishing) and the price basis (constant 2015 US$), which is what drives the construct_note. Checked the DataBank multi-year table (Source 4) for an Egypt time series, but the retrieved extract truncates alphabetically at Cambodia and never reaches Egypt, so no year-by-year Egypt values could be quoted from it. Checked the WDI table 3.3 extract (Source 5) for 2011 and 2019 Egypt values, but the text truncates mid-row at 'Egypt, Arab' before any figures, so nothing quotable there either. Looked for a national-source alternative: CAPMAS microdata catalogue entry for the Annual Bulletin of Agricultural Income Estimates 2016-2017 (Source 6) is a catalogue record only and publishes no per-worker productivity figure; the Ministry of Agriculture publications listing (Source 9) returns agronomy trial papers, no productivity statistics. Reviewed the two academic/IO sources: the MDPI ARDL paper (Source 7) reports agricultural GDP shares and employment shares (13.6 percent of GDP, 29.2 percent of jobs) but no value added per worker; the IFPRI Egypt SSP working paper (Source 8) discusses productivity gains qualitatively with no per-worker dollar figure. Dead ends recorded rather than filled. No cross-border figures were used."
+   },
+   "row": {
+    "value": 8942.42,
+    "cls": "Measured",
+    "level": 4,
+    "year": 2025,
+    "src": "World Bank, World Development Indicators \u2014 Agriculture, forestry, and fishing, value added per worker (constant 2015 US$) [NV.AGR.EMPL.KD]",
+    "note": "Denominator (agricultural employment) is an ILO modeled estimate; WDI metadata notes 'Data on employment are modeled estimates by the International Labor Organization (ILO) ILOSTAT database.'. Next level not proposed: Level 5 was not proposed because the published value, 8,942.42 constant 2015 US$, falls short of the 10000 cut point by roughly 1,058 dollars. No source in the retrieved pages publishes an Egypt figure at or above 10000 for this construct on any price basis or any reference year; the Arab World aggregate does exceed 10000 (10,945.1 in 2025) but that is a regional aggregate, not Egypt, and cannot be substituted. Should the definition be ratified as current US$ rather than constant 2015 US$, the level could move, but no current-US$ per-worker figure for Egypt was found in these pages. The indicator name reads 'Agriculture value added per worker (USD)'. The published series actually retrieved is WDI NV.AGR.EMPL.KD, whose long definition covers 'Agriculture, forestry, and fishing ... ISIC (Rev. 4) divisions 01-03' and is denominated in constant 2015 US$, not current USD. So the evidence sits on the broader-scope, constant-price side of the unratified definitional question: sector scope is wider than 'agriculture' alone (it includes forestry and fishing), and the price basis is a 2015 constant-dollar series rather than the bare 'USD' the name implies. The current-US$ counterpart (NV.AGR.TOTL.CD divided by employment) is not published as a per-worker series in these pages, so no alternative figure on the narrower reading exists here. Figure is national for Egypt, which is what the indicator asks for. Corroborated by an independent T1 series (World Bank WDI NV.AGR.EMPL.KD): 8942.42 for 2025.",
+    "tier": "T1",
+    "tier_detail": "Denominator (agricultural employment) is an ILO modelled estimate; WDI metadata notes 'Data on employment are modeled estimates by the International Labour Organization (ILO) ILOSTAT database.'",
+    "url": "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD"
+   },
+   "queries": [
+    "World Bank NV.AGR.EMPL.KD Egypt agriculture value added per worker constant 2015 US$",
+    "CAPMAS Egypt agriculture value added per worker statistics capmas.gov.eg",
+    "Egypt Ministry of Agriculture and Land Reclamation agricultural value added per worker annual bulletin"
+   ],
+   "perplexity_citations": [
+    "https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NV.AGR.EMPL.KD",
+    "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD",
+    "https://databank.worldbank.org/metadataglossary/sustainable-development-goals-(sdgs)/series/NV.AGR.EMPL.KD",
+    "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD?locations=1W",
+    "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD?locations=XU",
+    "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD?locations=XF",
+    "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD?name_desc=true&locations=US",
+    "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD?locations=GM",
+    "https://datos.bancomundial.org/indicador/NV.AGR.EMPL.KD",
+    "https://data.worldbank.org/indicator/NV.AGR.TOTL.KD?locations=Z4",
+    "https://data.worldbank.org/indicator/NV.AGR.TOTL.KD?locations=XH",
+    "https://data.worldbank.org/indicator/NV.AGR.TOTL.KD",
+    "https://data.worldbank.org/indicator/NV.AGR.TOTL.KD?locations=XO",
+    "https://data.worldbank.org/indicator/NV.AGR.TOTL.KD?locations=XT",
+    "https://data.worldbank.org/indicator/NV.AGR.TOTL.KD?locations=XM"
+   ],
+   "perplexity_lead": "The **best published match** is the World Bank indicator **NV.AGR.EMPL.KD**, which is **\u201cAgriculture, forestry, and fishing, value added per worker (constant 2015 US$)\u201d**[1][2]. That means the row\u2019s name **does not exactly match** the published measure if it says only *\u201cAgriculture value added per worker (USD)\u201d*; the published source explicitly includes **forestry and fishing** and specifies **constant 2015 US dollars**[1][3].\n\nFor the construct note, the evidence is **on the wrong side of the question**: the published source does **not** state the narrower construct as written, but instead a broader sector scope and a price basis[1][3]. In other words, the closest authoritative source indicates the row should be treated as **agriculture, forestry, and fishing value added per worker in constant 2015 USD**, not a bare \u201cagriculture (USD)\u201d measure[1][2].\n\nIf you need the exact published wording, the World Bank metadata says: **\u201cAgriculture, forestry, and fishing, value added per worker (constant 2015 US$)\u201d** and explains that \u201cvalue added per worker is calculated by dividing value added of a sector by the number employed in the sector\u201d[1]. It also states that \u201cthis indicator is expres",
+   "perplexity_error": "",
+   "pack": [
+    {
+     "url": "https://data.worldbank.org/indicator/NV.AGR.EMPL.KD",
+     "title": "Agriculture, forestry, and fishing, value added per worker ...",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NV.AGR.EMPL.KD",
+     "title": "Glossary | DataBank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://databank.worldbank.org/metadataglossary/sustainable-development-goals-(sdgs)/series/NV.AGR.EMPL.KD",
+     "title": "Glossary | DataBank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa, perplexity",
+     "cap": 6000
+    },
+    {
+     "url": "https://databank.worldbank.org/reports.aspx?dsid=2&series=NV.AGR.EMPL.KD",
+     "title": "World Development Indicators | DataBank",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://databank.worldbank.org/embed/3.3%20Agricultural%20output%20and%20productivity/id/421356e28f?review=y",
+     "title": "3.3 Agricultural output and productivity | World Development Indicators",
+     "published": "",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://censusinfo.capmas.gov.eg/metadata-en-v4.2/index.php/catalog/360",
+     "title": "A.R.E - Annual Bulletin of Agricultural Income Estimates 2016-2017",
+     "published": "2019-09-22T00:00:00.000Z",
+     "tier": "T1",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://www.mdpi.com/2227-7099/11/8/215",
+     "title": "Contributions of Investment and Employment to the ...",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://cgspace.cgiar.org/server/api/core/bitstreams/98ed5a78-591b-4029-ae89-840462e513ba/content",
+     "title": "The Role of Agriculture and the Agro-processing Industry for Development in Egypt",
+     "published": "",
+     "tier": "T2",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://moa.gov.eg/en/publications/",
+     "title": "Ministry of Agriculture and Land Reclamation - Publications ...",
+     "published": "",
+     "tier": "T3",
+     "surfaced_by": "exa",
+     "cap": 6000
+    },
+    {
+     "url": "https://donnees.banquemondiale.org/indicateur/NV.AGR.EMPL.KD?locations=EG",
+     "title": "Agriculture, forestry, and fishing, value added per worker ...",
+     "published": "",
+     "tier": "T5",
+     "surfaced_by": "exa",
+     "cap": 6000
+    }
+   ],
+   "wdi_corroboration": {
+    "status": "ok",
+    "value": 8942.41826869151,
+    "year": 2025,
+    "corroborate_only": false,
+    "src": "World Bank WDI NV.AGR.EMPL.KD",
+    "url": "https://api.worldbank.org/v2/country/EGY/indicator/NV.AGR.EMPL.KD?format=json&mrnev=1&per_page=5",
+    "tier": "T1",
+    "note": "",
+    "access": "2026-08-26"
+   }
+  }
+ }
+}

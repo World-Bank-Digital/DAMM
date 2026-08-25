@@ -417,22 +417,6 @@ def research_row(spec, country, llm, ledger, wdi, log, t1_fill=False, surveys=No
     # It is reported, never substituted: the point of the shadow run is to measure what
     # the research lane produces, and quietly swapping in an API figure would measure
     # the API instead.
-    # Where a row ends as a gap and the national survey is known to carry the construct,
-    # the gap says so. "Searched and found nothing" and "the national household survey
-    # measures this and nobody has published the cut we need" are different findings, and
-    # only the second tells anyone what to do next.
-    if row["cls"] == "Gap" and surveys:
-        loc = surveys.get(spec["id"])
-        if loc:
-            row["note"] = ((row.get("note") or "") + " WHERE THIS LIVES: "
-                           + f"{loc['survey']} ({loc['survey_years']}) collects "
-                           + f"{loc['construct']} in {loc['n_variables']} variable(s), "
-                           + f"including {', '.join(v['name'] for v in loc['variables'][:3])}. "
-                           + f"{loc['url']} "
-                           + ("That survey is too old to carry a current-state claim on "
-                              "its own. " if loc.get("stale") else "")
-                           + "No value is taken from it here.").strip()
-
     corroboration = ""
     w = wdi.get(spec["id"])
     if w and w.get("status") == "ok":
@@ -470,6 +454,25 @@ def research_row(spec, country, llm, ledger, wdi, log, t1_fill=False, surveys=No
                        "Recorded from the machine-readable T1 lane. The research lane did "
                        "not reach a country value for this row, and the series was fetched "
                        "directly from the publisher's interface. " + (w.get("note") or ""))))
+    # Where a row ends as a gap and the national survey is known to carry the construct,
+    # the gap says so. "Searched and found nothing" and "the national household survey
+    # measures this and nobody has published the cut we need" are different findings, and
+    # only the second tells anyone what to do next.
+    #
+    # After the fill above, not before: a row the T1 lane just filled is no longer a gap,
+    # and annotating it would describe an absence that had already been resolved.
+    if row["cls"] == "Gap" and surveys:
+        loc = surveys.get(spec["id"])
+        if loc:
+            row["note"] = ((row.get("note") or "") + " WHERE THIS LIVES: "
+                           + f"{loc['survey']} ({loc['survey_years']}) collects "
+                           + f"{loc['construct']} in {loc['n_variables']} variable(s), "
+                           + f"including {', '.join(v['name'] for v in loc['variables'][:3])}. "
+                           + f"{loc['url']} "
+                           + ("That survey is too old to carry a current-state claim on "
+                              "its own. " if loc.get("stale") else "")
+                           + "No value is taken from it here.").strip()
+
     record = dict(id=spec["id"], name=spec["name"], country=country,
                   verdict=verdict, gates=[g.as_dict() for g in gate_list],
                   quote_verified=quote_ok, answer=ans, row=row,
