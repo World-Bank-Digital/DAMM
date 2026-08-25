@@ -431,8 +431,13 @@ def research_row(spec, country, llm, ledger, wdi, log, t1_fill=False):
     # The research lane found nothing and a machine-readable T1 series has the figure.
     # Filling is off by default and never silent: the row records which lane produced it,
     # so a reader can always tell autonomous research from a curated series.
+    # `corroborate_only` marks a series that measures something adjacent to what the
+    # indicator names — a different population, or a different act. It may be shown beside
+    # the row and it may never become the row: scoring such a figure against this
+    # indicator's thresholds would be a measurement error carrying a T1 badge, which is
+    # worse than the gap it replaced because a gap is visibly a gap.
     if t1_fill and row["cls"] == "Gap" and w and w.get("status") == "ok" \
-            and not spec["candidate"]:
+            and not w.get("corroborate_only") and not spec["candidate"]:
         lvl = (tlevel(w["value"], "H" if spec["direction"] == "higher-is-better" else "L",
                       spec["thresholds"]) if spec["method"] == "threshold" else None)
         row = dict(value=w["value"], cls="Measured", level=lvl, year=w["year"],

@@ -1,222 +1,302 @@
 {
  "Egypt": {
+  "5.3": {
+   "status": "ok",
+   "value": 14.05011835217785,
+   "year": 2025,
+   "src": "UNESCO Institute for Statistics \u2014 percentage of graduates from STEM programmes in tertiary education (FOSGP.5T8.F500600700)",
+   "url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=FOSGP.5T8.F500600700&geoUnit=EGY&start=2015&end=2026",
+   "tier": "T1",
+   "note": "CONSTRUCT MISMATCH: this series counts STEM GRADUATES; indicator 5.3 names STEM ENROLMENT. UIS publishes no enrolment series for STEM. Corroboration only \u2014 it cannot fill the row.",
+   "access": "2026-08-26",
+   "corroborate_only": true
+  },
+  "8.5": {
+   "status": "no_data",
+   "code": "24043",
+   "note": "",
+   "access": "2026-08-26",
+   "corroborate_only": false
+  },
   "1.1": {
    "status": "ok",
    "value": 8942.41826869151,
    "year": 2025,
+   "corroborate_only": false,
    "src": "World Bank WDI NV.AGR.EMPL.KD",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/NV.AGR.EMPL.KD?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "1.2": {
    "status": "ok",
    "value": 7402.2,
    "year": 2023,
+   "corroborate_only": false,
    "src": "World Bank WDI AG.YLD.CREL.KG",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/AG.YLD.CREL.KG?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "1.3": {
    "status": "ok",
    "value": 17.5246443528294,
    "year": 2025,
+   "corroborate_only": false,
    "src": "World Bank WDI SL.AGR.EMPL.ZS (ILO modelled estimate)",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/SL.AGR.EMPL.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "ILO modelled estimate",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "1.4": {
    "status": "ok",
    "value": 109.07,
    "year": 2022,
+   "corroborate_only": false,
    "src": "World Bank WDI AG.PRD.FOOD.XD",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/AG.PRD.FOOD.XD?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "8.1": {
    "status": "ok",
    "value": 9.4,
    "year": 2023,
+   "corroborate_only": false,
    "src": "World Bank WDI SN.ITK.DEFC.ZS",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/SN.ITK.DEFC.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "2.4": {
    "status": "ok",
    "value": 74.64839935,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI IT.NET.USER.ZS",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/IT.NET.USER.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "2.9": {
    "status": "ok",
    "value": 100,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI EG.ELC.ACCS.RU.ZS",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/EG.ELC.ACCS.RU.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "5.2": {
    "status": "ok",
    "value": 79.4531619498685,
    "year": 2022,
+   "corroborate_only": false,
    "src": "World Bank WDI SE.ADT.LITR.ZS",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/SE.ADT.LITR.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
-  },
-  "5.3": {
-   "status": "ok",
-   "value": 38.0398346509947,
-   "year": 2025,
-   "src": "World Bank WDI SE.TER.ENRR",
-   "url": "https://api.worldbank.org/v2/country/EGY/indicator/SE.TER.ENRR?format=json&mrnev=1&per_page=5",
-   "tier": "T1",
-   "note": "PROXY: total tertiary gross enrollment, not STEM-specific \u2014 census defect logged (D3)",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "8.2": {
    "status": "ok",
    "value": 40.2142182329493,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI FX.OWN.TOTL.FE.ZS (Global Findex wave)",
    "url": "https://api.worldbank.org/v2/country/EGY/indicator/FX.OWN.TOTL.FE.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "Global Findex wave",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
+  },
+  "8.4": {
+   "status": "ok",
+   "value": 15.6072041150034,
+   "year": 2024,
+   "corroborate_only": false,
+   "src": "World Bank WDI mobileaccount.t.d (Global Findex)",
+   "url": "https://api.worldbank.org/v2/country/EGY/indicator/mobileaccount.t.d?format=json&mrnev=1&per_page=5",
+   "tier": "T1",
+   "note": "Global Findex",
+   "access": "2026-08-26"
+  },
+  "4.7": {
+   "status": "ok",
+   "value": 98.7781785562663,
+   "year": 2024,
+   "corroborate_only": false,
+   "src": "World Bank WDI ID.OWN.TOTL.ZS (World Bank Identification for Development (ID4D))",
+   "url": "https://api.worldbank.org/v2/country/EGY/indicator/ID.OWN.TOTL.ZS?format=json&mrnev=1&per_page=5&source=89",
+   "tier": "T1",
+   "note": "World Bank Identification for Development (ID4D)",
+   "access": "2026-08-26"
   },
   "A1-CAND-IRR": {
    "status": "no_data",
    "code": "AG.LND.IRIG.AG.ZS",
    "note": "PROVISIONAL spec 13.2 candidate: irrigation coverage",
-   "access": "2026-08-22"
+   "access": "2026-08-26",
+   "corroborate_only": false
   }
  },
  "Nigeria": {
+  "5.3": {
+   "status": "no_data",
+   "code": "FOSGP.5T8.F500600700",
+   "note": "CONSTRUCT MISMATCH: this series counts STEM GRADUATES; indicator 5.3 names STEM ENROLMENT. UIS publishes no enrolment series for STEM. Corroboration only \u2014 it cannot fill the row.",
+   "access": "2026-08-26",
+   "corroborate_only": true
+  },
+  "8.5": {
+   "status": "ok",
+   "value": 31.6,
+   "year": 2019,
+   "src": "FAOSTAT \u2014 SDG 5.a.1 share of women among owners or rights-bearers of agricultural land (item 24043)",
+   "url": "https://bulks-faostat.fao.org/production/SDG_BulkDownloads_E_All_Data_(Normalized).zip",
+   "tier": "T1",
+   "note": "",
+   "access": "2026-08-26",
+   "corroborate_only": false
+  },
   "1.1": {
    "status": "ok",
    "value": 3494.89275307711,
    "year": 2025,
+   "corroborate_only": false,
    "src": "World Bank WDI NV.AGR.EMPL.KD",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/NV.AGR.EMPL.KD?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "1.2": {
    "status": "ok",
    "value": 1558,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI AG.YLD.CREL.KG",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/AG.YLD.CREL.KG?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "1.3": {
    "status": "ok",
    "value": 33.5336954038865,
    "year": 2025,
+   "corroborate_only": false,
    "src": "World Bank WDI SL.AGR.EMPL.ZS (ILO modelled estimate)",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/SL.AGR.EMPL.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "ILO modelled estimate",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "1.4": {
    "status": "ok",
    "value": 119.85,
    "year": 2022,
+   "corroborate_only": false,
    "src": "World Bank WDI AG.PRD.FOOD.XD",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/AG.PRD.FOOD.XD?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "8.1": {
    "status": "ok",
    "value": 19.9,
    "year": 2023,
+   "corroborate_only": false,
    "src": "World Bank WDI SN.ITK.DEFC.ZS",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/SN.ITK.DEFC.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "2.4": {
    "status": "ok",
    "value": 41.21139908,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI IT.NET.USER.ZS",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/IT.NET.USER.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "2.9": {
    "status": "ok",
    "value": 23.5,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI EG.ELC.ACCS.RU.ZS",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/EG.ELC.ACCS.RU.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "5.2": {
    "status": "ok",
    "value": 70.4100036621094,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI SE.ADT.LITR.ZS",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/SE.ADT.LITR.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "",
-   "access": "2026-08-22"
-  },
-  "5.3": {
-   "status": "ok",
-   "value": 9.74153350922586,
-   "year": 2011,
-   "src": "World Bank WDI SE.TER.ENRR",
-   "url": "https://api.worldbank.org/v2/country/NGA/indicator/SE.TER.ENRR?format=json&mrnev=1&per_page=5",
-   "tier": "T1",
-   "note": "PROXY: total tertiary gross enrollment, not STEM-specific \u2014 census defect logged (D3)",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   },
   "8.2": {
    "status": "ok",
    "value": 52.2155914465012,
    "year": 2024,
+   "corroborate_only": false,
    "src": "World Bank WDI FX.OWN.TOTL.FE.ZS (Global Findex wave)",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/FX.OWN.TOTL.FE.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "Global Findex wave",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
+  },
+  "8.4": {
+   "status": "ok",
+   "value": 32.7907521346508,
+   "year": 2024,
+   "corroborate_only": false,
+   "src": "World Bank WDI mobileaccount.t.d (Global Findex)",
+   "url": "https://api.worldbank.org/v2/country/NGA/indicator/mobileaccount.t.d?format=json&mrnev=1&per_page=5",
+   "tier": "T1",
+   "note": "Global Findex",
+   "access": "2026-08-26"
+  },
+  "4.7": {
+   "status": "ok",
+   "value": 79.0803710088225,
+   "year": 2024,
+   "corroborate_only": false,
+   "src": "World Bank WDI ID.OWN.TOTL.ZS (World Bank Identification for Development (ID4D))",
+   "url": "https://api.worldbank.org/v2/country/NGA/indicator/ID.OWN.TOTL.ZS?format=json&mrnev=1&per_page=5&source=89",
+   "tier": "T1",
+   "note": "World Bank Identification for Development (ID4D)",
+   "access": "2026-08-26"
   },
   "A1-CAND-IRR": {
    "status": "ok",
    "value": 0.32317113096099,
    "year": 2017,
+   "corroborate_only": false,
    "src": "World Bank WDI AG.LND.IRIG.AG.ZS",
    "url": "https://api.worldbank.org/v2/country/NGA/indicator/AG.LND.IRIG.AG.ZS?format=json&mrnev=1&per_page=5",
    "tier": "T1",
    "note": "PROVISIONAL spec 13.2 candidate: irrigation coverage",
-   "access": "2026-08-22"
+   "access": "2026-08-26"
   }
  }
 }
