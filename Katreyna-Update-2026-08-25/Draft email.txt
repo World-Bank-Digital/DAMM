@@ -1,0 +1,23 @@
+Subject: DAMM v1.7 — companion guidebook and scoring workbook
+
+------------------------------------------------------------------------
+
+Dear Katreyna,
+
+An update on the Digital Agriculture Maturity Model since the August package. Two attachments, both short enough to read in one sitting.
+
+1. Companion Guidebook (12 pages). Not a replacement for the v1.7 Guidebook you already have — that remains the reference for the instrument. This answers two things it does not cover.
+
+Where the model came from. It sets out what v1.7 takes from the Bhutan assessment and, more usefully, what it deliberately declines. Bhutan is the proof that the strictest rule here is achievable: 97 of 97 indicators populated by hand, every one with a value, a source and a year. It is also the clearest argument for the two mechanisms we added. A third of Bhutan’s register — 32 of 97 rows — was rated Low or Estimated by its own authors, and every one of those rows still received a maturity level that fed the headline score of 2.29. Nothing was withheld. Abstention and the ratification hold exist to make that impossible.
+
+I should be straight about the other direction too: Bhutan achieved complete coverage and our automated pipeline has not. That comparison is in the document rather than left out of it.
+
+What the process produces. Six stages, what each hands on, and how far each has actually been run. Three of the six are built and tested but have not yet run against live data, and they are marked as such. I would rather you knew which parts are proven.
+
+2. The scoring workbook. The instrument itself — six entry columns, everything else derived.
+
+One erratum. The Egypt and Nigeria diagnostics in the August package state band cut-offs of 1.8 / 2.6 / 3.4 / 4.2. Following the section 13 rulings these are 1.5 / 2.5 / 3.5 / 4.5. The charts in those reports were always drawn correctly; the caption was a stale literal that did not move when the bands did. Fixed at source, and reports will re-render correctly from here.
+
+What would be most useful from you, if you have time for only one thing: whether abstention and the ratification hold are set where you would set them — given that the alternative, visible in Bhutan, is a complete register in which a third of the evidence was acknowledged weak and every row was scored anyway.
+
+With thanks, Randeep

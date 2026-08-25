@@ -84,7 +84,7 @@ Banding exists to decline that claim.
 
 ### What the Bhutan assessment shows
 
-Bhutan (March 2025) is out of scope as an assessment and stands as a design source under
+Bhutan (March 2026) is out of scope as an assessment and stands as a design source under
 13.11. It resolved this exact question the same way: all 97 indicators carry a whole-number
 level with the measured value recorded beside it, and there is not one fractional level in
 the register. It also used the same band edges, 1.8 / 2.6 / 3.4 / 4.2, which confirms the
