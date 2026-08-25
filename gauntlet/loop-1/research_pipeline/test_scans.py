@@ -84,6 +84,56 @@ check("another country does not", G.names_country("Kenya ministry", "Egypt"), "F
 check("empty text names nobody", G.names_country("", "Egypt"), "False")
 
 
+section("The register obeys the source-tier protocol")
+
+ok = dict(name="Farmer Card", lead="MALR", status="Operating", results_tier="")
+
+check("an entry with no results tier is fine at any source tier",
+      S.register_gate(ok, "T5", "Egypt"), None)
+
+check("a tiered results claim on a T1 source is fine",
+      S.register_gate(dict(ok, results_tier="T2"), "T1", "Egypt"), None)
+
+check("a results claim on a T5 source cannot be tiered",
+      # T4-T5 are admissible for existence facts only. A vendor figure badged as though
+      # it were evaluated is the most plausible-looking wrong thing this lane could
+      # produce, and render_v17's own QC refuses to emit a report containing one.
+      S.register_gate(dict(ok, results_tier="T2"), "T5", "Egypt"),
+      "admissible for existence only")
+
+check("a T4 source is refused the same way",
+      S.register_gate(dict(ok, results_tier="T3"), "T4", "Egypt"),
+      "admissible for existence only")
+
+check("a results tier outside T1-T3 is refused outright",
+      S.register_gate(dict(ok, results_tier="T5"), "T1", "Egypt"),
+      "only be tiered T1-T3")
+
+check("an entry with no name is refused", S.register_gate(dict(ok, name=""), "T1", "Egypt"),
+      "no name")
+check("an entry naming nobody who runs it is refused",
+      S.register_gate(dict(ok, lead=""), "T1", "Egypt"), "names nobody who runs it")
+check("a status outside the vocabulary is refused",
+      S.register_gate(dict(ok, status="Live"), "T1", "Egypt"), "is not one of")
+
+
+section("One programme is entered once")
+
+check("a name with its sponsor attached is the same programme",
+      # The hand-built register's own issues list records this failure: 'Al Mufeed' and
+      # 'FAO El-Mufeed' were one app entered twice.
+      S.is_duplicate("Al Mufeed", "FAO El-Mufeed app"), "True")
+check("a name and its fuller form are the same programme",
+      S.is_duplicate("Farmer Card (Kart el-Fallah) smart card programme", "Farmer Card"),
+      "True")
+check("two different programmes are not merged",
+      S.is_duplicate("Hudhud advisory app", "Zr3i"), "False")
+check("an acronym is not merged with an unrelated expansion",
+      S.is_duplicate("DAIRS", "Digital Agriculture Information System"), "False")
+check("a short fragment cannot swallow another entry",
+      S.is_duplicate("AIP", "Agricultural Innovation Platform"), "False")
+
+
 section("Every international record carries its restriction")
 
 check("the schema requires a country to be named",

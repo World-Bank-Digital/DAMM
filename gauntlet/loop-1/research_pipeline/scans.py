@@ -29,7 +29,7 @@ mean, a prerequisite or the readiness matrix.
     python3 scans.py --country Egypt --iso EGY --out EGY_shadow [--ceiling 500] [--resume]
 """
 
-import argparse, json, os, sys, time
+import argparse, datetime, json, os, re, sys, time
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -78,6 +78,52 @@ FINDING_SCHEMA = {
     },
     "required": ["found", "statement", "quote", "source_name", "source_url",
                  "published_year", "about_country", "why_it_matters", "abstained_because"],
+    "additionalProperties": False,
+}
+
+REGISTER_ENTRY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "found": {"type": "boolean"},
+        "name": {"type": "string"},
+        "lead": {"type": "string"},
+        "uc": {"type": "array", "items": {"type": "string"}},
+        "status": {"type": "string"},
+        "scale": {"type": "string"},
+        "results": {"type": "string"},
+        "results_tier": {"type": "string"},
+        "quote": {"type": "string"},
+        "source_name": {"type": "string"},
+        "source_url": {"type": "string"},
+        "abstained_because": {"type": "string"},
+    },
+    "required": ["found", "name", "lead", "uc", "status", "scale", "results",
+                 "results_tier", "quote", "source_name", "source_url",
+                 "abstained_because"],
+    "additionalProperties": False,
+}
+
+CANDIDATES_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "initiatives": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"name": {"type": "string"}, "why": {"type": "string"}},
+                "required": ["name", "why"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    "required": ["initiatives"],
+    "additionalProperties": False,
+}
+
+OVERLAP_SCHEMA = {
+    "type": "object",
+    "properties": {"overlap_finding": {"type": "string"}},
+    "required": ["overlap_finding"],
     "additionalProperties": False,
 }
 
@@ -193,6 +239,72 @@ def international_lane_gate(about_country, page_title, url, country):
     if G.foreign_url(url or "", country) is None and G.names_country(page_title or "", country):
         return f"the citation is a {country} page, not another country's"
     return None
+
+
+STATUSES = ("Operating", "Piloting", "Announced", "Discontinued", "Unclear")
+RESULTS_TIERS = ("T1", "T2", "T3")
+
+
+def register_gate(entry, source_tier, country):
+    """Whether a register entry may be recorded. Returns a refusal, or None.
+
+    The rule that carries the weight is the source-tier protocol: T4 and T5 sources are
+    admissible for existence facts only, so an entry resting on one may say that a
+    programme exists and may not carry a tiered results claim. A results figure from a
+    vendor page or a press release, badged as though it were evaluated, is the most
+    plausible-looking wrong thing this lane could produce — and render_v17's own QC
+    refuses to emit a report containing one, so an entry like that would block the
+    diagnostic rather than merely mislead.
+    """
+    if not (entry.get("name") or "").strip():
+        return "the entry has no name"
+    if not (entry.get("lead") or "").strip():
+        return "the entry names nobody who runs it"
+    if source_tier not in ("T1", "T2", "T3", "T4", "T5"):
+        return f"the source tier {source_tier!r} is not a tier"
+
+    status = (entry.get("status") or "").strip()
+    if status not in STATUSES:
+        return f"the status {status!r} is not one of {', '.join(STATUSES)}"
+
+    rt = (entry.get("results_tier") or "").strip()
+    if rt:
+        if rt not in RESULTS_TIERS:
+            return (f"a results claim may only be tiered T1-T3; {rt} is not admissible "
+                    "for results")
+        if source_tier in ("T4", "T5"):
+            return (f"the entry rests on a {source_tier} source, which is admissible for "
+                    "existence only, so its results claim cannot be tiered")
+    return None
+
+
+# Words that identify nothing on their own. Stripped before comparing names, so that a
+# programme written with and without its sponsor is recognised as one programme.
+_NOISE = re.compile(
+    r"\b(the|el|al|programme|program|project|platform|app|application|system|initiative|"
+    r"service|digital|national|smart)\b")
+
+
+def dedupe_key(name):
+    n = _NOISE.sub(" ", (name or "").lower())
+    return re.sub(r"[^a-z0-9]+", "", n)
+
+
+def is_duplicate(a, b, floor=5):
+    """Whether two names denote one programme.
+
+    The register's own issues list records this failure in the hand-built pass: 'Al
+    Mufeed' and 'FAO El-Mufeed' were one app entered twice. Containment rather than
+    equality is what catches it, since the second name is the first with its sponsor
+    attached. The floor keeps a short fragment from swallowing unrelated entries.
+    """
+    ka, kb = dedupe_key(a), dedupe_key(b)
+    if not ka or not kb:
+        return False
+    if ka == kb:
+        return True
+    short, long = (ka, kb) if len(ka) <= len(kb) else (kb, ka)
+    return len(short) >= floor and short in long
 
 
 # ------------------------------------------------------------------ the lanes
@@ -329,6 +441,113 @@ def scan_international(chapter, country, llm, ledger, log):
     ), None
 
 
+# ------------------------------------------------------------------ the register
+#
+# The initiative and solutions register, which the diagnostic needs and which nothing
+# built until now. Same retrieval, same tiers, same quote verification as the other two
+# lanes; what it adds is the source-tier protocol on results claims, and deduplication.
+
+MAX_INITIATIVES = 12
+
+
+def discover_initiatives(country, llm, ledger, log):
+    """Candidate programmes to enter. Names only; each is researched on its own after."""
+    queries = [
+        f"{country} digital agriculture platform farmers",
+        f"{country} agriculture ministry digital service farmers app",
+        f"{country} agritech startup farmers platform",
+        f"{country} donor project digital agriculture extension",
+    ]
+    pages = _search_and_fetch(queries, ledger, log)
+    if not pages:
+        return []
+    ans = llm.json_call(
+        SYSTEM,
+        f"COUNTRY: {country}\n\nSOURCES:\n{_pack(pages)}\n\n"
+        f"List the digital agriculture initiatives operating in or announced for "
+        f"{country} that these sources name — government programmes, donor projects, "
+        "and private platforms serving farmers. Name each one as its source names it. "
+        "Do not invent any; list only what appears above.",
+        CANDIDATES_SCHEMA, PASS, max_tokens=2500, detail="initiative discovery")
+    return [i["name"] for i in (ans.get("initiatives") or [])[:MAX_INITIATIVES]]
+
+
+def research_initiative(name, country, llm, ledger, log):
+    """One register entry, or a reason there is none."""
+    pages = _search_and_fetch(
+        [f"{country} {name}", f"{name} {country} farmers results evaluation"],
+        ledger, log)
+    if not pages:
+        return None, "no page could be retrieved"
+
+    ans = llm.json_call(
+        SYSTEM,
+        f"COUNTRY: {country}\nINITIATIVE: {name}\n\nSOURCES:\n{_pack(pages)}\n\n"
+        "Record this initiative for a register of digital agriculture programmes.\n\n"
+        f"status must be exactly one of: {', '.join(STATUSES)}.\n"
+        "uc: the farmer-facing functions it serves, in plain words.\n"
+        "scale: what the sources say about reach, with the figure and who reported it.\n"
+        "results: what independent evaluation shows. If none was found, say so plainly.\n"
+        "results_tier: the tier of the source for the RESULTS claim, and only when that "
+        "source is T1, T2 or T3. Leave it empty for a government or vendor claim, for a "
+        "press report, and whenever no independent evaluation was found.\n"
+        "quote: copied EXACTLY from one source above, establishing that this exists.\n\n"
+        f"The initiative must be in {country}. Set found=false and say why if these "
+        "sources do not establish that it exists.",
+        REGISTER_ENTRY_SCHEMA, PASS, max_tokens=3000, detail=f"register {name[:24]}")
+
+    if not ans.get("found"):
+        return None, ans.get("abstained_because") or "its existence was not established"
+
+    page = _verify(ans, pages, log)
+    if not page:
+        return None, "the quote it reported is on none of the pages that were read"
+
+    refusal = country_lane_gate(ans.get("quote", ""), page["url"], country)
+    if refusal:
+        return None, refusal
+    refusal = register_gate(ans, page["tier"], country)
+    if refusal:
+        return None, refusal
+
+    return dict(
+        name=ans["name"].strip(),
+        lead=ans["lead"].strip(),
+        uc=[u.strip() for u in (ans.get("uc") or []) if u.strip()],
+        status=ans["status"].strip(),
+        scale=ans.get("scale", "").strip(),
+        results=ans.get("results", "").strip(),
+        results_tier=(ans.get("results_tier") or "").strip(),
+        tier=page["tier"],
+        src=ans.get("source_name") or page["title"],
+        src_url=page["url"],
+        overlap=[],
+        verification_note=f"Existence verified against {page['url']} ({page['tier']}).",
+    ), None
+
+
+def synthesise_overlap(entries, country, llm, ledger, log):
+    """Where the same job is being done more than once.
+
+    This is the register's most useful output: duplication is invisible entry by entry and
+    obvious across the set. It is a reading of the entries, so it names them rather than
+    introducing anything the entries do not contain.
+    """
+    if len(entries) < 2:
+        return ""
+    brief = "\n".join(
+        f"- {e['name']} (lead: {e['lead']}) — serves {', '.join(e['uc']) or 'unstated'}; "
+        f"{e['status']}" for e in entries)
+    ans = llm.json_call(
+        SYSTEM,
+        f"COUNTRY: {country}\n\nREGISTER:\n{brief}\n\n"
+        "Where is the same job being done more than once? Name the entries involved and "
+        "the function they duplicate. Say only what these entries show; do not introduce "
+        "programmes that are not listed, and do not recommend anything.",
+        OVERLAP_SCHEMA, PASS, max_tokens=2500, detail="overlap synthesis")
+    return (ans.get("overlap_finding") or "").strip()
+
+
 # ------------------------------------------------------------------ main
 
 def main():
@@ -350,17 +569,41 @@ def main():
     spend_path = os.path.join(LOOP1, f"{a.out}_scans_spend.json")
     out_path = os.path.join(LOOP1, f"{a.out}_scans.json")
 
-    state = {"country": {}, "international": {}, "abstained": {}}
+    state = {"country": {}, "international": {}, "register": {}, "abstained": {},
+             "overlap": ""}
     if a.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
+        state.setdefault("register", {})
+        state.setdefault("overlap", "")
         carried = ledger.load(spend_path)
-        done = len(state["country"]) + len(state["international"])
+        done = len(state["country"]) + len(state["international"]) + len(state["register"])
         print(f"resuming — {done} scans already done, {carried} earlier vendor calls "
               f"carried (${ledger.spent():.2f} spent)")
 
     chapters = prescriptive_chapters()
     units = ([("country", c) for c in chapters]
              + [("international", c) for c in chapters][:len(chapters) * POINTERS_PER_CHAPTER])
+
+    # The register is discovered before the chapter lanes run, because its unit count is
+    # not known until the discovery call comes back and the progress line must not claim a
+    # total it will then exceed.
+    print(f"{a.country} ({a.iso}) · discovering initiatives for the register...")
+    sys.stdout.flush()
+    try:
+        names = discover_initiatives(a.country, llm, ledger, lambda m: print(m))
+    except V.BudgetExhausted as e:
+        print(f"!! {e}")
+        return 0
+    except Exception as e:
+        print(f"  ! initiative discovery failed: {str(e)[:100]}")
+        names = []
+    fresh = []
+    for n in names:
+        if any(is_duplicate(n, k) for k in fresh) or any(
+                is_duplicate(n, r["name"]) for r in state["register"].values()):
+            continue
+        fresh.append(n)
+    units += [("register", {"n": n, "title": n, "content": ""}) for n in fresh]
     total = len(units)
     print(f"{a.country} ({a.iso}) · {total} rows · vendor {a.vendor}")
     print(f"budget ${a.ceiling:.0f}, scans allocation "
@@ -390,8 +633,11 @@ def main():
             return
         t0 = time.time()
         try:
-            fn = scan_country if lane == "country" else scan_international
-            rec, why = fn(chapter, a.country, llm, ledger, log)
+            if lane == "register":
+                rec, why = research_initiative(chapter["n"], a.country, llm, ledger, log)
+            else:
+                fn = scan_country if lane == "country" else scan_international
+                rec, why = fn(chapter, a.country, llm, ledger, log)
         except V.BudgetExhausted as e:
             with lock:
                 stopped = str(e)
@@ -404,8 +650,9 @@ def main():
             n = counter["n"]
             if rec:
                 state[lane][key] = rec
-                mark, outcome = ("C" if lane == "country" else "I"), "found"
-                detail = rec["statement"][:34]
+                mark = {"country": "C", "international": "I", "register": "R"}[lane]
+                outcome = "found"
+                detail = (rec.get("statement") or rec.get("name") or "")[:34]
             else:
                 state["abstained"][key] = {"lane": lane, "chapter": chapter["n"],
                                            "why": why}
@@ -426,11 +673,41 @@ def main():
         save()
         return 0
 
+    entries = list(state["register"].values())
+    if entries and not state.get("overlap"):
+        try:
+            state["overlap"] = synthesise_overlap(entries, a.country, llm, ledger, log)
+            save()
+        except V.BudgetExhausted as e:
+            print(f"\n!! {e}")
+            save()
+            return 0
+        except Exception as e:
+            log(f"  ! overlap synthesis failed: {str(e)[:100]}")
+
+    if entries:
+        register = {
+            "country": a.iso,
+            "register": "Initiative & solutions register — DAMM v1.7 diagnostic",
+            "access_date": datetime.date.today().isoformat(),
+            "protocol": ("DAMM-v1.6-Source-Tier-Protocol (T4-T5 admissible for existence "
+                         "facts only; results claims T1-T3)"),
+            "entries": entries,
+            "overlap_finding": state.get("overlap", ""),
+            "issues": ("Assembled by the scans pass. Entries whose results claim rested on "
+                       "a T4 or T5 source were recorded without a results tier, as the "
+                       "protocol requires. Initiatives named more than once across sources "
+                       "were entered once."),
+        }
+        json.dump(register, open(os.path.join(LOOP1, f"{a.out}_register.json"), "w"),
+                  indent=1, default=str)
+
     payload = {
         "country": a.country,
         "iso3": a.iso,
         "assessment_year": ASSESSMENT_YEAR,
         "country_findings": list(state["country"].values()),
+        "register_entries": entries,
         # Kept under its own key, and every record inside it carries applies_to=dar_only.
         # Two independent statements of the same rule, because this is the one that would
         # put another country's material into a document about this one.
@@ -443,11 +720,13 @@ def main():
     json.dump(payload, open(out_path, "w"), indent=1, default=str)
     ledger.save(spend_path)
 
-    nc, ni, na = (len(state["country"]), len(state["international"]),
-                  len(state["abstained"]))
+    nc, ni, nr, na = (len(state["country"]), len(state["international"]),
+                      len(entries), len(state["abstained"]))
     print()
+    if entries:
+        print(f"wrote {a.out}_register.json — {nr} initiatives")
     print(f"wrote {a.out}_scans.json — {nc} country findings, {ni} international "
-          f"pointers, {na} abstentions")
+          f"pointers, {nr} register entries, {na} abstentions")
     s = ledger.summary()
     print(f"spend ${s['total']:.2f} of ${a.ceiling * V.Ledger.ALLOCATION[PASS]:.0f} "
           f"allocated (${a.ceiling:.0f} country ceiling), {s['calls']} vendor calls")

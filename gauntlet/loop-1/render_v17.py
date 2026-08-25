@@ -12,7 +12,10 @@ ISO = sys.argv[1] if len(sys.argv) > 1 else "NGA"
 CFG = json.load(open(os.path.join(HERE, f"config_{ISO.lower()}.json")))
 DATA = CFG.get("data_path") or os.path.join(HERE, f"{ISO}_v17.json")
 REG  = CFG.get("register_path") or os.path.join(HERE, "research", f"{ISO}_register.json")
-OUT  = os.path.join(HERE, f"{CFG['country']}-DAR-Diagnostic.html")
+# `out_path` lets a pipeline run render its own diagnostic without colliding with a
+# hand-built one for the same country. It mirrors data_path and register_path above; the
+# default is unchanged, so every existing invocation writes exactly where it always did.
+OUT  = CFG.get("out_path") or os.path.join(HERE, f"{CFG['country']}-DAR-Diagnostic.html")
 
 d   = json.load(open(DATA))
 reg = json.load(open(REG))
@@ -190,6 +193,14 @@ def pillar_chart():
         lbl = f'{p} · {short[p]}'
         s.append(f'<text x="{x0-12}" y="{y+17}" class="rowlab" text-anchor="end">{esc(lbl)}</text>')
         s.append(f'<line x1="{x0}" y1="{y+24.5}" x2="{x1}" y2="{y+24.5}" class="track"/>')
+        if pd["mean"] is None:
+            # A pillar with nothing rated has no mean. Drawing a bar of zero length would
+            # read as a measured floor — the lowest possible maturity — when what happened
+            # is that no row in the pillar carries a level. The row keeps its track and
+            # says so, which is the same rule the tiles below already follow.
+            s.append(f'<text x="{x0+8}" y="{y+17}" class="vallab">Not rated'
+                     f'&#8202;<tspan class="dimlab">&#183; 0 of {pd["n"]} rated</tspan></text>')
+            continue
         bw = max(X(pd["mean"])-x0, 2)
         weak = pd["weak"]
         cls = "bar weakbar" if weak else "bar"
@@ -247,6 +258,11 @@ def layer_chart():
         v = d["layers"][L]; y = TOP+i*ROW
         s.append(f'<text x="{x0-12}" y="{y+16}" class="rowlab" text-anchor="end">{L} <tspan class="dimlab">n={counts.get(L,0)}</tspan></text>')
         s.append(f'<line x1="{x0}" y1="{y+22.5}" x2="{x1}" y2="{y+22.5}" class="track"/>')
+        if v is None:
+            # Same rule as the pillar chart: a layer with nothing rated has no mean, and a
+            # zero-length bar would read as the lowest maturity rather than as silence.
+            s.append(f'<text x="{x0+8}" y="{y+16}" class="vallab">Not rated</text>')
+            continue
         s.append(f'<rect x="{x0}" y="{y+4}" width="{max(X(v)-x0,2):.1f}" height="15" rx="3" class="bar">'
                  f'<title>{L}: mean {v:.2f}</title></rect>')
         s.append(f'<text x="{X(v)+8:.1f}" y="{y+16}" class="vallab">{v:.2f}</text>')
@@ -404,8 +420,9 @@ IMPACT = build_impact(d)
 _a1 = d["pillars"]["A1"]
 _a1v = _a1["comp"]["Measured"] + _a1["comp"]["Documented"]
 A1_NOTE = (f'A1 is scored as need, not digital maturity \u2014 a low reading is a large opportunity. '
-           f'Pillar mean {_a1["mean"]:.2f}, {("(" + _a1["band"] + ")") if _a1["weak"] else _a1["band"]}, '
-           f'averaged over the {_a1["rated"]} of {_a1["n"]} rows that carry a level'
+           + (f'Pillar mean {_a1["mean"]:.2f}, {("(" + _a1["band"] + ")") if _a1["weak"] else _a1["band"]}, '
+              if _a1["mean"] is not None else 'No row in the pillar carries a level, so there is no mean; ')
+           + f'averaged over the {_a1["rated"]} of {_a1["n"]} rows that carry a level'
            + (f' ({_a1["held"]} withheld pending ratification, {_a1["comp"]["Gap"]} recorded as gaps)'
               if (_a1["held"] or _a1["comp"]["Gap"]) else '')
            + f'; {_a1v} of {_a1["n"]} are value-backed.')
@@ -1008,7 +1025,9 @@ html_out = f"""<meta charset="utf-8">
 
 {sec(4, "Layer profile", "Playbook 1C",
      layer_chart()
-     + f'<p class="caption">Leapfrog gap = mean(Foundation) − mean(Transformation) = <b>{d["leapfrog"]["gap"]:+.2f}</b> — {esc(d["leapfrog"]["reading"]).lower()} (flag at |gap| &gt; 1.5). The national gap is calm; the use-case grain below is where fragility shows.</p>')}
+     + (f'<p class="caption">Leapfrog gap = mean(Foundation) − mean(Transformation) = <b>{d["leapfrog"]["gap"]:+.2f}</b> — {esc(d["leapfrog"]["reading"]).lower()} (flag at |gap| &gt; 1.5). The national gap is calm; the use-case grain below is where fragility shows.</p>'
+        if d["leapfrog"]["gap"] is not None else
+        '<p class="caption">Leapfrog gap = mean(Foundation) − mean(Transformation): not computable, because one of the two layers carries no rated row. An absent gap is not a calm one.</p>'))}
 
 {sec(5, "Use-case readiness matrix", "Playbook 2B — Digital Readiness",
      matrix_table() + prereq_strip(),

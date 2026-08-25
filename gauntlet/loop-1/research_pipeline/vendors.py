@@ -71,8 +71,14 @@ class Ledger:
     """
 
     # decision G3's apportionment, as fractions of the country ceiling
+    # Every pass is named here, including the one that costs nothing: a pass missing from
+    # the allocation has no share rather than a zero share, and the difference shows up as
+    # a surface that cannot say what a pass is allowed to spend.
     ALLOCATION = {"research": 0.40, "g2": 0.15, "scans": 0.15,
-                  "foresight": 0.10, "generation": 0.20, "audition": 1.00}
+                  "foresight": 0.10, "generation": 0.20,
+                  # Deterministic rendering of an assessment already paid for.
+                  "diagnostic": 0.00,
+                  "audition": 1.00}
 
     def __init__(self, ceiling=500.0, label="run"):
         self.ceiling, self.label = ceiling, label
