@@ -119,6 +119,46 @@ check("the candidate pattern comes from the model",
       F.CANDIDATE_PATTERN.pattern, F.CANDIDATE["id_pattern"])
 
 
+section("The standalone report states what it is")
+
+_P = dict(
+    country="Egypt", iso3="EGY", assessment_year=YEAR, method=F.FORESIGHT["method"],
+    method_ratified=False,
+    scenarios=[dict(name="Stalled rollout", narrative="n", drivers=["a"],
+                    what_would_make_it_happen="w", implication_for_the_sector="i")],
+    scenario_status=("Scenarios bound the uncertainty. They are plausible futures, not "
+                     "forecasts, and none of them is a recommendation."),
+    preferred_future=dict(name="Connected smallholders", narrative="n",
+                          drawn_from_scenarios=["Stalled rollout"],
+                          what_is_being_chosen="a choice about values",
+                          who_would_have_to_agree="MALR"),
+    preferred_future_status=("A normative selection — a claim about values, not a finding "
+                             "from evidence."),
+    milestones=[dict(statement="s", indicator_id="2.1", target_level=4, target_year=YEAR + 7,
+                     why_this_step="w", provisional_because=None, binds_to_candidate=False),
+                dict(statement="s2", indicator_id="C2-CAND-EXT", target_level=3,
+                     target_year=YEAR + 5, why_this_step="w",
+                     provisional_because="not part of the scored model",
+                     binds_to_candidate=True)],
+    refused_milestones=[dict(statement="a vague aspiration", why="it binds to no indicator")],
+    candidate_indicators=[dict(id="C2-CAND-EXT", name="Extension agents",
+                               proposed_pillar="C2", rationale="r")],
+    candidate_status="Recorded, carried, flagged as a ratification item.",
+    note="Every milestone binds to an indicator or a proposed candidate.",
+)
+_H = F.render_html(_P)
+
+check("it says scenarios are not forecasts", _H, "not forecasts")
+check("it marks the preferred future as a claim about values", _H, "claim about values")
+check("a candidate-bound milestone says it is outside every aggregate", _H,
+      "outside every aggregate")
+check("a provisional milestone carries why", _H, "not part of the scored model")
+check("refused milestones are shown, not dropped", _H, "a vague aspiration")
+check("an unratified method says so", _H, "not yet ratified")
+check("the standing prohibitions are on the page", _H, "prohibitions")
+check("nothing is left unescaped from the model text", "<script" in _H, "False")
+
+
 print()
 if FAILED:
     print(f"{len(FAILED)} of {COUNT} checks FAILED\n")

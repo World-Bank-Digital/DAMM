@@ -29,7 +29,7 @@ milestones aimed at levels nobody has measured.
     python3 foresight.py --country Egypt --iso EGY --out EGY_shadow [--ceiling 500] [--resume]
 """
 
-import argparse, json, os, re, sys, time
+import argparse, html, json, os, re, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
@@ -257,6 +257,112 @@ def scans_text(basename):
         f"  - {r['statement']} [{r['source_name']}, {r['tier']}]" for r in rows[:12])
 
 
+# ------------------------------------------------------------------ the report
+
+def render_html(payload):
+    """The standalone foresight report (steps 7-8).
+
+    Three things it states rather than implies. Scenarios are not forecasts. The preferred
+    future is a choice about values and not a finding from evidence. A milestone binds to
+    the instrument, and one that binds to a proposed candidate is standing on something
+    the model has not ratified.
+    """
+    c = html.escape
+    p = payload
+    out = [
+        "<meta charset='utf-8'>",
+        f"<title>{c(p['country'])} — Strategic Foresight</title>",
+        "<style>",
+        "body{font:16px/1.65 Georgia,serif;max-width:820px;margin:40px auto;padding:0 20px;color:#1a1a1a}",
+        "h1{font-size:2rem;margin-bottom:.15em}h2{margin-top:2.4em;border-bottom:1px solid #ddd;padding-bottom:.2em}",
+        "h3{margin-bottom:.2em}",
+        ".note{background:#f4f2ec;border-left:3px solid #9aa;padding:.7em 1em;font:13px/1.6 system-ui;margin:1em 0}",
+        ".normative{background:#fff7e6;border-left:3px solid #d9a441}",
+        ".drivers{font:13px/1.6 system-ui;color:#555}",
+        "table{border-collapse:collapse;width:100%;font:14px/1.5 system-ui;margin:1em 0}",
+        "th,td{border-bottom:1px solid #e5e5e5;padding:.5em .4em;text-align:left;vertical-align:top}",
+        "th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#666}",
+        ".prov{color:#8a6d1f;font:12px/1.5 system-ui}",
+        ".cand{background:#fff7e6}",
+        ".refused{font:13px/1.6 system-ui;color:#666}",
+        ".prohib{font:12px/1.6 system-ui;color:#666;border-top:1px solid #ddd;margin-top:3em;padding-top:1em}",
+        "</style>",
+        f"<h1>{c(p['country'])} — Strategic Foresight</h1>",
+        f"<p><em>Pre-review draft. Method: {c(p['method'])}"
+        + ("" if p.get("method_ratified") else " — the method is declared in the model file and is not yet ratified")
+        + f". Assessment year {p['assessment_year']}.</em></p>",
+    ]
+
+    out.append("<h2>Scenarios</h2>")
+    out.append(f"<div class='note'>{c(p['scenario_status'])}</div>")
+    for sc in p["scenarios"]:
+        out.append(f"<h3>{c(sc['name'])}</h3>")
+        out.append(f"<p>{c(sc['narrative'])}</p>")
+        if sc.get("drivers"):
+            out.append(f"<p class='drivers'><b>Driven by:</b> "
+                       f"{c(', '.join(sc['drivers']))}</p>")
+        if sc.get("what_would_make_it_happen"):
+            out.append(f"<p class='drivers'><b>What would bring it about:</b> "
+                       f"{c(sc['what_would_make_it_happen'])}</p>")
+        if sc.get("implication_for_the_sector"):
+            out.append(f"<p class='drivers'><b>Implication:</b> "
+                       f"{c(sc['implication_for_the_sector'])}</p>")
+
+    pf = p["preferred_future"]
+    out.append("<h2>The preferred future</h2>")
+    out.append(f"<div class='note normative'>{c(p['preferred_future_status'])}</div>")
+    out.append(f"<h3>{c(pf['name'])}</h3><p>{c(pf['narrative'])}</p>")
+    if pf.get("what_is_being_chosen"):
+        out.append(f"<p><b>What is being chosen:</b> {c(pf['what_is_being_chosen'])}</p>")
+    if pf.get("who_would_have_to_agree"):
+        out.append(f"<p><b>Who would have to agree:</b> {c(pf['who_would_have_to_agree'])}</p>")
+
+    out.append("<h2>Milestones</h2>")
+    out.append(f"<div class='note'>{c(p['note'])}</div>")
+    out.append("<table><thead><tr><th>Milestone</th><th>Binds to</th><th>Target</th>"
+               "<th>By</th></tr></thead><tbody>")
+    for m in p["milestones"]:
+        cand = m.get("binds_to_candidate")
+        out.append(
+            f"<tr{' class=cand' if cand else ''}><td>{c(m['statement'])}"
+            + (f"<div class='drivers'>{c(m.get('why_this_step',''))}</div>"
+               if m.get("why_this_step") else "")
+            + (f"<div class='prov'>{c(m['provisional_because'])}</div>"
+               if m.get("provisional_because") else "")
+            + f"</td><td>{c(m['indicator_id'])}"
+            + ("<div class='prov'>proposed candidate — outside every aggregate</div>"
+               if cand else "")
+            + f"</td><td>Level {m['target_level']}</td><td>{m['target_year']}</td></tr>")
+    out.append("</tbody></table>")
+
+    if p.get("candidate_indicators"):
+        out.append("<h2>Candidate indicators proposed</h2>")
+        out.append(f"<div class='note normative'>{c(p['candidate_status'])}</div>")
+        out.append("<table><thead><tr><th>Id</th><th>Name</th><th>Pillar</th>"
+                   "<th>Why</th></tr></thead><tbody>")
+        for cd in p["candidate_indicators"]:
+            out.append(f"<tr><td>{c(cd['id'])}</td><td>{c(cd['name'])}</td>"
+                       f"<td>{c(cd['proposed_pillar'])}</td>"
+                       f"<td>{c(cd.get('rationale',''))}</td></tr>")
+        out.append("</tbody></table>")
+
+    if p.get("refused_milestones"):
+        # Shown, not dropped. A milestone the exercise produced and the binding rule
+        # refused is a fact about the exercise, and hiding it would make the kept ones
+        # look like everything it had to say.
+        out.append("<h2>Proposed and not recorded</h2>")
+        out.append("<p class='refused'>These were produced by the backcasting step and "
+                   "refused, because a milestone that cannot be measured against the "
+                   "instrument is not a milestone.</p><ul class='refused'>")
+        for r in p["refused_milestones"]:
+            out.append(f"<li>{c(r.get('statement',''))} — <i>{c(r.get('why',''))}</i></li>")
+        out.append("</ul>")
+
+    out.append("<div class='prohib'><b>Standing prohibitions.</b> "
+               + c(" ".join(str(x) for x in SPEC.get("prohibitions", []))) + "</div>")
+    return "\n".join(out)
+
+
 # ------------------------------------------------------------------ main
 
 def main():
@@ -425,9 +531,12 @@ def main():
                  "every aggregate."),
     }
     json.dump(payload, open(out_path, "w"), indent=1, default=str)
+    html_path = os.path.join(LOOP1, f"{a.out}_foresight.html")
+    open(html_path, "w").write(render_html(payload))
     ledger.save(spend_path)
 
     print()
+    print(f"wrote {a.out}_foresight.html — the standalone report")
     print(f"wrote {a.out}_foresight.json — {len(state['scenarios'])} scenarios, "
           f"{len(state['milestones'])} milestones, {len(candidates)} candidate indicators, "
           f"{len(state.get('refused') or [])} refused")

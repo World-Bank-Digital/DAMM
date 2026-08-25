@@ -118,15 +118,18 @@ def main():
     PASS_SCRIPTS = {"research": "research_orchestrator.py", "g2": "gate2.py",
                     "scans": "scans.py",
                     "foresight": "foresight.py",
-                    "generation": "generate_dar.py"}
+                    "generation": "generate_dar.py",
+                    "diagnostic": "diagnostic.py"}
     pass_defaults = {}
     for pass_name, script in PASS_SCRIPTS.items():
         src = open(os.path.join(LOOP1, "research_pipeline", script)).read()
-        m = re.search(r'add_argument\(\s*"--vendor"\s*,\s*default\s*=\s*"([^"]+)"', src)
+        m = re.search(r'add_argument\(\s*"--vendor"\s*,\s*default\s*=\s*"([^"]*)"', src)
         if not m:
             sys.exit(f"{script}: could not read the --vendor default. Export refuses to "
                      f"guess it: a wrong default would let a model review its own pass.")
-        pass_defaults[pass_name] = m.group(1)
+        # An empty default means the pass makes no vendor call, which the app has to be
+        # able to tell apart from a pass whose default it failed to read.
+        pass_defaults[pass_name] = m.group(1) or None
 
     vendors_out = {
         "_source": "vendors._MODEL_PREFS and the --vendor defaults in "
