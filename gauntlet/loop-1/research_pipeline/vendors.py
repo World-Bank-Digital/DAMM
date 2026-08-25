@@ -244,16 +244,31 @@ TIER_DOMAINS = [
 _GOV_RE = re.compile(r"\.gov(\.[a-z]{2})?$|\.go\.[a-z]{2}$|\.gouv\.[a-z]{2}$")
 
 
-def tier_for_url(url):
+def tier_for_url(url, country=None):
     """Propose a tier from the publisher's domain. Reported, never weighted (C1).
 
     The most specific domain wins, not the highest tier: `openknowledge.worldbank.org`
     is the World Bank's *repository* of analytical reports (T2), and matching it on
     the shorter `worldbank.org` needle would file a flagship report as an official
     statistic. Longest matching needle first, therefore, in every case.
+
+    A national statistical office is T1 wherever the country is known, not only for the
+    two whose domains happened to be listed here. The protocol has always said official
+    statistics are T1; the table implemented that for Egypt and Nigeria and left every
+    other country's statistics bureau to the generic government pattern at T3, or below
+    it — Kenya publishes at knbs.or.ke, which is not a .gov domain at all and tiered T5.
+    The effect was a standing preference for international re-publishers over the body
+    that produces the numbers.
     """
     if not url:
         return "T5"
+    if country is not None:
+        try:
+            import nso_registry
+            if nso_registry.is_office(url, country):
+                return "T1"
+        except Exception:
+            pass
     host = (urllib.parse.urlparse(url).hostname or "").lower().lstrip(".")
     low = url.lower()
     best = None

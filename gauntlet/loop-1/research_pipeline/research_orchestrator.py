@@ -45,6 +45,7 @@ from engine_v17 import MODEL, tlevel
 from build_inputs import ladder_level, standalone, americanize
 import machine_pass
 import survey_pass
+import nso_registry
 
 PASS = "research"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
@@ -152,7 +153,12 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
             "You plan evidence searches for a national statistics assessment. JSON only.",
             f"COUNTRY: {country}\nINDICATOR: {spec['id']} — {spec['name']}\n"
             f"WHAT IT MEASURES: {construct}\n\n"
-            "Propose the web searches most likely to surface the highest-tier published "
+            + (f"THE NATIONAL STATISTICAL OFFICE publishes at "
+               f"{', '.join(nso_registry.domains_for(country))}. It is a T1 publisher for "
+               f"this country and is usually where a national figure is first released; "
+               f"search it by name as well as the responsible ministry.\n\n"
+               if nso_registry.domains_for(country) else "")
+            + "Propose the web searches most likely to surface the highest-tier published "
             "source for this exact construct, for this country and no other. Search the "
             "publisher, not the topic.",
             QUERY_SCHEMA, pass_name, max_tokens=2000, detail=f"queries {spec['id']}")
@@ -173,7 +179,7 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
                 seen[u]["surfaced_by"].append(who)
             return
         seen[u] = dict(url=u, title=title or "", published=published,
-                       tier=V.tier_for_url(u), surfaced_by=[who])
+                       tier=V.tier_for_url(u, country), surfaced_by=[who])
         ranked.append(seen[u])
 
     # The planner's queries plus one deterministic query built from the country and the
@@ -344,7 +350,7 @@ def row_from(spec, ans, verdict, gate, pack, corroboration, country):
     # The tier of record is the tier of the domain that actually carries the page, not
     # the tier the vendor proposed for it. Tier is a property of the publisher.
     if url:
-        tier = V.tier_for_url(url)
+        tier = V.tier_for_url(url, country)
 
     if not asserted or verdict in ("reject", "gap"):
         return dict(value=americanize(standalone(gap_value(ans, spec, country))),

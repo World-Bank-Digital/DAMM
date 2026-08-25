@@ -76,6 +76,40 @@ for url, want in [
 ]:
     check(f"tier {url[:52]}", V.tier_for_url(url), want)
 
+
+section("A country's own statistics office is T1, in every country")
+
+import nso_registry as NSO
+
+# The table named Egypt's and Nigeria's offices because those were the countries that had
+# been assessed. Everywhere else the body that produces the statistics tiered below a
+# World Bank re-publication of the same number, and Kenya's bureau — knbs.or.ke, not a
+# .gov domain at all — tiered T5, with the newswires.
+for url, country, want in [
+    ("https://www.knbs.or.ke/reports/x.pdf", "Kenya", "T1"),
+    ("https://mospi.gov.in/publication/y", "India", "T1"),
+    ("https://nsb.gov.bt/statistics", "Bhutan", "T1"),
+    ("https://www.capmas.gov.eg/z", "Egypt", "T1"),
+    ("https://www.nigerianstat.gov.ng/z", "Nigeria", "T1"),
+]:
+    check(f"{country}'s office is T1", V.tier_for_url(url, country), want)
+
+check("another country's office is not T1 here",
+      # Kenya's bureau is a fine publisher and still says nothing about Nigeria. The
+      # isolation gate is what should catch that, not a tier that quietly promotes it.
+      V.tier_for_url("https://www.knbs.or.ke/x", "Nigeria"), "T5")
+
+check("with no country named, nothing is promoted",
+      V.tier_for_url("https://www.knbs.or.ke/x"), "T5")
+
+check("the longest-needle rule still wins over the promotion",
+      V.tier_for_url("https://openknowledge.worldbank.org/r", "Kenya"), "T2")
+
+check("the registry covers most of the world", len(NSO.load()) > 150, True)
+check("and resolves the model's own country wording",
+      NSO.domains_for("Egypt, Arab Rep."), ["capmas.gov.eg"])
+
+
 section("Citation resolvability distinguishes a bad link from a bad day")
 check("a domain root is not a citation", V.url_resolves("https://www.example.com/")[0], False)
 check("a non-URL is not a citation", V.url_resolves("see the annex")[0], False)

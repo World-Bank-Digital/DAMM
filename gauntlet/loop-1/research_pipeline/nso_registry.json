@@ -1,0 +1,600 @@
+{
+ "_source": "https://unstats.un.org/home/nso_sites/",
+ "_note": "The UN Statistics Division's list of national statistical offices. Refresh with: python3 nso_registry.py --refresh",
+ "offices": {
+  "Algeria": [
+   "ons.dz"
+  ],
+  "Angola": [
+   "ine.gov.ao"
+  ],
+  "Benin": [
+   "insae-bj.org"
+  ],
+  "Botswana": [
+   "cso.gov.bw"
+  ],
+  "Burkina Faso": [
+   "insd.bf"
+  ],
+  "Burundi": [
+   "isteebu.bi"
+  ],
+  "Cabo Verde": [
+   "ine.cv"
+  ],
+  "Cameroon": [
+   "statistics-cameroon.org"
+  ],
+  "Central African Republic": [
+   "stat-centrafrique.com"
+  ],
+  "Chad": [
+   "inseed-tchad.org"
+  ],
+  "Congo": [
+   "cnsee.org"
+  ],
+  "Cote d’Ivoire": [
+   "ins.ci"
+  ],
+  "Djibouti": [
+   "ministere-finances.dj"
+  ],
+  "Egypt": [
+   "capmas.gov.eg"
+  ],
+  "Equatorial Guinea": [
+   "inege.gq"
+  ],
+  "Ethiopia": [
+   "csa.gov.et"
+  ],
+  "Gabon": [
+   "stat-gabon.org"
+  ],
+  "Gambia": [
+   "gbos.gm"
+  ],
+  "Ghana": [
+   "statsghana.gov.gh"
+  ],
+  "Guinea": [
+   "stat-guinee.org"
+  ],
+  "Guinea-Bissau": [
+   "stat-guinebissau.com"
+  ],
+  "Kenya": [
+   "knbs.or.ke"
+  ],
+  "Lesotho": [
+   "bos.gov.ls"
+  ],
+  "Liberia": [
+   "tlcafrica.com"
+  ],
+  "Libya": [
+   "bsc.ly"
+  ],
+  "Madagascar": [
+   "instat.mg"
+  ],
+  "Malawi": [
+   "nsomalawi.mw"
+  ],
+  "Mali": [
+   "instat-mali.org"
+  ],
+  "Mauritania": [
+   "ons.mr"
+  ],
+  "Mauritius": [
+   "statsmauritius.govmu.org"
+  ],
+  "Morocco": [
+   "hcp.ma"
+  ],
+  "Mozambique": [
+   "ine.gov.mz"
+  ],
+  "Namibia": [
+   "npc.gov.na"
+  ],
+  "Niger": [
+   "stat-niger.org"
+  ],
+  "Nigeria": [
+   "nigerianstat.gov.ng"
+  ],
+  "Rwanda": [
+   "statistics.gov.rw"
+  ],
+  "Sao Tome and Principe": [
+   "ine.st"
+  ],
+  "Senegal": [
+   "ansd.sn"
+  ],
+  "Seychelles": [
+   "nsb.gov.sc"
+  ],
+  "Sierra Leone": [
+   "statistics.sl"
+  ],
+  "South Africa": [
+   "statssa.gov.za"
+  ],
+  "South Sudan": [
+   "ssnbs.org"
+  ],
+  "Saint Helena": [
+   "sainthelena.gov.sh"
+  ],
+  "Sudan": [
+   "cbs.gov.sd"
+  ],
+  "Swaziland": [
+   "swazistats.org.sz"
+  ],
+  "Togo": [
+   "stat-togo.org"
+  ],
+  "Tunisia": [
+   "ins.nat.tn"
+  ],
+  "Uganda": [
+   "ubos.org"
+  ],
+  "United Republic of Tanzania": [
+   "nbs.go.tz"
+  ],
+  "Zambia": [
+   "zamstats.gov.zm"
+  ],
+  "Zimbabwe": [
+   "zimstat.co.zw"
+  ],
+  "Anguilla": [
+   "gov.ai"
+  ],
+  "Argentina": [
+   "indec.gob.ar"
+  ],
+  "Aruba": [
+   "cbs.aw"
+  ],
+  "Bahamas": [
+   "statistics.bahamas.gov.bs"
+  ],
+  "Barbados": [
+   "barstats.gov.bb"
+  ],
+  "Belize": [
+   "sib.org.bz"
+  ],
+  "Bermuda": [
+   "seaexpress.bm"
+  ],
+  "Bolivia": [
+   "ine.gob.bo"
+  ],
+  "Brazil": [
+   "ibge.gov.br"
+  ],
+  "Canada": [
+   "statcan.gc.ca"
+  ],
+  "Cayman Islands": [
+   "eso.ky"
+  ],
+  "Chile": [
+   "ine.cl"
+  ],
+  "Colombia": [
+   "dane.gov.co"
+  ],
+  "Costa Rica": [
+   "inec.go.cr"
+  ],
+  "Cuba": [
+   "one.cu"
+  ],
+  "Curaçao": [
+   "cbs.cw"
+  ],
+  "Dominican Republic": [
+   "one.gob.do"
+  ],
+  "Ecuador": [
+   "ecuadorencifras.gob.ec"
+  ],
+  "El Salvador": [
+   "digestyc.gob.sv"
+  ],
+  "Guatemala": [
+   "ine.gob.gt"
+  ],
+  "Guyana": [
+   "statisticsguyana.gov.gy"
+  ],
+  "Haiti": [
+   "ihsi.ht"
+  ],
+  "Honduras": [
+   "ine.gob.hn"
+  ],
+  "Jamaica": [
+   "statinja.gov.jm"
+  ],
+  "Mexico": [
+   "inegi.org.mx"
+  ],
+  "Nicaragua": [
+   "inide.gob.ni"
+  ],
+  "Panama": [
+   "contraloria.gob.pa"
+  ],
+  "Paraguay": [
+   "dgeec.gov.py"
+  ],
+  "Peru": [
+   "inei.gob.pe"
+  ],
+  "Saint Lucia": [
+   "stats.gov.lc"
+  ],
+  "Saint Martin": [
+   "sintmaartengov.org"
+  ],
+  "Suriname": [
+   "statistics-suriname.org"
+  ],
+  "Trinidad and Tobago": [
+   "cso.gov.tt"
+  ],
+  "Turks and Caicos Islands": [
+   "depstc.org"
+  ],
+  "Uruguay": [
+   "ine.gub.uy"
+  ],
+  "United States": [
+   "fedstats.sites.usa.gov"
+  ],
+  "Venezuela": [
+   "ine.gov.ve"
+  ],
+  "Armenia": [
+   "armstat.am"
+  ],
+  "Azerbaijan": [
+   "stat.gov.az"
+  ],
+  "Bahrain": [
+   "cio.gov.bh"
+  ],
+  "Bangladesh": [
+   "bbs.gov.bd"
+  ],
+  "Bhutan": [
+   "nsb.gov.bt"
+  ],
+  "Brunei Darussalam": [
+   "depd.gov.bn"
+  ],
+  "Cambodia": [
+   "nis.gov.kh"
+  ],
+  "China": [
+   "stats.gov.cn"
+  ],
+  "China, Hong Kong SAR": [
+   "censtatd.gov.hk"
+  ],
+  "China, Macao SAR": [
+   "dsec.gov.mo"
+  ],
+  "Cyprus": [
+   "mof.gov.cy"
+  ],
+  "Georgia": [
+   "geostat.ge"
+  ],
+  "India": [
+   "mospi.gov.in"
+  ],
+  "Indonesia": [
+   "bps.go.id"
+  ],
+  "Iran": [
+   "amar.org.ir"
+  ],
+  "Iraq": [
+   "cosit.gov.iq"
+  ],
+  "Israel": [
+   "cbs.gov.il"
+  ],
+  "Japan": [
+   "soumu.go.jp"
+  ],
+  "Jordan": [
+   "dos.gov.jo"
+  ],
+  "Kazakhstan": [
+   "stat.gov.kz"
+  ],
+  "Kyrgyzstan": [
+   "stat.kg"
+  ],
+  "Korea, Republic of": [
+   "kostat.go.kr"
+  ],
+  "Kuwait": [
+   "csb.gov.kw"
+  ],
+  "Lao People's Democratic Republic": [
+   "lsb.gov.la"
+  ],
+  "Lebanon": [
+   "cas.gov.lb"
+  ],
+  "Malaysia": [
+   "dosm.gov.my"
+  ],
+  "Maldives": [
+   "planning.gov.mv"
+  ],
+  "Mongolia": [
+   "nso.mn"
+  ],
+  "Myanmar": [
+   "csostat.gov.mm"
+  ],
+  "Nepal": [
+   "cbs.gov.np"
+  ],
+  "Oman": [
+   "ncsi.gov.om"
+  ],
+  "Pakistan": [
+   "pbs.gov.pk"
+  ],
+  "Philippines": [
+   "psa.gov.ph"
+  ],
+  "Qatar": [
+   "qsa.gov.qa"
+  ],
+  "Saudi Arabia": [
+   "stats.gov.sa"
+  ],
+  "Singapore": [
+   "singstat.gov.sg"
+  ],
+  "Sri Lanka": [
+   "statistics.gov.lk"
+  ],
+  "State of  Palestine": [
+   "pcbs.gov.ps"
+  ],
+  "Syrian Arab Repblic": [
+   "cbssyr.org"
+  ],
+  "Tajikistan": [
+   "stat.tj"
+  ],
+  "Thailand": [
+   "nso.go.th"
+  ],
+  "Timor Leste": [
+   "dne.mof.gov.tl"
+  ],
+  "Turkey": [
+   "turkstat.gov.tr"
+  ],
+  "United Arab Emirates": [
+   "fcsa.gov.ae"
+  ],
+  "Uzbekistan": [
+   "stat.uz"
+  ],
+  "Viet Nam": [
+   "gso.gov.vn"
+  ],
+  "Åland Islands": [
+   "asub.ax"
+  ],
+  "Albania": [
+   "instat.gov.al"
+  ],
+  "Andorra": [
+   "estadistica.ad"
+  ],
+  "Austria": [
+   "statistik.at"
+  ],
+  "Belarus": [
+   "belstat.gov.by"
+  ],
+  "Belgium": [
+   "statbel.fgov.be"
+  ],
+  "Bosnia and Herzegovina": [
+   "bhas.ba"
+  ],
+  "Bulgaria": [
+   "nsi.bg"
+  ],
+  "Croatia": [
+   "dzs.hr"
+  ],
+  "Czech Republic": [
+   "czso.cz"
+  ],
+  "Denmark": [
+   "dst.dk"
+  ],
+  "Estonia": [
+   "stat.ee"
+  ],
+  "Faroe Islands": [
+   "hagstova.fo"
+  ],
+  "Finland": [
+   "stat.fi"
+  ],
+  "France": [
+   "insee.fr"
+  ],
+  "Germany": [
+   "destatis.de"
+  ],
+  "Greece": [
+   "statistics.gr"
+  ],
+  "Greenland": [
+   "stat.gl"
+  ],
+  "Hungary": [
+   "ksh.hu"
+  ],
+  "Iceland": [
+   "hagstofa.is"
+  ],
+  "Ireland": [
+   "cso.ie"
+  ],
+  "Italy": [
+   "istat.it"
+  ],
+  "Latvia": [
+   "csb.lv"
+  ],
+  "Liechtenstein": [
+   "as.llv.li"
+  ],
+  "Lithuania": [
+   "stat.gov.lt"
+  ],
+  "Luxembourg": [
+   "statec.lu"
+  ],
+  "Malta": [
+   "nso.gov.mt"
+  ],
+  "Moldova": [
+   "statistica.md"
+  ],
+  "Monaco": [
+   "gouv.mc"
+  ],
+  "Montenegro": [
+   "monstat.org"
+  ],
+  "Netherlands": [
+   "cbs.nl"
+  ],
+  "North Macedonia": [
+   "stat.gov.mk"
+  ],
+  "Norway": [
+   "ssb.no"
+  ],
+  "Poland": [
+   "stat.gov.pl"
+  ],
+  "Portugal": [
+   "ine.pt"
+  ],
+  "Romania": [
+   "insse.ro"
+  ],
+  "Russian Federation": [
+   "gks.ru"
+  ],
+  "San Marino": [
+   "upeceds.sm"
+  ],
+  "Serbia": [
+   "webrzs.stat.gov.rs"
+  ],
+  "Slovakia": [
+   "statistics.sk"
+  ],
+  "Slovenia": [
+   "stat.si"
+  ],
+  "Spain": [
+   "ine.es"
+  ],
+  "Sweden": [
+   "scb.se"
+  ],
+  "Switzerland": [
+   "bfs.admin.ch"
+  ],
+  "Ukraine": [
+   "ukrstat.gov.ua"
+  ],
+  "United Kingdom": [
+   "statistics.gov.uk"
+  ],
+  "Australia": [
+   "abs.gov.au"
+  ],
+  "Cook Islands": [
+   "stats.gov.ck"
+  ],
+  "Fiji": [
+   "statsfiji.gov.fj"
+  ],
+  "Guam": [
+   "bsp.guam.gov"
+  ],
+  "Kiribati": [
+   "spc.int"
+  ],
+  "Micronesia, Federated States of": [
+   "fsmgov.org"
+  ],
+  "Marshall Islands": [
+   "rmiembassyus.org"
+  ],
+  "Nauru": [
+   "spc.int"
+  ],
+  "New Zealand": [
+   "stats.govt.nz"
+  ],
+  "Niue": [
+   "spc.int"
+  ],
+  "Northern Mariana Islands": [
+   "commerce.gov.mp"
+  ],
+  "Palau": [
+   "palaugov.net"
+  ],
+  "Papua New Guinea": [
+   "nso.gov.pg"
+  ],
+  "Solomon Islands": [
+   "spc.int"
+  ],
+  "Tokelau": [
+   "spc.int"
+  ],
+  "Tonga": [
+   "spc.int"
+  ],
+  "Tuvalu": [
+   "spc.int"
+  ],
+  "Vanuatu": [
+   "spc.int"
+  ]
+ }
+}
