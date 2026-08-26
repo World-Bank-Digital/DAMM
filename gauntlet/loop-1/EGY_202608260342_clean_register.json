@@ -1,9 +1,139 @@
 {
  "country": "EGY",
  "register": "Initiative & solutions register \u2014 DAMM v1.7 diagnostic",
- "access_date": "",
- "protocol": "DAMM-v1.6-Source-Tier-Protocol",
- "entries": [],
- "overlap_finding": "",
- "issues": "The scans pass has not run for this assessment, so no initiative register was gathered. This section is empty because nothing was looked for, not because nothing was found."
+ "access_date": "2026-08-26",
+ "protocol": "DAMM-v1.6-Source-Tier-Protocol (T4-T5 admissible for existence facts only; results claims T1-T3)",
+ "entries": [
+  {
+   "name": "El Mufeed in Food and Agriculture (FAO mobile app, Egypt)",
+   "lead": "FAO Representation in Egypt, developed under FAO's Digital Services Portfolio (DSP) and promoted with the Ministry of Agriculture and Land Reclamation (MALR); rolled out under the project \"Inclusive rural Information and communication services for agricultural innovation and resilient family farming in the NENA region\"",
+   "uc": [
+    "Advisory content on citrus production",
+    "Advisory content on date palm production",
+    "Healthy nutrition guidance",
+    "Household poultry production guidance",
+    "Wholesale price information for vegetables and fruits",
+    "COVID-19 food safety information (theme added in 2020)",
+    "FAO Egypt news updates pushed to users via an in-app Twitter feed",
+    "Free download and use via Google Play Store; used by extension agents to disseminate simplified information to farmers"
+   ],
+   "status": "Operating",
+   "scale": "The sources give no user, download or coverage figures. They state only that the app was launched in 2019 nationally in Egypt, that a promotional campaign using social media (Facebook) was run to expand its use and was \"recommended for replication in other countries\", and that in December 2020 FAO and MALR invited extension agents to use the app and disseminate it among targeted groups.",
+   "results": "No independent evaluation was found in these sources. The only outcome-type material is FAO's own 2023 video of farmer testimonials (\"El Mufeed Application in Food and Agriculture: Testimonials\") and FAO's self-reported statement that the promotional campaign was successful and recommended for replication \u2014 both publisher (FAO) claims about its own app, not independent assessment. No adoption, yield, income or usage metrics are reported.",
+   "results_tier": "",
+   "tier": "T1",
+   "src": "FAO Digital Services Portfolio \u2014 Country Cases (Egypt)",
+   "src_url": "https://www.fao.org/digital-services/country-cases/en",
+   "overlap": [],
+   "verification_note": "Existence verified against https://www.fao.org/digital-services/country-cases/en (T1)."
+  },
+  {
+   "name": "EU-ZIRA3A (EU Integrated Rural Development Programme for Egypt)",
+   "lead": "Funded by the European Union (with parallel Italian funding) and implemented by the Italian Agency for Development Cooperation (AICS Cairo), working with the Ministry of Agriculture and Land Reclamation (MALR) and governorate directorates",
+   "uc": [
+    "Agricultural extension advice to smallholder farmers via equipped extension departments in Sohag, Assiut and Beni Suef",
+    "Veterinary and livestock services, including artificial insemination centres",
+    "Irrigation and water-scarcity mitigation support for farmers",
+    "Plant quarantine, inspection and sampling services supporting export procedures (visual inspection/sampling of citrus and medicinal and aromatic plants)",
+    "Vocational training and income-generating support for rural women and youth",
+    "Staff capacity building in data analysis and project management (Excel, Power BI, SPSS) and IT equipment for MALR digital infrastructure"
+   ],
+   "status": "Operating",
+   "scale": "Programme website reports a total EU fund of \u20ac24M plus AICS parallel funding of \u20ac3.3M (one programme news item cites \u20ac27.3 million total), covering three governorates \u2014 Assiut, Sohag and Beni Suef \u2014 with implementation started November 2022 for 66 months; direct beneficiaries described qualitatively as rural farming communities and their cooperatives, with no farmer headcount given. One event report notes the MAPs Festival booth in Beni Suef attracted 'more than 200 visitors'.",
+   "results": "No independent evaluation was found in these sources. The available material is programme/implementer self-reporting (AICS and the EU-ZIRA3A programme website) describing deliveries of IT equipment, trainings and expected results; no outcome data on farmer incomes, yields or service uptake is published here.",
+   "results_tier": "",
+   "tier": "T5",
+   "src": "About - EU-ZIRA3A",
+   "src_url": "https://eu-zira3a.org/en/",
+   "overlap": [],
+   "verification_note": "Existence verified against https://eu-zira3a.org/en/ (T5)."
+  },
+  {
+   "name": "Climate Resilient Agri-Food Transformation Project (CRAFT), P180480",
+   "lead": "Government of Egypt \u2014 borrower Ministry of International Cooperation; implementing agencies Ministry of Agriculture and Land Reclamation, Ministry of Water Resources and Irrigation, Ministry of Environment; financed by the World Bank (IBRD, US$250 million). Part of the food pillar of Egypt's NWFE country platform.",
+   "uc": [
+    "Nation-wide agricultural information system to support farm and policy decision-making",
+    "Agro-climatic early warning services for farmers (nationwide component)",
+    "Promotion and adoption of climate-smart agriculture technologies and practices",
+    "Improved irrigation services and modern (drip/single-lift) irrigation support, including water user associations",
+    "Help for smallholders to aggregate and access markets and value chains",
+    "Improved access to agricultural finance and technical support",
+    "Agricultural risk management and innovation support"
+   ],
+   "status": "Announced",
+   "scale": "Total operation cost US$250.00 million, all IBRD financing (World Bank Project Information Document, Concept Stage, 24-Apr-2024). Geographic scope per Egypt's Ministry of International Cooperation (Sept 2024): modern irrigation components in Delta governorates \u2014 Menoufia, Sharqia and Gharbia, in centres and villages under the 'Hayah Karima' initiative \u2014 and nationwide coverage for the early warning system component; the Minister of Agriculture and Land Reclamation stated the project would benefit 'around 30 million residents' of the Nile Valley and Delta. No farmer-user or registration figures are reported in these sources.",
+   "results": "No independent evaluation was found. The sources are a World Bank concept-stage Project Information Document (April 2024, pre-appraisal) and a September 2024 Egyptian government readout of a preparation-status meeting; neither reports implementation results, adoption rates, or impact evidence.",
+   "results_tier": "",
+   "tier": "T1",
+   "src": "World Bank \u2014 Project Information Document (Concept Stage), Climate Resilient Agri-Food Transformation Project (P180480), Report No. PIDC35458",
+   "src_url": "https://documents1.worldbank.org/curated/en/099042424185030624/pdf/P1804801d17e9208184851221aa3cdbbfb.pdf",
+   "overlap": [],
+   "verification_note": "Existence verified against https://documents1.worldbank.org/curated/en/099042424185030624/pdf/P1804801d17e9208184851221aa3cdbbfb.pdf (T1)."
+  },
+  {
+   "name": "Digital literacy training to promote diffusion of digital agricultural tools to smallholder farmers (randomized intervention, Egypt)",
+   "lead": "International Food Policy Research Institute (IFPRI), Development Strategies and Governance Unit (authors Fatma Abdelaziz and Kibrom A. Abay), implemented with the GIZ Egypt office; funded by the CGIAR Research Program Scaling for Impact and USAID. Registered as AEARCTR-0012723.",
+   "uc": [
+    "Classroom-based digital literacy training for smallholder farmers, delivered through a Training of Trainers (TOT) model",
+    "Edutainment variants: a video-based play or a live community play shown before the training, to build awareness and trust",
+    "Hands-on onboarding to two Egyptian farmer mobile apps offering crop marketing/sales services",
+    "App-based agricultural advisory (extension) information",
+    "App-based ordering and delivery of farm inputs"
+   ],
+   "status": "Piloting",
+   "scale": "The provided sources do not give a farmer or governorate count. They describe only the design: a randomized controlled trial with three treatment arms (T1 standard classroom digital literacy training, T2 training preceded by a video-based play, T3 training preceded by a live community play) and a control group, delivered via a Training of Trainers model and covering two Egyptian mobile apps (IFPRI Discussion Paper 02359, September 2025; Food Policy 141 (2026) 103108). No sample size, number of villages, or budget figure appears in the excerpts available.",
+   "results": "An RCT evaluation by the study authors (IFPRI), published as IFPRI Discussion Paper 02359 (Sept 2025) and in the peer-reviewed journal Food Policy 141 (2026) 103108, reports that all variants of digital training significantly increased uptake and utilization of digital tools: the standard digital training alone raised uptake by 20 percentage points and utilization by 26 percentage points (discussion paper) / 18 percentage points (published journal version), and the interventions raised farmer trust in digital tools by 8-13 percentage points. Notably, for some outcomes the training alone outperformed the combined arms that added edutainment nudges, with the authors pointing to group size effects and social influence dynamics during the plays; impacts also varied by farmer gender and age. Caveat: the evaluators are the same team that designed and implemented the intervention (IFPRI with GIZ Egypt), so this is not a third-party evaluation, though the journal version is peer-reviewed.",
+   "results_tier": "T2",
+   "tier": "T2",
+   "src": "IFPRI Discussion Paper 02359, \"Digital Literacy Training to Promote Diffusion of Digital Agricultural Tools to Smallholder Farmers: Evidence from a Randomized Intervention in Egypt\" (September 2025)",
+   "src_url": "https://cgspace.cgiar.org/server/api/core/bitstreams/a95d7429-19f8-4a76-8152-06c499fce4a0/content",
+   "overlap": [],
+   "verification_note": "Existence verified against https://cgspace.cgiar.org/server/api/core/bitstreams/a95d7429-19f8-4a76-8152-06c499fce4a0/content (T2)."
+  },
+  {
+   "name": "Cultivaet (Cultivaet Platform: Farmer AI Companion, Knowledge Platform, Business SaaS)",
+   "lead": "Cultivaet Technologies Holding Ltd. (private AI/AgriTech startup, founded 2023, HQ Cairo, Egypt; backed by Raya FutureTECH grant and Sanabil 500 MENA Seed Accelerator / 500 Global; Google Cloud Startups Program)",
+   "uc": [
+    "AI farmer assistant giving personalised daily advice based on the farmer's location and crops",
+    "Weather forecasts",
+    "Crop planning",
+    "Pest control guidance",
+    "Soil health advice",
+    "Knowledge hub collecting and distributing scientific and social agricultural data",
+    "B2B SaaS linking farmers to food-industry buyers for funding, purchase and procurement with traceability"
+   ],
+   "status": "Unclear",
+   "scale": "No user or farmer reach figures are reported in any source. Company size only: \"3 employees\" per the Pitch directory profile [2]; \"11-50 employees\" per LinkedIn [4] and Lucidity Insights [6]. Funding stage reported by Lucidity Insights as a grant (Raya FutureTECH, 08 Jul 2024) and Pre-Seed (Sanabil 500 MENA Seed Accelerator, 11 Nov 2024), amounts undisclosed.",
+   "results": "No independent evaluation was found. All available sources are the company's own marketing site, directory/startup-database listings and a third-party API profile that explicitly notes Cultivaet \"publishes only a marketing site (cultivaet.ai) with no public API, developer portal, documentation\". No adoption, yield, income or accuracy outcomes are documented anywhere in these sources.",
+   "results_tier": "",
+   "tier": "T5",
+   "src": "Cultivaet (official website)",
+   "src_url": "https://cultivaet.ai/",
+   "overlap": [],
+   "verification_note": "Existence verified against https://cultivaet.ai/ (T5)."
+  },
+  {
+   "name": "Qamhawey",
+   "lead": "Mahaseel Technologies (Mahaseel Masr), Cairo, Egypt",
+   "uc": [
+    "AI chat advisory (\"Ask the Expert\") answering crop care, pest management and planting questions via text, speech or uploaded images",
+    "Crop disease, pest and nutrient-deficiency detection from photos taken in the field",
+    "Weather forecasting (stated as 10 days ahead) with guidance on adapting farm operations to weather",
+    "Speech-to-text and text-to-speech in local Egyptian Arabic dialects for low-literacy farmers",
+    "Multimedia agricultural advisory content, product recommendations, and market price/supply-chain information",
+    "Linked e-commerce shop (shop.qamhawey.com) selling fertilisers, pesticides, seeds, seedlings, soil and equipment, with buy-now-pay-later instalments"
+   ],
+   "status": "Operating",
+   "scale": "Vendor claims: \"actively supporting 50,000+ Egyptian farmers\" and AI models \"trained on a dataset of 800,000+ plant disease images\" (Mahaseel LinkedIn post, 2025); the qamhawey.com site claims \"10K+ Happy Farmers\" and \"5+ Years Experience\" (with several other counters displaying as zero); the Mahaseel Masr shop 'About Us' page claims \"+ 57,000\" farmers, \"+2,000,000\" tonnes harvested and \"530,000\" hectares. The iOS app (Mahaseel Masr, version 1.0.4, 10/11/2025) shows only 1 rating. All figures are self-reported by the company and are mutually inconsistent.",
+   "results": "No independent evaluation found. All performance figures in the available sources are vendor self-claims from company-controlled web properties (e.g. \"40% Crop Yield Increase\", \"35% Cost Reduction\", \"95% Disease Prevention\", \"95% Accuracy Rate\") with no stated methodology, sample, or third-party verification. No peer-reviewed study, donor evaluation or randomised assessment of Qamhawey appears in these sources.",
+   "results_tier": "",
+   "tier": "T5",
+   "src": "Mahaseel (LinkedIn post): \"Mahaseel's Qamhawey: AI for Egyptian Farmers\"",
+   "src_url": "https://www.linkedin.com/posts/mahaseel-masr_mahaseel-qamhawey-agritech-activity-7358791808203563009-P31i",
+   "overlap": [],
+   "verification_note": "Existence verified against https://www.linkedin.com/posts/mahaseel-masr_mahaseel-qamhawey-agritech-activity-7358791808203563009-P31i (T5)."
+  }
+ ],
+ "overlap_finding": "Duplicated functions visible in the six listed entries:\n\n1) Crop advisory / extension content to farmers \u2014 five of six entries carry this job.\n- El Mufeed: \"Advisory content on citrus production\", \"Advisory content on date palm production\", \"Household poultry production guidance\", and is \"used by extension agents to disseminate simplified information to farmers\".\n- EU-ZIRA3A: \"Agricultural extension advice to smallholder farmers via equipped extension departments in Sohag, Assiut and Beni Suef\".\n- Cultivaet: \"AI farmer assistant giving personalised daily advice based on the farmer's location and crops\", plus \"Crop planning\", \"Pest control guidance\", \"Soil health advice\".\n- Qamhawey: \"AI chat advisory (\\\"Ask the Expert\\\") answering crop care, pest management and planting questions via text, speech or uploaded images\" and \"Multimedia agricultural advisory content\".\n- IFPRI digital literacy intervention: \"App-based agricultural advisory (extension) information\".\nThe delivery channel differs (static app content, physical extension departments, AI assistant, training-mediated app use) but the service delivered \u2014 advisory/extension guidance to smallholders \u2014 is the same.\n\n2) Pest and crop-health diagnosis/guidance \u2014 Cultivaet (\"Pest control guidance\", \"Soil health advice\") and Qamhawey (\"Crop disease, pest and nutrient-deficiency detection from photos taken in the field\") both cover the same pest/disease advisory function for the same user group.\n\n3) Weather / agro-climatic information \u2014 three entries.\n- CRAFT: \"Agro-climatic early warning services for farmers (nationwide component)\".\n- Cultivaet: \"Weather forecasts\".\n- Qamhawey: \"Weather forecasting (stated as 10 days ahead) with guidance on adapting farm operations to weather\".\nCRAFT is \"Announced\" while the two private services are \"Operating\"/\"Unclear\", so the duplication is between a planned public service and existing commercial ones.\n\n4) Price and market information \u2014 El Mufeed: \"Wholesale price information for vegetables and fruits\"; Qamhawey: \"market price/supply-chain information\". Both publish price signals to farmers.\n\n5) Market linkage / route to buyers \u2014 Cultivaet: \"B2B SaaS linking farmers to food-industry buyers for funding, purchase and procurement with traceability\"; CRAFT: \"Help for smallholders to aggregate and access markets and value chains\"; IFPRI intervention: onboarding to \"two Egyptian farmer mobile apps offering crop marketing/sales services\". Three entries address the same aggregation/market-access function.\n\n6) Farm input supply through digital ordering \u2014 Qamhawey: \"Linked e-commerce shop (shop.qamhawey.com) selling fertilisers, pesticides, seeds, seedlings, soil and equipment, with buy-now-pay-later instalments\"; IFPRI intervention: \"App-based ordering and delivery of farm inputs\". Same function, one as a vendor platform and one as a promoted app feature.\n\n7) Farmer access to finance/credit \u2014 CRAFT: \"Improved access to agricultural finance and technical support\"; Qamhawey: \"buy-now-pay-later instalments\"; Cultivaet: linking farmers to buyers \"for funding\". Three entries touch the same financing function, though the instruments named differ.\n\n8) Irrigation and water-scarcity support \u2014 EU-ZIRA3A: \"Irrigation and water-scarcity mitigation support for farmers\"; CRAFT: \"Improved irrigation services and modern (drip/single-lift) irrigation support, including water user associations\". Two donor-funded programmes, both working with MALR, carry the same irrigation-support function; CRAFT's national scope and EU-ZIRA3A's Sohag/Assiut/Beni Suef governorate footprint mean geographic overlap is possible but the register does not state CRAFT's governorate targeting, so I do not assert it.\n\n9) Agricultural knowledge/information aggregation \u2014 CRAFT: \"Nation-wide agricultural information system to support farm and policy decision-making\"; Cultivaet: \"Knowledge hub collecting and distributing scientific and social agricultural data\". Both are content/data aggregation layers, one state-facing and one private.\n\n10) Mobile app as the channel to smallholders \u2014 El Mufeed is a free MALR-promoted app (\"Free download and use via Google Play Store\"), while the IFPRI intervention delivers \"Hands-on onboarding to two Egyptian farmer mobile apps\". The register does not name those two apps, so I cannot state whether they are El Mufeed, Cultivaet or Qamhawey; I abstain on that identification.\n\nCapacity-building overlap not asserted: EU-ZIRA3A's \"Staff capacity building in data analysis and project management (Excel, Power BI, SPSS)\" targets MALR staff, whereas the IFPRI intervention delivers \"Classroom-based digital literacy training for smallholder farmers\". Different audiences on the register's own wording, so I do not record these as the same job.",
+ "issues": "Assembled by the scans pass. Entries whose results claim rested on a T4 or T5 source were recorded without a results tier, as the protocol requires. Initiatives named more than once across sources were entered once."
 }

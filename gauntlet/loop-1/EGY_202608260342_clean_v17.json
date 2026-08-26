@@ -718,15 +718,15 @@
    "kind": "t"
   },
   "4.9": {
-   "value": "DATA GAP \u2014 Reviewed all five supplied pages in order. (1) OECD Working Paper No. 35, 'Integrated Governance for Coherent Implementation of the SDGs in Egypt' (T2): the retrieved text covers foreword and acknowledgements and frames institutional/decision-making arrangements for SDGs generally; no agricultural or digital-agriculture coordination body appears in the retrieved extract. (2) OECD 'SME and Entrepreneurship Policy in Egypt', ch. 4 on strategic framework and delivery arrangements (T2): coordination discussion is confined to SME policy and MSMEDA. (3) MPED news item on the national statistics strategy (T3): records collaboration with 18 ministries on statistics development and mentions a 'Ministerial Group for Entrepreneurship' in the sidebar \u2014 neither is an agriculture/digital-agriculture mechanism. (4) MOIC page on Egypt\u2013UNSDCF technical coordination meetings (T3): describes the Joint Steering Committee and five results groups (human capital; sustainable and inclusive economic development; climate resilience; governance; women's empowerment) \u2014 no agriculture or digital-agriculture results group. (5) PARIS21 National Statistical System Assessment of Egypt 2015 (tagged T5 by domain): notes weakening of statistical coordination mechanisms and lists a Consultancy Committee for Statistical Planning and Coordination \u2014 a statistics body, not an agricultural one, and in any case dated and not at an admissible tier for this prerequisite row. Dead ends: no Ministry of Agriculture and Land Reclamation, MCIT, or Cabinet decree text was among the retrieved pages, so the sector-specific instruments that would settle this cell (a digital-agriculture steering committee, an agri-data governance council, or an MALR\u2013MCIT joint committee) could not be checked. Holding for ratification pending retrieval of MALR/MCIT/Cabinet sources.",
-   "cls": "Gap",
-   "level": null,
-   "year": 2026,
-   "src": "Automated source search, 26 August 2026",
-   "note": "Next level not proposed: 'Announced' or higher was not proposed because no retrieved page names any inter-ministerial committee, council, or standing coordination mechanism covering agriculture or agricultural digitalisation in Egypt. 'Absent' was likewise not proposed because the retrieved set contains no agriculture or digital-agriculture governance artifact whose silence could be read as evidence of non-existence. The closest retrieved items are: (a) the OECD working paper on integrated governance for SDG implementation in Egypt, which assesses whole-of-government institutional and decision-making arrangements for the SDGs rather than any agriculture or digital-agriculture coordination body; (b) the OECD SME and Entrepreneurship Policy in Egypt chapter on 'policy co-ordination mechanisms and delivery arrangements', which is explicitly about SME policy, not agriculture; (c) the Ministry of Planning page describing a national statistics strategy prepared 'in collaboration with 18 Egyptian ministries', which is a statistical-system process, not a standing agricultural coordination body; and (d) the MOIC page on the Egypt\u2013UNSDCF Joint Steering Committee co-chaired by MPED and the UN Resident Coordinator with results groups co-chaired by line ministries \u2014 a UN development-cooperation governance structure, not a domestic inter-ministerial mechanism for agriculture or agricultural data. On the census's open question (standing body vs. any documented recurring mechanism), the UNSDCF steering committee would sit on the permissive side of that line, but it fails on sector: none of its five results groups is an agriculture or digital-agriculture group, so it does not evidence the named construct regardless of how the definition is ratified.",
-   "tier": "",
+   "value": "\u0627\u0646\u0639\u0642\u0627\u062f \u0627\u0644\u0627\u062c\u062a\u0645\u0627\u0639 \u0627\u0644\u062b\u0627\u0644\u062b \u0644\u0644\u0645\u062c\u0645\u0648\u0639\u0629 \u0627\u0644\u0648\u0632\u0627\u0631\u064a\u0629 \u0644\u0631\u064a\u0627\u062f\u0629 \u0627\u0644\u0623\u0639\u0645\u0627\u0644 \u0628\u0631\u0626\u0627\u0633\u0629 \u0648\u0632\u064a\u0631\u0629 \u0627\u0644\u062a\u062e\u0637\u064a\u0637 \u0648\u0627\u0644\u062a\u0646\u0645\u064a\u0629 \u0627\u0644\u0627\u0642\u062a\u0635\u0627\u062f\u064a\u0629 \u0648\u0627\u0644\u062a\u0639\u0627\u0648\u0646 \u0627\u0644\u062f\u0648\u0644\u064a",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2025,
+   "src": "Ministry of Planning, Economic Development and International Cooperation \u2014 \u0627\u0646\u0639\u0642\u0627\u062f \u0627\u0644\u0627\u062c\u062a\u0645\u0627\u0639 \u0627\u0644\u062b\u0627\u0644\u062b \u0644\u0644\u0645\u062c\u0645\u0648\u0639\u0629 \u0627\u0644\u0648\u0632\u0627\u0631\u064a\u0629 \u0644\u0631\u064a\u0627\u062f\u0629 \u0627\u0644\u0623\u0639\u0645\u0627\u0644 \u0628\u0631\u0626\u0627\u0633\u0629 \u0648\u0632\u064a\u0631\u0629 \u0627\u0644\u062a\u062e\u0637\u064a\u0637 \u0648\u0627\u0644\u062a\u0646\u0645\u064a\u0629 \u0627\u0644\u0627\u0642\u062a\u0635\u0627\u062f\u064a\u0629 \u0648\u0627\u0644\u062a\u0639\u0627\u0648\u0646 \u0627\u0644\u062f\u0648\u0644\u064a",
+   "note": "Recorded on second review, which located evidence the first pass did not reach. The first-pass Gap is refuted by an official T3 Ministry page that affirmatively identifies a Ministerial Group for Entrepreneurship, says it was established by Prime Ministerial decision, and documents its third meeting. This is evidence of an operating inter-ministerial coordination mechanism, although its remit is entrepreneurship rather than expressly digital agriculture. Next level not proposed: Level 4 was not proposed because no independent evaluation, audit, performance evidence, service-standard result, or reach figure for this mechanism is supplied. Quality_evidence and scale_evidence are therefore empty. The evidence establishes a formally established, recurring inter-ministerial mechanism for entrepreneurship, not a mechanism specifically mandated for agriculture or digital agriculture. Source 7 places agriculture among sectors relevant to its startup work; whether such cross-sector/project-oriented coverage satisfies the still-unratified narrower agriculture interpretation remains open. Against the indicator NAME as written, it is an inter-ministerial coordination mechanism for Egypt.",
+   "tier": "T3",
    "tier_detail": "",
-   "url": "",
+   "url": "https://mped.gov.eg/singlenews?id=5974",
    "defnote": "Does the indicator require a formally constituted standing body or committee, or does any documented recurring \u2014 including project-based \u2014 coordination mechanism satisfy it?",
    "defsev": "construct-drift",
    "subs": [],
@@ -829,14 +829,14 @@
    "kind": "l"
   },
   "5.7": {
-   "value": "A Digital Transformation Unit (AG-DTU) was formally established inside Egypt's Ministry of Agriculture and Land Reclamation under MCIT ministerial decree no. 605 of 15 March 2020, with an initial complement of 16 experts",
+   "value": "The Ministry of Agriculture and Land Reclamation has ordered the establishment of a digital transformation unit within the MOALR by the decree of the Minister of Communication and Information Technology number 605 on 15t",
    "cls": "Documented",
-   "level": 3,
-   "year": 2021,
-   "src": "MALR / IFPRI-EU planning workshop presentation, 'Building the Digital Transformation Unit of the Ministry of Agriculture and Land Reclamation' (Dr. Mohamed El Kersh, MALR), hosted on CGSpace",
-   "note": "Slide deck presented by a MALR official at a donor-funded planning workshop; describes the unit's establishment and forward plan rather than an independent verification of its operation. Most recent confirmation of the unit dates from February 2021. Next level not proposed: Operating was not asserted, and in any case would not raise the level: the only document describing the unit is a February 2021 planning-workshop deck written in prospective terms ('DTU will be directly under the supervision of the Minister', 'seeking additional resources... to support the establishment of the unit'), and no later official source retrieved \u2014 including MALR's own site and the OECD AI Review of Egypt \u2014 confirms the unit is functioning, names it, or reports its outputs. Level 4 was not proposed because quality_evidence is empty: there is no evaluation, audit, performance report or service standard for the unit; the only account of it is the implementer's own presentation, which is design, not quality. Level 5 was not proposed because scale_evidence is empty: no reach figures exist for the unit (the 16-expert headcount is an input, not coverage or beneficiaries, and the ministry-wide digital service figures quoted elsewhere \u2014 3.5 million farmer cards printed, 20 e-services piloted \u2014 belong to the joint MALR-MCIT programme, not to this unit). The indicator name asserts a standing 'digital/AI' unit inside the ministry of agriculture. The confirmed instrument is a Digital Transformation Unit (AG-DTU) established by MCIT decree 605 of 15 March 2020 within MALR \u2014 a digital unit, and therefore on the right side of the construct for the 'digital' half. It is not an AI unit: its named components are Workflow and Government Services, GIS, and AG-FORESIGHT (foresight/policy modeling with EU-IFPRI support). The AI-labelled activity in Egyptian agriculture (the Hudhud AI advisory app, AI-based crop-area estimation) is documented on MALR's own site as a joint MALR-MCIT programme (Source 5), not as the output of a named AI unit inside MALR. The AI institutional home in Egypt sits at MCIT (National Council for AI, Applied Innovation Center \u2014 Source 7 navigation), not in the agriculture ministry. Nothing on MALR's own current websites (Sources 4 and 6, including the organisational-structure menus) names a digital or AI unit.",
+   "level": 2,
+   "year": 2020,
+   "src": "Planning Workshop: Building the Digital Transformation Unit of the Ministry of Agriculture and Land Reclamation",
+   "note": "Level 3 to 2 on second review: The first-pass citation does not support its assertion that the AG-DTU \u201cwas formally established\u201d with 16 experts. It says only that MALR \u201chas ordered the establishment\u201d and subsequently frames the staff and location in future tense, while stating that support was still being sought \u201cto support the establishment of the unit.\u201d This supports an Announced rung, not Adopted/level 3. Planning-workshop presentation; its action plan is prospective. Next level not proposed: Adopted (and therefore Operating) is not proposed: the cited presentation says \u201cDTU will be directly under the supervision of the Minister\u201d and that MALR was \u201cseeking additional resources from international partners to support the establishment of the unit,\u201d which is prospective language rather than confirmation that establishment had occurred. No supplied later official source names or confirms an operating MALR digital/AI unit. The evidence concerns a Digital Transformation Unit within the Ministry of Agriculture and Land Reclamation, satisfying the indicator name's digital-unit half. It does not describe the unit as an AI unit; the AI activities in the official MCIT material are joint MCIT\u2013MALR projects rather than evidence of a standing MALR AI unit.",
    "tier": "T2",
-   "tier_detail": "Slide deck presented by a MALR official at a donor-funded planning workshop; describes the unit's establishment and forward plan rather than an independent verification of its operation. Most recent confirmation of the unit dates from February 2021.",
+   "tier_detail": "Planning-workshop presentation; its action plan is prospective.",
    "url": "https://cgspace.cgiar.org/server/api/core/bitstreams/8614321b-bacd-4b1f-b602-45d664654870/content",
    "defnote": "The name asserts a standing digital/AI unit inside the ministry of agriculture, but Egypt is scored level 3 on a joint MALR-MCIT programme while the row's own note records that the named unit could not be confirmed and that the prior evidence for it was ruled inadmissible \u2014 and because this row\u2026",
    "defsev": "asserts-falsehood",
@@ -1106,19 +1106,19 @@
    "kind": "l"
   },
   "7.2": {
-   "value": "Egypt has one identifiable AI-enabled agricultural solution on the public record in these sources: the MCIT\u2013Microsoft 'AI for Agriculture' project on rationalising irrigation-water allocation, described in December 2019",
-   "cls": "Judged",
-   "level": null,
-   "year": 2019,
-   "src": "Microsoft News Center Middle East & Africa, \"MCIT partners with Microsoft to implement AI solutions in the agriculture sector\"",
-   "note": "RATIFICATION HOLD \u2014 the only source is T5 news, vendor or market material, which carries existence facts but never a statistic. The level is withheld and this row leaves every mean. Vendor press release (T5); existence fact only. Single-governorate project with a 2020 completion date and no retrieved follow-up confirming continued operation or handover to the Ministry of Agriculture.",
-   "tier": "T5",
-   "tier_detail": "Vendor press release (T5); existence fact only. Single-governorate project with a 2020 completion date and no retrieved follow-up confirming continued operation or handover to the Ministry of Agriculture.",
-   "url": "https://news.microsoft.com/en-xm/2019/12/05/mcit-partners-with-microsoft-to-implement-ai-solutions-in-the-agriculture-sector/",
+   "value": "\u0648\u062a\u0637\u0631\u0642 \u0627\u0644\u0644\u0642\u0627\u0621 \u0623\u064a\u0636\u064b\u0627 \u0625\u0644\u0649 \u0627\u0644\u062c\u0647\u0648\u062f \u0627\u0644\u062a\u064a \u062a\u0642\u0648\u0645 \u0628\u0647\u0627 \u0625\u062d\u062f\u0649 \u0634\u0631\u0643\u0627\u062a \u0627\u0644\u0642\u0637\u0627\u0639 \u0627\u0644\u062e\u0627\u0635 \u0644\u062f\u0639\u0645 \u0635\u0646\u0627\u0639\u0629 \u0625\u0646\u062a\u0627\u062c \u0627\u0644\u0646\u062e\u064a\u0644 \u0628\u0627\u0644\u0645\u062d\u0627\u0641\u0638\u0629\u060c \u0645\u0646 \u062e\u0644\u0627\u0644 \u062a\u0648\u0638\u064a\u0641 \u062a\u0642\u0646\u064a\u0627\u062a \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0644\u062a\u062d\u0633\u064a\u0646 \u062c\u0648\u062f\u0629 \u0627\u0644\u0625\u0646\u062a\u0627\u062c\u060c \u0648\u0631\u0635\u062f \u0627\u0644\u0623\u0645\u0631\u0627\u0636 \u0627\u0644\u062a\u064a \u062a\u0635\u064a\u0628 \u0627\u0644\u0646\u062e\u064a\u0644 \u0628\u0634\u0643\u0644 \u0645\u0628\u0643\u0631 \u0648\u0645\u0643\u0627\u0641\u062d\u062a\u0647\u0627.",
+   "cls": "Documented",
+   "level": 3,
+   "year": 2026,
+   "src": "\u0648\u0632\u0627\u0631\u0629 \u0627\u0644\u0627\u062a\u0635\u0627\u0644\u0627\u062a \u0648\u062a\u0643\u0646\u0648\u0644\u0648\u062c\u064a\u0627 \u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a\u060c \u0648\u0632\u064a\u0631 \u0627\u0644\u0627\u062a\u0635\u0627\u0644\u0627\u062a \u064a\u0628\u062d\u062b \u0645\u0639 \u0645\u062d\u0627\u0641\u0638 \u0627\u0644\u0648\u0627\u062f\u064a \u0627\u0644\u062c\u062f\u064a\u062f \u0633\u0628\u0644 \u0627\u0644\u062a\u0639\u0627\u0648\u0646 \u0644\u062f\u0639\u0645 \u0627\u0644\u062a\u062d\u0648\u0644 \u0627\u0644\u0631\u0642\u0645\u064a \u0628\u0627\u0644\u0645\u062d\u0627\u0641\u0638\u0629",
+   "note": "Recorded on second review, which located evidence the first pass did not reach. The first pass\u2019s conclusion that only a T5 vendor account existed does not hold against the independently retrieved official MCIT report. The report directly states that a private company is employing AI technologies in Egypt\u2019s palm-production sector. This is admissible T3 evidence of operating use, although it does not support quality or scale additions. Next level not proposed: Level 4 was not proposed because the source supplies neither an independent or official performance evaluation nor a service-quality result; it also supplies no reach figure, so level 5 is unsupported. The official source establishes AI use in Egypt\u2019s palm-production sector for production quality and early disease detection/control, but does not name the company or product and gives no farmer/user reach.",
+   "tier": "T3",
+   "tier_detail": "",
+   "url": "https://mcit.gov.eg/ar/Media_Center/Latest_News/News/99051",
    "defnote": "The name asserts deployment, but Egypt's level 3 rests on a solution restricted to a pilot cohort with no verified reach and Nigeria's row is anchored on a future-tense announcement of an intent to deploy.",
    "defsev": "construct-drift",
    "subs": [],
-   "stale": true,
+   "stale": false,
    "name": "AI-enabled agricultural solutions deployed",
    "pillar": "E1",
    "layer": "Transformation",
@@ -1369,17 +1369,17 @@
   },
   "C3": {
    "n": 8,
-   "rated": 6,
+   "rated": 7,
    "held": 0,
-   "mean": 2.67,
+   "mean": 2.71,
    "band": "Established",
-   "margin": -0.33,
+   "margin": -0.29,
    "weak": false,
    "comp": {
     "Measured": 2,
-    "Documented": 4,
+    "Documented": 5,
     "Judged": 0,
-    "Gap": 2
+    "Gap": 1
    },
    "stale": 3
   },
@@ -1387,9 +1387,9 @@
    "n": 7,
    "rated": 3,
    "held": 1,
-   "mean": 2.67,
-   "band": "Established",
-   "margin": -0.33,
+   "mean": 2.33,
+   "band": "Emerging",
+   "margin": 0.33,
    "weak": true,
    "comp": {
     "Measured": 1,
@@ -1401,19 +1401,19 @@
   },
   "E1": {
    "n": 11,
-   "rated": 5,
-   "held": 4,
-   "mean": 2.0,
+   "rated": 6,
+   "held": 3,
+   "mean": 2.17,
    "band": "Emerging",
-   "margin": 0.0,
-   "weak": true,
+   "margin": 0.17,
+   "weak": false,
    "comp": {
     "Measured": 0,
-    "Documented": 7,
-    "Judged": 2,
+    "Documented": 8,
+    "Judged": 1,
     "Gap": 2
    },
-   "stale": 2
+   "stale": 1
   },
   "O1": {
    "n": 7,
@@ -1434,8 +1434,8 @@
  },
  "layers": {
   "Foundation": 3.75,
-  "Enablers": 2.53,
-  "Transformation": 1.67,
+  "Enablers": 2.5,
+  "Transformation": 2.0,
   "Outcomes": 2.5
  },
  "prereq": {
@@ -1477,7 +1477,7 @@
   "4.9": {
    "name": "Inter-ministerial coordination mechanism",
    "kind": "DELIVERY",
-   "status": "Unverified"
+   "status": "Present"
   },
   "5.5": {
    "name": "Digital extension capability",
@@ -1487,7 +1487,7 @@
   "5.7": {
    "name": "MoAg digital/AI unit",
    "kind": "DELIVERY",
-   "status": "Present"
+   "status": "Present (narrow)"
   },
   "6.14": {
    "name": "Agri-fintech rails for smallholders",
@@ -1514,13 +1514,13 @@
      "Present"
     ]
    ],
-   "n_bearing": 18,
+   "n_bearing": 20,
    "basis": {
     "need": 0,
     "outcome": 0,
-    "enabler": 18
+    "enabler": 20
    },
-   "mean_readiness": 2.67,
+   "mean_readiness": 2.65,
    "mean_need": null,
    "mean_outcome": null,
    "mean_driven": false
@@ -1534,13 +1534,13 @@
      "Present"
     ]
    ],
-   "n_bearing": 16,
+   "n_bearing": 18,
    "basis": {
     "need": 0,
     "outcome": 0,
-    "enabler": 16
+    "enabler": 18
    },
-   "mean_readiness": 2.81,
+   "mean_readiness": 2.78,
    "mean_need": null,
    "mean_outcome": null,
    "mean_driven": false
@@ -1549,13 +1549,13 @@
    "status": "Unverified",
    "why": "universal unverified: 2.1",
    "prereqs": [],
-   "n_bearing": 15,
+   "n_bearing": 16,
    "basis": {
     "need": 0,
     "outcome": 0,
-    "enabler": 15
+    "enabler": 16
    },
-   "mean_readiness": 2.93,
+   "mean_readiness": 2.88,
    "mean_need": null,
    "mean_outcome": null,
    "mean_driven": false
@@ -1564,13 +1564,13 @@
    "status": "Unverified",
    "why": "universal unverified: 2.1",
    "prereqs": [],
-   "n_bearing": 15,
+   "n_bearing": 17,
    "basis": {
     "need": 0,
     "outcome": 0,
-    "enabler": 15
+    "enabler": 17
    },
-   "mean_readiness": 2.8,
+   "mean_readiness": 2.76,
    "mean_need": null,
    "mean_outcome": null,
    "mean_driven": false
@@ -1596,13 +1596,13 @@
      "Present"
     ]
    ],
-   "n_bearing": 17,
+   "n_bearing": 19,
    "basis": {
     "need": 0,
     "outcome": 2,
-    "enabler": 15
+    "enabler": 17
    },
-   "mean_readiness": 2.8,
+   "mean_readiness": 2.76,
    "mean_need": null,
    "mean_outcome": 2.5,
    "mean_driven": false
@@ -1628,20 +1628,20 @@
      "Present"
     ]
    ],
-   "n_bearing": 17,
+   "n_bearing": 19,
    "basis": {
     "need": 0,
     "outcome": 0,
-    "enabler": 17
+    "enabler": 19
    },
-   "mean_readiness": 2.59,
+   "mean_readiness": 2.58,
    "mean_need": null,
    "mean_outcome": null,
    "mean_driven": false
   }
  },
  "leapfrog": {
-  "gap": 2.08,
+  "gap": 1.75,
   "flag": true,
   "reading": "Foundations ahead of ecosystem \u2014 unrealized potential"
  },
@@ -1696,6 +1696,13 @@
    "prereq": true
   },
   {
+   "id": "5.7",
+   "name": "MoAg digital/AI unit",
+   "level": 2,
+   "pillar": "C4",
+   "prereq": true
+  },
+  {
    "id": "6.1",
    "name": "Global Innovation Index",
    "level": 2,
@@ -1721,13 +1728,6 @@
    "name": "Food production index (2014-16=100)",
    "level": 3,
    "pillar": "A1",
-   "prereq": false
-  },
-  {
-   "id": "2.11",
-   "name": "Device financing/subsidy schemes",
-   "level": 3,
-   "pillar": "C1",
    "prereq": false
   }
  ],
@@ -1829,11 +1829,6 @@
    "cls": "Gap"
   },
   {
-   "id": "4.9",
-   "name": "Inter-ministerial coordination mechanism",
-   "cls": "Gap"
-  },
-  {
    "id": "5.3",
    "name": "Tertiary STEM enrollment (% gross)",
    "cls": "Gap"
@@ -1862,11 +1857,6 @@
    "id": "6.13",
    "name": "SME/agribusiness adoption of digital tools (%)",
    "cls": "Gap"
-  },
-  {
-   "id": "7.2",
-   "name": "AI-enabled agricultural solutions deployed",
-   "cls": "Judged"
   },
   {
    "id": "8.6",
@@ -1938,27 +1928,22 @@
   {
    "id": "5.7",
    "name": "MoAg digital/AI unit",
-   "year": 2021
+   "year": 2020
   },
   {
    "id": "3.10",
    "name": "Agricultural e-commerce platforms",
    "year": 2021
-  },
-  {
-   "id": "7.2",
-   "name": "AI-enabled agricultural solutions deployed",
-   "year": 2019
   }
  ],
  "counts": {
   "Measured": 13,
-  "Documented": 22,
-  "Judged": 2,
-  "Gap": 20
+  "Documented": 24,
+  "Judged": 1,
+  "Gap": 19
  },
- "held": 9,
- "rated": 28,
+ "held": 8,
+ "rated": 30,
  "candidates": {
   "A1-CAND-IMP": {
    "value": "DATA GAP \u2014 1) Checked UNdata/FAOSTAT 'Cereal import dependency ratio (percent) (3-year average)' (Source 2), the canonical T1 source for this exact indicator \\u2014 Egypt is listed as a selectable country but the rendered page text stops at Albania (page 1 of 81 records); no Egypt value present to quote. 2) Checked FAO openknowledge Figure 52 'Cereal import dependency ratio, top countries (2017\\u20132019)' (Source 6) \\u2014 lists only ~20 top-ranked countries; Egypt not among them. 3) Checked FAO GIEWS Country Brief Egypt (Sources 1 and 3) \\u2014 gives cereal import requirements in tonnes and production forecasts, no dependency ratio. 4) Checked USDA FAS Grain and Feed Annual Egypt (Source 8) \\u2014 wheat/corn production, consumption and import tonnages only, no ratio. 5) Checked UN Comtrade cereals for Egypt (Source 5) \\u2014 trade values/weights only. 6) Checked Springer Food Security Egypt/Jordan paper (Source 7) \\u2014 states 50% food import dependence for Egypt, a different construct. 7) Checked CAPMAS metadata catalog entry (Source 4) \\u2014 bibliographic record only, no figures. 8) Food Systems Dashboard page (Source 10) blocked by a browser verification checkpoint, no data returned. Conclusion: the figure very likely exists in FAOSTAT's Suite of Food Security Indicators for Egypt, but it is not in the supplied pages, so nothing is recorded.",

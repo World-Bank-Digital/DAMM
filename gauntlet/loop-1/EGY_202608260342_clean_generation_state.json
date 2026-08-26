@@ -1,0 +1,1548 @@
+{
+ "chapters": {
+  "1": {
+   "n": "1",
+   "title": "Country and sector context",
+   "kind": "diagnostic",
+   "status": "evidenced by the assessment",
+   "prose": "Egypt's 2026 assessment opens on a sector whose scale and exposure are read through the A1 pillar, which the framework treats as a measure of need rather than of institutional maturity. A1 returns a mean of 3.6, placed in the Advanced band, but the reading must be interpreted in the direction the framework intends: on a need pillar, a low reading signals a large opportunity, and a higher reading signals that the structural pressure captured by these indicators is less acute than it might otherwise be. The pillar is not a scorecard of ministry performance and should not be read as one. Two of its constituent rows sit at level 3 \u2014 employment in agriculture (%) (1.3) and the food production index (1.4) \u2014 and these are the rows that carry the structural picture of how many Egyptians depend on the sector and how output is trending. No A1 row was withheld.\n\nThe evidence base behind that reading is, however, partial and should be stated as such. Only 5 of 10 A1 indicators were rated, and 1 of those carries a staleness flag, meaning the underlying source is older than the assessment window prefers. The remaining rows are unrated for want of a verifiable source rather than because they scored poorly, and the chapter does not treat them as zeros. Any conclusion about agricultural structure, need or climate exposure drawn from this pillar therefore rests on half the intended indicator set, one element of which is dated.\n\nOn the connectivity and foundational-infrastructure side, C1 returns a mean of 4.0 in the Advanced band, the strongest pillar mean in the pack. Here the band does read as maturity: the national digital substrate that a digital agriculture programme would have to run on is comparatively well developed. The same coverage caveat applies, though, with 3 of 6 indicators rated and none withheld. C1 is thus a confident but narrow finding \u2014 strong on what was measured, silent on the half of the pillar that was not.\n\nThe O1 pillar, covering the demand and adoption side, returns a mean of 2.5 in the Established band, and it is the thinnest-evidenced of the three, with 2 of 7 indicators rated and none withheld. Within it, mobile money account (%) (8.4) sits at level 2. The pairing of an Advanced infrastructure reading with an Established adoption reading is the most consequential structural observation the diagnostic supports: the pipes are further along than the uptake measured on them.\n\nThe constraint register locates the binding weaknesses squarely in the institutional and data layers rather than in infrastructure. Six rows sit at level 1: agricultural data interoperability standards (3.11) and open agricultural data (3.5) under C2; the national digital agriculture strategy (4.4) and the agricultural data governance framework (4.5) under C3; and adopted digital public goods (6.12) together with public-private partnerships in digital agriculture (6.9) under E1. Four further rows sit at level 2: digital extension capability (5.5) and a MoAg digital/AI unit (5.7) under C4, the Global Innovation Index (6.1) under E1, and mobile money account (%) (8.4) under O1.\n\nFour of these constraints are flagged as prerequisites, meaning later capability cannot be sequenced ahead of them: data interoperability standards (3.11), the data governance framework (4.5), digital extension capability (5.5) and a dedicated MoAg digital/AI unit (5.7). Two of the four sit at level 1 and two at level 2. That distribution is the central diagnostic finding of this chapter \u2014 the national digital context Egypt's roadmap must work inside offers a comparatively capable infrastructure base (C1 at 4.0) against a governance, standards and institutional-capacity layer that is at its earliest stages, with no adopted national digital agriculture strategy recorded above level 1. No use-case evidence was supplied in this pack, so no statement is made here about deployed applications.",
+   "cites": {
+    "pillars": [
+     "A1",
+     "C1",
+     "O1",
+     "C2",
+     "C3",
+     "C4",
+     "E1"
+    ],
+    "indicators": [
+     "1.3",
+     "1.4",
+     "3.5",
+     "3.11",
+     "4.4",
+     "4.5",
+     "5.5",
+     "5.7",
+     "6.1",
+     "6.9",
+     "6.12",
+     "8.4"
+    ],
+    "use_cases": [],
+    "prerequisites": [
+     "3.11",
+     "4.5",
+     "5.5",
+     "5.7"
+    ]
+   },
+   "figures": [
+    {
+     "value": "3.6",
+     "what_it_is": "A1 pillar mean (Advanced band), read as a need measure"
+    },
+    {
+     "value": "5 of 10",
+     "what_it_is": "A1 indicators rated out of total"
+    },
+    {
+     "value": "1",
+     "what_it_is": "A1 indicators flagged stale"
+    },
+    {
+     "value": "4.0",
+     "what_it_is": "C1 pillar mean (Advanced band)"
+    },
+    {
+     "value": "3 of 6",
+     "what_it_is": "C1 indicators rated out of total"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "O1 pillar mean (Established band)"
+    },
+    {
+     "value": "2 of 7",
+     "what_it_is": "O1 indicators rated out of total"
+    },
+    {
+     "value": "level 3",
+     "what_it_is": "level of indicators 1.3 (employment in agriculture %) and 1.4 (food production index)"
+    },
+    {
+     "value": "level 1",
+     "what_it_is": "level of constraints 3.11, 3.5, 4.4, 4.5, 6.12 and 6.9"
+    },
+    {
+     "value": "level 2",
+     "what_it_is": "level of constraints 5.5, 5.7, 6.1 and 8.4"
+    }
+   ],
+   "supported_figures": 4,
+   "unsupported_figures": [
+    "5 of 10",
+    "3 of 6",
+    "2 of 7",
+    "level 3",
+    "level 1",
+    "level 2"
+   ],
+   "stray_numbers": [
+    "1.3",
+    "1.4",
+    "3.11",
+    "3.5",
+    "4.4",
+    "4.5",
+    "5.5",
+    "5.7",
+    "6.1",
+    "6.12",
+    "6.9",
+    "8.4"
+   ],
+   "cited_outside_binding": [
+    "pillar C2",
+    "pillar C3",
+    "pillar C4",
+    "pillar E1",
+    "indicator 1.3",
+    "indicator 1.4",
+    "indicator 3.5",
+    "indicator 3.11",
+    "indicator 4.4",
+    "indicator 4.5",
+    "indicator 5.5",
+    "indicator 5.7",
+    "indicator 6.1",
+    "indicator 6.9",
+    "indicator 6.12",
+    "indicator 8.4",
+    "prerequisite 3.11",
+    "prerequisite 4.5",
+    "prerequisite 5.5",
+    "prerequisite 5.7"
+   ],
+   "provenance": "Chapter 1 draws on pillars A1, C1, O1, derived: constraints, register. Diagnostic: reports what the assessment found."
+  },
+  "2": {
+   "n": "2",
+   "title": "Where the country stands",
+   "kind": "diagnostic",
+   "status": "evidenced by the assessment",
+   "prose": "Egypt's 2026 assessment rests on 30 rated indicator rows and 8 withheld rows. Of the rated material, 13 rows are Measured, 24 Documented, 1 Judged, and 19 remain Gap \u2014 that is, no evidence was located rather than evidence of weakness. This distribution matters for how the rest of the chapter should be read: a substantial share of the seven pillars is characterised on documentary rather than measured grounds, and several pillars are assessed on fewer than half their available rows.\n\nAt pillar level, the picture is one of strong foundations and thinner middle layers. A1 scores a mean of 3.6 (Advanced) on 5 of 10 rows rated, with 1 stale row and no withholdings, though its evidence composition is starkly split \u2014 5 Measured rows against 5 Gap rows. C1 scores 4.0 (Advanced) on 3 of 6 rows rated, sitting exactly at its band threshold with a margin of 0.0. Below that, C3 returns 2.71 (Established) on 7 of 8 rows \u2014 the broadest coverage of any pillar \u2014 but with 3 stale rows. O1 returns 2.5 (Established) on only 2 of 7 rows rated, with 5 Gap rows, and is flagged as weakly evidenced; the same weak-evidence flag applies to C4, which returns 2.33 (Emerging) on 3 of 7 rows with 3 stale rows and 1 withheld. C2 returns 2.25 (Emerging) on 4 of 8 rows with 4 rows withheld and 2 stale \u2014 half that pillar's rows are not available for scoring, and the withholdings must not be read as zeros. E1, the largest pillar at 11 rows, returns 2.17 (Emerging) on 6 rows rated with 3 withheld and 1 stale, and carries no Measured evidence at all (8 Documented, 1 Judged, 2 Gap).\n\nThe layer profile makes the structural gap explicit. Foundation stands at 3.75, Enablers at 2.5, Transformation at 2.0, and Outcomes at 2.5. The leapfrog test is flagged, with a gap of 1.75 between foundations and the ecosystem above them; the reading returned is \"Foundations ahead of ecosystem \u2014 unrealized potential\". In plain terms, the connectivity, macro and institutional base that Egypt has built is not yet being converted through enablers into transformation-layer capability or measured outcomes. The constraint set is consistent with this: six Level 1 constraints sit in C2, C3 and E1 \u2014 agricultural data interoperability standards (3.11), open agricultural data (3.5), the national digital agriculture strategy (4.4), the agricultural data governance framework (4.5), digital public goods adopted (6.12), and public-private partnerships in digital agriculture (6.9). Level 2 constraints include digital extension capability (5.5), the MoAg digital/AI unit (5.7), the Global Innovation Index (6.1) and mobile money account share (8.4).\n\nThe use-case readiness matrix returns no use case as ready. Five of six \u2014 advisory (ADV), smallholder-facing services (SMF), market linkage (MKT), supply-chain management (SCM) and agricultural finance (FIN) \u2014 are Unverified, in every case for the same reason: the universal prerequisite 2.1, rural mobile broadband coverage (3G/4G), is itself unverified. Their underlying readiness means are mid-range and clustered: MKT at 2.88 on 16 bearing rows, SMF at 2.78 on 18, SCM and FIN both at 2.76 on 17 and 19 rows respectively, and ADV at 2.65 on 20 rows. FIN is the only one of the five carrying any outcome-layer evidence (mean outcome 2.5, from 2 rows); the rest rest entirely on enabler rows. Unverified here is a statement about the evidence base, not a finding of failure \u2014 these use cases cannot be cleared until 2.1 is established one way or the other. AGI, the AI and data-intensive use case, is the single Blocked entry, with a readiness mean of 2.58 across 19 bearing rows; it is blocked on 3.11 and 4.5, both recorded Absent.\n\nPrerequisite status divides into three groups. Four are Present: rural electricity access (2.9), the data protection and privacy law (4.1), the inter-ministerial coordination mechanism (4.9), and responsible-AI safeguards covering consent and rights (7.12), the last of which bears on four use cases. Two are Present but narrow \u2014 digital extension capability (5.5) and the MoAg digital/AI unit (5.7) \u2014 meaning the function exists but does not yet reach across the sector or the delivery mandate. Four are Unverified: rural mobile broadband coverage (2.1), the national farmer registry (3.3), digital ID coverage (4.7), and agri-fintech rails for smallholders (6.14); the last three cluster on FIN, which explains why that use case cannot be cleared even with a readiness mean of 2.76. Two are Absent: agricultural data interoperability standards (3.11) and the agricultural data governance framework (4.5).\n\nWhat the evidence rests on should be stated frankly. Only one pillar, C3, is rated on more than 80 percent of its rows; C2 and C4 carry withholdings, and O1 and C4 are flagged as weakly evidenced. Stale rows are concentrated in C3 and C4 (3 each) and C2 (2). Two of the eight pillar-level judgements sit within 0.33 of a band boundary (C4 at margin 0.33 and C2 at 0.25), and C1 sits exactly on one, so small revisions to the underlying rows could move those bands. The diagnosis of a foundation-heavy, enabler-light system is robust across the layer profile; the precise level of the enabler and transformation layers is less firmly established, and closing the 19 Gap rows \u2014 particularly in A1, O1, C4 and C1 \u2014 together with verifying 2.1 would materially change what this assessment can assert.",
+   "cites": {
+    "pillars": [
+     "A1",
+     "C1",
+     "C2",
+     "C3",
+     "C4",
+     "E1",
+     "O1"
+    ],
+    "indicators": [
+     "3.11",
+     "3.5",
+     "4.4",
+     "4.5",
+     "6.12",
+     "6.9",
+     "5.5",
+     "5.7",
+     "6.1",
+     "8.4"
+    ],
+    "use_cases": [
+     "ADV",
+     "SMF",
+     "MKT",
+     "SCM",
+     "FIN",
+     "AGI"
+    ],
+    "prerequisites": [
+     "2.1",
+     "2.9",
+     "3.3",
+     "3.11",
+     "4.1",
+     "4.5",
+     "4.7",
+     "4.9",
+     "5.5",
+     "5.7",
+     "6.14",
+     "7.12"
+    ]
+   },
+   "figures": [
+    {
+     "value": "30",
+     "what_it_is": "rated indicator rows"
+    },
+    {
+     "value": "8",
+     "what_it_is": "withheld rows"
+    },
+    {
+     "value": "13",
+     "what_it_is": "Measured evidence rows"
+    },
+    {
+     "value": "24",
+     "what_it_is": "Documented evidence rows"
+    },
+    {
+     "value": "1",
+     "what_it_is": "Judged evidence rows"
+    },
+    {
+     "value": "19",
+     "what_it_is": "Gap rows"
+    },
+    {
+     "value": "3.6",
+     "what_it_is": "A1 pillar mean"
+    },
+    {
+     "value": "5 of 10",
+     "what_it_is": "A1 rows rated"
+    },
+    {
+     "value": "4.0",
+     "what_it_is": "C1 pillar mean"
+    },
+    {
+     "value": "3 of 6",
+     "what_it_is": "C1 rows rated"
+    },
+    {
+     "value": "0.0",
+     "what_it_is": "C1 band margin"
+    },
+    {
+     "value": "2.71",
+     "what_it_is": "C3 pillar mean"
+    },
+    {
+     "value": "7 of 8",
+     "what_it_is": "C3 rows rated"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "O1 pillar mean"
+    },
+    {
+     "value": "2 of 7",
+     "what_it_is": "O1 rows rated"
+    },
+    {
+     "value": "2.33",
+     "what_it_is": "C4 pillar mean"
+    },
+    {
+     "value": "3 of 7",
+     "what_it_is": "C4 rows rated"
+    },
+    {
+     "value": "2.25",
+     "what_it_is": "C2 pillar mean"
+    },
+    {
+     "value": "4 of 8",
+     "what_it_is": "C2 rows rated"
+    },
+    {
+     "value": "2.17",
+     "what_it_is": "E1 pillar mean"
+    },
+    {
+     "value": "11",
+     "what_it_is": "E1 total rows"
+    },
+    {
+     "value": "6",
+     "what_it_is": "E1 rows rated"
+    },
+    {
+     "value": "3.75",
+     "what_it_is": "Foundation layer score"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "Enablers layer score"
+    },
+    {
+     "value": "2.0",
+     "what_it_is": "Transformation layer score"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "Outcomes layer score"
+    },
+    {
+     "value": "1.75",
+     "what_it_is": "leapfrog gap"
+    },
+    {
+     "value": "2.88",
+     "what_it_is": "MKT mean readiness"
+    },
+    {
+     "value": "16",
+     "what_it_is": "MKT bearing rows"
+    },
+    {
+     "value": "2.78",
+     "what_it_is": "SMF mean readiness"
+    },
+    {
+     "value": "18",
+     "what_it_is": "SMF bearing rows"
+    },
+    {
+     "value": "2.76",
+     "what_it_is": "SCM and FIN mean readiness"
+    },
+    {
+     "value": "17",
+     "what_it_is": "SCM bearing rows"
+    },
+    {
+     "value": "19",
+     "what_it_is": "FIN bearing rows"
+    },
+    {
+     "value": "2.65",
+     "what_it_is": "ADV mean readiness"
+    },
+    {
+     "value": "20",
+     "what_it_is": "ADV bearing rows"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "FIN mean outcome"
+    },
+    {
+     "value": "2",
+     "what_it_is": "FIN outcome-basis rows"
+    },
+    {
+     "value": "2.58",
+     "what_it_is": "AGI mean readiness"
+    },
+    {
+     "value": "19",
+     "what_it_is": "AGI bearing rows"
+    },
+    {
+     "value": "0.33",
+     "what_it_is": "C4 band margin"
+    },
+    {
+     "value": "0.25",
+     "what_it_is": "C2 band margin"
+    },
+    {
+     "value": "3",
+     "what_it_is": "stale rows in C3 and in C4"
+    },
+    {
+     "value": "2",
+     "what_it_is": "stale rows in C2"
+    },
+    {
+     "value": "1",
+     "what_it_is": "stale row in A1 and in E1"
+    },
+    {
+     "value": "4",
+     "what_it_is": "C2 withheld rows"
+    },
+    {
+     "value": "3",
+     "what_it_is": "E1 withheld rows"
+    },
+    {
+     "value": "1",
+     "what_it_is": "C4 withheld row"
+    },
+    {
+     "value": "5",
+     "what_it_is": "A1 Measured rows and A1 Gap rows; O1 Gap rows"
+    },
+    {
+     "value": "8",
+     "what_it_is": "E1 Documented rows"
+    }
+   ],
+   "supported_figures": 42,
+   "unsupported_figures": [
+    "5 of 10",
+    "3 of 6",
+    "7 of 8",
+    "2 of 7",
+    "3 of 7",
+    "4 of 8",
+    "3.75",
+    "1.75"
+   ],
+   "stray_numbers": [
+    "2.1",
+    "3.11",
+    "3.3",
+    "3.5",
+    "4.1",
+    "4.4",
+    "4.5",
+    "4.7",
+    "4.9",
+    "5.5",
+    "5.7",
+    "6.1",
+    "6.12",
+    "6.14",
+    "6.9",
+    "7.12",
+    "8.4",
+    "80"
+   ],
+   "cited_outside_binding": [
+    "indicator 3.11",
+    "indicator 3.5",
+    "indicator 4.4",
+    "indicator 4.5",
+    "indicator 6.12",
+    "indicator 6.9",
+    "indicator 5.5",
+    "indicator 5.7",
+    "indicator 6.1",
+    "indicator 8.4"
+   ],
+   "provenance": "Chapter 2 draws on pillars A1, C1, C2, C3, C4, E1, O1, use cases ADV, SMF, MKT, SCM, FIN, AGI, prerequisites *, derived: pillar_profile, layer_profile, leapfrog, matrix, prerequisites, constraints, evidence_ledger. Diagnostic: reports what the assessment found."
+  },
+  "3": {
+   "n": "3",
+   "title": "Vision, targeting and beneficiaries",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "This chapter's vision is a normative choice, not a model output. It comes from the foresight stage and is stated there as \"The Rights-Bearing Spine and the Serving Canal\": by 2036 the farmer registry becomes the sector's spine, and it becomes rights-bearing before it becomes near-universal. In practical terms the country would prefer to issue farmer-data consent, purpose-limitation, licensing and redress rules under Law No. 151 of 2020 ahead of mass enrolment, accepting a slower path to the Farmer's Card plan target of 80% coverage of holdings if that is the price of consent that is real and grievance channels that function. Nothing in the assessment predicts this choice; the foresight stage is explicit that the observed default is enrolment driven by the cost of exclusion. Everything proposed below is therefore a recommendation built on the assessment, not a finding of it.\n\nThe readiness matrix constrains sequencing more than it directs it, and the chapter should say so plainly. Five of the six use cases \u2014 advisory (ADV), smallholder farm management (SMF), market linkage (MKT), supply-chain management (SCM) and agri-finance (FIN) \u2014 are all rated Unverified for the same single reason: a shared universal row, indicator 2.1, is unverified. That is not a low score and should not be read as one; it is an evidence gap that sits under every use case at once, and resolving it would reclassify five lines simultaneously. The sixth, agricultural intelligence (AGI), is Blocked, and for substantive rather than evidentiary reasons: indicators 3.11 and 4.5 are Absent. Mean readiness sits in a narrow band across all six \u2014 MKT 2.88, SMF 2.78, SCM 2.76 and FIN 2.76, ADV 2.65, AGI 2.58 \u2014 and every one of these means is built entirely or almost entirely from enabler rows, with no need rows bearing on any use case at all. The ordering that band implies is weak and should not be presented as a priority list derived from evidence.\n\nWith that caveat, the proposed first wave is market linkage and supply-chain management, on the narrow ground that the matrix records no outstanding prerequisites for either (MKT rests on 16 bearing rows, SCM on 17), followed by smallholder farm management, whose only listed prerequisite, indicator 7.12, is already Present across 18 bearing rows. Advisory is proposed for the same wave but with a stated qualification: it depends on 7.12 (Present) and on 5.5, which is recorded as Present (narrow) \u2014 the base exists, but thinly, and a design that assumes breadth there would be assuming something the assessment does not support. Agri-finance is proposed as a verification task before it becomes a build task: three of its four prerequisites \u2014 3.3, 4.7 and 6.14 \u2014 are Unverified, so the correct first action is to establish their status rather than to treat them as failing. Its two bearing outcome rows average 2.5, the same value as the O1 pillar mean, and the chapter should not lean on that thin base. Agricultural intelligence is proposed for deferral until 3.11 and 4.5 move off Absent; the foresight milestone that lifts 4.5 to L3 by 2029 under Law No. 151 of 2020 is the gate, and attempting AGI ahead of it would invert the vision's core ordering.\n\nFor geography, the proposal is to borrow an existing targeting frame rather than to construct one. Egypt already has a geographically defined smallholder cohort: the STAR project, executed by the Ministry of Agriculture and Land Reclamation with USD 269.64 million total financing, targets 160,000 rural households in about 160 villages across Minya, Assiut and Sohag, and its 2025 supervision mission already included a Global Technical Specialist on ICT for Development. Using that cohort as the Upper Egypt pilot population is a recommendation, not an evidenced allocation, but it avoids inventing a new beneficiary definition and it places the first digital services where an implementation vehicle and an ICT4D presence already exist. At national scale, two frames are available for later waves: P180480 carries US$250m with a national agricultural information and early-warning objective, and contract farming is targeted at 1.8 million feddans, which offers a segment boundary defined by contractual relationship rather than by geography.\n\nBeneficiary claims must be stated more cautiously than the vision. The A1 pillar has a mean of 3.6 (Advanced), but only 5 of 10 rows are rated and 1 of those is stale; the O1 pillar has a mean of 2.5 (Established) with only 2 of 7 rows rated. Neither pillar, at that coverage, can carry a claim about which farmer segment needs a given service most, and the matrix confirms this: not one need row bears on any of the six use cases. On equity the position is worse and should be reported as a gap rather than glossed. Indicator 5.12, gender balance in the digital-agriculture workforce, is a documented DATA GAP as of 2026: the automated search of 26 August 2026 found sex-disaggregated ICT-staff variables in a 2011 survey whose universe is internet service companies rather than agriculture, found that the 2022 Labour Force Survey collects sex, occupation and economic-activity disaggregation but publishes no relevant cross-tab, and found the most on-construct source inaccessible. No page supplies a digital-agriculture workforce gender share for Egypt. The chapter therefore proposes a measurement commitment \u2014 a defined, sex-disaggregated denominator agreed with the statistical authority before any first-wave service is scaled \u2014 instead of a gender coverage target that would have no baseline to be measured against.\n\nOn phasing, one published approach elsewhere is worth reading rather than copying: India's Digital Agriculture Mission expressed its beneficiary ramp-up as explicit year-by-year coverage targets for digital farmer identities, piloted in six named districts before scaling, alongside a parallel geographic phasing of its crop survey. The pointer here is to the form of expression \u2014 numerically specified cohorts and named starting locations \u2014 not to the substance or the scale. Applied to Egypt's own choices, the proposal is that each wave state its cohort, its governorates and its date, and that the two governance milestones from the foresight stage bind the ramp: farmer-data rules under Law No. 151 of 2020 lifting 4.5 from L1 to L3 by 2029, and a costed strategy with a named delivery home lifting 4.4 from L1 to L3 by 2029. Ambition should be sized against the financing envelope that actually exists for this kind of work: general services support stands at 2.6% of the value of agricultural production in 2022-24, of which 76% goes to irrigation and 14% to R&D, against total support of about 2.8% of GDP. That distribution is the reason the foresight stage proposes keeping the canal money and changing what it buys, and it is why the targeting in this chapter is deliberately narrow.",
+   "cites": {
+    "pillars": [
+     "A1",
+     "O1"
+    ],
+    "indicators": [
+     "5.12",
+     "2.1",
+     "5.5",
+     "7.12",
+     "3.3",
+     "4.7",
+     "6.14",
+     "3.11",
+     "4.5",
+     "4.4"
+    ],
+    "use_cases": [
+     "ADV",
+     "SMF",
+     "MKT",
+     "SCM",
+     "FIN",
+     "AGI"
+    ],
+    "prerequisites": [
+     "5.5",
+     "7.12",
+     "3.3",
+     "4.7",
+     "6.14",
+     "3.11",
+     "4.5"
+    ]
+   },
+   "figures": [
+    {
+     "value": "80%",
+     "what_it_is": "Farmer's Card FY2025/26 plan target for coverage of holdings"
+    },
+    {
+     "value": "2.88",
+     "what_it_is": "Mean readiness for market linkage (MKT)"
+    },
+    {
+     "value": "2.78",
+     "what_it_is": "Mean readiness for smallholder farm management (SMF)"
+    },
+    {
+     "value": "2.76",
+     "what_it_is": "Mean readiness for supply-chain management (SCM) and for agri-finance (FIN)"
+    },
+    {
+     "value": "2.65",
+     "what_it_is": "Mean readiness for advisory (ADV)"
+    },
+    {
+     "value": "2.58",
+     "what_it_is": "Mean readiness for agricultural intelligence (AGI)"
+    },
+    {
+     "value": "16",
+     "what_it_is": "Bearing rows for MKT"
+    },
+    {
+     "value": "17",
+     "what_it_is": "Bearing rows for SCM"
+    },
+    {
+     "value": "18",
+     "what_it_is": "Bearing rows for SMF"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "Mean of the two bearing outcome rows for FIN, and the O1 pillar mean"
+    },
+    {
+     "value": "2029",
+     "what_it_is": "Target year for the 4.5 and 4.4 foresight milestones"
+    },
+    {
+     "value": "L1 to L3",
+     "what_it_is": "Level transition targeted for indicators 4.5 and 4.4"
+    },
+    {
+     "value": "2036",
+     "what_it_is": "Horizon year of the preferred future"
+    },
+    {
+     "value": "USD 269.64 million",
+     "what_it_is": "Total financing of the STAR project"
+    },
+    {
+     "value": "160,000",
+     "what_it_is": "Rural households targeted by STAR"
+    },
+    {
+     "value": "160 villages",
+     "what_it_is": "Approximate number of STAR villages"
+    },
+    {
+     "value": "US$250m",
+     "what_it_is": "Financing carried by project P180480"
+    },
+    {
+     "value": "1.8 million feddans",
+     "what_it_is": "Contract farming target area"
+    },
+    {
+     "value": "3.6 (Advanced)",
+     "what_it_is": "A1 pillar mean and band"
+    },
+    {
+     "value": "5 of 10",
+     "what_it_is": "A1 rows rated"
+    },
+    {
+     "value": "1",
+     "what_it_is": "Stale A1 row"
+    },
+    {
+     "value": "2.5 (Established)",
+     "what_it_is": "O1 pillar mean and band"
+    },
+    {
+     "value": "2 of 7",
+     "what_it_is": "O1 rows rated"
+    },
+    {
+     "value": "2026",
+     "what_it_is": "Assessment year of the 5.12 data gap"
+    },
+    {
+     "value": "26 August 2026",
+     "what_it_is": "Date of the automated source search for 5.12"
+    },
+    {
+     "value": "2011",
+     "what_it_is": "Year of the ICT survey whose universe is internet service companies"
+    },
+    {
+     "value": "2022",
+     "what_it_is": "Year of the Labour Force Survey reviewed for 5.12"
+    },
+    {
+     "value": "six named districts",
+     "what_it_is": "Pilot districts in the published Indian phasing approach"
+    },
+    {
+     "value": "2.6%",
+     "what_it_is": "General services support as a share of the value of agricultural production, 2022-24"
+    },
+    {
+     "value": "76%",
+     "what_it_is": "Share of general services support going to irrigation"
+    },
+    {
+     "value": "14%",
+     "what_it_is": "Share of general services support going to R&D"
+    },
+    {
+     "value": "2.8% of GDP",
+     "what_it_is": "Approximate total support to agriculture"
+    },
+    {
+     "value": "Law No. 151 of 2020",
+     "what_it_is": "Horizontal personal-data baseline law"
+    }
+   ],
+   "supported_figures": 14,
+   "unsupported_figures": [
+    "80%",
+    "L1 to L3",
+    "USD 269.64 million",
+    "160,000",
+    "160 villages",
+    "US$250m",
+    "1.8 million feddans",
+    "3.6 (Advanced)",
+    "5 of 10",
+    "2.5 (Established)",
+    "2 of 7",
+    "26 August 2026",
+    "2011",
+    "six named districts",
+    "2.6%",
+    "76%",
+    "14%",
+    "2.8% of GDP",
+    "Law No. 151 of 2020"
+   ],
+   "stray_numbers": [
+    "1.8",
+    "151",
+    "160",
+    "180480",
+    "2.1",
+    "250",
+    "26",
+    "269.64",
+    "3.11",
+    "3.3",
+    "4.4",
+    "4.5",
+    "4.7",
+    "5.12",
+    "5.5",
+    "6.14",
+    "7.12"
+   ],
+   "cited_outside_binding": [
+    "indicator 2.1",
+    "indicator 5.5",
+    "indicator 7.12",
+    "indicator 3.3",
+    "indicator 4.7",
+    "indicator 6.14",
+    "indicator 3.11",
+    "indicator 4.5",
+    "indicator 4.4",
+    "prerequisite 5.5",
+    "prerequisite 7.12",
+    "prerequisite 3.3",
+    "prerequisite 4.7",
+    "prerequisite 6.14",
+    "prerequisite 3.11",
+    "prerequisite 4.5"
+   ],
+   "provenance": "Chapter 3 draws on pillars A1, O1, indicators 5.12, use cases ADV, SMF, MKT, SCM, FIN, AGI, derived: matrix, foresight.preferred_future, foresight.milestones. Prescriptive: proposed, not evidenced."
+  },
+  "4": {
+   "n": "4",
+   "title": "The investment program",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "This chapter proposes an investment program. Nothing in it is a finding of the assessment; the assessment supplies the sequence logic and the dependency map, and the sequence below is a recommendation built on that map. It should be read as a draft for negotiation between the Ministry of Planning, Economic Development and International Cooperation as plan owner and MALR and MWRI as implementing ministries, with MCIT joined where data rules are concerned.\n\nThe starting position is that no use case in the pack is cleared for scale, but only one is blocked for want of something built. Five of the six \u2014 advisory (ADV), smallholder services (SMF), market linkage (MKT), supply-chain and traceability (SCM) and agricultural finance (FIN) \u2014 sit at Unverified for a single shared reason: the universal prerequisite 2.1, rural mobile broadband coverage (3G/4G), has not been verified. That is a measurement gap, not a coverage failure, and it must not be scored as one. Agricultural intelligence (AGI) is the exception: it is Blocked, and the pack names what blocks it \u2014 3.11, agricultural data interoperability standards, and 4.5, an agricultural data governance framework, both recorded as Absent. Underlying readiness across the six is clustered tightly, from 2.58 for AGI to 2.88 for MKT, with ADV at 2.65 and SMF, SCM and FIN each at 2.76, 2.78 and 2.76 respectively; the evidence base behind each is broad but entirely enabler-side, with 20 bearing rows for ADV, 19 for FIN, 19 for AGI, 18 for SMF, 17 for SCM and 16 for MKT, and no need or outcome rows behind five of the six. FIN carries two outcome rows at a mean of 2.5. The proposed reading is that Egypt's constraint is not raw capability but the paperwork and proof that let capability be used.\n\nTranche 0 is therefore proposed as a verification tranche, cheap and fast, owned jointly by MCIT and the MALR digital/AI unit. Four prerequisites sit at Unverified and each gates something: 2.1 gates all five Unverified use cases at once; 3.3, the national farmer registry, gates FIN and AGI; 4.7, digital ID coverage, and 6.14, agri-fintech rails for smallholders, gate FIN. Egypt has published that the farmer registry instrument already exists as the Farmer's Card and that its expansion to 80% of holdings is an explicit target of the FY 2025/2026 development plan, which suggests 3.3 may be closer to Present than its Unverified status implies \u2014 but the roadmap should say plainly that the status is unverified until the coverage and data-quality evidence is filed. Tranche 0 buys the right to make investment decisions on the other tranches; it does not itself build anything.\n\nTranche 1 is the unblocking tranche and is the only place where the pack names an absence rather than a gap in evidence. It proposes two instruments in a fixed order. First, 4.5: sector-specific farmer-data rules \u2014 consent, purpose limitation, controller and processor duties, and a named redress route \u2014 issued jointly by MCIT and MALR and covering both Farmer's Card and project-level farmer data. The foresight step for this indicator is a move from L1 to L3 by 2029, and its rationale is that the registry spine should be rights-bearing before it becomes near-universal, which places the rules ahead of the 80% enrolment target rather than behind it. Second, 3.11: interoperability standards, a Level 1 constraint on pillar C2, without which registry, advisory and market data cannot be joined. Both are named as prerequisites for AGI; clearing them is what converts AGI from Blocked to a live investment candidate. The proposal is that AGI receives no build funding until 4.5 and 3.11 are gazetted, and that the AGI budget line is written now with a conditional release tied to them.\n\nTranche 2 covers the delivery scaffolding that everything else inherits. 4.4, a costed National Digital Agriculture Strategy, is a Level 1 constraint on pillar C3, with a foresight step from L1 to L3 by 2029 defined by having a named delivery home \u2014 MALR's Economic Affairs Sector \u2014 and a named financing route per workstream rather than by document length. The financing constraint is real and should be stated in the program: general services support to agriculture stands at 2.6% of production value, of which 76% is irrigation and 14% R&D, against total support of 2.8% of GDP. The proposed implication is that this program must be sized against the thin general-services envelope, with an irrigation rider or partner finance named where the envelope will not stretch. The delivery prerequisites are in place to hold this: 4.9, an inter-ministerial coordination mechanism, is Present, and 5.7, a MoAg digital/AI unit, is Present (narrow) \u2014 the proposal is to fund the widening of that unit rather than to create a new body. Alongside it sit the other Level 1 constraints the pack names: 3.5 open, machine-readable agricultural data, 6.12 digital public goods adopted, and 6.9 public-private partnerships in digital agriculture.\n\nTranche 3 is delivery at scale, and it splits by dependency depth. MKT and SCM carry no use-case-specific prerequisites at all in the matrix; once 2.1 is verified, they are the shortest path to a visible service and are proposed as the first delivery investments. ADV depends on 5.5, digital extension capability, recorded as Present (narrow), and on 7.12, responsible-AI safeguards, recorded as Present; the proposal is a widening investment in 5.5 \u2014 a Level 2 constraint on pillar C4 \u2014 rather than a new platform. SMF depends only on 7.12, which is already Present. FIN sits last among the unblocked because it carries the deepest stack: 3.3, 4.7 and 6.14 all unverified, and the published contract-farming target of 1.8 million feddans is the natural first workload once that stack is confirmed. Pillar-level context supports this ordering as a proposal: C1 is Advanced at a mean of 4.0 on 3 of 6 rows rated, while C2 is Emerging at 2.25 on 4 of 8, C4 Emerging at 2.33 on 3 of 7, E1 Emerging at 2.17 on 6 of 11, and C3 Established at 2.71 on 7 of 8. Those thin denominators matter: four rows are withheld in C2, three in E1 and one in C4, and staleness affects three rows in C3, three in C4, two in C2 and one in E1. A withheld level is not an absence, and none of the withheld rows should be read into this program as a deficiency; several may resolve upward once refreshed, which is a further argument for Tranche 0 preceding the rest. On the presentation of the sequence itself, India's Digital Agriculture Mission publishes its foundational digital-identity build as a phased, multi-year target sequence with annual volumes attached \u2014 offered here only as one published format drafters may look at when writing Tranche 0 and Tranche 1 targets, not as an endorsement or a comparison.",
+   "cites": {
+    "pillars": [
+     "C1",
+     "C2",
+     "C3",
+     "C4",
+     "E1"
+    ],
+    "indicators": [
+     "2.1",
+     "2.9",
+     "3.3",
+     "3.5",
+     "3.11",
+     "4.1",
+     "4.4",
+     "4.5",
+     "4.7",
+     "4.9",
+     "5.5",
+     "5.7",
+     "6.9",
+     "6.12",
+     "6.14",
+     "7.12"
+    ],
+    "use_cases": [
+     "ADV",
+     "SMF",
+     "MKT",
+     "SCM",
+     "FIN",
+     "AGI"
+    ],
+    "prerequisites": [
+     "2.1",
+     "2.9",
+     "3.3",
+     "3.11",
+     "4.1",
+     "4.5",
+     "4.7",
+     "4.9",
+     "5.5",
+     "5.7",
+     "6.14",
+     "7.12"
+    ]
+   },
+   "figures": [
+    {
+     "value": "2.58",
+     "what_it_is": "AGI mean readiness"
+    },
+    {
+     "value": "2.88",
+     "what_it_is": "MKT mean readiness"
+    },
+    {
+     "value": "2.65",
+     "what_it_is": "ADV mean readiness"
+    },
+    {
+     "value": "2.76",
+     "what_it_is": "SCM and FIN mean readiness"
+    },
+    {
+     "value": "2.78",
+     "what_it_is": "SMF mean readiness"
+    },
+    {
+     "value": "20",
+     "what_it_is": "bearing rows behind ADV"
+    },
+    {
+     "value": "19",
+     "what_it_is": "bearing rows behind FIN and behind AGI"
+    },
+    {
+     "value": "18",
+     "what_it_is": "bearing rows behind SMF"
+    },
+    {
+     "value": "17",
+     "what_it_is": "bearing rows behind SCM"
+    },
+    {
+     "value": "16",
+     "what_it_is": "bearing rows behind MKT"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "FIN mean outcome across its two outcome rows"
+    },
+    {
+     "value": "80%",
+     "what_it_is": "Farmer's Card coverage target of holdings in the FY 2025/2026 development plan"
+    },
+    {
+     "value": "L1",
+     "what_it_is": "current level of indicators 4.5 and 4.4"
+    },
+    {
+     "value": "L3",
+     "what_it_is": "foresight target level for indicators 4.5 and 4.4"
+    },
+    {
+     "value": "2029",
+     "what_it_is": "target year for the 4.5 and 4.4 foresight milestones"
+    },
+    {
+     "value": "2.6%",
+     "what_it_is": "general services support to agriculture as share of production value"
+    },
+    {
+     "value": "76%",
+     "what_it_is": "share of GSSE going to irrigation"
+    },
+    {
+     "value": "14%",
+     "what_it_is": "share of GSSE going to R&D"
+    },
+    {
+     "value": "2.8%",
+     "what_it_is": "total support to agriculture as share of GDP"
+    },
+    {
+     "value": "1.8 million feddans",
+     "what_it_is": "published contract-farming target"
+    },
+    {
+     "value": "4.0",
+     "what_it_is": "C1 pillar mean (Advanced)"
+    },
+    {
+     "value": "3 of 6",
+     "what_it_is": "C1 rows rated"
+    },
+    {
+     "value": "2.25",
+     "what_it_is": "C2 pillar mean (Emerging)"
+    },
+    {
+     "value": "4 of 8",
+     "what_it_is": "C2 rows rated"
+    },
+    {
+     "value": "2.33",
+     "what_it_is": "C4 pillar mean (Emerging)"
+    },
+    {
+     "value": "3 of 7",
+     "what_it_is": "C4 rows rated"
+    },
+    {
+     "value": "2.17",
+     "what_it_is": "E1 pillar mean (Emerging)"
+    },
+    {
+     "value": "6 of 11",
+     "what_it_is": "E1 rows rated"
+    },
+    {
+     "value": "2.71",
+     "what_it_is": "C3 pillar mean (Established)"
+    },
+    {
+     "value": "7 of 8",
+     "what_it_is": "C3 rows rated"
+    }
+   ],
+   "supported_figures": 17,
+   "unsupported_figures": [
+    "80%",
+    "L1",
+    "L3",
+    "2.6%",
+    "76%",
+    "14%",
+    "2.8%",
+    "1.8 million feddans",
+    "3 of 6",
+    "4 of 8",
+    "3 of 7",
+    "6 of 11",
+    "7 of 8"
+   ],
+   "stray_numbers": [
+    "1.8",
+    "2.1",
+    "3.11",
+    "3.3",
+    "3.5",
+    "4.4",
+    "4.5",
+    "4.7",
+    "4.9",
+    "5.5",
+    "5.7",
+    "6.12",
+    "6.14",
+    "6.9",
+    "7.12"
+   ],
+   "cited_outside_binding": [
+    "indicator 2.1",
+    "indicator 2.9",
+    "indicator 3.3",
+    "indicator 3.5",
+    "indicator 3.11",
+    "indicator 4.1",
+    "indicator 4.4",
+    "indicator 4.5",
+    "indicator 4.7",
+    "indicator 4.9",
+    "indicator 5.5",
+    "indicator 5.7",
+    "indicator 6.9",
+    "indicator 6.12",
+    "indicator 6.14",
+    "indicator 7.12"
+   ],
+   "provenance": "Chapter 4 draws on pillars C1, C2, C3, C4, E1, use cases ADV, SMF, MKT, SCM, FIN, AGI, prerequisites *, derived: matrix, prerequisites, constraints, foresight.milestones. Prescriptive: proposed, not evidenced."
+  },
+  "5": {
+   "n": "5",
+   "title": "Costs and financing",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "This chapter is prescriptive. Nothing in it is a finding of the 2026 assessment. The Digital Agriculture Maturity Model carries no cost, budget or financing data of any kind, so no figure below is derived from the model or from the assessment scoring. The only quantities that appear here are drawn from published national and international sources recorded in the evidence pack, or are scale figures self-reported by initiatives in the source register and tier-badged as such. Where the pack shows no figure, this chapter deliberately proposes a shape of spending rather than an amount.\n\nThe starting point for any costed programme is the structure of Egypt's public agricultural spending, which the roadmap should treat as a hard design constraint rather than a variable to be optimised. As published by the OECD, support to general services amounted to only 2.6% of the value of agricultural production in 2022-24, and that envelope is already dominated by irrigation infrastructure at 76% and agricultural R&D at 14% \u2014 leaving roughly a tenth of an already thin envelope for everything else, including information systems, extension, inspection and market data. Total agricultural support was 2.8% of GDP in 2022-24, but that headline is overwhelmingly price support to producers and consumers and is not a pool a digital programme can draw on. It follows \u2014 and this is a recommendation, not an evidenced conclusion \u2014 that envelope scenarios should be sized against the general-services line and its composition, not against total support, and that a roadmap presented as a claim on total agricultural support would be misaddressed from the outset.\n\nOn that basis we propose three envelope scenarios expressed as shares of the general-services line rather than as absolute sums, since the pack carries no budget figures from which absolute sums could be responsibly built. A constrained scenario would assume no growth in the general-services envelope and fund the programme entirely from the residual outside irrigation and R&D, which implies sequencing to a small number of shared assets and accepting multi-year delivery. A rider scenario would attach digital components to irrigation investment, the dominant recipient of the general-services line at 76%, on the reasoning that water-management instrumentation, farm registries and advisory channels are complements to irrigation capital rather than competitors to it. An expanded scenario would assume an incremental claim on the general-services line together with external and partner finance. Each scenario should be costed by the finance ministry and the agriculture ministry jointly during programme preparation; the roadmap proposes the routing logic, not the price.\n\nInstrument routing should follow the nature of the asset. Shared public goods \u2014 the farmer and holding registry, the reference geospatial layer, interoperability standards and the data-governance function \u2014 are proposed for recurrent budget or concessional public investment, because they generate no revenue and cannot be cost-recovered from users. Capital instrumentation that is physically and operationally bound to water infrastructure is proposed for the irrigation rider route. Service layers that touch farmers directly, including advisory delivery and input finance, are proposed for blended routing in which public money buys coverage of underserved segments and private or partner capital carries the transaction rails. Nothing in the assessment establishes that these routes are available or that treasury rules permit them; each requires confirmation in programme preparation.\n\nThe financing case for smallholder-facing rails is constrained by two rows in the pack that must be read as they stand. Indicator 1.7, agricultural credit access as a share of farmers, is a documented data gap for 2026: the automated source search worked through ten pages in tier order and found supply-side loan values, in-kind and cash loans by governorate and benefitted areas, association membership counts, and a full Agricultural Bank of Egypt product catalogue with amounts, tenors and interest rates \u2014 but no borrower counts and no share of farmers. The only percentages present in those pages were interest rates, financing ratios of 80% and 25-70% of production costs, and year-on-year growth rates; the 4,541,884 holdings figure from the FAO World Census of Agriculture 1999/2000 was noted only as a potential denominator, and a tier-5 page reporting CAPMAS investment-loan totals of EGP 56 billion for FY2023-24 reports value, not farmer share. The consequence for financing design is direct: the programme cannot at present be targeted or evaluated against a baseline of credit coverage, and we propose that establishing that baseline be funded as a first-order line item rather than deferred to monitoring.\n\nIndicator 6.14, agri-fintech rails for smallholders, is documented for 2025: FAO's STI Portal records Agri Cash, a fintech platform with a digital wallet and a 12-month interest-free \"Plant Now & Pay Later\" input-financing scheme. The prerequisite row for 6.14 is carried as Unverified against the FIN use case, and the FIN use-case row itself is Unverified on universal grounds with a readiness of 2.76 across 19 bearing rows. Unverified is not a low score and not an absence of capability \u2014 it means the evidence available to the 2026 assessment did not permit verification, and the financing chapter should treat it as a verification task with a cost attached, not as a deficiency to be remediated by spending. We therefore propose that a modest verification and due-diligence line precede any public co-financing of fintech-mediated input credit, so that concessional or public funds are not committed against rails whose coverage, pricing and consumer-protection terms have not been independently confirmed.\n\nOn sources of finance, the roadmap proposes a deliberate sequence. Domestic budget should carry the registry, standards and governance core, because these are the assets that no partner will sustain and that every later service depends on. Irrigation investment, as the dominant general-services recipient, should be the primary vehicle for capital-intensive instrumentation, subject to the ministries agreeing that digital components are eligible under existing project rules. External and partner finance should be sought for the verification, baseline-measurement and pilot layers, where the absence of a credit-access baseline and the unverified status of the fintech prerequisite make domestic budget commitment premature. Private capital should be expected to carry transaction rails and, where it does, the public contribution should be structured to buy coverage rather than to subsidise margin. All of this is proposed. None of it is established by the assessment, and the absence of any cost data in the model means the figures for each of these routes must be produced by the budget process before the programme can be approved.",
+   "cites": {
+    "pillars": [],
+    "indicators": [
+     "1.7",
+     "6.14"
+    ],
+    "use_cases": [
+     "FIN"
+    ],
+    "prerequisites": [
+     "6.14"
+    ]
+   },
+   "figures": [
+    {
+     "value": "2.6%",
+     "what_it_is": "OECD-reported support to general services as a share of the value of agricultural production, 2022-24"
+    },
+    {
+     "value": "76%",
+     "what_it_is": "Share of the general-services envelope going to irrigation infrastructure, as reported by OECD"
+    },
+    {
+     "value": "14%",
+     "what_it_is": "Share of the general-services envelope going to agricultural R&D, as reported by OECD"
+    },
+    {
+     "value": "2.8% of GDP",
+     "what_it_is": "Total agricultural support in 2022-24, as reported by OECD"
+    },
+    {
+     "value": "80%",
+     "what_it_is": "A financing ratio found in the credit source pages searched for indicator 1.7"
+    },
+    {
+     "value": "25-70% of production costs",
+     "what_it_is": "A financing ratio found in the credit source pages searched for indicator 1.7"
+    },
+    {
+     "value": "4,541,884 holdings",
+     "what_it_is": "Holdings figure from FAO World Census of Agriculture, Egypt 1999/2000, noted in the 1.7 gap note as a potential denominator"
+    },
+    {
+     "value": "EGP 56 billion",
+     "what_it_is": "CAPMAS investment-loan total for FY2023-24 as reported on a tier-5 page in the 1.7 gap note"
+    },
+    {
+     "value": "12-month",
+     "what_it_is": "Interest-free term of the \"Plant Now & Pay Later\" input-financing scheme recorded for Agri Cash under indicator 6.14"
+    },
+    {
+     "value": "2.76",
+     "what_it_is": "FIN use-case readiness value in the assessment"
+    },
+    {
+     "value": "19 bearing rows",
+     "what_it_is": "Number of bearing rows behind the FIN use-case readiness value"
+    }
+   ],
+   "supported_figures": 1,
+   "unsupported_figures": [
+    "2.6%",
+    "76%",
+    "14%",
+    "2.8% of GDP",
+    "80%",
+    "25-70% of production costs",
+    "4,541,884 holdings",
+    "EGP 56 billion",
+    "12-month",
+    "19 bearing rows"
+   ],
+   "stray_numbers": [
+    "1.7",
+    "25",
+    "4,541,884",
+    "56",
+    "6.14",
+    "70"
+   ],
+   "cited_outside_binding": [],
+   "provenance": "Chapter 5 draws on indicators 1.7, 6.14, use cases FIN, prerequisites 6.14, derived: register. Prescriptive: proposed, not evidenced."
+  },
+  "6": {
+   "n": "6",
+   "title": "Policy and regulatory actions",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "Egypt's policy and safeguards pillar (C3) is assessed at a mean of 2.71, placing it in the Established band, with 7 of 8 constituent rows rated, 0 withheld, and 3 carrying stale evidence. That profile is the starting point for this chapter, but nothing in this chapter is a finding: what follows is a proposed reform and legal-drafting programme built on the assessment, not a conclusion drawn from it. The staleness flagged on three rows is itself a drafting consideration \u2014 before instruments are put on a legislative timetable, we propose that the underlying evidence for those rows be refreshed so that drafters are not legislating against a picture that has moved.\n\nTwo prerequisites in this pillar's orbit are recorded as Absent, and in both cases the absence is a named instrument that does not exist rather than a weak score. Row 4.5, the agricultural data governance framework, is Absent, and it is a prerequisite for the agricultural intelligence use case (AGI). Row 3.11, agricultural data interoperability standards, is likewise Absent and likewise tied to AGI. We therefore propose that the roadmap's first legal-drafting workstream be the preparation of a national agricultural data governance instrument \u2014 covering the classes of agricultural data in scope, the rights of farmers and other data subjects and contributors, the conditions for sharing between public bodies and with private parties, and the custodian of the framework \u2014 and that a companion technical instrument or ministerial decision adopt binding agricultural data interoperability standards. Without both, the AGI use case should be treated as blocked rather than merely immature.\n\nThe drafting environment is more favourable than those two gaps alone suggest. Row 4.1, a data protection and privacy law, is recorded as Present as a universal prerequisite, which means the agricultural data governance framework can be drafted as a sectoral layer that inherits and specifies the general regime rather than as a first-principles privacy statute. Row 7.12, responsible-AI safeguards covering consent and rights, is also recorded as Present and is a prerequisite across the advisory (ADV), smallholder market and finance-adjacent (SMF), financial services (FIN) and agricultural intelligence (AGI) use cases; we propose that the new sectoral instrument cross-reference these safeguards explicitly so that model-based advisory and intelligence services fall within an existing rights framework rather than outside one. Row 4.9, the inter-ministerial coordination mechanism, is recorded as Present, and row 5.7, the MoAg digital or AI unit, as Present (narrow).\n\nInstitutional design deserves particular attention in the drafting instructions. Egypt's published policy record shows agricultural and food policy divided across the Ministry of Agriculture and Land Reclamation, the Ministry of Supply and Internal Trade, and the Ministry of Water Resources and Irrigation, with further ministries responsible for trade, rural development and environment, and the OECD identifies this split mandate as a source of co-ordination and implementation problems. We therefore propose that the governance instrument not assume a single lead ministry can enact digital-agriculture rules on its own: it should instead vest the existing inter-ministerial coordination mechanism recorded at row 4.9 with an explicit legal mandate over agricultural data, assign named decision rights to each participating ministry, and give the MoAg digital/AI unit at row 5.7 a defined secretariat function \u2014 recognising that this unit is recorded as narrow in scope and would need a resourcing decision alongside any new mandate.\n\nSeveral rows that bear on the regulatory perimeter are recorded as Unverified rather than absent, and drafters should treat them as open questions to be resolved, not as failures. The national farmer registry (row 3.3, a prerequisite for FIN and AGI), digital ID coverage (row 4.7, FIN), agri-fintech rails for smallholders (row 6.14, FIN) and rural mobile broadband coverage (row 2.1, universal) are all Unverified in this assessment. Because a farmer registry and digital ID together determine who the data subjects of an agricultural data regime actually are, we propose a short verification exercise on rows 3.3 and 4.7 as a formal precondition to finalising the registry-related provisions of the governance instrument. Rural electricity access (row 2.9) is recorded as Present, and digital extension capability (row 5.5) as Present (narrow), which suggests that any regulatory obligations placed on digital advisory delivery should be phased to the actual reach of that capability.\n\nOn drafting method, Kenya has published a draft national policy on agricultural data, information and digital systems that places the creation of an enabling legal, policy and institutional framework at the centre of its digital agriculture reform agenda. This is offered only as a pointer to a drafting structure that Egyptian drafters may wish to examine \u2014 it is not an endorsement, and no comparison of the two countries' positions is intended or supported by this assessment. In sequencing terms, we propose the following order as a recommendation for consideration: refresh the three stale rows in C3; verify rows 3.3 and 4.7; draft the agricultural data governance framework (row 4.5) as a sectoral layer on the existing data protection law (row 4.1) with explicit cross-reference to the responsible-AI safeguards (row 7.12); adopt interoperability standards (row 3.11) as a subordinate technical instrument; and legislate or decree the coordination mandate that the OECD's diagnosis of split ministerial responsibility makes necessary.",
+   "cites": {
+    "pillars": [
+     "C3"
+    ],
+    "indicators": [],
+    "use_cases": [
+     "AGI",
+     "ADV",
+     "SMF",
+     "FIN"
+    ],
+    "prerequisites": [
+     "2.1",
+     "2.9",
+     "3.3",
+     "3.11",
+     "4.1",
+     "4.5",
+     "4.7",
+     "4.9",
+     "5.5",
+     "5.7",
+     "6.14",
+     "7.12"
+    ]
+   },
+   "figures": [
+    {
+     "value": "2.71",
+     "what_it_is": "Mean score of the policy and safeguards pillar (C3), Established band"
+    },
+    {
+     "value": "7 of 8",
+     "what_it_is": "Rows rated within pillar C3"
+    },
+    {
+     "value": "0",
+     "what_it_is": "Rows withheld within pillar C3"
+    },
+    {
+     "value": "3",
+     "what_it_is": "Rows within pillar C3 carrying stale evidence"
+    }
+   ],
+   "supported_figures": 3,
+   "unsupported_figures": [
+    "7 of 8"
+   ],
+   "stray_numbers": [
+    "2.1",
+    "3.11",
+    "3.3",
+    "4.1",
+    "4.5",
+    "4.7",
+    "4.9",
+    "5.5",
+    "5.7",
+    "6.14",
+    "7.12"
+   ],
+   "cited_outside_binding": [
+    "use_case AGI",
+    "use_case ADV",
+    "use_case SMF",
+    "use_case FIN",
+    "prerequisite 2.1",
+    "prerequisite 2.9",
+    "prerequisite 3.3",
+    "prerequisite 4.7",
+    "prerequisite 4.9",
+    "prerequisite 5.5",
+    "prerequisite 5.7",
+    "prerequisite 6.14"
+   ],
+   "provenance": "Chapter 6 draws on pillars C3, prerequisites 4.1, 4.5, 3.11, 7.12, derived: prerequisites. Prescriptive: proposed, not evidenced."
+  },
+  "7": {
+   "n": "7",
+   "title": "Delivery and governance",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "This chapter is prescriptive. Nothing in it is a finding of the 2026 assessment; it is a set of proposals built on what the assessment recorded, and each proposal should be read as a choice open to government rather than as an evidenced conclusion.\n\nThe assessment's institutional picture rests on a thin base. Pillar C4 scores a mean of 2.33, placing it at the Emerging level, but that mean is drawn from 3 of 7 indicators rated, with 1 withheld and 3 stale. A withheld level is not a low score and not an absence of capability \u2014 it is a level that could not be published, and it should not be read down. Likewise, the three stale rows mean the underlying evidence has aged past the currency threshold, not that performance has fallen. The practical consequence for governance design is that any steering body established under this roadmap will begin work without a complete institutional baseline for its own domain, and one of its first tasks should therefore be to close the ratings gap in C4 \u2014 refreshing the stale rows and resolving the withheld one \u2014 before major structural commitments are locked in.\n\nOn mandate and ownership, the roadmap proposes that Egypt build on what already exists rather than create a new body. The Economic Affairs Sector of the Ministry of Agriculture and Land Reclamation (MALR) is the sector formally tasked with publishing data on Egypt's agricultural activities, and it already declares as its official vision the digitalization of Egyptian agriculture for sustainable agricultural development, framed within Egypt Vision 2030 and national and international statistical data-system concepts. That gives a drafting team a named institutional home with a published digital mandate already rooted in the statistical function. The proposal here is to designate that Sector as the roadmap's institutional owner and to make its published mandate the formal basis for that designation, so that ownership is anchored in an existing instrument rather than asserted afresh.\n\nTwo delivery prerequisites are recorded as present and bear directly on this chapter. An inter-ministerial coordination mechanism (4.9) is present, and a MoAg digital/AI unit (5.7) is present but narrow. Both are reported as delivery-risk flags: they describe how well the roadmap can be executed and they gate nothing \u2014 no use case is blocked by either. Read together, they suggest a serviceable but shallow governance spine. The proposal is that the existing inter-ministerial mechanism be used as the roadmap's steering forum rather than replaced, with a standing agriculture-digital item, a published meeting cadence and a named chair drawn from the institutional owner; and that the narrowness recorded against the digital/AI unit be treated as the principal capacity question for the first implementation period, addressed through a staffing and skills plan with explicit posts for data engineering, standards work and procurement oversight. Neither step is evidenced as sufficient by the assessment; both are recommendations.\n\nThe steering arrangement should also carry the enabling gaps that sit outside this chapter but land on the same table. The assessment records agricultural data interoperability standards (3.11) and an agricultural data governance framework (4.5) as absent, while a national farmer registry (3.3), digital ID coverage (4.7), rural mobile broadband coverage (2.1) and agri-fintech rails for smallholders (6.14) are unverified \u2014 that is, not yet evidenced either way, and not to be treated as failures. Against these, rural electricity access (2.9), a data protection and privacy law (4.1) and responsible-AI safeguards covering consent and rights (7.12) are present, and digital extension capability (5.5) is present but narrow. The proposal is that the steering forum own a single register of these items, assign each to a lead institution, and distinguish in its reporting between items that are absent and require an instrument, items that are unverified and require a verification exercise, and items that are present but narrow and require deepening.\n\nAs a pointer and not an endorsement, drafters may wish to examine how the draft Kenya Agricultural Data, Information and Digital Policy documents an explicit split of delivery mandate: national government holding strategic leadership, coordination and policy guidance, with sub-national frontline deliverers enabled through common standards, capacity development and sustainable financing, alongside a stated intent to establish an enabling legal, policy and institutional framework for governing digital agricultural innovations. That document is a March 2026 draft and not an adopted instrument, and it is offered here only as an example of how such a division of roles can be written down. Whether a comparable central-steward-plus-delivery-tier structure suits Egypt's administrative arrangements is a question for the drafting team, not a finding of this assessment.\n\nFinally, the chapter proposes that the governance arrangement be made accountable through publication. The institutional owner should publish, on a fixed cycle, the status of the delivery flags at 4.9 and 5.7, progress on the absent and unverified prerequisites, and the completion rate of C4's ratings against the 7 indicators in the pillar. This creates a public record against which the next assessment cycle can measure movement, and it is the mechanism by which the proposals in this chapter would become auditable rather than aspirational.",
+   "cites": {
+    "pillars": [
+     "C4"
+    ],
+    "indicators": [],
+    "use_cases": [],
+    "prerequisites": [
+     "2.1",
+     "2.9",
+     "3.3",
+     "3.11",
+     "4.1",
+     "4.5",
+     "4.7",
+     "4.9",
+     "5.5",
+     "5.7",
+     "6.14",
+     "7.12"
+    ]
+   },
+   "figures": [
+    {
+     "value": "2.33",
+     "what_it_is": "Pillar C4 mean score"
+    },
+    {
+     "value": "3 of 7",
+     "what_it_is": "C4 indicators rated out of total indicators in the pillar"
+    },
+    {
+     "value": "1",
+     "what_it_is": "C4 indicators withheld"
+    },
+    {
+     "value": "3",
+     "what_it_is": "C4 indicators stale"
+    },
+    {
+     "value": "7",
+     "what_it_is": "total indicators in pillar C4"
+    },
+    {
+     "value": "March 2026",
+     "what_it_is": "date of the draft Kenya policy document cited as a pointer"
+    }
+   ],
+   "supported_figures": 4,
+   "unsupported_figures": [
+    "3 of 7",
+    "March 2026"
+   ],
+   "stray_numbers": [
+    "2.1",
+    "3.11",
+    "3.3",
+    "4.1",
+    "4.5",
+    "4.7",
+    "4.9",
+    "5.5",
+    "5.7",
+    "6.14",
+    "7.12"
+   ],
+   "cited_outside_binding": [
+    "prerequisite 2.1",
+    "prerequisite 2.9",
+    "prerequisite 3.3",
+    "prerequisite 3.11",
+    "prerequisite 4.1",
+    "prerequisite 4.5",
+    "prerequisite 4.7",
+    "prerequisite 5.5",
+    "prerequisite 6.14",
+    "prerequisite 7.12"
+   ],
+   "provenance": "Chapter 7 draws on pillars C4, prerequisites 4.9, 5.7, derived: prerequisites, register. Prescriptive: proposed, not evidenced."
+  },
+  "8": {
+   "n": "8",
+   "title": "Climate alignment",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "Egypt enters the 2026 roadmap cycle with a climate-alignment picture that is strong on observation infrastructure, thin on measured behaviour, and already partly funded. This chapter is prescriptive: what follows is a proposal built on the assessment, not a finding of it. Where the assessment holds no number, no number is asserted here.\n\nThe one firmly documented element is the physical weather and climate data base. Indicator 3.6 records that the Egyptian Meteorological Authority operates a national meteorological observation network of 28 synoptic stations, 72 automatic weather stations (28 of them on the GTS) and 5 radio-sounding stations, with observations. That is a real asset for the roadmap to build on: a national observing backbone with an established international data-exchange path for part of the automatic network. The proposal is therefore to treat the meteorological network as the anchor of the climate layer of the digital agriculture architecture, and to concentrate roadmap effort not on new stations but on the translation chain between those observations and farm-level decisions \u2014 the segment where the assessment could find no published measurement.\n\nOn practice and on reach, the assessment returns two explicit data gaps, and these should be read as gaps in the published record rather than as evidence of absence. For indicator 1.8, farmers using climate-smart practices, the search reviewed nine sources and found no farmer-level adoption share for Egypt: the FAO SHARP+ project page carries only a forward-looking target of 8,000 farmers by 2027; a seven-governorate farmer survey covering 2953 farmers yielded, in the retrieved portion, only a qualitative statement of limited uptake; the FAO Knowledge Repository record for the 2022 climate-smart agriculture study offered a catalogue synopsis while the 92-page PDF itself was not retrieved; a Delta Nile survey of 792 farmers reports that 51.9% had no knowledge of climate change, which is an awareness measure from two governorates and not a practice-adoption rate; and a raised-bed report listed wheat area under mechanised raised beds in its table of contents without the values appearing in the retrieved text. Two of the nine pages were access-blocked outright. For indicator 8.17, climate advisory reach, the outcome is the same: a CAPMAS microdata catalogue containing 47 agriculture studies surfaced no advisory or extension-reach variable; the FAO STI Portal entry for Egypt's Early Climate Warning app confirms the app's existence, maturity and Upper Egypt target group but states that specific adoption rates are not provided; an IFAD supervision report rates adaptation to climate change 4/6 without carrying a reach figure; a WFP publication gives Upper Egypt livelihood shares of 63% of zone employment and approximately 85% of rural households but nothing on advisory reach; and a CGIAR policy seminar note describes the advisory supply chain most fully and explicitly flags an unquantified communication gap. A press report on the expansion of extension and digital advisory services and 7,000+ wheat demonstration fields records existence only and cannot carry a statistic. The hold was therefore set on both indicators.\n\nThe use-case row reinforces the same conclusion from a different direction. Advisory (ADV) is recorded as Unverified at readiness 2.65 across 20 bearing rows, with the block traced to a universal unverified prerequisite, 2.1. That is a withheld verification state, not a low score, and the distinction matters for sequencing: the roadmap should not fund advisory scale-up on the assumption that the underlying condition is weak, nor assume it is sound. The proposed first step is to resolve 2.1 so that ADV can be scored on evidence rather than carried as unverified.\n\nAccordingly, this chapter proposes three actions, all of them recommendations. First, establish a measurement instrument for climate-smart practice adoption and for advisory receipt, ideally as additional variables inside existing national statistical vehicles rather than as a standalone survey, so that indicators 1.8 and 8.17 can be populated at the next assessment. The distinction the assessment repeatedly encountered \u2014 between awareness, adaptation behaviour, and receipt of an advisory \u2014 should be built into the question design from the start. Second, route climate-service investment through the vehicle Egypt has already created rather than beside it: the Climate Resilient Agri-Food Transformation Project (P180480), a US$250 million IBRD Investment Project Financing implemented by the Ministry of Water Resources and Irrigation, the Ministry of Environment and the Ministry of Agriculture and Land Reclamation, has a stated development objective covering both climate-smart agriculture adoption and the national agricultural information and early warning system. The roadmap's proposed role is complementary \u2014 the measurement and data-governance layer that project reporting can draw on \u2014 and explicitly not a duplicate advisory or weather-data programme. Third, decide deliberately where climate alignment sits in the roadmap's architecture. One option drafters could consider, offered as a pointer and not as an endorsement or a comparison, is the approach in the draft Kenya Agricultural Data, Information and Digital Policy, which embeds climate responsiveness as a founding principle of the whole digital agriculture framework rather than as a separate climate-services programme. The alternative \u2014 a discrete climate chapter with its own delivery line \u2014 is easier to budget but harder to make binding on the rest of the architecture.\n\nTwo limits should be stated plainly. This assessment holds no NDC or CCDR crosswalk and no climate-finance taxonomy; any claim that the actions proposed here align with Egypt's nationally determined contribution, with a Country Climate and Development Report, or with a climate-finance classification is external to this evidence pack and must be established and marked as such by the responsible ministry. And because 1.8 and 8.17 are both gaps, this chapter sets no baseline against which climate-smart adoption or advisory reach can be tracked; creating that baseline is itself the principal proposed deliverable of the climate-alignment workstream.",
+   "cites": {
+    "pillars": [],
+    "indicators": [
+     "1.8",
+     "3.6",
+     "8.17"
+    ],
+    "use_cases": [
+     "ADV"
+    ],
+    "prerequisites": [
+     "2.1"
+    ]
+   },
+   "figures": [
+    {
+     "value": "28 synoptic stations",
+     "what_it_is": "Egyptian Meteorological Authority synoptic stations (indicator 3.6)"
+    },
+    {
+     "value": "72 automatic weather stations (28 of them on the GTS)",
+     "what_it_is": "Automatic weather stations in the national observation network, with the number on the Global Telecommunication System (indicator 3.6)"
+    },
+    {
+     "value": "5 radio-sounding stations",
+     "what_it_is": "Radio-sounding stations in the national meteorological network (indicator 3.6)"
+    },
+    {
+     "value": "8,000 farmers by 2027",
+     "what_it_is": "Forward-looking target on the FAO SHARP+ project page cited under indicator 1.8"
+    },
+    {
+     "value": "2953 farmers",
+     "what_it_is": "Sample size of the seven-governorate farmer survey reviewed for indicator 1.8"
+    },
+    {
+     "value": "92-page PDF",
+     "what_it_is": "Length of the unretrieved FAO 'Toward climate-smart agriculture in Egypt' (2022) document"
+    },
+    {
+     "value": "792 farmers",
+     "what_it_is": "Sample size of the Delta Nile survey (Kassem et al. 2019)"
+    },
+    {
+     "value": "51.9%",
+     "what_it_is": "Share of surveyed Delta Nile farmers with no knowledge of climate change (awareness, not practice adoption)"
+    },
+    {
+     "value": "47 agriculture studies",
+     "what_it_is": "Agriculture studies in the CAPMAS microdata catalogue reviewed for indicator 8.17"
+    },
+    {
+     "value": "4/6",
+     "what_it_is": "IFAD SAIL supervision report rating for 'Adaptation to Climate Change'"
+    },
+    {
+     "value": "63% of zone employment",
+     "what_it_is": "WFP Upper Egypt livelihood share cited under indicator 8.17"
+    },
+    {
+     "value": "approximately 85% of rural households",
+     "what_it_is": "WFP Upper Egypt livelihood share cited under indicator 8.17"
+    },
+    {
+     "value": "7,000+ wheat demonstration fields",
+     "what_it_is": "Figure in a tier-5 press item, existence fact only, ineligible to carry a statistic"
+    },
+    {
+     "value": "2.65",
+     "what_it_is": "Readiness score recorded for the Advisory (ADV) use case, state Unverified"
+    },
+    {
+     "value": "20 bearing rows",
+     "what_it_is": "Number of bearing rows behind the ADV use-case row"
+    },
+    {
+     "value": "2.1",
+     "what_it_is": "Universal unverified prerequisite blocking verification of the ADV use case"
+    },
+    {
+     "value": "US$250 million",
+     "what_it_is": "IBRD Investment Project Financing amount for the Climate Resilient Agri-Food Transformation Project (P180480)"
+    }
+   ],
+   "supported_figures": 1,
+   "unsupported_figures": [
+    "28 synoptic stations",
+    "72 automatic weather stations (28 of them on the GTS)",
+    "5 radio-sounding stations",
+    "8,000 farmers by 2027",
+    "2953 farmers",
+    "92-page PDF",
+    "792 farmers",
+    "51.9%",
+    "47 agriculture studies",
+    "4/6",
+    "63% of zone employment",
+    "approximately 85% of rural households",
+    "7,000+ wheat demonstration fields",
+    "20 bearing rows",
+    "2.1",
+    "US$250 million"
+   ],
+   "stray_numbers": [
+    "1.8",
+    "180480",
+    "250",
+    "28",
+    "2953",
+    "47",
+    "63",
+    "7,000",
+    "72",
+    "792",
+    "8,000",
+    "8.17",
+    "85",
+    "92"
+   ],
+   "cited_outside_binding": [
+    "prerequisite 2.1"
+   ],
+   "provenance": "Chapter 8 draws on indicators 1.8, 3.6, 8.17, use cases ADV. Prescriptive: proposed, not evidenced."
+  },
+  "9": {
+   "n": "9",
+   "title": "Results and learning",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "This chapter proposes how Egypt's digital agriculture programme should be measured, and it begins by being explicit about how much measurement there is to build on. The assessment carries 30 rated rows, of which 13 are graded Measured, 24 Documented, 1 Judged and 19 recorded as Gap, with 8 rows withheld. Only the Measured rows can carry a baseline; everything else either describes a situation without quantifying it or records that no reading was obtainable. The single pillar reported here, O1, has a mean of 2.5 (Established) with 2 of 7 indicators rated, 0 withheld and 0 stale. That mean is a real reading of two indicators, not a characterisation of the pillar: five of the seven rows are unrated, so the O1 figure should be quoted with its coverage attached every time it is used. The 8 withheld rows elsewhere in the assessment are not low scores and must not be reported as zeros or as weaknesses; they are rows where the evidence could not be verified to the standard required, and they belong in the gap register rather than in any performance narrative.\n\nAt outcome level, the pack carries six national baselines that can anchor the top of a results chain. Agriculture value added per worker stands at USD 8,942.42 (2025). Cereal yield is 7,402.0 kg/ha (2023). Employment in agriculture is 18.0% (2025). The food production index reads 109.1 on a 2014-16 = 100 base (2022). Prevalence of undernourishment is 9.0% (2023). Female account ownership is recorded at 40.21%, and the pack does not carry a reading year for that row, so it should be re-dated before it is used as a baseline. These are national aggregates drawn from international statistical series; they move slowly, they respond to weather, prices and macroeconomic conditions far more than to any digital programme, and this chapter proposes that they be tracked as context indicators rather than as attributable results. Nothing in the assessment establishes a causal link between digital investment and any of these six figures, and the roadmap should not claim one.\n\nBetween those context indicators and the delivery work, the pack supplies two structural steps that can serve as the verifiable spine of a results chain, both of them proposals rather than findings. The first is the foresight milestone on agricultural data governance: indicator 4.5 is Measured at L1, and the proposed milestone is that by 2029 MCIT and MALR jointly issue and gazette farmer-data rules under Law No. 151 of 2020 \\u2014 consent, purpose limitation, controller/processor licensing and a named redress route \\u2014 covering all Farmer's Card and project-level farmer data, lifting 4.5 to L3. The sequencing rationale carried in the pack is that the Farmer's Card is scheduled for expansion to 80% of holdings under the FY2025/26 plan, so the rights instrument is proposed to land ahead of mass enrolment rather than after it. The second is indicator 4.4, also Measured at L1, with a proposed milestone that by 2029 Cabinet adopts a costed National Digital Agriculture Strategy naming MALR's Economic Affairs Sector as the delivery home and an explicit financing route for each workstream, moving 4.4 to L3. The financing constraint is on the record: general services support to agriculture stands at 2.6% of production value, of which 76% is irrigation and 14% R&D, against total support of 2.8% of GDP. A results chain that sizes its ambition against the 2.6% envelope rather than the 2.8% headline is the more honest one, and that choice is a recommendation of this roadmap, not a conclusion of the assessment.\n\nThe measurement gap register is carried forward here in full rather than summarised. Nineteen rows are recorded as Gap: for these, no level and no baseline exist, and any target set against them would be set against nothing. Eight rows are withheld and must be re-evidenced before they can enter any monitoring table; the register should name the specific verification that is missing for each, and the roadmap should not report progress on a withheld row until it has been re-rated. One row is graded Judged, which means it rests on assessor inference and should be re-based on documentary or measured evidence at the next cycle. Within O1, the five unrated indicators are themselves a register entry, because the pillar mean of 2.5 will move simply as coverage improves, independently of any real change in performance. A definitional gap is also on the record for 4.4: the pack notes it is unresolved whether the indicator scores only a dedicated digital-agriculture strategy document or also credits digital-agriculture components embedded in broader national strategies. That ambiguity must be settled in writing before 2029, because the same national action could be scored L1 or L3 depending on which reading applies. Finally, vintage is a gap in its own right: three of the six outcome baselines date from 2022 or 2023 (the food production index from 2022, cereal yield and undernourishment from 2023), and the female account ownership row carries no year at all in the pack.\n\nFor the delivery layer, this chapter proposes anchoring adoption measurement on infrastructure that already exists rather than commissioning fresh baselines. A donor-financed delivery platform with an existing measurement base is already running in Upper Egypt: IFPRI's randomised controlled trial on digital literacy training operates through roughly 30 farmer organizations covering about 4,000 smallholder farmers in Minya and Beni Suef supported by GIZ's Agricultural Innovation Project, and it includes a baseline survey on farmers' access to digital tools and adoption barriers. The proposal is that the roadmap's digital-tool adoption results chain adopt that baseline survey as its starting measurement and its farmer-organization network as its recurring sampling frame, with the explicit caveat that two governorates and roughly 4,000 farmers are not a national baseline and should never be reported as one. As a pointer only, and not as an endorsement or a comparison, Kenya published a sector-level monitoring and evaluation framework sitting underneath its climate-smart agriculture strategy, defining its purpose as checking whether the implementation framework's objectives, outcomes and outputs are proceeding as planned, and anchoring that duty in a pre-existing statutory reporting obligation rather than creating a standalone monitoring exercise. The analogous move available here would be to hang reporting on the instrument proposed under milestone 4.5 rather than to stand up a separate monitoring apparatus.\n\nOn cadence, the following is proposed rather than established. The two structural indicators, 4.4 and 4.5, should be re-rated annually against their 2029 L3 targets, since both are binary-ish institutional acts whose status is cheap to verify and whose slippage is the earliest available warning that the rest of the chain is at risk. The 19 Gap rows and the 8 withheld rows should be reviewed annually as a register, with the single test being whether each has acquired a level or an evidence route since the last cycle; the register's own shrinkage is the roadmap's most useful internal metric in the early years. O1 should be re-rated on the same annual cycle with coverage reported alongside the mean, so that a rise from 2.5 caused by rating three more indicators is never mistaken for improvement. The six outcome baselines should be refreshed only when their source series publish, which is typically annual and lagged, and should be read over multi-year windows. Adoption measurement through the existing Minya and Beni Suef platform should follow the trial's own survey rounds. Two learning commitments follow from this design: that the 4.4 definitional question be resolved and documented before any target is scored against it, and that any figure in future reporting be traceable to a Measured row, with Documented, Judged, Gap and withheld rows labelled as such wherever they appear.",
+   "cites": {
+    "pillars": [
+     "O1"
+    ],
+    "indicators": [
+     "4.4",
+     "4.5"
+    ],
+    "use_cases": [],
+    "prerequisites": []
+   },
+   "figures": [
+    {
+     "value": "30",
+     "what_it_is": "rated rows in the assessment"
+    },
+    {
+     "value": "13",
+     "what_it_is": "rows graded Measured"
+    },
+    {
+     "value": "24",
+     "what_it_is": "rows graded Documented"
+    },
+    {
+     "value": "1",
+     "what_it_is": "row graded Judged"
+    },
+    {
+     "value": "19",
+     "what_it_is": "rows recorded as Gap"
+    },
+    {
+     "value": "8",
+     "what_it_is": "rows withheld"
+    },
+    {
+     "value": "2.5",
+     "what_it_is": "O1 pillar mean (Established)"
+    },
+    {
+     "value": "2 of 7",
+     "what_it_is": "O1 indicators rated"
+    },
+    {
+     "value": "0",
+     "what_it_is": "O1 withheld rows / O1 stale rows"
+    },
+    {
+     "value": "USD 8,942.42",
+     "what_it_is": "KPI 1.1 agriculture value added per worker, 2025"
+    },
+    {
+     "value": "7,402.0 kg/ha",
+     "what_it_is": "KPI 1.2 cereal yield, 2023"
+    },
+    {
+     "value": "18.0%",
+     "what_it_is": "KPI 1.3 employment in agriculture, 2025"
+    },
+    {
+     "value": "109.1",
+     "what_it_is": "KPI 1.4 food production index (2014-16=100), 2022"
+    },
+    {
+     "value": "9.0%",
+     "what_it_is": "KPI 8.1 prevalence of undernourishment, 2023"
+    },
+    {
+     "value": "40.21%",
+     "what_it_is": "KPI 8.2 account ownership, female (no year carried in pack)"
+    },
+    {
+     "value": "L1",
+     "what_it_is": "measured level of indicators 4.5 and 4.4"
+    },
+    {
+     "value": "L3",
+     "what_it_is": "target level for indicators 4.5 and 4.4"
+    },
+    {
+     "value": "2029",
+     "what_it_is": "target year for the 4.5 and 4.4 milestones"
+    },
+    {
+     "value": "Law No. 151 of 2020",
+     "what_it_is": "horizontal data protection instrument cited in the 4.5 milestone"
+    },
+    {
+     "value": "80% of holdings",
+     "what_it_is": "planned Farmer's Card coverage under the FY2025/26 plan"
+    },
+    {
+     "value": "2.6% of production value",
+     "what_it_is": "general services support to agriculture (GSSE)"
+    },
+    {
+     "value": "76%",
+     "what_it_is": "share of GSSE going to irrigation"
+    },
+    {
+     "value": "14%",
+     "what_it_is": "share of GSSE going to R&D"
+    },
+    {
+     "value": "2.8% of GDP",
+     "what_it_is": "total support to agriculture"
+    },
+    {
+     "value": "roughly 30 farmer organizations",
+     "what_it_is": "coverage of the IFPRI digital literacy RCT"
+    },
+    {
+     "value": "about 4,000 smallholder farmers",
+     "what_it_is": "farmers covered by the IFPRI RCT in Minya and Beni Suef"
+    }
+   ],
+   "supported_figures": 13,
+   "unsupported_figures": [
+    "2 of 7",
+    "USD 8,942.42",
+    "7,402.0 kg/ha",
+    "L1",
+    "L3",
+    "Law No. 151 of 2020",
+    "80% of holdings",
+    "2.6% of production value",
+    "76%",
+    "14%",
+    "2.8% of GDP",
+    "roughly 30 farmer organizations",
+    "about 4,000 smallholder farmers"
+   ],
+   "stray_numbers": [
+    "151",
+    "26",
+    "4,000",
+    "4.4",
+    "4.5",
+    "80"
+   ],
+   "cited_outside_binding": [
+    "indicator 4.4",
+    "indicator 4.5"
+   ],
+   "provenance": "Chapter 9 draws on pillars O1, derived: kpi_baseline, evidence_ledger, foresight.milestones. Prescriptive: proposed, not evidenced."
+  },
+  "10": {
+   "n": "10",
+   "title": "Risks and safeguards",
+   "kind": "prescriptive",
+   "status": "proposed, not evidenced",
+   "prose": "This chapter is prescriptive. Nothing in it is a finding of the 2026 assessment; it is a set of proposals built on what the assessment could and could not see, and it should be read as a recommendation to be debated, costed and ratified rather than as evidence of current practice.\n\nThe starting point for data rights is that Egypt does not need to invent a legal baseline. The assessment records prerequisite 4.1, a data protection and privacy law, as Present on a universal basis, and the published record identifies the instrument: Law No. 151 of 2020 on personal data protection, passed in July 2020, which criminalises processing data outside the purposes authorised by data owners and requires collectors and processors to hold licences, permits and approvals. The proposal of this chapter is that every farmer-facing digital service in the roadmap be designed to sit inside that instrument \u2014 consent captured against a named and disclosed purpose, processors licensed as the law requires, and a redress route that a smallholder can actually use without counsel. Prerequisite 7.12, responsible-AI safeguards covering consent and rights, is also recorded as Present for the advisory, smallholder-finance, financial-inclusion and agricultural-intelligence use cases; the recommendation is to treat that as a floor for automated advisory and scoring systems, not as a completed control.\n\nThe visible gap in the rights architecture is sectoral rather than horizontal. Prerequisite 4.5, an agricultural data governance framework, is recorded as Absent for the agricultural-intelligence use case. A horizontal privacy law governs personal data; it does not by itself settle who may aggregate field-level yield, plot boundary, input purchase or credit-behaviour data, on what terms, for how long, or with what benefit flowing back to the farmer who generated it. This chapter proposes that a dedicated agricultural data governance instrument be drafted and put to public consultation, and that it carry, in the same document that authorises data sharing, the clauses that constrain it. As a pointer only, and not as an endorsement or a comparison, drafters may wish to examine India's Telangana state draft Agricultural Data Management Policy of July 2022, which pairs the efficiency goal of data sharing with an explicit rights-protection objective and is structured around named safeguard clauses \u2014 classification of the purpose of processing agricultural data containing personal data, de-identification and anonymization, access control, quality of datasets, and compliance requirements \u2014 with a dedicated grievance-redressal section at Clause 10 and a Data Governance Framework at Clause 11, released for public comment against a stated deadline and a prescribed submission template. The instructive feature is structural: rights and redress live in the same instrument that grants the sharing power, and objections are surfaced before adoption rather than after.\n\nEvidence quality is itself a risk and must be declared as one. Across the assessment, 30 rows were rated and 8 were withheld. The evidence base behind those ratings comprises 13 Measured, 24 Documented, 1 Judged and 19 Gap entries \u2014 meaning that a substantial share of the picture rests on documentary assertion rather than measurement, and that 19 recorded gaps mark places where no reading was obtainable at all. Pillar C3 scores a mean of 2.71, placing it at the Established band, with 7 of its 8 rows rated, 0 withheld, and 3 stale readings. Three stale readings inside an otherwise well-populated pillar are a warning that the band may reflect an older state of affairs than the assessment year; the proposal is that stale rows be re-measured before any funding decision is anchored to that pillar's score.\n\nThe 8 withheld rows require a specific discipline. A withheld level is not a low score and must not be reported, budgeted or benchmarked as one; it is an absence of a publishable reading, and the honest treatment is to name it as withheld each time the row is used. This chapter proposes that the roadmap's monitoring instrument carry a standing rule: no withheld row may be substituted with an assumed value, no gap may be filled by analogy to another country, and any indicator whose definition has not been formally ratified must be labelled unratified wherever it appears. Where the evidence is Judged rather than Measured or Documented \u2014 and the pack records a single such entry \u2014 the judgement and its author should be identified so that a later reviewer can reopen it.\n\nPolitical-economy risk follows from the same asymmetry. A governance instrument that authorises agricultural data sharing creates value for whoever holds the aggregate, and the parties best placed to shape the instrument are rarely the farmers whose data fills it. The mitigations proposed here are procedural rather than rhetorical: publish the draft agricultural data governance framework for consultation with a stated deadline and a submission template so that objections are documented and traceable; ratify indicator definitions before targets are attached to them, so that reporting incentives cannot quietly redefine success; keep the redress route separate from the body that operates the data platform; and require that the count of Measured, Documented, Judged and Gap entries be republished at each review cycle, so that improvement in the evidence base can be distinguished from improvement in the underlying sector. None of these mitigations is currently evidenced as in place; each is a recommendation of this chapter, and each would need an owner, a budget line and a date before it becomes more than an intention.",
+   "cites": {
+    "pillars": [
+     "C3"
+    ],
+    "indicators": [],
+    "use_cases": [
+     "ADV",
+     "SMF",
+     "FIN",
+     "AGI"
+    ],
+    "prerequisites": [
+     "4.1",
+     "4.5",
+     "7.12"
+    ]
+   },
+   "figures": [
+    {
+     "value": "2.71",
+     "what_it_is": "Pillar C3 mean score"
+    },
+    {
+     "value": "Established",
+     "what_it_is": "Pillar C3 band"
+    },
+    {
+     "value": "7 of 8",
+     "what_it_is": "C3 rows rated"
+    },
+    {
+     "value": "0",
+     "what_it_is": "C3 rows withheld"
+    },
+    {
+     "value": "3",
+     "what_it_is": "C3 stale readings"
+    },
+    {
+     "value": "30",
+     "what_it_is": "total rows rated across the assessment"
+    },
+    {
+     "value": "8",
+     "what_it_is": "total rows withheld across the assessment"
+    },
+    {
+     "value": "13",
+     "what_it_is": "Measured evidence entries"
+    },
+    {
+     "value": "24",
+     "what_it_is": "Documented evidence entries"
+    },
+    {
+     "value": "1",
+     "what_it_is": "Judged evidence entries"
+    },
+    {
+     "value": "19",
+     "what_it_is": "Gap evidence entries"
+    },
+    {
+     "value": "Law No. 151 of 2020",
+     "what_it_is": "Egypt's personal data protection law"
+    },
+    {
+     "value": "July 2020",
+     "what_it_is": "month the personal data protection law was passed"
+    },
+    {
+     "value": "July 2022",
+     "what_it_is": "date of the Telangana draft Agricultural Data Management Policy"
+    },
+    {
+     "value": "Clause 10",
+     "what_it_is": "grievance-redressal clause in the Telangana draft policy"
+    },
+    {
+     "value": "Clause 11",
+     "what_it_is": "Data Governance Framework clause in the Telangana draft policy"
+    }
+   ],
+   "supported_figures": 9,
+   "unsupported_figures": [
+    "Established",
+    "7 of 8",
+    "Law No. 151 of 2020",
+    "July 2020",
+    "July 2022",
+    "Clause 10",
+    "Clause 11"
+   ],
+   "stray_numbers": [
+    "151",
+    "4.1",
+    "4.5",
+    "7.12"
+   ],
+   "cited_outside_binding": [
+    "use_case ADV",
+    "use_case SMF",
+    "use_case FIN",
+    "use_case AGI"
+   ],
+   "provenance": "Chapter 10 draws on pillars C3, prerequisites 4.1, 4.5, 7.12, derived: evidence_ledger. Prescriptive: proposed, not evidenced."
+  }
+ }
+}

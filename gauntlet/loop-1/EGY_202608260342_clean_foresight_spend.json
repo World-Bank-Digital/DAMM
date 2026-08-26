@@ -1,0 +1,59 @@
+{
+ "summary": {
+  "label": "EGY_202608260342_clean_foresight",
+  "ceiling": 500.0,
+  "total": 0.390205,
+  "calls": 3,
+  "elapsed_s": 183.3,
+  "by_pass": {
+   "foresight": 0.3902
+  },
+  "by_vendor": {
+   "anthropic": 0.3902
+  }
+ },
+ "calls": [
+  {
+   "vendor": "anthropic",
+   "pass_name": "foresight",
+   "model": "claude-opus-5",
+   "in_tok": 3443,
+   "out_tok": 4269,
+   "searches": 0,
+   "content_pages": 0,
+   "fetches": 0,
+   "requests": 0,
+   "cost": 0.12394,
+   "detail": "scenarios",
+   "at": 67.9
+  },
+  {
+   "vendor": "anthropic",
+   "pass_name": "foresight",
+   "model": "claude-opus-5",
+   "in_tok": 2686,
+   "out_tok": 2757,
+   "searches": 0,
+   "content_pages": 0,
+   "fetches": 0,
+   "requests": 0,
+   "cost": 0.082355,
+   "detail": "preferred future",
+   "at": 106.5
+  },
+  {
+   "vendor": "anthropic",
+   "pass_name": "foresight",
+   "model": "claude-opus-5",
+   "in_tok": 5912,
+   "out_tok": 6174,
+   "searches": 0,
+   "content_pages": 0,
+   "fetches": 0,
+   "requests": 0,
+   "cost": 0.18391,
+   "detail": "backcasting",
+   "at": 183.3
+  }
+ ]
+}

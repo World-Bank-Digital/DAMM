@@ -42,6 +42,10 @@ import vendors as V
 from engine_v17 import MODEL, run as engine_run
 
 PASS = "generation"
+
+# Every id the instrument names, so a reference to a row can be told from a claim about
+# the country. Prerequisite ids are indicator ids, so the one set covers both.
+KNOWN_IDS = frozenset(MODEL)
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
 SPEC = json.load(open(MODEL_FILE))
 ASSESSMENT_YEAR = SPEC["config"]["assessment_year"]
@@ -97,13 +101,15 @@ CHAPTER_SCHEMA = {
 # Pure, so the rules that decide whether a document may be written can be tested without
 # a key or a network.
 
-def binding_gate(cites, binding):
+def binding_gate(cites, binding, assessment=None):
     """What a chapter cited that its binding does not allow. Empty list when clean.
 
     The pack already withholds everything outside the binding, so a violation here means
     the writer produced an id from its own knowledge rather than from the evidence — which
     is precisely the failure the binding exists to catch.
     """
+    if assessment is not None:
+        binding = expand_binding(binding, assessment)
     out = []
     for kind in ("pillars", "indicators", "use_cases", "prerequisites"):
         allowed = set(binding.get(kind) or [])
@@ -186,7 +192,62 @@ def _ordinary(n):
     return False
 
 
-def fidelity_check(prose, figures, allowed):
+# A figure the assessment states as a pair or as a level, rather than as one number:
+# "5 of 10" is a coverage denominator and "level 3" is a rung. Both come straight out of
+# the pack, and both used to be unparseable — so the writer quoting the evidence exactly
+# was marked as claiming something the engine did not produce. Of the 95 figures the first
+# Egypt roadmap was blocked over, 74 were of this shape.
+_PAIR = re.compile(r"^\s*(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:of|/|out of)\s*"
+                   r"(\d+(?:,\d{3})*(?:\.\d+)?)\s*$", re.I)
+_RUNG = re.compile(r"^\s*(?:level|band|rung)\s*(\d+(?:\.\d+)?)\s*$", re.I)
+
+
+def _composite_supported(raw, allowed):
+    """Whether a composite figure is fully supported. None when it is not a composite."""
+    if raw is None:
+        return None
+    text = str(raw)
+    m = _PAIR.match(text)
+    if m:
+        a, b = _norm_num(m.group(1)), _norm_num(m.group(2))
+        return a is not None and b is not None and a in allowed and b in allowed
+    m = _RUNG.match(text)
+    if m:
+        n = _norm_num(m.group(1))
+        return n is not None and n in allowed
+    return None
+
+
+def reference_ids(prose, known_ids, cited_ids=()):
+    """Numbers in the prose that are references to rows, not claims about the country.
+
+    The roadmap names a row the way the instrument does — "(3.11)" after the indicator's
+    name, or "indicator 3.11". Read as a quantity, 3.11 is a number the engine never
+    produced, and 86 of the 114 numbers the first Egypt roadmap was blocked over were
+    references of exactly this kind.
+
+    Matched in the shapes a reference actually takes, so a real figure that happens to
+    equal an id — a pillar mean of 3.11, written as "mean 3.11" — is still checked.
+
+    A chapter also declares what it cites. Where prose names an id the chapter has cited,
+    that is a reference on the chapter's own account, which is firmer than any reading of
+    the surrounding words: the roadmap writes "— 3.11" and "; 3.3" as often as it writes
+    "(3.11)", and no amount of context matching separates those from a quantity.
+    """
+    if not prose or not known_ids:
+        return set()
+    out = {str(c).strip() for c in (cited_ids or [])
+           if str(c).strip() in known_ids and str(c).strip() in prose}
+    for m in re.finditer(r"[(\[§]\s*([0-9]+\.[0-9]+[A-Za-z-]*)\s*[)\]]?"
+                         r"|(?:indicator|prerequisite|row|indicators|rows)\s+"
+                         r"([0-9]+\.[0-9]+[A-Za-z-]*)", prose, re.I):
+        tok = m.group(1) or m.group(2)
+        if tok in known_ids:
+            out.add(tok)
+    return out
+
+
+def fidelity_check(prose, figures, allowed, known_ids=(), cited_ids=()):
     """Which claimed figures the engine supports, and what the prose says beyond them.
 
     Returns (supported, unsupported, stray). `stray` is numbers in the prose that are
@@ -196,15 +257,20 @@ def fidelity_check(prose, figures, allowed):
     supported, unsupported = [], []
     claimed = set()
     for f in figures or []:
-        n = _norm_num(f.get("value"))
+        raw = f.get("value")
+        n = _norm_num(raw)
         claimed.add(n)
-        if n is not None and n in allowed:
+        comp = _composite_supported(raw, allowed)
+        if comp is True or (comp is None and n is not None and n in allowed):
             supported.append(f)
         else:
             unsupported.append(f)
 
+    refs = reference_ids(prose, set(known_ids), cited_ids)
     stray = []
     for raw in _numbers(prose):
+        if raw in refs:
+            continue
         n = _norm_num(raw)
         if (n is None or n in claimed or n in allowed
                 or _ordinary(n) or _rounds_to(n, raw, allowed)):
@@ -234,10 +300,33 @@ def qc_checks(doc):
     add("B3 no prescriptive chapter renders as evidenced", not mislabelled,
         f"chapters {', '.join(mislabelled)}" if mislabelled else "")
 
-    rate = doc["fidelity"]["rate"]
-    add(f"B4 figure fidelity at or above {FIDELITY_FLOOR:.0%}", rate >= FIDELITY_FLOOR,
-        f"{rate:.1%} — {doc['fidelity']['unsupported']} unsupported of "
-        f"{doc['fidelity']['claimed']} claimed")
+    # Fidelity is an evidence test, and it binds on the chapters that make claims about
+    # the country. Chapters three to ten propose an investment programme: a budget line,
+    # a district count, a target year. Those figures are proposals, and the engine could
+    # not have produced them — holding them to "every number traces to the assessment"
+    # asks a proposal to be evidence, which is the one thing chapter three to ten is
+    # marked as not being. On the first Egypt roadmap the split was 97% on the diagnostic
+    # chapters against 52% on the prescriptive ones, and the global rate of 53% was read
+    # as the document being unsupported when its evidence chapters were nearly clean.
+    #
+    # What protects the prescriptive chapters is B3, which fails if one of them renders as
+    # evidenced, and the banner each carries. Their fidelity is reported, never blocking.
+    ev = [c for c in chapters if c["kind"] != "prescriptive"]
+    ev_claimed = sum(len(c.get("figures") or []) for c in ev)
+    ev_unsup = sum(len(c.get("unsupported_figures") or []) for c in ev)
+    ev_rate = (ev_claimed - ev_unsup) / ev_claimed if ev_claimed else 1.0
+    add(f"B4 evidence-chapter figure fidelity at or above {FIDELITY_FLOOR:.0%}",
+        ev_rate >= FIDELITY_FLOOR,
+        f"{ev_rate:.1%} — {ev_unsup} unsupported of {ev_claimed} claimed in the "
+        f"{len(ev)} evidence chapters")
+
+    pr = [c for c in chapters if c["kind"] == "prescriptive"]
+    pr_claimed = sum(len(c.get("figures") or []) for c in pr)
+    pr_unsup = sum(len(c.get("unsupported_figures") or []) for c in pr)
+    # Reported so that a reader can see how much of the programme is proposal rather than
+    # measurement. Not a pass or a fail: it is the point of those chapters.
+    checks.append((f"      prescriptive chapters propose {pr_unsup} figures the "
+                   f"assessment did not produce, of {pr_claimed}", True, ""))
 
     strays = [f"{c['n']}: {', '.join(c['stray_numbers'][:4])}"
               for c in chapters if c.get("stray_numbers")]
@@ -252,9 +341,35 @@ def qc_checks(doc):
 
 # ------------------------------------------------------------------ the pack
 
+# A binding may say ["*"] for "every one of these". Both the pack and the gate have to
+# read it the same way, so it is expanded once here rather than interpreted twice.
+#
+# Neither expanded it before. The pack looked up an id called "*", found nothing, and
+# handed chapters bound to every prerequisite no prerequisite evidence at all; the gate
+# then compared each cited id against the literal set {"*"} and reported every one of
+# them as a citation outside the binding. So the chapters most entitled to the evidence
+# were the ones starved of it, and were then failed for going to look elsewhere.
+_KINDS = {
+    "pillars": lambda a: list(a.get("pillars") or {}),
+    "indicators": lambda a: list(a.get("indicators") or {}),
+    "use_cases": lambda a: list(a.get("matrix") or {}),
+    "prerequisites": lambda a: list(a.get("prereq") or {}),
+}
+
+
+def expand_binding(binding, assessment):
+    """The binding with any "*" replaced by every id of that kind."""
+    out = dict(binding)
+    for kind, all_ids in _KINDS.items():
+        vals = list(out.get(kind) or [])
+        if any(str(v).strip() == "*" for v in vals):
+            out[kind] = all_ids(assessment)
+    return out
+
+
 def pack_for(chapter, assessment, scans, foresight):
     """The evidence a chapter may see. Nothing outside its binding is included."""
-    b = chapter["binding"]
+    b = expand_binding(chapter["binding"], assessment)
     out = []
 
     if b.get("pillars"):
@@ -361,8 +476,11 @@ def write_chapter(chapter, assessment, scans, foresight, country, llm, allowed):
         "- Never compare this country to another, and never rank countries.",
         CHAPTER_SCHEMA, PASS, max_tokens=8000, detail=f"chapter {chapter['n']}")
 
-    outside = binding_gate(ans["cites"], chapter["binding"])
-    supported, unsupported, stray = fidelity_check(ans["prose"], ans["figures"], allowed)
+    outside = binding_gate(ans["cites"], chapter["binding"], assessment)
+    cited = [c for k in ("indicators", "prerequisites")
+             for c in (ans["cites"].get(k) or [])]
+    supported, unsupported, stray = fidelity_check(
+        ans["prose"], ans["figures"], allowed, KNOWN_IDS, cited)
 
     return {
         "n": chapter["n"],

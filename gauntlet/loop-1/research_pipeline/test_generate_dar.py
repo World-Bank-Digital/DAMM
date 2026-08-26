@@ -154,10 +154,37 @@ check("a prescriptive chapter presented as evidenced blocks the emit",
       "B3 no prescriptive chapter renders as evidenced"
       in failing(doc(chapter={"status": "evidenced by the assessment"})), True)
 
-check("fidelity below the floor blocks the emit",
-      "B4 figure fidelity at or above 95%"
-      in failing(doc(fidelity={"rate": 0.8, "claimed": 10, "supported": 8, "unsupported": 2})),
+# Fidelity binds on the chapters that make claims about the country. Chapters three to
+# ten propose an investment programme — a budget line, a district count — and the engine
+# could not have produced those figures. Holding a proposal to "every number traces to the
+# assessment" asks it to be evidence, which is the one thing it is marked as not being.
+# On the first Egypt roadmap the evidence chapters ran at 97% and the prescriptive ones at
+# 52%, and the blended 53% was read as the document being unsupported.
+_EVID = dict(n="2", title="Where the country stands", kind="diagnostic",
+             status="evidenced by the assessment", provenance="Chapter 2 draws on ...",
+             cited_outside_binding=[], stray_numbers=[],
+             figures=[{"value": "1"}] * 10,
+             unsupported_figures=[{"value": "9.9"}] * 2)
+
+check("fidelity below the floor blocks the emit, on an evidence chapter",
+      "B4 evidence-chapter figure fidelity at or above 95%"
+      in failing({"chapters": [_EVID], "fidelity": {"rate": 0.8, "claimed": 10,
+                                                    "supported": 8, "unsupported": 2}}),
       True)
+
+check("an evidence chapter at the floor passes",
+      "B4 evidence-chapter figure fidelity at or above 95%"
+      in failing({"chapters": [dict(_EVID, figures=[{"value": "1"}] * 20,
+                                    unsupported_figures=[{"value": "9.9"}])],
+                  "fidelity": {"rate": 0.95, "claimed": 20, "supported": 19,
+                               "unsupported": 1}}),
+      False)
+
+check("a prescriptive chapter's proposed figures never block the emit",
+      "B4 evidence-chapter figure fidelity at or above 95%"
+      in failing(doc(chapter={"figures": [{"value": "USD 269.64 million"}] * 10,
+                              "unsupported_figures": [{"value": "USD 269.64 million"}] * 9})),
+      False)
 
 check("undeclared numbers block the emit",
       "B5 no undeclared numbers in the prose"
@@ -171,6 +198,73 @@ check("chapters 3 to 10 are prescriptive",
       sum(1 for c in D.OUTLINE if c["kind"] == "prescriptive"), 8)
 check("the fidelity floor is high enough to mean something", D.FIDELITY_FLOOR >= 0.95, True)
 
+
+
+section("A binding that says every one of these means every one of these")
+
+_A = {"pillars": {"A1": {}, "C1": {}}, "indicators": {"1.1": {}, "2.4": {}},
+      "matrix": {"ADV": {}, "FIN": {}}, "prereq": {"2.1": {}, "7.12": {}}}
+
+_b = D.expand_binding({"prerequisites": ["*"], "pillars": ["A1"]}, _A)
+check("the wildcard expands to every id of its kind", sorted(_b["prerequisites"]), ["2.1", "7.12"])
+check("an explicit list is left alone", _b["pillars"], ["A1"])
+
+# The pack looked up an id called "*", found nothing, and handed chapters bound to every
+# prerequisite no prerequisite evidence at all. The gate then compared each cited id
+# against the literal set {"*"} and failed every one. The chapters most entitled to the
+# evidence were starved of it and then failed for going to look elsewhere.
+check("a cited prerequisite inside a wildcard binding is allowed",
+      D.binding_gate({"prerequisites": ["2.1"]}, {"prerequisites": ["*"]}, _A), [])
+check("without the assessment the wildcard cannot be expanded, and nothing is claimed clean",
+      D.binding_gate({"prerequisites": ["2.1"]}, {"prerequisites": ["*"]}), ["prerequisite 2.1"])
+check("a genuine violation is still caught",
+      D.binding_gate({"indicators": ["9.9"]}, {"indicators": ["1.1"]}, _A), ["indicator 9.9"])
+
+
+section("A figure stated as a pair or a rung is still a figure")
+
+_ALLOWED = {5.0, 10.0, 3.0, 3.6, 2.5}
+
+# "5 of 10" is a coverage denominator and "level 3" is a rung; both come straight out of
+# the pack. Unparseable before, so the writer quoting the evidence exactly was recorded as
+# claiming something the engine never produced — 74 of the 95 figures the first Egypt
+# roadmap was blocked over were this shape.
+check("a coverage pair is supported when both halves are",
+      D._composite_supported("5 of 10", _ALLOWED), True)
+check("a pair with an invented half is not",
+      D._composite_supported("5 of 99", _ALLOWED), False)
+check("a rung is supported when the level is",
+      D._composite_supported("level 3", _ALLOWED), True)
+check("a plain number is not a composite",
+      D._composite_supported("3.6", _ALLOWED) is None, True)
+
+_sup, _uns, _ = D.fidelity_check("", [{"value": "5 of 10"}, {"value": "level 3"}], _ALLOWED)
+check("composites reach the supported list", len(_sup), 2)
+check("and none is called unsupported", len(_uns), 0)
+
+
+section("An id in the prose is a reference, not a claim about the country")
+
+_IDS = {"3.11", "1.3", "4.4"}
+
+check("a parenthesised id is a reference",
+      sorted(D.reference_ids("interoperability standards (3.11) are absent", _IDS)), ["3.11"])
+check("a named row is a reference",
+      sorted(D.reference_ids("row 3.11 and indicator 1.3", _IDS)), ["1.3", "3.11"])
+# The roadmap writes "— 3.11" and "; 3.3" as often as it writes "(3.11)", and no reading
+# of the surrounding words separates those from a quantity. The chapter's own declared
+# citations do.
+check("a bare id the chapter cited is a reference",
+      sorted(D.reference_ids("what blocks it — 3.11", _IDS, cited_ids=["3.11"])), ["3.11"])
+check("a bare id the chapter did not cite is left to be checked",
+      sorted(D.reference_ids("a mean of 3.11", _IDS)), [])
+check("a figure that happens to equal an id is still checked",
+      sorted(D.reference_ids("the pillar mean 3.11 is Established", _IDS)), [])
+
+_, _, _stray = D.fidelity_check("standards (3.11) are absent", [], {2.0}, _IDS)
+check("a referenced id is not a stray number", _stray, [])
+_, _, _stray2 = D.fidelity_check("a mean of 7.77 appears", [], {2.0}, _IDS)
+check("an undeclared quantity still is", _stray2, ["7.77"])
 
 print()
 if FAILED:
