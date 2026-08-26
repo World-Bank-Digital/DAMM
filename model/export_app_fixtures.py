@@ -15,7 +15,7 @@ exist.
     python3 model/export_app_fixtures.py [--app PATH]
 """
 
-import argparse, json, os, re, shutil, sys
+import argparse, hashlib, json, os, re, shutil, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, ".."))
@@ -61,6 +61,39 @@ def main():
     shutil.copyfile(src, os.path.join(data, "model_v1_7.json"))
     rev = json.load(open(src))["revision"]
     print(f"model_v1_7.json  <- revision {rev}")
+
+    # DAR Studio must execute the workflow DAMM defines, not a locally maintained copy of
+    # its stage list. Copy both the contract and its schema and pin their bytes in a small
+    # manifest. The app validates the contract at load time and its tests check these
+    # digests, so an incomplete export is a visible failure rather than silent drift.
+    workflow_dir = os.path.join(REPO, "workflow")
+    workflow_files = {
+        "dar_workflow_v1.json": os.path.join(workflow_dir, "dar-workflow-v1.json"),
+        "dar_workflow_v1.schema.json": os.path.join(
+            workflow_dir, "dar-workflow-v1.schema.json"
+        ),
+    }
+    workflow_hashes = {}
+    for destination, source in workflow_files.items():
+        shutil.copyfile(source, os.path.join(data, destination))
+        workflow_hashes[destination] = hashlib.sha256(open(source, "rb").read()).hexdigest()
+    workflow_contract = json.load(open(workflow_files["dar_workflow_v1.json"]))
+    workflow_manifest = {
+        "schema_version": "damm.workflow-export/v1",
+        "workflow_id": workflow_contract["workflow_id"],
+        "workflow_version": workflow_contract["workflow_version"],
+        "sha256": workflow_hashes,
+    }
+    json.dump(
+        workflow_manifest,
+        open(os.path.join(data, "dar_workflow_manifest.json"), "w"),
+        indent=2,
+    )
+    print(
+        "dar_workflow_v1.json <- "
+        f"{len(workflow_contract['stages'])} stages; "
+        f"sha256 {workflow_hashes['dar_workflow_v1.json'][:12]}…"
+    )
 
     for iso, name in (("EGY", "egypt"), ("NGA", "nigeria")):
         a = json.load(open(os.path.join(LOOP1, f"{iso}_v17.json")))
@@ -110,21 +143,34 @@ def main():
     # the two defaults happened to differ. Now that the app chooses the vendor it has to
     # enforce it, and to do that it needs the defaults — read from the scripts rather
     # than restated, so a change there cannot leave the app checking the wrong pair.
-    # A pass is runnable when a script implements it. The budget allocation names five
-    # passes because it reserves each one's share of the ceiling, but only these two are
-    # built — and the app must not queue a run for the other three, because a pass with
-    # no script of its own would be handed to the research orchestrator and spend a full
-    # research budget under another pass's name.
+    # A pass is runnable when a script implements it. Every protected allocation must map
+    # to its real implementation; in particular, the country and international scan lanes
+    # are distinct budget principals even though they share scan_stage.py. Otherwise the
+    # app could display the fixed stage shares while launching an aggregate `scans` pass
+    # that is allowed to consume both.
     PASS_SCRIPTS = {"research": "research_orchestrator.py", "g2": "gate2.py",
-                    "scans": "scans.py",
+                    "country_research": "scan_stage.py",
+                    "international_lessons": "scan_stage.py",
+                    "ai": "ai_assessment.py",
                     "foresight": "foresight.py",
+                    "investment": "investment_options.py",
                     "generation": "generate_dar.py",
-                    "diagnostic": "diagnostic.py"}
+                    "diagnostic": "diagnostic.py",
+                    "export": "export_package.py"}
+    expected_passes = set(V.Ledger.ALLOCATION) - {"audition"}
+    if set(PASS_SCRIPTS) != expected_passes:
+        sys.exit(
+            "PASS_SCRIPTS does not exactly cover the canonical budget passes: "
+            + ", ".join(sorted(expected_passes ^ set(PASS_SCRIPTS)))
+        )
     pass_defaults = {}
     for pass_name, script in PASS_SCRIPTS.items():
         src = open(os.path.join(LOOP1, "research_pipeline", script)).read()
         m = re.search(r'add_argument\(\s*"--vendor"\s*,\s*default\s*=\s*"([^"]*)"', src)
         if not m:
+            if V.Ledger.ALLOCATION.get(pass_name) == 0:
+                pass_defaults[pass_name] = None
+                continue
             sys.exit(f"{script}: could not read the --vendor default. Export refuses to "
                      f"guess it: a wrong default would let a model review its own pass.")
         # An empty default means the pass makes no vendor call, which the app has to be

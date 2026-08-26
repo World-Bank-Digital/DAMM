@@ -300,6 +300,14 @@ _os.unlink(_f)
 # Per-pass caps only bound the total if the allocations exhaust the ceiling (decision G3).
 check("the per-pass allocations sum to the whole ceiling",
       round(sum(v for k, v in V.Ledger.ALLOCATION.items() if k != "audition"), 6), 1.0)
+check("country research has its own protected share",
+      V.Ledger.ALLOCATION["country_research"], 0.075)
+check("international lessons has its own protected share",
+      V.Ledger.ALLOCATION["international_lessons"], 0.075)
+check("the legacy aggregate scan share is not a second canonical allocation",
+      "scans" in V.Ledger.ALLOCATION, False)
+check("historical all-lane scans retain their old aggregate cap",
+      V.Ledger(ceiling=500).cap("scans"), 75.0)
 
 # ---------------------------------------------------------------- report
 

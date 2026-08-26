@@ -4,6 +4,17 @@
 
 **Version 1.7 · Draft for review · August 2026**
 
+> **Normative workflow supersession — 26 August 2026.** The instrument history and scoring
+> guidance in this companion remain unchanged. For process orchestration and artifact
+> lifecycle, `workflow/DAR-CANONICAL-WORKFLOW.md` and
+> `workflow/dar-workflow-v1.json` supersede conflicting statements below. The canonical
+> workflow has eight stages, including separate AI and digital-agriculture assessment and
+> investment-options/cost-benefit analysis stages. Optional documents are frozen before launch
+> and absent documents trigger autonomous fallback. No human action or budget top-up is required
+> during an active run. The independent automated challenge remains in Stage 1; G1, G2, and G3
+> are post-completion review/publication controls. A Draft may be generated before review; Final
+> promotion and publication may not. The four prohibitions remain unchanged.
+
 ---
 
 ## What this document is
@@ -14,9 +25,9 @@ It exists to answer two questions that the Guidebook does not, and that a reader
 
 **Where did this come from?** The model did not begin on a blank page. Its strictest rule was made possible by a country assessment that had already proved the rule could be met, and several of its refusals are refusals of things that assessment did.
 
-**What does the process actually produce?** The model is now the instrument inside an automated pipeline. This sets out every stage of that pipeline, what each one is allowed to spend, what it hands on, and — stated plainly — how far each has actually been run.
+**What does the process actually produce?** The model is now the instrument inside an automated pipeline. This sets out every stage of that pipeline, what it hands on, the execution controls that govern it, and — stated plainly — how far the components have actually been run.
 
-A note on the second question. Several stages described here are built and tested but have not yet been run against live data. Each is marked. We would rather a reviewer knew which parts of this are proven than discover it later.
+A note on the second question. Several components are built and tested but have not yet been run as one canonical eight-stage workflow. The limits are stated under *What is not yet proven*. We would rather a reviewer knew which parts of this are proven than discover it later.
 
 ---
 
@@ -93,88 +104,134 @@ One Bhutan device *is* proposed for adoption in v1.8: the **Global / Local scope
 
 # Part two — the process, stage by stage
 
-The model is the instrument. The pipeline is what carries a country through it. Six stages, each with a fixed share of a country budget ceiling, each checkpointing after every row so that a failure at row fifty of fifty-seven resumes at row fifty-one rather than at zero.
+The model is the instrument. The workflow is what carries a country through it. The country is
+required at launch; country-context, AI, international-strategy, foresight, and investment/CBA
+documents are optional pre-launch inputs. Launch freezes their provenance and hashes. A missing
+optional document starts the declared autonomous research fallback and never pauses the run.
 
-The budget shares are fixed in advance and enforced, rather than drawn from a common pool. This is deliberate: under a shared pool a badly-behaved research stage consumes the whole ceiling and the country ends with no document at all.
+The budget ceiling is also authorized before launch. The system may retry and automatically
+reallocate within that ceiling, but it never waits for a human decision or top-up. If a required
+product remains impossible after bounded retry and fallback, the run fails transparently.
 
-| # | Stage | Share of ceiling | What it hands on | How far it has run |
-|---|---|---|---|---|
-| 1 | **Research** | 40% | Engine input: all 57 rows with value, source, tier, year, level and a per-row argument; plus the full research trail | **Run live.** Egypt, 25 August 2026, 59 rows, $13.46 |
-| 2 | **Second review** | 15% | Reviewed engine input; findings per row reopened | **Run in development** on Egypt and Nigeria; not yet through the application |
-| 3 | **Scans** | 15% | Country evidence outside the instrument; one international precedent pointer per chapter; the initiative register | Built and tested; **not yet run live** |
-| 4 | **Foresight** | 10% | Scenarios, a preferred future, milestones bound to indicators; standalone report | Built and tested; **not yet run live** |
-| 5 | **Diagnostic** | 0% | The diagnostic report | **Run live.** Egypt, 25 August 2026 |
-| 6 | **Roadmap** | 20% | The eleven-chapter draft DAR | Built and tested; **not yet run live** |
+| # | Canonical stage | What it hands on |
+|---:|---|---|
+| 1 | **DAMM diagnostic** | DAMM observations, independent automated challenge, scored assessment, diagnostic report, source inventory |
+| 2 | **Country research and source inventory** | Country evidence beyond DAMM and a consolidated inventory of credible sources and pre-launch materials |
+| 3 | **AI in digital agriculture assessment** | As-is AI position, peer-country experience, and a recommended national AI agenda |
+| 4 | **International strategies and lessons** | Relevant recent strategies, transferable lessons, selection rationale, and limitations |
+| 5 | **Strategic foresight** | Scenarios, preferred future, and backcast milestones |
+| 6 | **Investment options and cost-benefit analysis** | Prioritized options with baselines, counterfactuals, cost/benefit ranges, sensitivity, risks, distributional effects, and evidence gaps |
+| 7 | **Integrated Draft DAR** | One comprehensive Draft with claim-level provenance and explicit epistemic status |
+| 8 | **Export package** | Required narrative and structured formats, source inventories, manifest, and complete ZIP bundle |
 
-### Stage 1 — Research
+### Stage 1 — DAMM diagnostic
 
-Every one of the fifty-seven indicator rows is researched independently. Queries are generated from that row's own construct, so no row inherits another's leads. Retrieval is a discovery engine and a fetch service, with a second discovery vendor as an independent peer. Each row returns a value, a source with its tier, a year, a proposed level, and an argument for that level.
+Every one of the fifty-seven indicator rows is researched independently. Queries are generated
+from that row's own construct, so no row inherits another's leads. Each row returns a value, a
+source with its tier, a year, a proposed level, and an argument for that level. The gaps,
+withheld levels, and prerequisite rows are then challenged automatically by an independent
+vendor. This is the Stage 1 automated challenge, not human G2.
 
-Eight gates sit between what the machine proposes and what is recorded. A quote must be verifiable against the page that was actually fetched. A source about another country cannot support a claim about this one. A level must follow from the argument given for it, not exceed it. Evidence about the presence of something must be current. A row that fails is held or recorded as a gap, with the trail that produced it.
+Evidence gates verify quotation, country isolation, tier, construct, prerequisite, coherence,
+currency, and argument. The engine scores only accepted observations, and the renderer refuses
+to emit a diagnostic that fails its automated checks.
 
-**Output:** the engine input, and a research trail recording every search, fetch, quote and gate decision for every row.
+**Output:** observations, automated challenge, scored assessment, diagnostic report, source
+inventory, and stage manifest.
 
-### Stage 2 — Second review
+### Stage 2 — Country research and source inventory
 
-The gaps, the withheld levels and the twelve prerequisite rows are re-researched by **a model from a different vendor**. This is a peer review, and the vendor must differ: a model reviewing its own pass tends to uphold it, and the second review's whole value is that it is not the first one again.
+This stage researches the strategies, institutions, legal instruments, programmes, and
+initiative register that the fifty-seven indicators do not cover. Pre-launch country documents
+are synthesized when present; autonomous country research fills the branch when absent.
 
-**Output:** a reviewed engine input, and a per-row record of what was upheld, adjusted, filled or withdrawn.
+**Output:** country research report, country evidence data, consolidated source inventory, and
+stage manifest.
 
-### Stage 3 — Scans
+### Stage 3 — AI in digital agriculture assessment
 
-Three things the fifty-seven indicators do not measure but a roadmap needs.
+AI is a separate required analytical product: the country's as-is AI position, peer-country
+experience, and a recommended national AI agenda for digital agriculture. Optional AI documents
+supplement the analysis; their absence triggers autonomous country and peer research.
 
-*Country evidence outside the instrument* — the strategies, institutions, legal instruments and programmes a chapter must be written against.
+**Output:** AI assessment report, AI evidence data, source inventory, and stage manifest.
 
-*The initiative register* — the digital agriculture programmes actually operating in the country: who leads each, at what scale, with what independently evaluated results. Here a rule of the source-tier protocol does real work: T4 and T5 sources are admissible for **existence** facts only. An entry resting on a vendor page or a press release may say that a programme exists; it may not carry a tiered claim about that programme's results.
+### Stage 4 — International strategies and lessons
 
-*International precedent* — one pointer per prescriptive chapter, drawn from another country's published strategy. This feeds the roadmap only. It never enters the diagnostic, it is never an endorsement, and it is never a comparison of countries. The pointer count is capped for a reason: an uncapped scan produces a league table, and a league table is a ranking whatever the surrounding prose calls it.
+Recent, relevant country strategies are selected with an explicit rationale, and their
+transferable lessons and limits are recorded. This is neither an endorsement nor a country
+ranking. Optional strategy documents supplement rather than replace the stage.
 
-**Output:** country findings, international pointers, and the initiative register.
+**Output:** international lessons report, strategy-comparison data, source inventory, and stage
+manifest.
 
-### Stage 4 — Foresight
+### Stage 5 — Strategic foresight
 
-Scenarios, then a preferred future, then backcasting to milestones. The method is declared in the model file so that it is ratifiable like every other rule; an unnamed method would be the one part of this system nobody could review.
+Scenarios bound uncertainty and are **not forecasts**. The preferred future is a claim about
+values, not an evidence finding. Backcast milestones bind to indicators or prerequisites with a
+target level and year. Optional foresight materials are synthesized when present; autonomous
+research and the declared method run when absent.
 
-Three things the output states rather than implies. Scenarios bound uncertainty and are **not forecasts**. The preferred future is **a claim about values, not a finding from evidence** — the single normative act in the whole pipeline, and marked as such. And every milestone must bind to an indicator or prerequisite with a target level and a target year, so that progress is measurable against the same instrument that produced the diagnostic. A milestone that cannot be measured against the instrument is refused and recorded as refused; a milestone reduced to prose is exactly what the binding rule exists to prevent.
+**Output:** foresight report, foresight data, source inventory, and stage manifest.
 
-Where nothing in the model measures what a milestone needs, it proposes a **candidate indicator** — recorded, carried, and outside every mean, prerequisite and readiness column, exactly as the existing candidate mechanism provides.
+### Stage 6 — Investment options and cost-benefit analysis
 
-**Output:** scenarios, the preferred future, bound milestones, proposed candidates, and a standalone foresight report.
+Potential investments are appraised through explicit baselines, counterfactuals, cost and
+benefit ranges, assumptions, sensitivity, risks, distributional effects, and evidence gaps.
+Where optional appraisal material is absent, preliminary ranges come from cited benchmarks and
+unsupported values are marked for post-completion validation. This stage recommends and
+appraises; it never makes an automatic financing decision.
 
-### Stage 5 — Diagnostic
+**Output:** investment-options report, cost-benefit workbook, appraisal data, source inventory,
+and stage manifest.
 
-The assessment is scored by the engine and rendered by the report renderer. This stage makes no vendor call and has a zero budget share: the evidence has already been paid for. Where the second review has run, its output supersedes the first pass.
+### Stage 7 — Integrated Draft DAR
 
-The renderer carries an emit-blocking quality gate — a report that fails its own checks is not written. That gate is much of why the diagnostic has survived review.
+The Draft synthesizes the recorded outputs of Stages 1–6 from the same workflow version.
+Prescriptive material is marked *proposed, not evidenced*. Chapter bindings and figure checks
+prevent a fluent claim from citing the wrong evidence or inventing a number.
 
-**Output:** the diagnostic report.
+**Output:** integrated Draft DAR, source data, claim provenance, and stage manifest.
 
-### Stage 6 — Roadmap
+### Stage 8 — Export package
 
-Eleven chapters of prose. Chapters three to ten are prescriptive and are marked *proposed, not evidenced* — on the page, in the record, and in the gate.
+The workflow exports required narrative formats, meaningful structured formats, source
+inventories, a SHA-256 manifest, and a complete ZIP bundle. A missing required converter is a
+terminal failure, not a silently omitted format.
 
-Prose invites one particular failure: a paragraph that reads perfectly and carries a figure the evidence never produced. Three mechanisms stand against it.
-
-**Each chapter sees only what it may cite.** Every chapter's evidence binding — which pillars, indicators, use-case columns and prerequisites it may draw on — is declared in the model file, and the pack assembled for that chapter contains that and nothing else. A financing chapter reaching for connectivity indicators reads perfectly fluently and is wrong; withholding the material is what prevents it.
-
-**Every figure is checked against the engine.** The claimed figures are matched against the numbers the assessment actually produced, and the prose is separately swept for numbers that were never declared. The resulting fidelity rate is printed on the document's own face.
-
-**The gate blocks the emit.** A missing provenance banner, a citation outside a binding, a prescriptive chapter presented as evidenced, or fidelity below the floor, and no document is written.
-
-**Output:** the eleven-chapter draft roadmap.
+**Output:** the complete, version-bound Draft package. Human review begins only now. G1 and G2
+may create a revised Draft; G3 controls promotion to Final or publication. None is an active-run
+dependency.
 
 ---
 
-# Part three — the three documents
+# Part three — the Draft package
 
-The pipeline exists to produce three documents. They are reviewed **once, at the end, on the completed set** — not one at a time. Each is a pre-review draft and says so.
+The workflow produces a versioned package and it is reviewed **once, after Stage 8, as a
+completed set** — not one artifact at a time. Every narrative product is a pre-review Draft and
+says so.
 
 **The diagnostic report.** Where the country stands, on the evidence recorded. Ten sections, its own emit-blocking gate. Its international content is deliberately bounded; free-form comparison has no place in it.
 
+**The country research and source inventory.** Country evidence beyond DAMM, including the
+initiative register and the provenance of optional pre-launch materials.
+
+**The AI in digital agriculture assessment.** The country's as-is AI position, peer experience,
+and recommended national agenda.
+
+**The international strategies and lessons report.** Relevant strategies, transferable lessons,
+and their limitations without ranking countries.
+
 **The strategic foresight report.** Scenarios, a preferred future offered for decision, and milestones bound to the instrument.
 
-**The draft Digital Agriculture Roadmap.** Eleven chapters, with the prescriptive ones marked as proposals rather than findings.
+**The investment-options report and cost-benefit workbook.** Appraisal ranges and assumptions for
+post-completion validation, never an automatic financing decision.
+
+**The integrated Draft Digital Agriculture Roadmap.** The comprehensive synthesis, with
+prescriptive material marked as proposals rather than findings.
+
+**The export package.** Required narrative and structured formats, source inventories, a
+cryptographic manifest, and the complete ZIP bundle.
 
 ---
 
@@ -195,7 +252,10 @@ Stated plainly, because a reviewer should not have to discover it.
 
 **The pipeline has not yet produced a complete assessment.** The one full research pass run through the application reached nine of fifty-seven rows with a recorded value. That run was degraded — one of the three retrieval vendors was unavailable for the entire pass, so every row was researched without its discovery peer. The failure was recorded on every affected row rather than hidden, and the run reports it. But the resulting assessment is thin, and the diagnostic rendered from it says so on its face rather than presenting an absence of evidence as a finding about the country.
 
-**Three of the six stages have never run against live data.** Scans, foresight and roadmap generation are built, and their gates are covered by automated checks that require no network. Tested is not the same as run, and we are not presenting them as run.
+**The complete eight-stage canonical workflow has not yet been demonstrated live.** Earlier
+component runs do not establish end-to-end conformance, especially for the separate AI,
+investment/CBA, integration, and export stages. Tested is not the same as run, and we are not
+presenting those components as a completed canonical run.
 
 **Two definition questions remain open.** The A1 threshold calibration lacks a documented basis, and forty-four indicator rows carry an open definition question. Rows affected by an unsettled definition carry a ratification hold rather than a level.
 
@@ -207,7 +267,7 @@ Two things, in order of usefulness.
 
 **First, on the instrument:** whether the rules of evidence are the right ones — in particular whether abstention and the ratification hold are set where a reviewer would set them, given that the alternative visible in Bhutan is a complete register in which a third of the evidence was acknowledged weak and every row was scored anyway.
 
-**Second, on the process:** whether the six stages produce what a roadmap engagement actually needs, and whether anything in the outputs described here would be unusable, unwelcome, or missing.
+**Second, on the process:** whether the eight stages produce what a roadmap engagement actually needs, and whether anything in the outputs described here would be unusable, unwelcome, or missing.
 
 The attached scoring workbook is the instrument itself, and is the quickest way to see the rules operating: six entry columns, everything else derived.
 

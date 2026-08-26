@@ -46,6 +46,7 @@ from build_inputs import ladder_level, standalone, americanize
 import machine_pass
 import survey_pass
 import nso_registry
+import workflow_inputs as WI
 
 PASS = "research"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
@@ -516,13 +517,24 @@ def main():
 
     state_path = os.path.join(LOOP1, f"{args.out}_state.json")
     spend_path = os.path.join(LOOP1, f"{args.out}_spend.json")
+    ledger.attach(spend_path)
+    # Spend is journalled independently of completed-row state. A process can die after
+    # a paid call and before its first row checkpoint; a retry must still carry that call
+    # into the protected allocation instead of overwriting the spend file from zero.
+    carried = ledger.load(spend_path) if args.resume else 0
     state = {"rows": {}, "records": {}}
+    loaded_state = False
     if args.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
-        carried = ledger.load(spend_path)
+        loaded_state = True
+    WI.bind_checkpoint_state(state, loaded=loaded_state)
+    if loaded_state:
         print(f"resuming — {len(state['rows'])} rows already researched, "
               f"{carried} earlier vendor calls carried into the spend counter "
               f"(${ledger.spent():.2f} already spent)")
+    elif args.resume and carried:
+        print(f"resuming — no completed row checkpoint yet; {carried} earlier vendor "
+              f"calls carried (${ledger.spent():.2f} already spent)")
 
     print(f"{args.country} ({args.iso}) · {len(specs)} rows · vendor {vendor}/{llm.model}")
     print(f"budget ${args.ceiling:.0f}, research allocation "
@@ -577,7 +589,7 @@ def main():
         with lock:
             state["rows"][spec["id"]] = row
             state["records"][spec["id"]] = record
-            json.dump(state, open(state_path, "w"), indent=1, default=str)
+            V.atomic_write_json(state_path, state)
             ledger.save(spend_path)
             n = len(state["rows"])
         mark = {"pass": "  ", "hold": "H ", "reject": "R ", "gap": "G "}[record["verdict"]]

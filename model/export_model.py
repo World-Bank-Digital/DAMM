@@ -123,6 +123,11 @@ DERIVED_SOURCES = {
     "foresight.scenarios":        "Scenario set produced by the foresight stage.",
     "foresight.preferred_future": "The selected preferred future.",
     "foresight.milestones":       "Backcast milestones and their indicator bindings.",
+    "ai.as_is":                   "Country as-is AI-in-agriculture evidence from canonical Stage 3.",
+    "ai.peer_experience":         "Relevant peer-country AI experience and transfer limitations.",
+    "ai.recommended_agenda":      "Proposed, sequenced AI agenda for post-completion validation.",
+    "investment.options":         "Preliminary investment options with explicit appraisal assumptions.",
+    "investment.portfolio_sequencing": "Cross-option sequencing and dependency analysis.",
 }
 
 ALL_PILLARS = ["A1", "C1", "C2", "C3", "C4", "E1", "O1"]
@@ -133,7 +138,7 @@ DAR_OUTLINE = [
      "content": "Agricultural structure, need and climate exposure; the national digital context "
                 "the roadmap has to work inside.",
      "binding": {"pillars": ["A1", "C1", "O1"], "indicators": [], "use_cases": [],
-                 "prerequisites": [], "derived": ["constraints", "register"]},
+                 "prerequisites": [], "derived": ["constraints", "register", "ai.as_is"]},
      "note": "A1 reads as NEED: a low reading is a large opportunity, never low maturity."},
 
     {"n": "2", "title": "Where the country stands", "kind": "diagnostic",
@@ -142,7 +147,8 @@ DAR_OUTLINE = [
      "binding": {"pillars": ALL_PILLARS, "indicators": [], "use_cases": ALL_UC,
                  "prerequisites": ["*"],
                  "derived": ["pillar_profile", "layer_profile", "leapfrog", "matrix",
-                             "prerequisites", "constraints", "evidence_ledger"]},
+                             "prerequisites", "constraints", "evidence_ledger",
+                             "ai.as_is", "ai.peer_experience"]},
      "note": "This chapter is the diagnostic. Every figure must reconcile with the diagnostic "
              "report generated for the same assessment."},
 
@@ -151,7 +157,8 @@ DAR_OUTLINE = [
                 "pursuing first, and for whom.",
      "binding": {"pillars": ["A1", "O1"], "indicators": ["5.12"], "use_cases": ALL_UC,
                  "prerequisites": [],
-                 "derived": ["matrix", "foresight.preferred_future", "foresight.milestones"]},
+                 "derived": ["matrix", "foresight.preferred_future", "foresight.milestones",
+                             "ai.recommended_agenda"]},
      "note": "Targeting rests on the readiness matrix; beneficiary claims rest on A1 need and O1 "
              "equity rows. The vision itself comes from the foresight stage, not from the model."},
 
@@ -160,30 +167,36 @@ DAR_OUTLINE = [
                 "built before what.",
      "binding": {"pillars": ["C1", "C2", "C3", "C4", "E1"], "indicators": [], "use_cases": ALL_UC,
                  "prerequisites": ["*"],
-                 "derived": ["matrix", "prerequisites", "constraints", "foresight.milestones"]},
+                 "derived": ["matrix", "prerequisites", "constraints", "foresight.milestones",
+                             "ai.recommended_agenda", "investment.options",
+                             "investment.portfolio_sequencing"]},
      "note": "Sequencing follows the prerequisites: a Blocked column names what must be built. "
              "A blocked use case is an argument FOR investment, never against it."},
 
     {"n": "5", "title": "Costs and financing", "kind": "prescriptive",
      "content": "Costed program under envelope scenarios; instrument routing; financing sources.",
      "binding": {"pillars": [], "indicators": ["1.7", "6.14"], "use_cases": ["FIN"],
-                 "prerequisites": ["6.14"], "derived": ["register"]},
-     "note": "DAMM CARRIES NO COST, BUDGET OR FINANCING DATA OF ANY KIND. No figure in this "
-             "chapter may be presented as derived from the model or the assessment. The only "
-             "quantities available are scale figures as reported by initiatives in the register, "
-             "which are the initiatives' own claims and are tier-badged as such."},
+                 "prerequisites": ["6.14"],
+                 "derived": ["register", "investment.options",
+                             "investment.portfolio_sequencing"]},
+     "note": "The scored DAMM instrument carries no cost, budget or financing data. Preliminary "
+             "ranges may come only from canonical Stage 6, with their source or planning-assumption "
+             "basis, currency, base year, sensitivity and data gaps visible. They remain proposed "
+             "decision support and never constitute an automatic financing decision."},
 
     {"n": "6", "title": "Policy and regulatory actions", "kind": "prescriptive",
      "content": "Reform actions arising from the policy and safeguards pillar; legal drafting needs.",
      "binding": {"pillars": ["C3"], "indicators": [], "use_cases": [],
-                 "prerequisites": ["4.1", "4.5", "3.11", "7.12"], "derived": ["prerequisites"]},
+                 "prerequisites": ["4.1", "4.5", "3.11", "7.12"],
+                 "derived": ["prerequisites", "ai.recommended_agenda"]},
      "note": "An Absent prerequisite here is a named legal or regulatory instrument that does not "
              "exist; say which, and cite the row."},
 
     {"n": "7", "title": "Delivery and governance", "kind": "prescriptive",
      "content": "Mandate and ownership; steering arrangements; the institutional home and its capacity.",
      "binding": {"pillars": ["C4"], "indicators": [], "use_cases": [],
-                 "prerequisites": ["4.9", "5.7"], "derived": ["prerequisites", "register"]},
+                 "prerequisites": ["4.9", "5.7"],
+                 "derived": ["prerequisites", "register", "ai.recommended_agenda"]},
      "note": "4.9 and 5.7 are DELIVERY-risk flags: they are reported and they block nothing. "
              "Do not render them as gating anything."},
 
@@ -191,7 +204,7 @@ DAR_OUTLINE = [
      "content": "Climate-smart practice, advisory reach and the weather and climate data base the "
                 "roadmap can build on.",
      "binding": {"pillars": [], "indicators": ["1.8", "3.6", "8.17"], "use_cases": ["ADV"],
-                 "prerequisites": [], "derived": []},
+                 "prerequisites": [], "derived": ["ai.recommended_agenda"]},
      "note": "The model holds no NDC or CCDR crosswalk and no climate-finance taxonomy. Alignment "
              "claims against those instruments are external and must be marked as such."},
 
@@ -199,7 +212,8 @@ DAR_OUTLINE = [
      "content": "Results chains with baselines; the measurement gap register; what will be watched "
                 "and how often.",
      "binding": {"pillars": ["O1"], "indicators": [], "use_cases": [], "prerequisites": [],
-                 "derived": ["kpi_baseline", "evidence_ledger", "foresight.milestones"]},
+                 "derived": ["kpi_baseline", "evidence_ledger", "foresight.milestones",
+                             "investment.options"]},
      "note": "Baselines come from Measured A1/O1 rows only. Recorded gaps, held levels and stale "
              "readings ARE the measurement gap register — carry them, do not summarise them away."},
 
@@ -207,7 +221,9 @@ DAR_OUTLINE = [
      "content": "Data rights, consent and redress; evidence-quality risk; political-economy risk "
                 "and mitigations.",
      "binding": {"pillars": ["C3"], "indicators": [], "use_cases": [],
-                 "prerequisites": ["4.1", "4.5", "7.12"], "derived": ["evidence_ledger"]},
+                 "prerequisites": ["4.1", "4.5", "7.12"],
+                 "derived": ["evidence_ledger", "ai.as_is", "ai.peer_experience",
+                             "ai.recommended_agenda", "investment.options"]},
      "note": "Evidence quality is itself a risk and belongs here: how much of the assessment rests "
              "on withheld levels, recorded gaps, stale readings and unratified definitions."},
 
@@ -248,7 +264,9 @@ FORESIGHT = {
         "provisionality": "A target level standing on an unratified threshold inherits that "
                           "provisionality and carries the marking of the open decision governing it.",
     },
-    "note": "Where a foresight document is supplied it is ingested and this exercise is skipped. "
+    "note": "Where foresight documents are supplied before launch they are synthesized and "
+            "supplemented where necessary; where none are supplied, autonomous research provides "
+            "the inputs. The declared exercise always produces the canonical Stage 5 product. "
             "A machine-run preferred future is a facilitation input, never a finding.",
 }
 

@@ -146,18 +146,36 @@ class Ledger:
     and leave nothing to review.
     """
 
-    # decision G3's apportionment, as fractions of the country ceiling
+    # Canonical-workflow apportionment, as fractions of the country ceiling. The two
+    # new analytical products have their own protected shares: an AI assessment must
+    # not consume the investment appraisal's budget (or vice versa), and generation
+    # remains reserved so a difficult retrieval pass cannot leave no Draft DAR.
     # Every pass is named here, including the one that costs nothing: a pass missing from
     # the allocation has no share rather than a zero share, and the difference shows up as
     # a surface that cannot say what a pass is allowed to spend.
-    ALLOCATION = {"research": 0.40, "g2": 0.15, "scans": 0.15,
-                  "foresight": 0.10, "generation": 0.20,
+    ALLOCATION = {"research": 0.35, "g2": 0.10,
+                  "country_research": 0.075,
+                  "international_lessons": 0.075,
+                  "ai": 0.10, "foresight": 0.10, "investment": 0.05,
+                  "generation": 0.15,
                   # Deterministic rendering of an assessment already paid for.
                   "diagnostic": 0.00,
+                  # Deterministic format conversion and packaging.
+                  "export": 0.00,
                   "audition": 1.00}
+    # Direct historical invocations of ``scans.py --lane all`` predate the canonical
+    # coordinator. They retain the old aggregate cap without becoming an extra share of
+    # the canonical ceiling. Canonical Stage 2/4 calls always use the protected names above.
+    LEGACY_ALLOCATION = {"scans": 0.15}
 
     def __init__(self, ceiling=500.0, label="run"):
         self.ceiling, self.label = ceiling, label
+        self.checkpoint_identity = os.environ.get(
+            "DAMM_CHECKPOINT_BINDING_SHA256", ""
+        ).strip()
+        if self.checkpoint_identity and not re.fullmatch(
+                r"[0-9a-f]{64}", self.checkpoint_identity):
+            raise ValueError("DAMM_CHECKPOINT_BINDING_SHA256 is not a SHA-256 digest")
         self.calls = []
         self._t0 = time.time()
         # Fetches and vendor calls run concurrently, so the counter is shared state.
@@ -168,6 +186,7 @@ class Ledger:
         # deadlocks at the first checkpoint of every run rather than rarely.
         self._lock = threading.RLock()
         self._carried_s = 0.0
+        self._checkpoint_path = None
 
     # -- pricing ---------------------------------------------------
     @staticmethod
@@ -191,6 +210,11 @@ class Ledger:
                                    requests=requests, cost=round(cost, 6),
                                    detail=detail[:200],
                                    at=round(time.time() - self._t0, 1)))
+            if self._checkpoint_path:
+                # Persist inside the same lock that publishes the call. A normal exception,
+                # coordinator retry, or process crash after this point cannot lose a paid
+                # attempt and later spend the same protected allocation again.
+                atomic_write_json(self._checkpoint_path, self.snapshot())
         return cost
 
     # -- reading ---------------------------------------------------
@@ -200,7 +224,10 @@ class Ledger:
                              if pass_name is None or c["pass_name"] == pass_name), 6)
 
     def cap(self, pass_name):
-        return self.ceiling * self.ALLOCATION.get(pass_name, 1.0)
+        share = self.ALLOCATION.get(
+            pass_name, self.LEGACY_ALLOCATION.get(pass_name, 1.0)
+        )
+        return self.ceiling * share
 
     def remaining(self, pass_name):
         return self.cap(pass_name) - self.spent(pass_name)
@@ -218,24 +245,91 @@ class Ledger:
         for c in self.calls:
             by_pass[c["pass_name"]] = round(by_pass.get(c["pass_name"], 0) + c["cost"], 4)
             by_vendor[c["vendor"]] = round(by_vendor.get(c["vendor"], 0) + c["cost"], 4)
-        return dict(label=self.label, ceiling=self.ceiling, total=self.spent(),
-                    calls=len(self.calls), elapsed_s=self.elapsed(),
-                    by_pass=by_pass, by_vendor=by_vendor)
+        value = dict(label=self.label, ceiling=self.ceiling, total=self.spent(),
+                     calls=len(self.calls), elapsed_s=self.elapsed(),
+                     by_pass=by_pass, by_vendor=by_vendor)
+        if self.checkpoint_identity:
+            value["checkpoint_identity_sha256"] = self.checkpoint_identity
+        return value
 
     def snapshot(self):
         with self._lock:
             return dict(summary=self.summary(), calls=list(self.calls))
 
+    def _bind_checkpoint_path(self, path):
+        resolved = os.path.abspath(path)
+        if self._checkpoint_path and self._checkpoint_path != resolved:
+            raise ValueError("ledger is already bound to another spend checkpoint")
+        self._checkpoint_path = resolved
+        return resolved
+
+    def attach(self, path):
+        """Journal every subsequent vendor record to one durable spend checkpoint."""
+        with self._lock:
+            resolved = self._bind_checkpoint_path(path)
+            if not os.path.exists(resolved):
+                atomic_write_json(resolved, self.snapshot())
+        return resolved
+
     def save(self, path):
-        atomic_write_json(path, self.snapshot())
+        with self._lock:
+            resolved = self._bind_checkpoint_path(path)
+            atomic_write_json(resolved, self.snapshot())
 
     def restore(self, saved):
         """Restore one prior snapshot into a fresh ledger and return its call count."""
-        prior = list((saved or {}).get("calls") or [])
+        prior, elapsed = self._validated_snapshot(saved)
         with self._lock:
             self.calls = prior + self.calls
-        self._carried_s = ((saved or {}).get("summary") or {}).get("elapsed_s", 0) or 0
+            self._carried_s = elapsed
         return len(prior)
+
+    def _validated_snapshot(self, saved):
+        if not isinstance(saved, dict):
+            raise ValueError("spend ledger snapshot is not an object")
+        summary = saved.get("summary") or {}
+        if not isinstance(summary, dict):
+            raise ValueError("spend ledger summary is not an object")
+        saved_identity = str(
+            summary.get("checkpoint_identity_sha256") or ""
+        )
+        if self.checkpoint_identity:
+            if saved_identity != self.checkpoint_identity:
+                raise ValueError(
+                    "spend ledger is not bound to this workflow checkpoint"
+                )
+        elif saved_identity:
+            raise ValueError(
+                "cannot load a workflow-bound spend ledger without its checkpoint identity"
+            )
+        prior = saved.get("calls") or []
+        if not isinstance(prior, list) or any(not isinstance(call, dict) for call in prior):
+            raise ValueError("spend ledger calls is not an array of objects")
+        elapsed = summary.get("elapsed_s", 0) or 0
+        if (isinstance(elapsed, bool) or not isinstance(elapsed, (int, float))
+                or not math.isfinite(float(elapsed)) or elapsed < 0):
+            raise ValueError("spend ledger elapsed_s is invalid")
+        return list(prior), float(elapsed)
+
+    def reconcile(self, saved):
+        """Keep the longer of two prefix-compatible crash checkpoints.
+
+        Generation embeds its ledger in the chapter state and also journals it to a
+        standalone spend file. A crash may leave either atomic file one write ahead of
+        the other. They are compatible only when one ordered call list is a prefix of
+        the other; anything else is stale or tampered state and must fail closed.
+        """
+        prior, elapsed = self._validated_snapshot(saved)
+        with self._lock:
+            current = list(self.calls)
+            if current == prior[:len(current)]:
+                self.calls = prior
+            elif prior != current[:len(prior)]:
+                raise ValueError("spend ledger checkpoints have divergent call histories")
+            self._carried_s = max(self._carried_s, elapsed)
+            if self._checkpoint_path:
+                atomic_write_json(self._checkpoint_path, self.snapshot())
+            return len(self.calls)
 
     def load(self, path):
         """Carry a previous ledger forward, for a resumed run.
@@ -247,9 +341,12 @@ class Ledger:
         resets on resume could be walked past that cap indefinitely by stopping and
         starting.
         """
-        if not os.path.exists(path):
-            return 0
-        return self.restore(strict_json_load(path))
+        with self._lock:
+            resolved = self._bind_checkpoint_path(path)
+            if not os.path.exists(resolved):
+                return 0
+            saved = strict_json_load(resolved)
+        return self.restore(saved)
 
 
 # ---------------------------------------------------------------- http

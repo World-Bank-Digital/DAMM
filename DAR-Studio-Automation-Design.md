@@ -5,30 +5,41 @@ settled deliberately; this record exists so they can be reviewed as a set, and s
 reasoning survives into the next session the way the specification and handoff do.*
 
 *The first build phase landed the same day — see **Build status** at the foot of this
-record for which decisions now have code behind them. The decisions themselves are
-unchanged; nothing here was revisited in the building.*
+record for which decisions now have code behind them. The historical rationale remains;
+the orchestration clauses superseded below no longer govern the active workflow.*
+
+> **Normative workflow supersession — 26 August 2026.** For orchestration and artifact
+> lifecycle, `workflow/DAR-CANONICAL-WORKFLOW.md` and
+> `workflow/dar-workflow-v1.json` supersede every conflicting statement in this record.
+> The canonical workflow has eight stages, including separate AI and digital-agriculture
+> assessment and investment-options/cost-benefit analysis stages. Optional documents are
+> frozen into the input snapshot before launch; an absent optional document triggers the
+> declared autonomous fallback. After launch, no human confirmation, upload, retry choice,
+> or budget top-up is required or permitted as a condition of normal completion. The
+> independent automated challenge remains inside Stage 1; G1, G2, and G3 are
+> post-completion review and publication controls. The system may generate and export a
+> Draft before human review, but only a reviewed version may become Final or be published.
+> The four DAMM prohibitions remain unchanged.
 
 ---
 
 ## What is being built
 
-An automated pipeline that takes a country name and produces three documents: a **diagnostic
-report**, a **strategic foresight report**, and a **draft Digital Agriculture Roadmap**. Every
-step between those two points runs without a human. A single human review sits at the end, on
-the completed set.
+An automated workflow that takes a country name plus any optional pre-launch documents and
+produces a versioned Draft DAR package. It runs through all eight stages without requiring a
+person after launch; post-completion review may revise the Draft and authorize Final or public
+use.
 
-The nine steps as requested, mapped to what they actually mean against DAMM v1.7:
-
-| # | Requested | What it is in practice |
-|---|---|---|
-| 1 | Web-populate all indicators | Research all 57 rows: value, source, tier, year, level, per-row argument |
-| 2 | Broader roadmap research | Country evidence outside the indicator set |
-| 3 | International strategies scan | Free-form scan, feeding the **DAR only** (the diagnostic stays bounded) |
-| 4 | Diagnostic report | **Already exists** — `render_v17.py`, ten sections, four chart types, QC-gated |
-| 5 | Exa / Jina / Perplexity | Exa + Jina as retrieval; Perplexity for discovery, its citations re-fetched |
-| 6 | Foresight document upload | Ingestion path (partly recoverable from v1.5 git history) |
-| 7–8 | Machine-run foresight | Scenarios → preferred future → backcasting to milestones, standalone report |
-| 9 | Draft DAR | 11-chapter outline, full prose, prescriptive chapters marked *proposed, not evidenced* |
+| # | Canonical stage | Required product |
+|---:|---|---|
+| 1 | DAMM diagnostic | Researched and independently challenged observations, scored assessment, diagnostic report |
+| 2 | Country research and source inventory | Country evidence beyond DAMM and a consolidated credible-source inventory |
+| 3 | AI in digital agriculture assessment | As-is AI position, peer experience, and recommended national AI agenda |
+| 4 | International strategies and lessons | Relevant strategies, transferable lessons, rationale, and limitations |
+| 5 | Strategic foresight | Scenarios, preferred future, and backcast milestones |
+| 6 | Investment options and cost-benefit analysis | Prioritized options, appraisal ranges, assumptions, sensitivity, risks, and gaps |
+| 7 | Integrated Draft DAR | One traceable Draft synthesizing Stages 1–6 |
+| 8 | Export package | Required formats, structured data, source inventories, frozen original uploads and extracted text, manifest, and ZIP bundle |
 
 ---
 
@@ -75,7 +86,7 @@ industrialises defect #1, where a national coverage figure recorded against an i
 **B2. Run the vendor audition first.** Standing decision 4 fixes the method — 13 cells, 10
 known answers and 3 verifiable non-existent, scored on fabrication rate, tier compliance and
 citation resolvability — but **it has never been run**. Two vendors are needed: a primary and an
-independent one for G2. Thirteen cells is cheap; choosing wrong costs $500 per country in
+independent one for the automated Stage 1 challenge. Thirteen cells is cheap; choosing wrong costs $500 per country in
 re-runs. It also yields a measured fabrication-rate baseline, which is the number a reviewer of
 a machine-drafted roadmap will ask for and which cannot currently be stated.
 
@@ -107,7 +118,7 @@ electricity at level 2 rather than 3 flips every Nigerian column from Ready to P
 stays fully automated while raising the bar precisely where a one-level error propagates to six
 columns.
 
-**C5. G2 runs automatically, with a second vendor.** Scoped to prerequisites, held rows and
+**C5. The Stage 1 challenge runs automatically, with a second vendor.** Scoped to prerequisites, held rows and
 recorded gaps — roughly 20 rows, not 57 — prompted to refute. In the gauntlet this earned its
 keep: 24 of 24 prerequisites survived attack, 12 provenance adjustments landed, and **4 gap
 refutations** found what the first pass missed.
@@ -127,9 +138,9 @@ report looks exactly like a real one — and the gauntlet caught it only because
 
 ---
 
-## D. Where humans touch it
+## D. Where humans touch it after completion
 
-**D1. An edit supersedes, visibly.** The machine's original value, source and argument are kept
+**D1. A post-completion edit supersedes, visibly.** After Stage 8, the machine's original value, source and argument are kept
 in history; provenance flips to assessor; the assessment rescores; an audit entry records it.
 **The count of human-touched rows appears on the report's face** — in a fully automated pipeline
 that number is the most informative quality signal a reviewer has.
@@ -151,8 +162,8 @@ must reproduce the Egypt and Nigeria HTML before replacing anything.
 **E2. The diagnostic keeps its bounded international content.** At most one tier-badged
 precedent pointer per strategic question — "never an endorsement and never a comparison of
 countries." The free-form international scan feeds the **DAR only**. The diagnostic is a
-standalone document already verified and about to be reviewed; the DAR is a different document
-with a human process in front of it.
+standalone document already verified and about to be reviewed; the DAR Draft is generated by
+the same autonomous workflow and enters human review only after the export package completes.
 
 **E3. The DAR is full prose, with epistemic status on the page.** All 11 chapters get prose.
 Prescriptive chapters (3–10: vision, investment programme, costs and financing, policy, delivery
@@ -180,8 +191,10 @@ file so it is ratifiable like every other rule. An unnamed method would be the o
 system nobody could review. (A pre-mortem and stakeholder wind-tunnel remain available as
 additions.)
 
-**F2. Uploaded document takes precedence.** Where one is supplied, it is ingested and the
-machine-run exercise is skipped.
+**F2. Optional documents are pre-launch inputs, not stage replacements.** A supplied document
+is frozen into the launch snapshot, provenance-checked, synthesized, and supplemented where
+needed. When none is supplied, the stage runs its declared autonomous research fallback; it
+never pauses an active run to request an upload.
 
 **F3. Milestones bind to the instrument.** Each milestone attaches to one or more indicators or
 prerequisites with a target level and year — *"2.1 rural mobile broadband to L3 by 2029"* — so
@@ -198,21 +211,24 @@ provisionality and is marked accordingly (A3).
 
 ## G. Execution and cost
 
-**G1. A durable worker runs the Python pipeline; the app orchestrates.** Per-item checkpointing
+**Execution 1. A durable worker runs the Python pipeline; the app orchestrates.** Per-item checkpointing
 and resumability — a failure at indicator 50 of 57 must not restart from zero. The v1.5
 in-process lock and tick-polling arrangement was fragile and lost work on restart. Keeping the
 pipeline in Python is also the fastest route to a working end-to-end system, since it already
 runs and is verified.
 
-**G2. $500 per country, with human top-up on exhaustion.** The run stops and reports what it
-has; a person decides whether to add budget. A live spend counter is visible throughout.
-Exhaustion must be *visible*, because a budget-induced gap is indistinguishable from a real one
-in the output — which is how Nigeria's 21 phantom gaps happened.
+**Execution 2. The budget ceiling is authorized before launch; there is no active-run top-up.** A live
+spend counter remains visible. The system may retry within fixed, protected stage allocations
+under the frozen ceiling. If a required product still cannot be completed, the run ends in an
+honest terminal failure rather than pausing for a person or emitting budget-induced gaps as
+findings.
 
-**G3. Fixed per-pass allocation, with generation reserved.** Roughly: indicator research 40%,
-G2 15%, scans 15%, foresight 10%, document generation 20%. Under a shared pool a pathological
-research pass consumes the budget and produces no document at all — $500 spent with nothing to
-review.
+**Execution 3. Stage budgets are controlled within the preauthorized ceiling.** The declared per-pass
+shares are fixed and protected so an expensive early stage cannot consume the allocation reserved
+for a later required product, especially Draft generation. They are not human checkpoints;
+exhaustion after bounded retry and fallback is terminal. The stage shares are 45% diagnostic
+(35% research plus 10% challenge), 7.5% country research, 10% AI assessment, 7.5% international
+lessons, 10% foresight, 5% investment appraisal, 15% Draft generation, and 0% deterministic export.
 
 ---
 
@@ -221,8 +237,8 @@ review.
 | Layer | Work |
 |---|---|
 | **Model file** (`model/export_model.py`) | Per-chapter DAR bindings (E4); foresight method declaration (F1); candidate-indicator carry for milestones (F4). No ratifiable value changes. |
-| **Pipeline** (Python) | Research orchestrator with per-pass budget; abstention rule (C3); prerequisite bar (C4); automated G2 (C5); Perplexity discovery + re-fetch (C6); isolation and bleed rejection (C7); foresight generator; DAR generator; QC gates for both. `render_v17.py` untouched. |
-| **App** (`dar-studio-v2`) | Durable job queue and worker (G1); run orchestration, progress, spend counter (G2); evidence edit semantics (D1); version history (D2); document viewing and export; Perplexity added to the search provider set. |
+| **Pipeline** (Python) | Research orchestrator with a preauthorized ceiling; abstention rule (C3); prerequisite bar (C4); automated Stage 1 challenge (C5); Perplexity discovery + re-fetch (C6); isolation and bleed rejection (C7); foresight generator; investment/CBA stage; DAR generator; QC gates. `render_v17.py` untouched. |
+| **App** (`dar-studio-v2`) | Durable job queue and worker (Execution 1); run orchestration, progress, spend counter (Execution 2); evidence edit semantics (D1); version history (D2); document viewing and export; Perplexity added to the search provider set. |
 
 ---
 
@@ -244,13 +260,10 @@ review.
    the diagnostic; the DAR rests on both. Until the §13 rulings land, every document in the
    chain is provisional, and A3's marking is what carries that fact forward.
 
-4. **At $500 the budget is probably no longer the binding constraint.** The apportionment gives
-   roughly $200 to indicator research alone — what the entire run was budgeted at a revision
-   ago — with ~$75 for G2, ~$75 for the scans, ~$50 for foresight and ~$100 reserved for
-   document generation. The limiting factor moves to the abstention threshold (risk 1) and the
-   open definitions (risk 3): more searching does not rescue a row whose construct is unsettled.
-   The first Egypt re-run replaces this estimate with a measurement; if it lands well under the
-   ceiling, the surplus buys more from widening G2 than from deepening pass one.
+4. **At $500 the budget is probably no longer the binding constraint.** The limiting factor
+   moves to the abstention threshold (risk 1) and the open definitions (risk 3): more searching
+   does not rescue a row whose construct is unsettled. The ceiling is frozen at launch and split
+   into fixed, protected stage allocations; there is no human top-up or active-run choice.
 
 5. **Comprehensiveness carries most of its weight in chapters with no evidence base.** Chapters
    3–10 rest on judgment the pipeline does not have. The *proposed, not evidenced* marking (E3)
@@ -260,17 +273,18 @@ review.
 
 ## Build status
 
-*Added 24 August 2026. The twenty-seven decisions above stand as written and were not
-revisited; this section records only which of them now have code behind them.*
+*Added 24 August 2026. This section records which historical decisions gained code. The
+26 August 2026 normative supersession governs wherever those decisions conflict with the
+canonical workflow.*
 
 **Built and exercised against Egypt and Nigeria.** B2 (the audition, run for the first
 time — `gauntlet/loop-1/research_pipeline/AUDITION-RESULTS.md` and `VENDOR-DECISION.md`).
-C1, C2, C3, C4, C6, C7 and the per-pass budget of G2/G3, in
+C1, C2, C3, C4, C6, C7 and the preauthorized budget controls of Execution 2/3, in
 `research_pipeline/research_orchestrator.py` with the gates in `gates.py`. E4, F1 and F4
 in the model file, enforced by the parity test and the app's loader.
 
-**Not built — later threads.** C5 (automated Gate 2), the broad and international scans,
-and G1's durable worker are Thread 3. D1 and D2 (edit semantics and versioning) live in
+**Not built — later threads.** C5 (the automated Stage 1 challenge), the broad and international scans,
+and Execution 1's durable worker are Thread 3. D1 and D2 (edit semantics and versioning) live in
 the app. E1's caller, E3 and E5 (the DAR generator and its gate), and F2 are Thread 4.
 A1–A4 are governance statements the generators will carry.
 

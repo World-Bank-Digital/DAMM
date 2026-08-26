@@ -42,6 +42,7 @@ sys.path.insert(0, LOOP1)
 sys.path.insert(0, os.path.join(REPO, "model"))
 
 import vendors as V
+import workflow_inputs as WI
 from engine_v17 import MODEL, run as engine_run, tlevel
 from reference_scorer import Scorer as ReferenceScorer
 
@@ -51,6 +52,7 @@ PASS = "generation"
 # the country. Prerequisite ids are indicator ids, so the one set covers both.
 KNOWN_IDS = frozenset(MODEL)
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
+WORKFLOW_FILE = os.path.join(REPO, "workflow", "dar-workflow-v1.json")
 ENGINE_FILE = os.path.join(LOOP1, "engine_v17.py")
 REFERENCE_SCORER_FILE = os.path.join(REPO, "model", "reference_scorer.py")
 MODEL_EXPORT_FILE = os.path.join(REPO, "model", "export_model.py")
@@ -1832,6 +1834,59 @@ def pack_for(chapter, assessment, scans, foresight):
                        f"[{s['source_name']}, {s['tier']}; numeric origins: "
                        f"{origin_legend(exposed)}]")
 
+    # Canonical stage 3 remains a separate product. It is attached under a private key
+    # instead of flattened into scans, so country AI evidence, peer lessons and proposed
+    # actions retain their epistemic status inside the integrated Draft.
+    derived_allowed = set(b.get("derived") or [])
+    ai = (scans or {}).get("_ai_assessment") or {}
+    ai_sections = [section for section in ("as_is", "peer_experience")
+                   if f"ai.{section}" in derived_allowed]
+    include_ai_agenda = "ai.recommended_agenda" in derived_allowed
+    if ai and (ai_sections or include_ai_agenda):
+        out.append("AI IN DIGITAL AGRICULTURE (separate Stage 3 assessment):")
+        for section in ai_sections:
+            for index, finding in enumerate((ai.get(section) or {}).get("findings") or []):
+                origin = f"ai:{section}:{index}"
+                exposed = permit_statement_numbers(origin, finding.get("statement"))
+                out.append(
+                    f"  - {finding.get('id', origin)}: {finding.get('statement', '')} "
+                    f"[{finding.get('source_name', '')}, {finding.get('tier', '')}; "
+                    f"numeric origins: {origin_legend(exposed)}]"
+                )
+        if include_ai_agenda:
+            for index, action in enumerate(
+                    (ai.get("recommended_agenda") or {}).get("actions") or []):
+                origin = f"ai:recommended_agenda:{index}"
+                statement = json.dumps(action, ensure_ascii=False, default=str)
+                exposed = permit_statement_numbers(origin, statement)
+                out.append(
+                    "  - PROPOSED AI ACTION FOR POST-COMPLETION VALIDATION: "
+                    f"{statement}; NUMERIC ORIGINS: {origin_legend(exposed)}"
+                )
+
+    # Canonical stage 6 feeds the programme, financing, results and risk chapters. Its
+    # numbers are traceable appraisal inputs and planning assumptions; no financing
+    # decision is made here or by the generator.
+    investment = (scans or {}).get("_investment_options") or {}
+    if investment and "investment.options" in derived_allowed:
+        out.append("PRELIMINARY INVESTMENT OPTIONS AND COST-BENEFIT ANALYSIS:")
+        for index, option in enumerate(investment.get("options") or []):
+            origin = f"investment:options:{index}"
+            exposed = permit_numeric_fields(origin, option)
+            out.append(
+                f"  - {json.dumps(option, ensure_ascii=False, default=str)}; "
+                f"NUMERIC ORIGINS: {origin_legend(exposed)}"
+            )
+        out.append(
+            "  - DECISION STATUS: "
+            f"{investment.get('decision_status', 'no_financing_decision_made')}"
+        )
+        if "investment.portfolio_sequencing" in derived_allowed:
+            out.append(
+                "  - PORTFOLIO SEQUENCING: "
+                f"{investment.get('portfolio_sequencing', '')}"
+            )
+
     text = "\n".join(out)
     claim_origins = sorted(set(re.findall(r"\[\[origin:([^\]]+)\]\]", text)))
     return {"text": text, "allowed_citations": allowed,
@@ -2132,6 +2187,8 @@ def build_annex_chapter(rows, assessment, scans, foresight, country, iso3):
         "international_pointers": list((scans or {}).get("international_pointers") or []),
         "initiative_register": list((scans or {}).get("register_entries") or []),
         "scan_abstentions": list((scans or {}).get("abstained") or []),
+        "ai_digital_agriculture": dict((scans or {}).get("_ai_assessment") or {}),
+        "investment_options": dict((scans or {}).get("_investment_options") or {}),
         "foresight": dict(foresight or {}),
         "method_record": {
             "config": SPEC.get("config"),
@@ -2158,8 +2215,9 @@ def build_annex_chapter(rows, assessment, scans, foresight, country, iso3):
         "unsupported_figures": [],
         "stray_numbers": [],
         "cited_outside_binding": binding_gate(cites, chapter["binding"], assessment),
-        "provenance": ("Generated deterministically from the reviewed assessment input, "
-                       "engine output, scans, foresight and model configuration; no "
+        "provenance": ("Generated deterministically from the workflow-bound assessment "
+                       "input, engine output, scans, AI assessment, investment appraisal, "
+                       "foresight and model configuration; no "
                        "language model authored or summarised this annex."),
         "annex": annex,
     }
@@ -5932,6 +5990,9 @@ def render_html(doc):
                 ("International pointers", annex.get("international_pointers") or []),
                 ("Initiative register", annex.get("initiative_register") or []),
                 ("Scan abstentions", annex.get("scan_abstentions") or []),
+                ("AI in digital agriculture", annex.get("ai_digital_agriculture") or {}),
+                ("Investment options and cost-benefit analysis",
+                 annex.get("investment_options") or {}),
                 ("Foresight record", annex.get("foresight") or {}),
                 ("Method record", annex.get("method_record") or {}),
             )
@@ -5948,7 +6009,8 @@ def render_html(doc):
 
 def file_record(path, **extra):
     """Stable identity of one run input or implementation file."""
-    content = open(path, "rb").read()
+    with open(path, "rb") as handle:
+        content = handle.read()
     record = {
         "file": os.path.basename(path),
         "bytes": len(content),
@@ -6219,6 +6281,112 @@ def required_product_errors(scans, foresight, country):
     return errors
 
 
+def supplemental_product_errors(ai, investment, country, iso3):
+    """Validate the two canonical products the earlier generator did not consume."""
+    errors = []
+    expected_country = " ".join(country.split()).casefold()
+    expected_iso = iso3.strip().upper()
+    for label, product, schema in (
+            ("ai_assessment", ai, "damm.ai-digital-agriculture/v1"),
+            ("investment_options", investment, "damm.investment-options/v1")):
+        if not isinstance(product, dict):
+            errors.append(f"{label} is not an object")
+            continue
+        if product.get("schema_version") != schema:
+            errors.append(f"{label}.schema_version is not {schema}")
+        if " ".join(str(product.get("country") or "").split()).casefold() != expected_country:
+            errors.append(f"{label}.country does not match the run country")
+        if str(product.get("iso3") or "").upper() != expected_iso:
+            errors.append(f"{label}.iso3 does not match the run ISO")
+        if not isinstance(product.get("source_inventory"), list):
+            errors.append(f"{label}.source_inventory is not an array")
+    if isinstance(ai, dict):
+        for section in ("as_is", "peer_experience", "recommended_agenda"):
+            if not isinstance(ai.get(section), dict):
+                errors.append(f"ai_assessment.{section} is not an object")
+        if not ((ai.get("as_is") or {}).get("findings")):
+            errors.append("ai_assessment.as_is has no verified finding")
+        if not ((ai.get("peer_experience") or {}).get("findings")):
+            errors.append("ai_assessment.peer_experience has no verified finding")
+        if ((ai.get("recommended_agenda") or {}).get("status")
+                != "proposed_for_post_completion_validation"):
+            errors.append("ai_assessment recommendations are not marked proposed")
+    if isinstance(investment, dict):
+        if not isinstance(investment.get("options"), list) or not investment.get("options"):
+            errors.append("investment_options.options is empty")
+        if investment.get("decision_status") != "no_financing_decision_made":
+            errors.append("investment_options purports to make a financing decision")
+    return errors
+
+
+def workflow_generation_input_errors(manifest, country, iso3, input_records):
+    """Authorize Draft generation from completed machine stages, never Final publication.
+
+    The legacy reviewed package remains valid for a reviewed replay. This envelope is a
+    different authority: it proves that stages 1–6 of the canonical autonomous workflow
+    completed against exact, hash-bound inputs. It authorizes a Draft only; `reviewed`
+    remains false and the final-publication gate below remains unchanged.
+    """
+    errors = []
+    if not isinstance(manifest, dict):
+        return ["workflow manifest is not an object"]
+    if manifest.get("schema_version") != "damm.workflow-run/v1":
+        errors.append("workflow manifest schema_version is not damm.workflow-run/v1")
+    if manifest.get("workflow_id") != "dar-canonical-v1":
+        errors.append("workflow manifest workflow_id is not dar-canonical-v1")
+    with open(WORKFLOW_FILE) as handle:
+        contract = json.load(handle)
+    if manifest.get("workflow_version") != contract.get("workflow_version"):
+        errors.append("workflow manifest version does not match the canonical contract")
+    if manifest.get("contract_sha256") != file_record(WORKFLOW_FILE)["sha256"]:
+        errors.append("workflow manifest is not bound to the canonical contract bytes")
+    if " ".join(str(manifest.get("country") or "").split()).casefold() != (
+            " ".join(country.split()).casefold()):
+        errors.append("workflow manifest country does not match the run country")
+    if str(manifest.get("iso3") or "").upper() != iso3.strip().upper():
+        errors.append("workflow manifest ISO does not match the run ISO")
+    if manifest.get("status") not in {"running", "retrying"}:
+        errors.append("workflow manifest is not an active Stage 7 workflow")
+    snapshot = manifest.get("input_snapshot")
+    if (not isinstance(snapshot, dict)
+            or not re.fullmatch(r"[0-9a-f]{64}", str(snapshot.get("sha256") or ""))):
+        errors.append("workflow manifest has no immutable input snapshot hash")
+
+    stages = manifest.get("stages")
+    if not isinstance(stages, list):
+        errors.append("workflow manifest stages is not an array")
+        return errors
+    by_id = {stage.get("id"): stage for stage in stages if isinstance(stage, dict)}
+    required_stages = [
+        "damm_diagnostic", "country_research", "ai_digital_agriculture",
+        "international_lessons", "strategic_foresight", "investment_options",
+    ]
+    for stage_id in required_stages:
+        stage = by_id.get(stage_id)
+        if not stage or stage.get("status") != "complete":
+            errors.append(f"workflow stage {stage_id} is not complete")
+
+    artifact_bindings = {
+        "engine_input": ("damm_diagnostic", "engine_input"),
+        "scans": ("international_lessons", "scans"),
+        "ai_assessment": ("ai_digital_agriculture", "ai_assessment"),
+        "foresight": ("strategic_foresight", "foresight"),
+        "investment_options": ("investment_options", "investment_options"),
+    }
+    for input_name, (stage_id, artifact_key) in artifact_bindings.items():
+        stage = by_id.get(stage_id) or {}
+        artifacts = stage.get("artifacts")
+        artifacts = artifacts if isinstance(artifacts, list) else []
+        artifact = next((item for item in artifacts
+                         if isinstance(item, dict) and item.get("key") == artifact_key), None)
+        actual = input_records.get(input_name) or {}
+        if not artifact:
+            errors.append(f"workflow stage {stage_id} has no {artifact_key} artifact")
+        elif artifact.get("sha256") != actual.get("sha256"):
+            errors.append(f"{input_name} hash does not match workflow stage {stage_id}")
+    return errors
+
+
 def _preparse_output_target(argv):
     """Return one unambiguous ``--out`` value without accepting other arguments.
 
@@ -6303,6 +6471,11 @@ def main():
     ap.add_argument("--ceiling", type=float, default=500.0)
     ap.add_argument("--vendor", default="anthropic/claude-opus-5")
     ap.add_argument("--replay", help="versioned offline recording of chapter responses")
+    ap.add_argument(
+        "--workflow-manifest",
+        help=("active damm.workflow-run/v1 manifest whose completed stages 1–6 "
+              "authorize autonomous Draft generation; never authorizes Final publication"),
+    )
     ap.add_argument("--resume", action="store_true")
     try:
         a = ap.parse_args(argv)
@@ -6325,10 +6498,16 @@ def main():
     scans_path = run_path("scans.json")
     foresight_path = run_path("foresight.json")
     package_path = run_path("run_package.json")
+    ai_path = run_path("ai_assessment.json")
+    investment_path = run_path("investment_options.json")
+    workflow_manifest_path = (os.path.abspath(a.workflow_manifest)
+                              if a.workflow_manifest else None)
+    workflow_mode = workflow_manifest_path is not None
 
     started_at = utc_now()
     state = {"schema_version": 3, "country": a.country, "iso3": a.iso,
              "chapters": {}, "request_sha256": {}, "response_sha256": {}}
+    WI.bind_checkpoint_state(state, loaded=False)
     reused, regenerated = [], []
     input_records = {}
     reviewed = False
@@ -6368,6 +6547,8 @@ def main():
             "publication_blockers": list(publication_blockers),
             "model_version": f"{SPEC['version']} rev{SPEC['revision']}",
             "execution": dict(adapter),
+            "draft_authority": ("canonical_workflow" if workflow_mode
+                                else "reviewed_run_package"),
             "inputs": dict(input_records),
             "implementation": implementation,
             "chapters": {
@@ -6421,23 +6602,40 @@ def main():
         "engine_input": inp,
         "scans": scans_path,
         "foresight": foresight_path,
-        "run_package": package_path,
     }
+    if workflow_mode:
+        required.update({
+            "ai_assessment": ai_path,
+            "investment_options": investment_path,
+            "workflow_manifest": workflow_manifest_path,
+        })
+    else:
+        required["run_package"] = package_path
     missing = [name for name, path in required.items() if not os.path.exists(path)]
     if missing:
-        return block(
-            "required_input_missing",
-            "final DAR requires the reviewed engine input, scans and foresight; missing "
-            + ", ".join(missing))
+        detail = ("canonical Draft DAR requires completed workflow stages 1–6; missing "
+                  if workflow_mode else
+                  "final DAR requires the reviewed engine input, scans and foresight; missing ")
+        return block("required_input_missing", detail + ", ".join(missing))
 
     try:
         for name, path in required.items():
             input_records[name] = file_record(
-                path, required=True, reviewed=(name == "engine_input"))
+                path, required=True,
+                reviewed=(not workflow_mode and name == "engine_input"))
         rows = V.strict_json_load(inp)
         scans = V.strict_json_load(scans_path)
         foresight = V.strict_json_load(foresight_path)
-        package = V.strict_json_load(package_path)
+        if workflow_mode:
+            ai_assessment = V.strict_json_load(ai_path)
+            investment_options = V.strict_json_load(investment_path)
+            workflow_manifest = V.strict_json_load(workflow_manifest_path)
+            package = None
+        else:
+            ai_assessment = None
+            investment_options = None
+            workflow_manifest = None
+            package = V.strict_json_load(package_path)
     except (OSError, ValueError, json.JSONDecodeError) as error:
         return block("required_input_invalid", str(error))
 
@@ -6446,30 +6644,47 @@ def main():
         return block("required_input_invalid", "; ".join(row_errors[:12]))
 
     identity_errors = (input_identity_errors("scans", scans, a.country, a.iso)
-                       + input_identity_errors("foresight", foresight, a.country, a.iso)
-                       + input_identity_errors("run_package", package, a.country, a.iso))
+                       + input_identity_errors("foresight", foresight, a.country, a.iso))
+    if not workflow_mode:
+        identity_errors += input_identity_errors(
+            "run_package", package, a.country, a.iso)
     if identity_errors:
         return block("input_identity_mismatch", "; ".join(identity_errors))
-    if (package.get("schema_version") != "damm.dar-run-package/v1"
-            or package.get("reviewed") is not True):
-        return block("input_package_invalid",
-                     "run package is not a reviewed damm.dar-run-package/v1 envelope")
     product_errors = required_product_errors(scans, foresight, a.country)
+    if workflow_mode:
+        product_errors += supplemental_product_errors(
+            ai_assessment, investment_options, a.country, a.iso)
     if product_errors:
         return block("required_product_incomplete", "; ".join(product_errors))
-    declared_files = package.get("files") or {}
-    hash_errors = []
-    for name in ("engine_input", "scans", "foresight"):
-        declared_sha = (declared_files.get(name) or {}).get("sha256")
-        actual_sha = input_records[name]["sha256"]
-        if declared_sha != actual_sha:
-            hash_errors.append(
-                f"{name} sha256 {actual_sha} does not match reviewed package {declared_sha}")
-    if hash_errors:
-        return block("input_package_mismatch", "; ".join(hash_errors))
-    # This attests only to the deterministic inputs.  The completed narrative is not
-    # final until its exact reviewed replay is matched after adapter initialization.
-    review["inputs"] = True
+    if workflow_mode:
+        workflow_errors = workflow_generation_input_errors(
+            workflow_manifest, a.country, a.iso, input_records)
+        if workflow_errors:
+            return block("workflow_manifest_invalid", "; ".join(workflow_errors))
+        # Attach rather than flatten. `pack_for` and the deterministic annex preserve
+        # each product's separate status and provenance.
+        scans = dict(scans)
+        scans["_ai_assessment"] = ai_assessment
+        scans["_investment_options"] = investment_options
+        declared_files = {}
+    else:
+        if (package.get("schema_version") != "damm.dar-run-package/v1"
+                or package.get("reviewed") is not True):
+            return block("input_package_invalid",
+                         "run package is not a reviewed damm.dar-run-package/v1 envelope")
+        declared_files = package.get("files") or {}
+        hash_errors = []
+        for name in ("engine_input", "scans", "foresight"):
+            declared_sha = (declared_files.get(name) or {}).get("sha256")
+            actual_sha = input_records[name]["sha256"]
+            if declared_sha != actual_sha:
+                hash_errors.append(
+                    f"{name} sha256 {actual_sha} does not match reviewed package {declared_sha}")
+        if hash_errors:
+            return block("input_package_mismatch", "; ".join(hash_errors))
+        # This attests only to the deterministic inputs. The completed narrative is not
+        # final until its exact reviewed replay is matched after adapter initialization.
+        review["inputs"] = True
 
     if a.replay:
         replay_path = os.path.abspath(a.replay)
@@ -6492,6 +6707,14 @@ def main():
         return block("engine_failed", str(error))
 
     ledger = V.Ledger(ceiling=a.ceiling, label=f"{a.out}_generation")
+    resume_state_exists = a.resume and os.path.exists(state_path)
+    resume_spend_exists = a.resume and os.path.exists(spend_path)
+    ledger.attach(spend_path)
+    # A retry can have a journalled call but no generation state if the process died
+    # before its first chapter checkpoint. Existing generation state embeds its own
+    # ledger and follows the reconciliation path below; without state, the standalone
+    # journal is the only authoritative account and must be carried now.
+    carried = ledger.load(spend_path) if resume_spend_exists else 0
     try:
         if a.replay:
             llm = V.ReplayLLM(a.replay, ledger)
@@ -6515,9 +6738,10 @@ def main():
     write_manifest("running", None)
 
     resume_cache_reset = False
-    if a.resume and os.path.exists(state_path):
+    if resume_state_exists:
         try:
             cached_state = V.strict_json_load(state_path)
+            WI.bind_checkpoint_state(cached_state, loaded=True)
             identified = (cached_state.get("schema_version") == 3
                           and cached_state.get("country")
                           and cached_state.get("iso3"))
@@ -6541,8 +6765,10 @@ def main():
                 state = cached_state
                 state.setdefault("request_sha256", {})
                 state.setdefault("response_sha256", {})
-                carried = (ledger.restore(state["ledger"])
-                           if state.get("ledger") else ledger.load(spend_path))
+                if state.get("ledger"):
+                    carried = (ledger.reconcile(state["ledger"])
+                               if resume_spend_exists
+                               else ledger.restore(state["ledger"]))
         except (OSError, ValueError, json.JSONDecodeError) as error:
             return block("resume_state_invalid", str(error))
         if not resume_cache_reset:
@@ -6557,15 +6783,14 @@ def main():
     sys.stdout.flush()
 
     def save():
-        # State and spend travel together in the authoritative checkpoint. The separate
-        # spend file remains a human-facing compatibility artifact; resume reads the
-        # embedded snapshot first, so a crash cannot reuse a paid chapter while losing
-        # the call that paid for it.
+        # State and spend carry the same snapshot, while each metered call is also
+        # journalled immediately. Resume reconciles the two ordered call histories, so a
+        # crash between either atomic write cannot reuse a paid chapter or lose spend.
         state["ledger"] = ledger.snapshot()
         V.atomic_write_json(state_path, state)
         V.atomic_write_json(spend_path, state["ledger"])
 
-    if not a.resume or resume_cache_reset:
+    if not a.resume or resume_cache_reset or not resume_state_exists:
         save()
 
     stopped = None
@@ -6682,6 +6907,11 @@ def main():
         "method_ratified": SPEC.get("ratified") is True,
         "final": final,
         "publication_blockers": publication_blockers,
+        "workflow": ({
+            "workflow_id": workflow_manifest.get("workflow_id"),
+            "workflow_version": workflow_manifest.get("workflow_version"),
+            "input_snapshot_sha256": (workflow_manifest.get("input_snapshot") or {}).get("sha256"),
+        } if workflow_mode else None),
         "chapters": chapters,
         "fidelity": {
             "claimed": claimed,

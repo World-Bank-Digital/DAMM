@@ -510,7 +510,7 @@
   {
    "pass_name": "generation",
    "detail": "chapter 5",
-   "request_sha256": "7716a3245630bf2e543b172de8ae174b5554aef47592c7f9f85abf377f45f285",
+   "request_sha256": "700be6fe539141df4cf9a819547a1d8450c9c0175e27c495cbddc3540dd81506",
    "response_sha256": "a8a616cefcfea065785d4d656e2d4298d744ca37fa0ef71e8b40b5f0b853b0d0",
    "response": {
     "prose": "The financing plan should separate investment costs from recurrent operating costs and identify the instrument suited to each activity. No financing source should be treated as committed without appraisal.\n\nThe chapter proposes an illustrative envelope of US$120 million. It assumes 5 years for delivery. The amount and period are planning assumptions intended to support option analysis.\n\nIt assumes a 15 percent contingency while designs and procurement packages are refined. The final envelope remains subject to government approval and financing due diligence.",

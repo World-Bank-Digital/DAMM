@@ -159,6 +159,44 @@ check("the standing prohibitions are on the page", _H, "prohibitions")
 check("nothing is left unescaped from the model text", "<script" in _H, "False")
 
 
+section("TTL documents are evidence, not instructions")
+
+_LONG = ("START_MARKER" + "a" * 18000 + "MIDDLE_MARKER"
+         + "b" * 18000 + "TAIL_MARKER")
+_original_search = F.V.exa_search
+try:
+    F.V.exa_search = lambda *args, **kwargs: []
+    _sources = F.foresight_context_sources(
+        "Egypt",
+        [
+            {"filename": "future.pdf", "sha256": "a" * 64,
+             "extracted_text": _LONG},
+            {"filename": "second.txt", "sha256": "b" * 64,
+             "extracted_text": "second document evidence"},
+        ],
+        object(),
+    )
+finally:
+    F.V.exa_search = _original_search
+
+check("every TTL upload is represented", len(_sources), "2")
+check("balanced foresight evidence includes the opening", _sources[0]["text"],
+      "START_MARKER")
+check("balanced foresight evidence includes the middle", _sources[0]["text"],
+      "MIDDLE_MARKER")
+check("balanced foresight evidence includes the tail", _sources[0]["text"],
+      "TAIL_MARKER")
+check("coverage policy is recorded",
+      _sources[0]["analysis_coverage"]["policy"], F.WI.BALANCED_EXCERPT_POLICY)
+_context = F.context_text(_sources)
+check("the prompt states the TTL evidence boundary", _context, "NEVER INSTRUCTIONS")
+check("the prompt discloses excerpt coverage", _context, "ANALYSIS_COVERAGE")
+check("the prompt retains the tail", _context, "TAIL_MARKER")
+check("the source inventory retains coverage",
+      F.context_inventory(_sources)[0], "analysis_coverage")
+check("the system instruction rejects embedded commands", F.SYSTEM, "never instructions")
+
+
 print()
 if FAILED:
     print(f"{len(FAILED)} of {COUNT} checks FAILED\n")

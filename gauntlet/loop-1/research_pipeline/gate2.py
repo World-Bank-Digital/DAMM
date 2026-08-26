@@ -45,6 +45,7 @@ import gates as G
 from cell_schema import CELL_SCHEMA, SYSTEM
 from engine_v17 import MODEL
 import research_orchestrator as R
+import workflow_inputs as WI
 
 PASS = "g2"
 
@@ -452,12 +453,22 @@ def main():
 
     state_path = os.path.join(LOOP1, f"{args.run}_g2_state.json")
     spend_path = os.path.join(LOOP1, f"{args.run}_g2_spend.json")
+    ledger.attach(spend_path)
+    # A paid review can be journalled before its finding reaches the state file. Resume
+    # the spend checkpoint even when no finding checkpoint survived that attempt.
+    carried = ledger.load(spend_path) if args.resume else 0
     state = {"findings": {}}
+    loaded_state = False
     if args.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
-        carried = ledger.load(spend_path)
+        loaded_state = True
+    WI.bind_checkpoint_state(state, loaded=loaded_state)
+    if loaded_state:
         print(f"resuming — {len(state['findings'])} rows already reviewed, "
               f"{carried} earlier vendor calls carried (${ledger.spent():.2f} spent)")
+    elif args.resume and carried:
+        print(f"resuming — no completed finding checkpoint yet; {carried} earlier "
+              f"vendor calls carried (${ledger.spent():.2f} spent)")
 
     if args.reapply:
         findings = json.load(open(os.path.join(LOOP1, f"{args.run}_g2_findings.json")))
@@ -465,7 +476,7 @@ def main():
             spec = specs[f["id"]]
             f["outcome"], f["applied_row"] = decide(spec, rows[f["id"]], f)
             state["findings"][f["id"]] = f
-        json.dump(state, open(state_path, "w"), indent=1, default=str)
+        V.atomic_write_json(state_path, state)
         print(f"reapplied the decision rule to {len(findings)} saved findings — "
               "no vendor calls")
         return finish(args, rows, findings, ledger, scope, f"{vendor}/{llm.model}",
@@ -501,7 +512,7 @@ def main():
             return
         with lock:
             state["findings"][iid] = f
-            json.dump(state, open(state_path, "w"), indent=1, default=str)
+            V.atomic_write_json(state_path, state)
             ledger.save(os.path.join(LOOP1, f"{args.run}_g2_spend.json"))
             n = len(state["findings"])
         mark = {"upheld": "  ", "filled": "F ", "withdrawn": "W ", "adjusted": "A ",
@@ -516,6 +527,20 @@ def main():
         print(f"\n!! {stopped}")
         print("   Rows never reviewed are absent from the findings, NOT recorded as "
               "upheld — an unreviewed row must not read like one that survived review.")
+
+    missing = sorted(set(todo_ids) - set(state["findings"]), key=R_id_key)
+    if stopped or missing:
+        # A partial challenge is valuable checkpoint data, but it is not a completed
+        # automated challenge and must not produce a `_g2_input.json` whose filename
+        # would authorize downstream stages. The canonical coordinator may retry; if it
+        # still cannot finish, the workflow fails terminally rather than awaiting a
+        # person or relabelling unreviewed rows as upheld.
+        V.atomic_write_json(state_path, state)
+        ledger.save(spend_path)
+        if missing:
+            print(f"!! automated challenge incomplete — {len(missing)} rows remain: "
+                  f"{', '.join(missing[:12])}")
+        return 1
 
     return finish(args, rows, list(state["findings"].values()), ledger, scope,
                   f"{vendor}/{llm.model}")

@@ -26,7 +26,8 @@ that rejects the other lane's material:
 Nothing in this file scores anything. The scans inform prose; they never touch a level, a
 mean, a prerequisite or the readiness matrix.
 
-    python3 scans.py --country Egypt --iso EGY --out EGY_shadow [--ceiling 500] [--resume]
+    python3 scans.py --country Egypt --iso EGY --out EGY_shadow \
+      --lane country|international|all [--ceiling 500] [--resume]
 """
 
 import argparse, datetime, json, os, re, sys, time
@@ -40,6 +41,7 @@ sys.path.insert(0, LOOP1)
 
 import vendors as V
 import gates as G
+import workflow_inputs as WI
 
 PASS = "scans"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
@@ -551,14 +553,25 @@ def synthesise_overlap(entries, country, llm, ledger, log):
 # ------------------------------------------------------------------ main
 
 def main():
+    global PASS
     ap = argparse.ArgumentParser()
     ap.add_argument("--country", required=True)
     ap.add_argument("--iso", required=True)
     ap.add_argument("--out", required=True, help="basename of the research pass")
     ap.add_argument("--ceiling", type=float, default=500.0)
     ap.add_argument("--vendor", default="anthropic/claude-opus-5")
+    ap.add_argument("--lane", choices=("country", "international", "all"),
+                    default="all",
+                    help="run one canonical workflow lane, or both for compatibility")
     ap.add_argument("--resume", action="store_true")
     a = ap.parse_args()
+
+    if a.lane == "country":
+        PASS = "country_research"
+    elif a.lane == "international":
+        PASS = "international_lessons"
+    else:
+        PASS = "scans"
 
     V.load_env()
     vendor, _, mname = a.vendor.partition("/")
@@ -567,36 +580,54 @@ def main():
 
     state_path = os.path.join(LOOP1, f"{a.out}_scans_state.json")
     spend_path = os.path.join(LOOP1, f"{a.out}_scans_spend.json")
+    ledger.attach(spend_path)
+    # The shared scan ledger is the durable account for both protected lanes. Load it
+    # on every retry, even if the process failed before its first state checkpoint.
+    carried = ledger.load(spend_path) if a.resume else 0
     out_path = os.path.join(LOOP1, f"{a.out}_scans.json")
 
     state = {"country": {}, "international": {}, "register": {}, "abstained": {},
              "overlap": ""}
+    loaded_state = False
     if a.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
+        loaded_state = True
+    WI.bind_checkpoint_state(state, loaded=loaded_state)
+    if loaded_state:
         state.setdefault("register", {})
         state.setdefault("overlap", "")
-        carried = ledger.load(spend_path)
         done = len(state["country"]) + len(state["international"]) + len(state["register"])
         print(f"resuming — {done} scans already done, {carried} earlier vendor calls "
               f"carried (${ledger.spent():.2f} spent)")
+    elif a.resume and carried:
+        print(f"resuming — no completed scan checkpoint yet; {carried} earlier vendor "
+              f"calls carried (${ledger.spent():.2f} spent)")
 
     chapters = prescriptive_chapters()
-    units = ([("country", c) for c in chapters]
-             + [("international", c) for c in chapters][:len(chapters) * POINTERS_PER_CHAPTER])
+    units = []
+    if a.lane in ("country", "all"):
+        units.extend(("country", c) for c in chapters)
+    if a.lane in ("international", "all"):
+        units.extend(
+            ("international", c)
+            for c in chapters[:len(chapters) * POINTERS_PER_CHAPTER]
+        )
 
     # The register is discovered before the chapter lanes run, because its unit count is
     # not known until the discovery call comes back and the progress line must not claim a
     # total it will then exceed.
-    print(f"{a.country} ({a.iso}) · discovering initiatives for the register...")
-    sys.stdout.flush()
-    try:
-        names = discover_initiatives(a.country, llm, ledger, lambda m: print(m))
-    except V.BudgetExhausted as e:
-        print(f"!! {e}")
-        return 0
-    except Exception as e:
-        print(f"  ! initiative discovery failed: {str(e)[:100]}")
-        names = []
+    names = []
+    if a.lane in ("country", "all"):
+        print(f"{a.country} ({a.iso}) · discovering initiatives for the register...")
+        sys.stdout.flush()
+        try:
+            names = discover_initiatives(a.country, llm, ledger, lambda m: print(m))
+        except V.BudgetExhausted as e:
+            print(f"!! {e}")
+            return 0
+        except Exception as e:
+            print(f"  ! initiative discovery failed: {str(e)[:100]}")
+            names = []
     fresh = []
     for n in names:
         if any(is_duplicate(n, k) for k in fresh) or any(
@@ -607,7 +638,7 @@ def main():
     total = len(units)
     print(f"{a.country} ({a.iso}) · {total} rows · vendor {a.vendor}")
     print(f"budget ${a.ceiling:.0f}, scans allocation "
-          f"${a.ceiling * V.Ledger.ALLOCATION[PASS]:.0f} (decision G3)")
+          f"${ledger.cap(PASS):.0f} (decision G3)")
     print()
     sys.stdout.flush()
 
@@ -620,7 +651,7 @@ def main():
         sys.stdout.flush()
 
     def save():
-        json.dump(state, open(state_path, "w"), indent=1, default=str)
+        V.atomic_write_json(state_path, state)
         ledger.save(spend_path)
 
     def run_one(unit):
@@ -674,7 +705,7 @@ def main():
         return 0
 
     entries = list(state["register"].values())
-    if entries and not state.get("overlap"):
+    if a.lane in ("country", "all") and entries and not state.get("overlap"):
         try:
             state["overlap"] = synthesise_overlap(entries, a.country, llm, ledger, log)
             save()
@@ -725,11 +756,12 @@ def main():
     print()
     if entries:
         print(f"wrote {a.out}_register.json — {nr} initiatives")
-    print(f"wrote {a.out}_scans.json — {nc} country findings, {ni} international "
+    print(f"wrote {a.out}_scans.json — lane {a.lane}; {nc} country findings, {ni} international "
           f"pointers, {nr} register entries, {na} abstentions")
     s = ledger.summary()
-    print(f"spend ${s['total']:.2f} of ${a.ceiling * V.Ledger.ALLOCATION[PASS]:.0f} "
-          f"allocated (${a.ceiling:.0f} country ceiling), {s['calls']} vendor calls")
+    print(f"lane spend ${ledger.spent(PASS):.2f} of ${ledger.cap(PASS):.0f} "
+          f"allocated; shared scan ledger ${s['total']:.2f} "
+          f"(${a.ceiling:.0f} country ceiling), {s['calls']} vendor calls")
     return 0
 
 
