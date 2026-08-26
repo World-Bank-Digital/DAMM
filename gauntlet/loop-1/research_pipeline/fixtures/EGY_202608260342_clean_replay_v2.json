@@ -1,0 +1,1030 @@
+{
+ "format": "damm.llm-replay/v2",
+ "fixture_id": "reviewed-egypt-final-dar-v2",
+ "responses": [
+  {
+   "pass_name": "generation",
+   "detail": "chapter 1",
+   "request_sha256": "0386c5d03fb9101c647ec2abf3d46e8165ed90f745b82c2ca3842a9152c9b8ea",
+   "response_sha256": "b02baed5cb506b7b55e2d9452ba90145a6bfd031ceaf75c7efade1cfafd98be9",
+   "response": {
+    "prose": "Egypt's A1 pillar mean is 3.6, with 5 of 10 rows rated. This is the strongest infrastructure signal in the diagnostic, but the denominator also shows where evidence remains incomplete.\n\nThe C1 pillar mean is 4.0, with 3 of 6 rows rated. The result provides a strong platform base while preserving the distinction between measured capability and unobserved rows.\n\nThe O1 pillar mean is 2.5, with 2 of 7 rows rated. Outcome evidence is therefore thinner than the infrastructure evidence and should be treated cautiously.",
+    "cites": {
+     "pillars": [
+      "A1",
+      "C1",
+      "O1"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "claims": [
+     {
+      "text": "Egypt's A1 pillar mean is 3.6, with 5 of 10 rows rated.",
+      "source_refs": [
+       "pillar:A1:mean",
+       "pillar:A1:rated",
+       "pillar:A1:n"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "This is the strongest infrastructure signal in the diagnostic, but the denominator also shows where evidence remains incomplete.",
+      "source_refs": [
+       "pillar:A1:mean",
+       "pillar:A1:n",
+       "pillar:C1:mean",
+       "pillar:O1:mean"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "The C1 pillar mean is 4.0, with 3 of 6 rows rated.",
+      "source_refs": [
+       "pillar:C1:mean",
+       "pillar:C1:rated",
+       "pillar:C1:n"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "The result provides a strong platform base while preserving the distinction between measured capability and unobserved rows.",
+      "source_refs": [
+       "pillar:C1:mean",
+       "pillar:C1:rated",
+       "pillar:C1:n"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "The O1 pillar mean is 2.5, with 2 of 7 rows rated.",
+      "source_refs": [
+       "pillar:O1:mean",
+       "pillar:O1:rated",
+       "pillar:O1:n"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "Outcome evidence is therefore thinner than the infrastructure evidence and should be treated cautiously.",
+      "source_refs": [
+       "pillar:O1:mean",
+       "pillar:O1:rated",
+       "pillar:O1:n",
+       "pillar:A1:mean",
+       "pillar:C1:mean"
+      ],
+      "basis": "evidence"
+     }
+    ],
+    "figures": [
+     {
+      "value": "3.6",
+      "what_it_is": "A1 pillar mean",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:A1:mean"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "5 of 10 rows",
+      "what_it_is": "A1 rated denominator",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:A1:rated",
+       "pillar:A1:n"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "4.0",
+      "what_it_is": "C1 pillar mean",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C1:mean"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "3 of 6 rows",
+      "what_it_is": "C1 rated denominator",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C1:rated",
+       "pillar:C1:n"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "2.5",
+      "what_it_is": "O1 pillar mean",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:O1:mean"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "2 of 7 rows",
+      "what_it_is": "O1 rated denominator",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:O1:rated",
+       "pillar:O1:n"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 2",
+   "request_sha256": "b4e8bce7d8cf1e2326509cea6b8694d6f7f474d9129c1f8ecafdf681918e8b90",
+   "response_sha256": "1d2aed55032bd100a5f4a117611caa0d0f5222048d93339e51d690083c15993d",
+   "response": {
+    "prose": "The evidence ledger contains 30 rated rows and 8 withheld rows. Its composition records 13 Measured rows, 24 Documented rows, 1 Judged row, and 19 Gap rows.\n\nThe C3 pillar mean is 2.71, with 7 of 8 rows rated. The profile also contains 3 stale rows, which means the apparent coverage should not be mistaken for uniformly current evidence.\n\nTaken together, the ledger supports a usable diagnostic while making the remaining verification and refresh burden visible.",
+    "cites": {
+     "pillars": [
+      "C3"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "claims": [
+     {
+      "text": "The evidence ledger contains 30 rated rows and 8 withheld rows.",
+      "source_refs": [
+       "derived:evidence_ledger:rated",
+       "derived:evidence_ledger:held"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "Its composition records 13 Measured rows, 24 Documented rows, 1 Judged row, and 19 Gap rows.",
+      "source_refs": [
+       "derived:evidence_ledger:counts:Measured",
+       "derived:evidence_ledger:counts:Documented",
+       "derived:evidence_ledger:counts:Judged",
+       "derived:evidence_ledger:counts:Gap"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "The C3 pillar mean is 2.71, with 7 of 8 rows rated.",
+      "source_refs": [
+       "pillar:C3:mean",
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "The profile also contains 3 stale rows, which means the apparent coverage should not be mistaken for uniformly current evidence.",
+      "source_refs": [
+       "pillar:C3:stale",
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ],
+      "basis": "evidence"
+     },
+     {
+      "text": "Taken together, the ledger supports a usable diagnostic while making the remaining verification and refresh burden visible.",
+      "source_refs": [
+       "derived:evidence_ledger:rated",
+       "derived:evidence_ledger:held"
+      ],
+      "basis": "evidence"
+     }
+    ],
+    "figures": [
+     {
+      "value": "30 rated rows",
+      "what_it_is": "rated evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:evidence_ledger:rated"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "8 withheld rows",
+      "what_it_is": "withheld evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:evidence_ledger:held"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "13 Measured rows",
+      "what_it_is": "Measured evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:evidence_ledger:counts:Measured"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "24 Documented rows",
+      "what_it_is": "Documented evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:evidence_ledger:counts:Documented"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "1 Judged row",
+      "what_it_is": "Judged evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:evidence_ledger:counts:Judged"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "19 Gap rows",
+      "what_it_is": "Gap evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:evidence_ledger:counts:Gap"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "2.71",
+      "what_it_is": "C3 pillar mean",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C3:mean"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "7 of 8 rows",
+      "what_it_is": "C3 rated denominator",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "3 stale rows",
+      "what_it_is": "stale C3 evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C3:stale"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 3",
+   "request_sha256": "cafd5351869f594a63969c221751e63604bc898a3f152fab9f57b1183bf90132",
+   "response_sha256": "ba61db172cf8028a3b29c66cc56fa8c8667c82da37e7c8d11a6a2795c167851f",
+   "response": {
+    "prose": "The A1 pillar mean is 3.6. This gives the roadmap a credible infrastructure base from which to target farmer-facing services, but targeting should remain selective and tied to clear beneficiary definitions.\n\nThe roadmap proposes 2030 as the target year for the first scaled beneficiary programme. This date is a planning assumption for appraisal, not an assessment finding.\n\nIt also proposes 6 districts as an initial cohort so delivery can be tested before wider adoption. The cohort is illustrative and remains subject to government decision.",
+    "cites": {
+     "pillars": [
+      "A1"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "3.6",
+      "what_it_is": "A1 pillar mean",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:A1:mean"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "2030",
+      "what_it_is": "illustrative target year",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "6 districts",
+      "what_it_is": "illustrative first cohort",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "The A1 pillar mean is 3.6.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:A1:mean"
+      ]
+     },
+     {
+      "text": "This gives the roadmap a credible infrastructure base from which to target farmer-facing services, but targeting should remain selective and tied to clear beneficiary definitions.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:A1:mean"
+      ]
+     },
+     {
+      "text": "The roadmap proposes 2030 as the target year for the first scaled beneficiary programme.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "This date is a planning assumption for appraisal, not an assessment finding.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It also proposes 6 districts as an initial cohort so delivery can be tested before wider adoption.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The cohort is illustrative and remains subject to government decision.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 4",
+   "request_sha256": "abbfacc5b4c21a0793553e11bbdf32c608fafb5d78ae41fa03e3019e6dd5a38a",
+   "response_sha256": "87afe45aaf6268f0582496cdba8f11e97f3a577621839d7c0819339538cbce3b",
+   "response": {
+    "prose": "The C3 pillar has 7 of 8 rows rated. That evidence coverage is 87.5 percent, although currency and quality still need to be considered separately.\n\nThe investment programme should sequence enabling policy, shared services, and user-facing delivery so that dependencies are resolved before scale. Owners should be named for each workstream.\n\nThe roadmap proposes US$180 million as an illustrative programme envelope. It also proposes 3 workstreams. Both figures are planning assumptions for appraisal, not findings from the diagnostic.",
+    "cites": {
+     "pillars": [
+      "C3"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "7 of 8 rows",
+      "what_it_is": "C3 rated denominator",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "87.5 percent",
+      "what_it_is": "calculated C3 evidence coverage",
+      "basis": "calculation",
+      "operation": "percentage",
+      "source_refs": [
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ],
+      "inputs": [
+       "7 rows",
+       "8 rows"
+      ],
+      "rationale": "Seven rated rows divided by eight total rows equals 87.5 percent."
+     },
+     {
+      "value": "US$180 million",
+      "what_it_is": "illustrative programme envelope",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "3 workstreams",
+      "what_it_is": "illustrative programme structure",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "The C3 pillar has 7 of 8 rows rated.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ]
+     },
+     {
+      "text": "That evidence coverage is 87.5 percent, although currency and quality still need to be considered separately.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ]
+     },
+     {
+      "text": "The investment programme should sequence enabling policy, shared services, and user-facing delivery so that dependencies are resolved before scale.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "Owners should be named for each workstream.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The roadmap proposes US$180 million as an illustrative programme envelope.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It also proposes 3 workstreams.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "Both figures are planning assumptions for appraisal, not findings from the diagnostic.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 5",
+   "request_sha256": "7716a3245630bf2e543b172de8ae174b5554aef47592c7f9f85abf377f45f285",
+   "response_sha256": "a8a616cefcfea065785d4d656e2d4298d744ca37fa0ef71e8b40b5f0b853b0d0",
+   "response": {
+    "prose": "The financing plan should separate investment costs from recurrent operating costs and identify the instrument suited to each activity. No financing source should be treated as committed without appraisal.\n\nThe chapter proposes an illustrative envelope of US$120 million. It assumes 5 years for delivery. The amount and period are planning assumptions intended to support option analysis.\n\nIt assumes a 15 percent contingency while designs and procurement packages are refined. The final envelope remains subject to government approval and financing due diligence.",
+    "cites": {
+     "pillars": [],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "US$120 million",
+      "what_it_is": "illustrative financing envelope",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "5 years",
+      "what_it_is": "illustrative financing period",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "15 percent",
+      "what_it_is": "illustrative contingency",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "The financing plan should separate investment costs from recurrent operating costs and identify the instrument suited to each activity.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "No financing source should be treated as committed without appraisal.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The chapter proposes an illustrative envelope of US$120 million.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It assumes 5 years for delivery.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The amount and period are planning assumptions intended to support option analysis.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It assumes a 15 percent contingency while designs and procurement packages are refined.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The final envelope remains subject to government approval and financing due diligence.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 6",
+   "request_sha256": "76df02d321d3b2032f6861684fa0ab6b6db0de2714e945f22aa09241c276a197",
+   "response_sha256": "096da7a61b13a28025797ae2ec5e8a8c814ef264c365df04c179bfd3b3a82d0e",
+   "response": {
+    "prose": "The C3 pillar has 7 of 8 rows rated, giving the reform chapter a broad but not complete policy evidence base. Withheld or stale material should be verified before legal drafting relies on it.\n\nThe reform programme should distinguish rules that can be issued administratively from changes that require legislation. Consent, redress, and accountability should be explicit rather than implied.\n\nIt proposes 2029 as the enactment year. It assumes 2 consultation rounds. The date and consultation count are planning assumptions that remain subject to the legislative process.",
+    "cites": {
+     "pillars": [
+      "C3"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "7 of 8 rows",
+      "what_it_is": "C3 rated denominator",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "2029",
+      "what_it_is": "illustrative enactment year",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "2 consultation rounds",
+      "what_it_is": "illustrative consultation plan",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "The C3 pillar has 7 of 8 rows rated, giving the reform chapter a broad but not complete policy evidence base.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:C3:rated",
+       "pillar:C3:n"
+      ]
+     },
+     {
+      "text": "Withheld or stale material should be verified before legal drafting relies on it.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The reform programme should distinguish rules that can be issued administratively from changes that require legislation.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "Consent, redress, and accountability should be explicit rather than implied.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It proposes 2029 as the enactment year.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It assumes 2 consultation rounds.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The date and consultation count are planning assumptions that remain subject to the legislative process.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 7",
+   "request_sha256": "594f2419a87902f471089458b96af7d6b8eb81bdf16497fdc0e6afdf37c0f61a",
+   "response_sha256": "bef12d0ccd78a5f28e57d7141a9338205105a96e4d9ee1f3dedfd9597da26ded",
+   "response": {
+    "prose": "The C4 pillar mean is 2.33, indicating that delivery arrangements need deliberate institutional strengthening. The roadmap should assign a single accountable owner while keeping cross-government participation explicit.\n\nThe roadmap proposes 4 delivery units with distinct mandates. This structure is illustrative and should be tested against existing legal authority and staffing.\n\nIt assumes 12 months for the governance review cycle. The cycle is a planning assumption that can be revised after implementation experience.",
+    "cites": {
+     "pillars": [
+      "C4"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "2.33",
+      "what_it_is": "C4 pillar mean",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C4:mean"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "4 delivery units",
+      "what_it_is": "illustrative delivery structure",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "12 months",
+      "what_it_is": "illustrative governance review cycle",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "The C4 pillar mean is 2.33, indicating that delivery arrangements need deliberate institutional strengthening.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:C4:mean"
+      ]
+     },
+     {
+      "text": "The roadmap should assign a single accountable owner while keeping cross-government participation explicit.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The roadmap proposes 4 delivery units with distinct mandates.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "This structure is illustrative and should be tested against existing legal authority and staffing.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It assumes 12 months for the governance review cycle.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The cycle is a planning assumption that can be revised after implementation experience.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 8",
+   "request_sha256": "1e7f5c988ed64ad56a1c4f043981452d46d2f20ba0c9d4226e55a4618be3abf3",
+   "response_sha256": "884455c422d2054cc6fa513dc50c1e77b9a568b9738d2deae1e1b685ad6befc8",
+   "response": {
+    "prose": "A current climate-resilience programme carries US$250 million in financing. This is an existing programme fact in the reviewed country scan, not a proposed roadmap budget.\n\nClimate alignment should connect weather information, advisory delivery, and farm-level decisions rather than treating data infrastructure as an end in itself.\n\nThe roadmap proposes 8 pilots. It sets 2029 as the target year. The pilot count and date are explicit planning assumptions for appraisal and government decision.",
+    "cites": {
+     "pillars": [],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "US$250 million",
+      "what_it_is": "existing climate-resilience programme financing",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "scan:country_findings:3:number:0"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "8 pilots",
+      "what_it_is": "illustrative climate pilot cohort",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "2029",
+      "what_it_is": "illustrative climate pilot target year",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "A current climate-resilience programme carries US$250 million in financing.",
+      "basis": "evidence",
+      "source_refs": [
+       "scan:country_findings:3:number:0"
+      ]
+     },
+     {
+      "text": "This is an existing programme fact in the reviewed country scan, not a proposed roadmap budget.",
+      "basis": "evidence",
+      "source_refs": [
+       "scan:country_findings:3:number:0"
+      ]
+     },
+     {
+      "text": "Climate alignment should connect weather information, advisory delivery, and farm-level decisions rather than treating data infrastructure as an end in itself.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The roadmap proposes 8 pilots.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It sets 2029 as the target year.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The pilot count and date are explicit planning assumptions for appraisal and government decision.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 9",
+   "request_sha256": "48502d468d0e7c416ed6a49c365f5bf15480a4adf1f56fb17b4556b4532731d5",
+   "response_sha256": "f4344016094ef880554855efe3f01ae6c32f0fcc2118b9c9a763d1c48b09094c",
+   "response": {
+    "prose": "The O1 pillar mean is 2.5, so the results framework should not presume that outcome measurement is already mature. The monitoring design should preserve the distinction between readiness and realised outcomes.\n\nThe financial baseline is USD 8,942.42, while the productivity baseline is 7,402 kg/ha. These values come from the deterministic baseline register and should retain their source notes in implementation reporting.\n\nThe monitoring plan adopts 2029 as the target year for its first outcome review. That date is a planning assumption and does not change the recorded baselines.",
+    "cites": {
+     "pillars": [
+      "O1"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "2.5",
+      "what_it_is": "O1 pillar mean",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:O1:mean"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "USD 8,942.42",
+      "what_it_is": "financial KPI baseline",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:kpi_baseline:1.1:value"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "7,402 kg/ha",
+      "what_it_is": "productivity KPI baseline",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "derived:kpi_baseline:1.2:value"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "2029",
+      "what_it_is": "illustrative outcome review year",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "The O1 pillar mean is 2.5, so the results framework should not presume that outcome measurement is already mature.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:O1:mean"
+      ]
+     },
+     {
+      "text": "The monitoring design should preserve the distinction between readiness and realised outcomes.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The financial baseline is USD 8,942.42, while the productivity baseline is 7,402 kg/ha.",
+      "basis": "evidence",
+      "source_refs": [
+       "derived:kpi_baseline:1.1:value",
+       "derived:kpi_baseline:1.2:value"
+      ]
+     },
+     {
+      "text": "These values come from the deterministic baseline register and should retain their source notes in implementation reporting.",
+      "basis": "evidence",
+      "source_refs": [
+       "derived:kpi_baseline:1.1:value",
+       "derived:kpi_baseline:1.2:value"
+      ]
+     },
+     {
+      "text": "The monitoring plan adopts 2029 as the target year for its first outcome review.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "That date is a planning assumption and does not change the recorded baselines.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  },
+  {
+   "pass_name": "generation",
+   "detail": "chapter 10",
+   "request_sha256": "f6222bfa48f0f2b900f5f8ce2dd43a21ea7b9b6ffe8aac1a08de4d56b332ce69",
+   "response_sha256": "7adb2519a7acf00608bef25b1a53f6a154b9dc556dc5d529b311b5737f979f4b",
+   "response": {
+    "prose": "The C3 profile contains 3 stale rows. Evidence currency is therefore a live safeguard risk, not merely a documentation issue.\n\nThe risk register should cover data rights, consent, redress, delivery capacity, financing, and evidence quality, with named owners and escalation routes.\n\nThe roadmap proposes 6 risk categories. It assumes a 10 percent contingency for mitigation planning. Both values are illustrative planning assumptions and require approval during appraisal.",
+    "cites": {
+     "pillars": [
+      "C3"
+     ],
+     "indicators": [],
+     "use_cases": [],
+     "prerequisites": []
+    },
+    "figures": [
+     {
+      "value": "3 stale rows",
+      "what_it_is": "stale C3 evidence rows",
+      "basis": "evidence",
+      "operation": "none",
+      "source_refs": [
+       "pillar:C3:stale"
+      ],
+      "inputs": [],
+      "rationale": "Copied from the reviewed evidence pack."
+     },
+     {
+      "value": "6 risk categories",
+      "what_it_is": "illustrative risk register structure",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     },
+     {
+      "value": "10 percent",
+      "what_it_is": "illustrative mitigation contingency",
+      "basis": "planning_assumption",
+      "operation": "none",
+      "source_refs": [],
+      "inputs": [],
+      "rationale": "An explicit planning assumption for appraisal and decision, not a finding."
+     }
+    ],
+    "claims": [
+     {
+      "text": "The C3 profile contains 3 stale rows.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:C3:stale"
+      ]
+     },
+     {
+      "text": "Evidence currency is therefore a live safeguard risk, not merely a documentation issue.",
+      "basis": "evidence",
+      "source_refs": [
+       "pillar:C3:stale"
+      ]
+     },
+     {
+      "text": "The risk register should cover data rights, consent, redress, delivery capacity, financing, and evidence quality, with named owners and escalation routes.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "The roadmap proposes 6 risk categories.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "It assumes a 10 percent contingency for mitigation planning.",
+      "basis": "proposal",
+      "source_refs": []
+     },
+     {
+      "text": "Both values are illustrative planning assumptions and require approval during appraisal.",
+      "basis": "proposal",
+      "source_refs": []
+     }
+    ]
+   }
+  }
+ ]
+}

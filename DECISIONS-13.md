@@ -5,28 +5,85 @@ these are rulings to be taken jointly rather than requested. This file records e
 as it is settled: the question, the evidence, the options with their consequences, the
 ruling, and what changes in the model when the ruling lands.*
 
-*A ruling here is a data change. Every value the twelve decisions can move is data in
-`model/DAMM-v1.7-model.json`, so ratifying one edits the model and bumps `revision`.
-Nothing is rebuilt.*
+*A ratified ruling first changes canonical data in `model/DAMM-v1.7-model.json` and bumps
+`revision`. Generated projections, assessments, workbooks, application fixtures, and DARs
+are then rebuilt from that frozen source and their diffs reviewed; they are never edited
+as independent authorities.*
 
-**Order of work.** 13.11, 13.1, 13.6, 13.2, 13.12, 13.3, 13.4, 13.8, 13.7, 13.9, 13.10,
-13.5. Quick and structural first; 13.5 last, because it is 44 sub-items and every other
-ruling narrows it.
+**Ratification order.** The earlier quick-first triage sequence is superseded by the
+evidence dependencies found during Issue 2 work: freeze 13.5 definitions first; then
+ratify the dependent 13.3 mapping and ten-row 13.6 A1 calibration; complete the other 22
+threshold calibrations and attest the full 32-row catalog; confirm the remaining working
+directions; freeze the canonical revision; and only then regenerate and review downstream
+artifacts.
 
-| # | Title | Ruling | Status |
+| # | Title | Working direction or evidence | Status |
 |---|---|---|---|
-| 13.1 | Band edges | **Recut to midpoint boundaries** | Ruled — to apply |
-| 13.2 | A1 additions | **Retain A1 at ten indicators**; the two candidates stay carried and unscored | Ruled — to apply |
-| 13.3 | Per-use-case prerequisite mapping | **Not ratified.** Close through an edge-level mapping table | Open, work specified |
-| 13.4 | The three binding rules | Approved, with one change: **7.12 follows the use of personal or farm-level data**, not the AGI column alone | Ruled — to apply |
-| 13.5 | Indicator definitions | **Not ratified as a blanket set.** Close through a row-level definition dictionary | Open, work specified |
-| 13.6 | A1 thresholds | **Not ratified.** Close through a documented calibration basis | Open, work specified |
-| 13.7 | Sub-readings display | **Nest as unscored detail** | Ruled — to apply |
-| 13.8 | Source-tier lookup | Approved, subject to the qualifications | Ruled — to apply |
-| 13.9 | QC gate scope | Approved, subject to the qualifications | Ruled — to apply |
-| 13.10 | Practice Library schema | Approved, subject to the qualifications | Ruled — to apply |
-| 13.11 | Bhutan out of scope | **Confirmed** | Closed, no change |
-| 13.12 | Need, readiness and outcome roles | **Separate the three roles** | Ruled — to apply |
+| 13.1 | Band edges | **Recut to midpoint boundaries** | Working direction — joint confirmation pending |
+| 13.2 | A1 additions | **Retain A1 at ten indicators**; the two candidates stay carried and unscored | Working direction — joint confirmation pending |
+| 13.3 | Per-use-case prerequisite mapping | **Proposal complete; not ratified.** The 72-cell edge graph is ready for joint review | Proposal ready — decision pending |
+| 13.4 | The three binding rules | Working direction, with one change: **7.12 follows the use of personal or farm-level data**, not the AGI column alone | Joint confirmation pending |
+| 13.5 | Indicator definitions | **Research dictionary complete; not ratified.** Five bindings are mechanical; 39 require joint reviewer choices | Proposal ready — decisions pending |
+| 13.6 | A1 thresholds | **Calibration-lineage research complete; not ratified.** Neither inherited numeric set has a cut-level basis | Contract ready — numeric decisions pending |
+| 13.7 | Sub-readings display | **Nest as unscored detail** | Working direction — joint confirmation pending |
+| 13.8 | Source-tier lookup | Working direction, subject to the qualifications | Joint confirmation pending |
+| 13.9 | QC gate scope | Working direction, subject to the qualifications | Joint confirmation pending |
+| 13.10 | Practice Library schema | Working direction, subject to the qualifications | Joint confirmation pending |
+| 13.11 | Bhutan out of scope | **Keep Bhutan as a design source, not a target assessment** | Working confirmation — joint record pending |
+| 13.12 | Need, readiness and outcome roles | **Separate the three roles** | Working direction — joint confirmation pending |
+
+### Issue 2 review artifacts — 26 August 2026
+
+The three artifacts requested in the final-DAR review now exist:
+
+- `DECISION-13.3-PREREQUISITE-MAPPING-PROPOSAL.md` defines all 72
+  prerequisite–use-case cells and the Egypt/Nigeria sensitivity.
+- `DECISION-13.5-INDICATOR-DEFINITION-RESEARCH.md` defines all 44 scored open
+  rows, records 22 numbered source-register entries covering 39 first-party links and
+  documents, and separates five exact metadata bindings from 39 substantive reviewer
+  choices.
+- `DECISION-13.6-A1-CALIBRATION-RESEARCH.md` reconstructs all ten threshold
+  lineages, identifies four score changes caused by the undocumented recut, and defines
+  the calibration/provenance contract and release tests.
+
+The Final-publication gate now encodes the required order without pretending the work has
+happened: durable joint method-freeze evidence must precede replayed Egypt and Nigeria
+migrations, which must finish before the independently human-shadowed unseen-country run.
+Ratified observations are bound to exact definition and calibration metadata; migration,
+unseen-country, and six release-application outputs are recomputed from archived inputs;
+the migration baseline is replayed under an archived revision-2 model bound to its source
+tag and an authorized cryptographic signer; current migration and unseen source packets
+bind their captured bytes and complete scoring metadata; construct reviews bind the
+source, observation, and applicable human assessment row; and provenance-backed
+comparisons cannot carry unresolved automation rejection. The application cases compare
+the complete outputs of both scoring implementations. Release workbooks must match the
+exact 1,226-formula manifest spanning Config mappings, 57 scoring rows, dashboards,
+definitions, readiness logic, and live Visuals. Spreadsheet-engine recalculation is a
+separate, temp-only verifier: it recalculates an isolated copy with LibreOffice, compares
+the workbook's complete semantic projection with both scorers, and emits a
+content-addressed record that the release gate must bind to the exact workbook, model,
+observations, profiles, formula manifest, zero-mismatch result, and recalculator exit.
+These controls validate captured content and
+replay, not the truth of a human identity, actual external test execution, signing-key
+authority, or normative methodological choice.
+
+Completing the artifacts does **not** amount to ratification. The repository still has no
+record of the actual joint Katreyna + Randeep confirmation required below; the working
+rulings came from a simulated exchange. Decision 13.5 still contains 39 normative choices,
+and Decision 13.6 finds no current numeric array that can honestly be approved from the
+available evidence. Accordingly the canonical model remains `ratified: false`; its ten A1
+threshold flags remain false, its 22 other threshold rows lack affirmative flags, and no
+country score has been regenerated from these proposals.
+
+### Release-wide threshold calibration gate
+
+Decision 13.6 covers the ten A1 threshold rows, but the model contains **32** threshold
+rows in total. The other 22 require the same affirmative, method-owned calibration
+attestation before a Final DAR: seven are not definition-open, while 15 cannot be
+calibrated until their 13.5 construct, population, unit, or ladder boundary is frozen.
+Consequently every threshold row must carry `thresholds_ratified: true`, and the release
+record must identify one complete 32-row calibration catalog and its method owner. An A1
+approval alone cannot satisfy this gate.
 
 ### Standing conditions attached to the rulings
 

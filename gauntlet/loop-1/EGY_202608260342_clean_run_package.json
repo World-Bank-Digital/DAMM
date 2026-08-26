@@ -1,0 +1,22 @@
+{
+ "schema_version": "damm.dar-run-package/v1",
+ "country": "Egypt",
+ "iso3": "EGY",
+ "assessment_year": 2026,
+ "reviewed": true,
+ "files": {
+  "engine_input": {
+   "sha256": "ba2c5a6f5242ac151bea118da9181bf37d5562f5a436196facd5f9879be1a224"
+  },
+  "scans": {
+   "sha256": "23ae507fd8f7abce65ca4a0b0442d4e715d7bff6d7ee4318a7d61ca42d596530"
+  },
+  "foresight": {
+   "sha256": "18fd2cb5dc47297e4e4aad989a67fafbff4b83610d66c476ebfa204ed303e045"
+  },
+  "replay": {
+   "sha256": "87cdbbfaf952ee286a78d930c2adb8379cf7d3a506a432cc782531e8de55886a",
+   "fixture_id": "reviewed-egypt-final-dar-v2"
+  }
+ }
+}

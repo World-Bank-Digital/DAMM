@@ -4,6 +4,27 @@
 reasoning), then `gauntlet/loop-1/research_pipeline/README.md` (how the pipeline runs and
 what will bite you). `THREAD-3-HANDOFF.md` is the previous brief and is now history.*
 
+> **Update, 26 August 2026:** the three requested 13.3/13.5/13.6 artifacts are now
+> complete as proposals and linked from `DECISIONS-13.md`. They expose decisions rather
+> than silently closing them: 39 definition boundaries still need joint judgment, and no
+> A1 numeric threshold set has a documented calibration basis. Final publication now also
+> requires affirmative calibration of all 32 threshold rows, durable joint evidence,
+> a provenance-backed method freeze, replayed Egypt/Nigeria migration inputs and
+> mechanically derived diffs, and a later independently human-shadowed unseen country
+> whose 57-row source packet and automation output are replayed. The migration baseline
+> is bound to a cryptographically verified historical tag and replayed under the archived
+> revision-2 model; current source captures, construct reviews, and human comparison rows
+> are content-bound; the release workbook matches a 1,226-formula semantic manifest; and
+> six application scenarios compare the complete engine and independent-reference outputs
+> rather than relying on boolean attestations. Spreadsheet recalculation now has a
+> temp-only LibreOffice verifier whose archived record and exact inputs are mandatory
+> release evidence; it never writes the source workbook. The
+> canonical model remains unratified. Current dependency order is 13.5, then
+> 13.3/13.6, then completion and attestation of all 32 threshold calibrations, then freeze
+> and regenerate. `ISSUE-2-RATIFICATION-DISPOSITION.md` is the current operational handoff.
+> The remainder of this file is retained only as the 25 August historical state; its
+> “applied,” “approved,” quick-first, test-count, and “Your scope” language is not current.
+
 ---
 
 ## Status in one paragraph

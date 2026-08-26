@@ -22,12 +22,88 @@ Reasoning vendors (Anthropic, OpenAI, Gemini) are reached through one uniform
 rather than comparing each vendor's built-in search.
 """
 
-import json, os, re, threading, time, unicodedata
+import hashlib, json, math, os, re, tempfile, threading, time, unicodedata
 import urllib.parse, urllib.request, urllib.error
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 PRICES = json.load(open(os.path.join(HERE, "prices.json")))
+
+
+def atomic_write_bytes(path, content):
+    """Replace one file only after its complete content is durable."""
+    path = os.path.abspath(path)
+    directory = os.path.dirname(path)
+    fd, temporary = tempfile.mkstemp(
+        prefix=f".{os.path.basename(path)}.", suffix=".tmp", dir=directory)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        try:
+            directory_fd = os.open(directory, getattr(os, "O_DIRECTORY", 0))
+            try:
+                os.fsync(directory_fd)
+            finally:
+                os.close(directory_fd)
+        except OSError:
+            pass
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def atomic_write_text(path, content):
+    atomic_write_bytes(path, content.encode("utf-8"))
+
+
+def atomic_write_json(path, value):
+    # Python otherwise emits NaN and Infinity, although neither is valid JSON.
+    atomic_write_text(
+        path, json.dumps(value, indent=1, default=str, allow_nan=False) + "\n")
+
+
+def _invalid_json_constant(token):
+    raise ValueError(f"non-finite JSON number {token!r} is not allowed")
+
+
+def _nonfinite_paths(value, path="$"):
+    if isinstance(value, float) and not math.isfinite(value):
+        return [path]
+    if isinstance(value, dict):
+        paths = []
+        for key, item in value.items():
+            paths.extend(_nonfinite_paths(item, f"{path}.{key}"))
+        return paths
+    if isinstance(value, (list, tuple)):
+        paths = []
+        for index, item in enumerate(value):
+            paths.extend(_nonfinite_paths(item, f"{path}[{index}]"))
+        return paths
+    return []
+
+
+def require_finite_json(value):
+    """Reject non-finite floats, including finite-looking literals that overflowed."""
+    paths = _nonfinite_paths(value)
+    if paths:
+        raise ValueError("non-finite JSON number at " + ", ".join(paths[:8]))
+    return value
+
+
+def strict_json_load(path):
+    """Load standards-compliant JSON, rejecting Python's NaN/Infinity extension."""
+    with open(path, encoding="utf-8") as stream:
+        return require_finite_json(
+            json.load(stream, parse_constant=_invalid_json_constant))
+
+
+def strict_json_loads(value):
+    """Parse standards-compliant JSON, rejecting Python's NaN/Infinity extension."""
+    return require_finite_json(
+        json.loads(value, parse_constant=_invalid_json_constant))
 
 
 # ---------------------------------------------------------------- keys
@@ -146,10 +222,20 @@ class Ledger:
                     calls=len(self.calls), elapsed_s=self.elapsed(),
                     by_pass=by_pass, by_vendor=by_vendor)
 
-    def save(self, path):
+    def snapshot(self):
         with self._lock:
-            json.dump(dict(summary=self.summary(), calls=list(self.calls)),
-                      open(path, "w"), indent=1)
+            return dict(summary=self.summary(), calls=list(self.calls))
+
+    def save(self, path):
+        atomic_write_json(path, self.snapshot())
+
+    def restore(self, saved):
+        """Restore one prior snapshot into a fresh ledger and return its call count."""
+        prior = list((saved or {}).get("calls") or [])
+        with self._lock:
+            self.calls = prior + self.calls
+        self._carried_s = ((saved or {}).get("summary") or {}).get("elapsed_s", 0) or 0
+        return len(prior)
 
     def load(self, path):
         """Carry a previous ledger forward, for a resumed run.
@@ -163,14 +249,7 @@ class Ledger:
         """
         if not os.path.exists(path):
             return 0
-        saved = json.load(open(path))
-        prior = saved.get("calls", [])
-        with self._lock:
-            self.calls = prior + self.calls
-        # Elapsed is wall-clock for this sitting, so the earlier sitting's seconds are
-        # carried separately and added back by `elapsed`.
-        self._carried_s = saved.get("summary", {}).get("elapsed_s", 0) or 0
-        return len(prior)
+        return self.restore(strict_json_load(path))
 
 
 # ---------------------------------------------------------------- http
@@ -179,8 +258,26 @@ class VendorError(Exception):
     pass
 
 
+class ReplayExhausted(VendorError):
+    """The offline replay has no recorded response for a requested vendor call."""
+
+
+def stable_json_sha256(value):
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":"),
+                         ensure_ascii=False, allow_nan=False).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def json_call_request_sha256(system, user, schema, pass_name, max_tokens, detail):
+    """Identity of the exact JSON-model request an offline response answers."""
+    return stable_json_sha256({
+        "system": system, "user": user, "schema": schema,
+        "pass_name": pass_name, "max_tokens": max_tokens, "detail": detail,
+    })
+
+
 def _http(url, data=None, headers=None, method=None, timeout=90, retries=3):
-    body = json.dumps(data).encode() if data is not None else None
+    body = json.dumps(data, allow_nan=False).encode() if data is not None else None
     h = {"Content-Type": "application/json", "Accept": "application/json"}
     h.update(headers or {})
     last = None
@@ -190,7 +287,7 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=3):
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 raw = r.read().decode("utf-8", "replace")
             try:
-                return json.loads(raw)
+                return strict_json_loads(raw)
             except json.JSONDecodeError:
                 return raw
         except urllib.error.HTTPError as e:
@@ -494,6 +591,82 @@ _NOT_TEXT = ("image", "vision", "tts", "audio", "speech", "embed", "moderation",
              "customtools", "translate", "omni")
 
 
+class ReplayLLM:
+    """Offline adapter for a versioned recording of `LLM.json_call` responses."""
+
+    FORMAT = "damm.llm-replay/v2"
+
+    def __init__(self, path, ledger):
+        tape = strict_json_load(path)
+        self.format = tape.get("format")
+        if self.format != self.FORMAT:
+            raise VendorError(f"unsupported replay format: {tape.get('format')!r}")
+        self.vendor = "replay"
+        self.ledger = ledger
+        self.model = tape.get("fixture_id") or "offline-replay"
+        self._responses = {}
+        self.consumed = []
+        for item in tape.get("responses") or []:
+            key_ = (item.get("pass_name"), item.get("detail"))
+            if not all(key_) or key_ in self._responses:
+                raise VendorError(f"invalid or duplicate replay response: {key_!r}")
+            if self.format == self.FORMAT and not item.get("request_sha256"):
+                raise VendorError(f"replay response lacks request hash: {key_!r}")
+            if self.format == self.FORMAT and not item.get("response_sha256"):
+                raise VendorError(f"replay response lacks response hash: {key_!r}")
+            response = item.get("response")
+            if (not isinstance(response, dict)
+                    or stable_json_sha256(response) != item.get("response_sha256")):
+                raise VendorError(f"replay response hash mismatch: {key_!r}")
+            self._responses[key_] = dict(
+                response=response,
+                request_sha256=item.get("request_sha256"),
+                response_sha256=item.get("response_sha256"),
+            )
+
+    def cache_identity(self, pass_name, detail, request_sha256=None):
+        """Per-entry identity, so adding other tape entries does not bust this cache."""
+        entry = self._responses.get((pass_name, detail))
+        if not entry:
+            return None
+        if request_sha256 and request_sha256 != entry["request_sha256"]:
+            raise VendorError(
+                f"offline replay request hash mismatch for {(pass_name, detail)!r}: "
+                f"expected {entry['request_sha256']}, got {request_sha256}")
+        return {
+            "request_sha256": entry["request_sha256"],
+            "response_sha256": entry["response_sha256"],
+        }
+
+    def json_call(self, system, user, schema, pass_name, max_tokens=8000, detail=""):
+        key_ = (pass_name, detail)
+        if key_ not in self._responses:
+            raise ReplayExhausted(
+                f"offline replay has no response for {pass_name!r} / {detail!r}")
+        entry = self._responses[key_]
+        response = entry["response"]
+        if not isinstance(response, dict):
+            raise VendorError(f"offline replay response is not an object: {key_!r}")
+        actual_request_sha = json_call_request_sha256(
+            system, user, schema, pass_name, max_tokens, detail)
+        if (entry["request_sha256"]
+                and entry["request_sha256"] != actual_request_sha):
+            raise VendorError(
+                f"offline replay request hash mismatch for {key_!r}: "
+                f"expected {entry['request_sha256']}, got {actual_request_sha}")
+        actual_response_sha = stable_json_sha256(response)
+        if (entry["response_sha256"]
+                and entry["response_sha256"] != actual_response_sha):
+            raise VendorError(
+                f"offline replay response hash mismatch for {key_!r}: "
+                f"expected {entry['response_sha256']}, got {actual_response_sha}")
+        missing = [name for name in schema.get("required", []) if name not in response]
+        if missing:
+            raise VendorError(f"offline replay response {key_!r} misses {missing}")
+        self.consumed.append(key_)
+        return strict_json_loads(json.dumps(response, allow_nan=False))
+
+
 class LLM:
     """One JSON-in / JSON-out interface over three reasoning vendors.
 
@@ -580,7 +753,7 @@ class LLM:
             output_config={"format": {"type": "json_schema", "schema": schema}},
         )
         text = next((b.text for b in r.content if b.type == "text"), "{}")
-        return json.loads(text), r.usage.input_tokens, r.usage.output_tokens
+        return strict_json_loads(text), r.usage.input_tokens, r.usage.output_tokens
 
     def _call_openai(self, system, user, schema, max_tokens):
         import openai
@@ -594,7 +767,7 @@ class LLM:
                              "schema": schema, "strict": True}},
         )
         u = r.usage
-        return (json.loads(r.output_text),
+        return (strict_json_loads(r.output_text),
                 getattr(u, "input_tokens", 0), getattr(u, "output_tokens", 0))
 
     def _call_gemini(self, system, user, schema, max_tokens):
@@ -615,7 +788,7 @@ class LLM:
             ),
         )
         u = r.usage_metadata
-        return (json.loads(r.text or ""),
+        return (strict_json_loads(r.text or ""),
                 getattr(u, "prompt_token_count", 0) or 0,
                 (getattr(u, "candidates_token_count", 0) or 0)
                 + (getattr(u, "thoughts_token_count", 0) or 0))

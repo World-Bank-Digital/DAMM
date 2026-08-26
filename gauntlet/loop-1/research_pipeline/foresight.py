@@ -394,7 +394,9 @@ def main():
     out_path = os.path.join(LOOP1, f"{a.out}_foresight.json")
 
     rows = json.load(open(inp))
-    assessment = engine_run(a.country, rows, refyear=ASSESSMENT_YEAR)
+    assessment = engine_run(
+        a.country, rows, refyear=ASSESSMENT_YEAR, model_spec=SPEC,
+        intervention_profiles={})
     levels = {i: r.get("level") for i, r in rows.items() if i in MODEL}
     standing = standing_text(assessment, levels) + scans_text(a.out)
 
