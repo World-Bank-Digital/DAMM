@@ -22,6 +22,8 @@ silently between two runs of the same country would be worse than a tier that is
 """
 import json, os, re, sys, urllib.parse, urllib.request
 
+import country_names
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "nso_registry.json")
 SOURCE = "https://unstats.un.org/home/nso_sites/"
@@ -72,46 +74,10 @@ def load():
 
 _OFFICES = load()
 
-# Country names the model uses that the UNSD list words differently.
-ALIASES = {
-    "Egypt, Arab Rep.": "Egypt",
-    "Egypt Arab Rep": "Egypt",
-    "Vietnam": "Viet Nam",
-    "Iran, Islamic Rep.": "Iran (Islamic Republic of)",
-    "Korea, Rep.": "Republic of Korea",
-    "Tanzania": "United Republic of Tanzania",
-    "Bolivia": "Bolivia (Plurinational State of)",
-    "Venezuela, RB": "Venezuela (Bolivarian Republic of)",
-    "Lao PDR": "Lao People's Democratic Republic",
-    "Syrian Arab Republic": "Syrian Arab Republic",
-    "Turkiye": "Türkiye",
-    "Turkey": "Türkiye",
-    "Cote d'Ivoire": "Côte d'Ivoire",
-    "Congo, Dem. Rep.": "Democratic Republic of the Congo",
-    "Kyrgyz Republic": "Kyrgyzstan",
-    "Slovak Republic": "Slovakia",
-    "Moldova": "Republic of Moldova",
-}
-
-
 def domains_for(country):
     """The statistical office host(s) for one country. Empty when it is not listed."""
-    if not country:
-        return []
-    name = ALIASES.get(country.strip(), country.strip())
-    if name in _OFFICES:
-        return list(_OFFICES[name])
-    low = name.lower()
-    for k, v in _OFFICES.items():
-        if k.lower() == low:
-            return list(v)
-    # A trailing qualifier the model carries and the UNSD list does not, such as
-    # "Egypt, Arab Rep." reaching here without an alias.
-    head = re.split(r"[,(]", name)[0].strip().lower()
-    for k, v in _OFFICES.items():
-        if k.lower() == head:
-            return list(v)
-    return []
+    match = country_names.resolve(country, _OFFICES) if country else None
+    return list(_OFFICES[match]) if match else []
 
 
 def all_domains():

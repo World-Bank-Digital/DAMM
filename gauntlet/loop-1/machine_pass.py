@@ -20,6 +20,9 @@ is right about the wrong thing is worse than a gap, because a gap is visibly a g
 """
 import csv, io, json, os, urllib.request, time, sys, datetime, zipfile
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "research_pipeline"))
+import country_names
+
 # indicator id -> (WDI code, note) or (WDI code, note, database source id).
 # Most series live in the default database; a few, such as ID4D, are published in a
 # separate one and need its source id passed or the query returns nothing.
@@ -133,18 +136,31 @@ def _fao_sdg_rows():
     return _FAO_CACHE["rows"]
 
 
-# FAOSTAT keys by country name, not ISO3.
-FAO_AREA = {"EGY": "Egypt", "NGA": "Nigeria"}
+def _fao_areas():
+    """Every area FAOSTAT publishes, from the archive's own list.
+
+    Read from the same download as the data, so the two can never drift, and so a
+    country's area name is never a thing somebody has to remember to add. This began as
+    a two-entry map of the countries that had been assessed, which meant a third country
+    resolved to nothing and the lane produced no row without saying why.
+    """
+    if "areas" in _FAO_CACHE:
+        return _FAO_CACHE["areas"]
+    rows = _fao_sdg_rows()
+    _FAO_CACHE["areas"] = sorted({r.get("Area") for r in rows if r.get("Area")})
+    return _FAO_CACHE["areas"]
 
 
-def fetch_fao_sdg(iso3, item, area_name=None):
+def fetch_fao_sdg(iso3, item, country=None):
     rows = _fao_sdg_rows()
     if not rows:
         return dict(error=_FAO_CACHE.get("error", "the SDG archive could not be read"),
                     code=item, url=FAO_SDG_URL)
-    area = area_name or FAO_AREA.get(iso3)
+    area = country_names.resolve(country, _fao_areas()) if country else None
     if not area:
-        return None
+        return dict(error=(f"{country!r} does not resolve to an area FAOSTAT publishes"
+                           if country else "no country name was supplied"),
+                    code=item, url=FAO_SDG_URL)
     got = [r for r in rows
            if r.get("Area") == area and r.get("Item Code") == item
            and str(r.get("Value", "")).strip()]
@@ -158,7 +174,7 @@ def fetch_fao_sdg(iso3, item, area_name=None):
 # indicators have a machine-fetchable T1 series, without refetching both countries as
 # a side effect of the import. The automated pipeline reuses this map to corroborate
 # its own research on those rows.
-def fetch_country(iso3, area_name=None):
+def fetch_country(iso3, country=None):
     rows = {}
 
     # --- UNESCO UIS
@@ -177,7 +193,7 @@ def fetch_country(iso3, area_name=None):
 
     # --- FAOSTAT SDG
     for ind, spec in FAO_SDG_SERIES.items():
-        r = fetch_fao_sdg(iso3, spec["item"], area_name)
+        r = fetch_fao_sdg(iso3, spec["item"], country)
         base = dict(note=spec.get("note", ""), access=ACCESS,
                     corroborate_only=spec.get("corroborate_only", False))
         if r is None:
@@ -215,7 +231,7 @@ def fetch_country(iso3, area_name=None):
 if __name__ == "__main__":
     out = {}
     for iso3, cname in [("EGY", "Egypt"), ("NGA", "Nigeria")]:
-        rows = fetch_country(iso3)
+        rows = fetch_country(iso3, cname)
         for ind in rows:
             print(f"{cname} {ind}: {rows[ind].get('value','—')} ({rows[ind].get('year','—')})")
         out[cname] = rows

@@ -530,7 +530,7 @@ def main():
 
     print("fetching the machine-readable T1 lane for independent corroboration...")
     try:
-        wdi = machine_pass.fetch_country(args.iso)
+        wdi = machine_pass.fetch_country(args.iso, args.country)
         print(f"  {sum(1 for r in wdi.values() if r.get('status') == 'ok')} of "
               f"{len(wdi)} series returned")
     except Exception as e:
