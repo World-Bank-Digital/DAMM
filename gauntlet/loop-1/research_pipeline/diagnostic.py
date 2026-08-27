@@ -36,15 +36,19 @@ SPEC = json.load(open(MODEL_FILE))
 ASSESSMENT_YEAR = SPEC["config"]["assessment_year"]
 
 
-def gates_text(basename, reviewed):
-    """What the report says about its own gates. Stated from what actually ran."""
+def review_status(automated_challenge_complete):
+    """Keep machine QC separate from the three post-completion human gates."""
     return {
-        "G1": ("machine derivation, executed by the research pass with every level "
-               "derived from a recorded value and its own argument"),
-        "G2": ("automated independent peer review of every gap, hold and prerequisite row"
-               if reviewed else
-               "NOT RUN for this pass — no independent second review has been applied"),
-        "G3": "pending",
+        "automated_challenge": (
+            "complete — machine QC only; does not satisfy G1 or G2"
+            if automated_challenge_complete
+            else "not complete — machine QC only; does not satisfy G1 or G2"
+        ),
+        "human_gates": {
+            "G1": "pending — named human assessor review required",
+            "G2": "pending — independent human review required after G1",
+            "G3": "pending — named and dated TTL/country-owner sign-off required",
+        },
     }
 
 
@@ -68,9 +72,9 @@ def main():
               f"$  0.00 {int(time.time() - t0):3d}s")
         sys.stdout.flush()
 
-    # A second review, where it has run, supersedes the first pass. Preferring it is the
-    # whole point of having run it.
-    inp, reviewed = V.engine_input_for(LOOP1, a.out)
+    # A completed automated challenge supersedes the first machine pass for scoring.
+    # This technical selection does not satisfy any post-completion human gate.
+    inp, challenged = V.engine_input_for(LOOP1, a.out)
     src = os.path.basename(inp)
     if not os.path.exists(inp):
         print(f"!! no engine input at {src}")
@@ -116,6 +120,7 @@ def main():
     t0 = time.time()
     key = a.out.lower()
     out_html = os.path.join(LOOP1, f"{a.out}_diagnostic.html")
+    status = review_status(challenged)
     json.dump({
         "country": a.country,
         "period": str(ASSESSMENT_YEAR),
@@ -124,7 +129,8 @@ def main():
         "register_path": register_path,
         # Keeps this run's report off any hand-built one for the same country.
         "out_path": out_html,
-        "gates": gates_text(a.out, reviewed),
+        "gates": status["human_gates"],
+        "automated_challenge": status["automated_challenge"],
     }, open(os.path.join(LOOP1, f"config_{key}.json"), "w"), indent=1)
 
     proc = subprocess.run([sys.executable, "render_v17.py", a.out],
@@ -157,7 +163,7 @@ def main():
     print()
     print(f"wrote {os.path.basename(out_html)} — {d['rated']} rated rows, "
           f"{d['counts']['Gap']} gaps, {d['held']} levels withheld"
-          + ("" if reviewed else ", second review NOT applied"))
+          + ("" if challenged else ", automated challenge NOT applied"))
     print("spend $0.00 of $0 allocated — this pass makes no vendor call")
     return 0
 

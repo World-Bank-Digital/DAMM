@@ -372,7 +372,7 @@ class WorkflowCoordinatorTest(unittest.TestCase):
             "damm_diagnostic": (
                 round(
                     V.Ledger.ALLOCATION["research"]
-                    + V.Ledger.ALLOCATION["g2"],
+                    + V.Ledger.ALLOCATION["automated_challenge"],
                     6,
                 )
             ),
@@ -415,6 +415,14 @@ class WorkflowCoordinatorTest(unittest.TestCase):
         self.assertEqual(
             defaults["international_lessons"].spend_path.name,
             "EGY_test_international_lessons_spend.json",
+        )
+        self.assertEqual(
+            defaults["damm_diagnostic"].artifacts["engine_input"].name,
+            "EGY_test_automated_challenge_input.json",
+        )
+        self.assertEqual(
+            defaults["damm_diagnostic"].artifacts["automated_challenge"].name,
+            "EGY_test_automated_challenge_findings.json",
         )
         self.assertTrue(all(
             spec.checkpoint_namespace == "EGY_test"

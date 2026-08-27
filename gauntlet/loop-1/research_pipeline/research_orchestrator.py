@@ -14,14 +14,14 @@ The design decisions this file implements, and where to find them:
   C4  prerequisites need T1-T3 quote-verified evidence                 -> `gates.py`
   C6  Perplexity discovers; its citations are re-fetched and verified  -> `retrieve`
   C7  one country per task, no shared leads, bleed rejected            -> `gates.py`
-  G2  a live spend counter and visible exhaustion                      -> `vendors.Ledger`
-  G3  fixed per-pass allocation, generation reserved                   -> `vendors.Ledger`
+  B1  a live spend counter and visible exhaustion                      -> `vendors.Ledger`
+  B2  fixed per-pass allocation, generation reserved                   -> `vendors.Ledger`
 
-Two things it deliberately does NOT do. It does not run Gate 2 — the automated
-refutation pass is Thread 3, and its absence is why this pass will hold more rows than
-the hand-run assessments did. And it does not consult the verified Egypt or Nigeria
-assessments for anything: those are the test oracle, and a pipeline that reads its own
-answer key measures nothing.
+Two things it deliberately does NOT do. It does not run the automated challenge — that
+is a separate Stage 1 machine pass, and its absence is why this first pass will hold more
+rows than the hand-run assessments did. And it does not consult the verified Egypt or
+Nigeria assessments for anything: those are the test oracle, and a pipeline that reads
+its own answer key measures nothing.
 
 Usage:
     python3 research_orchestrator.py --country Egypt --iso EGY --out EGY_shadow \\
@@ -143,10 +143,10 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
     Queries are generated per row from that row's own construct — there is no shared
     lead list anywhere in this function, which is what closes defect #11.
 
-    `pass_name` decides which budget allocation the searching bills against. Gate 2 does
-    its own retrieval through this same function, and billing that to the research pass
-    would let one pass spend another's share — which is exactly what decision G3's fixed
-    allocation exists to prevent.
+    `pass_name` decides which budget allocation the searching bills against. The
+    automated challenge does its own retrieval through this same function, and billing
+    that to the research pass would let one pass spend another's share — exactly what
+    the fixed allocation exists to prevent.
     """
     construct = construct_for(spec, country)
     try:

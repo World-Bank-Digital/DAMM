@@ -21,6 +21,16 @@ d   = json.load(open(DATA))
 reg = json.load(open(REG))
 esc = lambda s: html.escape(str(s), quote=True)
 
+
+# Legacy configs contain only unverified free text. It cannot establish a named,
+# authenticated post-completion approval, even when it says "executed". The renderer
+# therefore fails closed until a future structured approval record can be validated.
+HUMAN_GATES = {
+    "G1": "pending — named human assessor review required",
+    "G2": "pending — independent human review required after G1",
+    "G3": "pending — named and dated TTL/country-owner sign-off required",
+}
+
 # The report is a standalone document: no process history, no internal cross-references.
 # Agent-authored text (register entries, notes) is sanitized before it reaches the page.
 _CLEAN = [
@@ -1071,7 +1081,7 @@ html_out = f"""<meta charset="utf-8">
 <li>Prerequisites bind on presence only; a failed prerequisite blocks its use-case column, not a global stage.</li>
 <li>Source tiers (T1–T5) are reported, never weighted. Researched narrative cites scored rows; <b>no narrative claim sets a level.</b></li>
 </ol>
-<p class="qcline"><b>Automated quality control:</b> {len(QC)}/{len(QC)} renderer checks passed (consistency, provenance, reconciliation and presentation \u2014 a failed check blocks the render). <b>Human gates:</b> G1, assessor confirmation of every machine-filled row \u2014 {CFG["gates"]["G1"]}; G2, independent peer review of all prerequisite and judged rows \u2014 {CFG["gates"]["G2"]}; G3, task team leader sign-off against the four prohibitions \u2014 {CFG["gates"]["G3"]}.</p>\n<p class="prohib">Prohibitions: no cross-country ranking · no band as a project development objective (PDO), disbursement-linked indicator (DLI), or disbursement condition · no automatic financing decisions ·
+<p class="qcline"><b>Automated quality control:</b> {len(QC)}/{len(QC)} renderer checks passed (consistency, provenance, reconciliation and presentation \u2014 a failed check blocks the render). <b>Stage 1 automated challenge:</b> {CFG.get("automated_challenge") or "not recorded \u2014 machine QC only; does not satisfy G1 or G2"}. <b>Human gates:</b> G1, assessor confirmation of every machine-filled row \u2014 {HUMAN_GATES["G1"]}; G2, independent peer review of all prerequisite and Judged rows plus a 15% sample of the remainder \u2014 {HUMAN_GATES["G2"]}; G3, task team leader/country-owner sign-off against all seven QC affirmations \u2014 {HUMAN_GATES["G3"]}.</p>\n<p class="prohib">Prohibitions: no cross-country ranking · no band as a project development objective (PDO), disbursement-linked indicator (DLI), or disbursement condition · no automatic financing decisions ·
 no public claim before human review. Rendered by the DAMM v1.7 engine and report pipeline from the scored indicator set and the initiative register for {CFG["country"]}; the same pipeline renders any country&#8217;s assessment. Source tiers are assigned by the DAMM Source-Tier Protocol lookup.</p>
 {GLOSS.replace("{CFG.get('gloss_extra','')}", CFG.get('gloss_extra',''))}
 </div>

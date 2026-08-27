@@ -137,18 +137,20 @@ def main():
 
     # The reasoning vendors, and which one each pass uses when none is named.
     #
-    # gate2.py's contract is that the reviewer comes from a DIFFERENT vendor than the
-    # primary: the audition showed a vendor's siblings sharing blind spots, so a model
-    # reviewing its own pass upholds it. Nothing in the pipeline enforces that, because
-    # the two defaults happened to differ. Now that the app chooses the vendor it has to
-    # enforce it, and to do that it needs the defaults — read from the scripts rather
-    # than restated, so a change there cannot leave the app checking the wrong pair.
+    # automated_challenge.py's contract is that the challenger comes from a DIFFERENT
+    # vendor than the primary: the audition showed a vendor's siblings sharing blind
+    # spots, so a model challenging its own pass upholds it. Nothing in the pipeline
+    # enforces that, because the two defaults happened to differ. Now that the app chooses
+    # the vendor it has to enforce it, and to do that it needs the defaults — read from
+    # the scripts rather than restated, so a change there cannot leave the app checking
+    # the wrong pair.
     # A pass is runnable when a script implements it. Every protected allocation must map
     # to its real implementation; in particular, the country and international scan lanes
     # are distinct budget principals even though they share scan_stage.py. Otherwise the
     # app could display the fixed stage shares while launching an aggregate `scans` pass
     # that is allowed to consume both.
-    PASS_SCRIPTS = {"research": "research_orchestrator.py", "g2": "gate2.py",
+    PASS_SCRIPTS = {"research": "research_orchestrator.py",
+                    "automated_challenge": "automated_challenge.py",
                     "country_research": "scan_stage.py",
                     "international_lessons": "scan_stage.py",
                     "ai": "ai_assessment.py",
@@ -179,7 +181,8 @@ def main():
 
     vendors_out = {
         "_source": "vendors._MODEL_PREFS and the --vendor defaults in "
-                   "research_orchestrator.py / gate2.py — exported, never restated. "
+                   "research_orchestrator.py / automated_challenge.py — exported, "
+                   "never restated. "
                    "Regenerate with model/export_app_fixtures.py after changing either.",
         "families": V._MODEL_PREFS,
         "runnable_passes": sorted(PASS_SCRIPTS),

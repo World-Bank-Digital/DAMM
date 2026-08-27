@@ -7,7 +7,7 @@ One place where every outside call is made, metered and priced, so that:
   * every call is recorded with its exact usage counts before dollars are derived,
     so a wrong price is a one-line correction rather than a re-run (`prices.json`);
   * the spend counter is live and the budget ceiling is enforced *before* a call is
-    made, not discovered afterwards (decisions G2/G3) — and exhaustion raises a
+    made, not discovered afterwards (budget-control decisions) — and exhaustion raises a
     named exception, because a budget-induced gap that looks like a real one is how
     Nigeria's 21 phantom gaps happened.
 
@@ -30,26 +30,62 @@ REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 PRICES = json.load(open(os.path.join(HERE, "prices.json")))
 
 
-def atomic_write_bytes(path, content):
-    """Replace one file only after its complete content is durable."""
+def _durable_temporary(path, content, suffix):
+    """Write and fsync bytes beside their destination, returning the temporary path."""
     path = os.path.abspath(path)
     directory = os.path.dirname(path)
     fd, temporary = tempfile.mkstemp(
-        prefix=f".{os.path.basename(path)}.", suffix=".tmp", dir=directory)
+        prefix=f".{os.path.basename(path)}.", suffix=suffix, dir=directory
+    )
     try:
         with os.fdopen(fd, "wb") as stream:
             stream.write(content)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+    except Exception:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+        raise
+    return path, directory, temporary
+
+
+def _fsync_directory(directory):
+    try:
+        directory_fd = os.open(directory, getattr(os, "O_DIRECTORY", 0))
         try:
-            directory_fd = os.open(directory, getattr(os, "O_DIRECTORY", 0))
-            try:
-                os.fsync(directory_fd)
-            finally:
-                os.close(directory_fd)
-        except OSError:
-            pass
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except OSError:
+        pass
+
+
+def atomic_write_bytes(path, content):
+    """Replace one file only after its complete content is durable."""
+    path, directory, temporary = _durable_temporary(path, content, ".tmp")
+    try:
+        os.replace(temporary, path)
+        _fsync_directory(directory)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def publish_bytes_once(path, content, label="file"):
+    """Atomically create immutable bytes, accepting only an identical existing file."""
+    path, directory, temporary = _durable_temporary(path, content, ".publish")
+    try:
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            if os.path.islink(path) or not os.path.isfile(path):
+                raise ValueError(f"existing {label} is not a regular file")
+            with open(path, "rb") as existing:
+                if existing.read() != content:
+                    raise ValueError(f"refusing to replace divergent existing {label}")
+            return False
+        _fsync_directory(directory)
+        return True
     finally:
         if os.path.exists(temporary):
             os.unlink(temporary)
@@ -106,6 +142,41 @@ def strict_json_loads(value):
         json.loads(value, parse_constant=_invalid_json_constant))
 
 
+def compatible_alias_presence(canonical_path, legacy_path, label):
+    """Return which alias files exist, rejecting divergent duplicate identities."""
+    canonical_present = regular_file_presence(canonical_path, f"{label} alias")
+    legacy_present = regular_file_presence(legacy_path, f"{label} alias")
+    if canonical_present and legacy_present:
+        with open(canonical_path, "rb") as canonical_handle:
+            canonical_bytes = canonical_handle.read()
+        with open(legacy_path, "rb") as legacy_handle:
+            legacy_bytes = legacy_handle.read()
+        if canonical_bytes != legacy_bytes:
+            raise ValueError(f"conflicting canonical and legacy {label}")
+    return canonical_present, legacy_present
+
+
+def regular_file_presence(path, label):
+    """Return file presence while rejecting symlinks and non-regular aliases."""
+    if not os.path.lexists(path):
+        return False
+    if os.path.islink(path) or not os.path.isfile(path):
+        raise ValueError(f"{label} is not a regular file: {path}")
+    return True
+
+
+def load_compatible_json_alias(canonical_path, legacy_path, label):
+    """Load the canonical JSON alias, or an unambiguous historical fallback."""
+    canonical_present, legacy_present = compatible_alias_presence(
+        canonical_path, legacy_path, label
+    )
+    if canonical_present:
+        return strict_json_load(canonical_path)
+    if legacy_present:
+        return strict_json_load(legacy_path)
+    return None
+
+
 # ---------------------------------------------------------------- keys
 
 def load_env(path=None):
@@ -139,7 +210,7 @@ class BudgetExhausted(Exception):
 
 
 class Ledger:
-    """Live spend counter with a fixed per-pass allocation (decision G3).
+    """Live spend counter with a fixed per-pass allocation.
 
     Generation is reserved by allocating it up front: a pathological research pass
     can exhaust its own share and stop, but it cannot consume the document budget
@@ -153,7 +224,7 @@ class Ledger:
     # Every pass is named here, including the one that costs nothing: a pass missing from
     # the allocation has no share rather than a zero share, and the difference shows up as
     # a surface that cannot say what a pass is allowed to spend.
-    ALLOCATION = {"research": 0.35, "g2": 0.10,
+    ALLOCATION = {"research": 0.35, "automated_challenge": 0.10,
                   "country_research": 0.075,
                   "international_lessons": 0.075,
                   "ai": 0.10, "foresight": 0.10, "investment": 0.05,
@@ -166,7 +237,7 @@ class Ledger:
     # Direct historical invocations of ``scans.py --lane all`` predate the canonical
     # coordinator. They retain the old aggregate cap without becoming an extra share of
     # the canonical ceiling. Canonical Stage 2/4 calls always use the protected names above.
-    LEGACY_ALLOCATION = {"scans": 0.15}
+    LEGACY_ALLOCATION = {"scans": 0.15, "g2": 0.10}
 
     def __init__(self, ceiling=500.0, label="run"):
         self.ceiling, self.label = ceiling, label
@@ -219,9 +290,14 @@ class Ledger:
 
     # -- reading ---------------------------------------------------
     def spent(self, pass_name=None):
+        aliases = (
+            {"automated_challenge", "g2"}
+            if pass_name in {"automated_challenge", "g2"}
+            else {pass_name}
+        )
         with self._lock:
             return round(sum(c["cost"] for c in self.calls
-                             if pass_name is None or c["pass_name"] == pass_name), 6)
+                             if pass_name is None or c["pass_name"] in aliases), 6)
 
     def cap(self, pass_name):
         share = self.ALLOCATION.get(
@@ -337,7 +413,7 @@ class Ledger:
         A resume used to start the counter at zero and then overwrite the saved ledger,
         so a run finished in two sittings reported only the second one: Egypt's first
         pass read $0.26 when it had cost $15.75. Worse than the misreporting, the
-        ceiling stopped binding — decision G2 caps a country at $500, and a counter that
+        ceiling stopped binding — the run budget caps a country at $500, and a counter that
         resets on resume could be walked past that cap indefinitely by stopping and
         starting.
         """
@@ -483,19 +559,30 @@ def tier_for_url(url, country=None):
 # ---------------------------------------------------------------- which pass to read
 
 def engine_input_for(loop1_dir, basename):
-    """The engine input a downstream pass should read, and whether it was reviewed.
+    """The engine input a downstream pass should read, and whether it was machine-challenged.
 
-    A second review supersedes the first pass wherever it has run. That rule was written
-    into the diagnostic and into nothing else, so the foresight and roadmap passes read
-    the unreviewed file and G2's corrections never reached a single document — the review
-    could reopen a gap, fill it, and withdraw a level, and the roadmap would still be
-    written against the row as the first pass left it.
+    The Stage 1 automated challenge supersedes the first machine pass wherever it has
+    run. This selection says nothing about human G1 or G2, both of which remain pending
+    until after Stage 8.
 
-    Returns (path, reviewed).
+    Retired ``_g2_input`` files remain readable for historical runs. If both names exist,
+    their bytes must agree; ambiguity fails closed rather than selecting one silently.
+
+    Returns (path, challenged).
     """
-    g2 = os.path.join(loop1_dir, f"{basename}_g2_input.json")
-    if os.path.exists(g2):
-        return g2, True
+    canonical = os.path.join(
+        loop1_dir, f"{basename}_automated_challenge_input.json"
+    )
+    legacy = os.path.join(loop1_dir, f"{basename}_g2_input.json")
+    canonical_present, legacy_present = compatible_alias_presence(
+        canonical,
+        legacy,
+        "automated-challenge engine inputs",
+    )
+    if canonical_present:
+        return canonical, True
+    if legacy_present:
+        return legacy, True
     return os.path.join(loop1_dir, f"{basename}_input.json"), False
 
 
