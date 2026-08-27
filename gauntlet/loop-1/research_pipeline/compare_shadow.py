@@ -8,10 +8,10 @@ oracle.
 
 Divergence is the expected result, not the failure condition. The verified assessments
 came from sustained human-directed searching under the full tiered protocol, and this
-pass runs without Gate 2. What the report is for is the *measured* delta, because that
-is what calibrates the abstention threshold — the highest-leverage parameter in the
-system, and the only thing standing between machine-set levels and a machine-set
-readiness matrix.
+pass runs without the automated challenge. What the report is for is the *measured*
+delta, because that is what calibrates the abstention threshold — the highest-leverage
+parameter in the system, and the only thing standing between machine-set levels and a
+machine-set readiness matrix.
 
 Usage:
     python3 compare_shadow.py --shadow EGY_shadow --oracle EGY_v17 --country Egypt
@@ -23,6 +23,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
 sys.path.insert(0, LOOP1)
 from engine_v17 import MODEL
+import vendors as V
 
 PREREQ = [i for i in MODEL if MODEL[i]["prereq"]]
 
@@ -34,16 +35,25 @@ def load(name):
 def lineage_spend(name):
     """Every pass that went into this assessment, summed.
 
-    A Gate 2 assessment is the first pass plus the second review, and reporting only
-    the second review's ledger would price the deliverable at a third of what it cost.
-    The passes are separate files because decision G3 allocates them separately; the
-    total is what a reader wants.
+    A machine-challenged assessment is the first pass plus the automated challenge, and
+    reporting only the challenge ledger would price the deliverable at a third of what
+    it cost. The passes are separate files because the budget policy allocates them
+    separately; the total is what a reader wants.
     """
     base = name[:-3] if name.endswith("_g2") else name
     parts, seen = [], []
-    for stem in (f"{base}_spend.json", f"{base}_g2_spend.json"):
-        p = os.path.join(LOOP1, stem)
-        if not os.path.exists(p) or (name == base and stem.endswith("_g2_spend.json")):
+    ledgers = [(f"{base}_spend.json", os.path.join(LOOP1, f"{base}_spend.json"))]
+    canonical = os.path.join(LOOP1, f"{base}_automated_challenge_spend.json")
+    legacy = os.path.join(LOOP1, f"{base}_g2_spend.json")
+    canonical_present, legacy_present = V.compatible_alias_presence(
+        canonical, legacy, "automated-challenge spend ledgers"
+    )
+    if canonical_present:
+        ledgers.append((os.path.basename(canonical), canonical))
+    elif legacy_present and name != base:
+        ledgers.append((os.path.basename(legacy), legacy))
+    for stem, p in ledgers:
+        if not os.path.exists(p):
             continue
         j = json.load(open(p)).get("summary", {})
         parts.append(j)
@@ -107,7 +117,7 @@ def main():
     p = os.path.join(LOOP1, f"{args.shadow}_research.json")
     if os.path.exists(p):
         research.update(json.load(open(p)))
-    if not research:  # a Gate 2 assessment carries the first pass's research records
+    if not research:  # a challenged assessment carries the first pass's research records
         base = args.shadow[:-3] if args.shadow.endswith("_g2") else args.shadow
         p = os.path.join(LOOP1, f"{base}_research.json")
         if os.path.exists(p):
@@ -434,16 +444,16 @@ def main():
     w("Divergence here is the expected result. The verified assessments came from "
       "sustained human-directed searching under the full tiered protocol — Nigeria went "
       "from 21 recorded gaps to 4 that way — and this pass runs once, on a budget, "
-      "without the Gate 2 refutation round that found four of those gap refutations. "
+      "without the automated challenge that found four of those gap refutations. "
       "More gaps and more holds are the honest output of a first automated pass, not a "
       "regression.\n")
     w("The number to act on is the **abstention rate**: "
       f"{len(s_holds)} holds and {len(s_gaps)} gaps against the verified "
       f"{len(o_holds)} and {len(o_gaps)}. Too loose and everything reads Ready; too "
       "tight and everything reads Unverified. These figures are what that threshold "
-      "should be tuned against, and they should be kept — when automated Gate 2 arrives, "
-      "re-running this comparison is what tells you whether it earns its 15% of the "
-      "budget.\n")
+      "should be tuned against, and they should be kept — when the automated challenge "
+      "runs, re-running this comparison is what tells you whether it earns its 15% of "
+      "the budget.\n")
 
     out = args.out or os.path.join(LOOP1, f"SHADOW-COMPARISON-{args.shadow}.md")
     open(out, "w").write("\n".join(L) + "\n")

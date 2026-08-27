@@ -57,6 +57,13 @@ NARRATIVE_ARTIFACTS = {
     "investment_options": "investment_options_report",
     "draft_dar": "draft_dar_report",
 }
+# The coordinator snapshots these bridge artifacts in addition to the public stage
+# contract.  Stage 8 must carry the exact assessment rows that post-completion G1
+# reviews; a workflow manifest that merely points at bytes outside the ZIP is not a
+# self-contained review package.
+REQUIRED_SUPPLEMENTAL_ARTIFACTS = {
+    "damm_diagnostic": ("engine_input",),
+}
 SOURCE_INVENTORY_STAGES = EXPECTED_STAGE_IDS[:6]
 HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 ISO3_RE = re.compile(r"^[A-Z]{3}$")
@@ -384,9 +391,13 @@ def validate_workflow_manifest(
                 )
             all_paths[binding.path] = (f"{stage_id}.{binding.key}", binding.sha256)
             grouped.setdefault(binding.key, []).append(binding)
-        required = contract_stages[stage_id].get("required_artifacts")
-        if not isinstance(required, list):
+        contract_required = contract_stages[stage_id].get("required_artifacts")
+        if not isinstance(contract_required, list):
             raise ManifestValidationError(f"contract stage {stage_id} has no required_artifacts")
+        required = list(contract_required)
+        for key in REQUIRED_SUPPLEMENTAL_ARTIFACTS.get(stage_id, ()):
+            if key not in required:
+                required.append(key)
         missing = [key for key in required if key not in grouped]
         if missing:
             raise ManifestValidationError(
@@ -1248,6 +1259,53 @@ def _validate_packaged_upload_records(
             )
 
 
+def _validate_packaged_assessment_input_record(
+    package_root: Path,
+    package_manifest: Mapping[str, Any],
+    workflow: ValidatedWorkflow,
+) -> None:
+    """Require the exact Stage 1 engine input as one provenance-bound payload."""
+
+    binding = workflow.artifacts.get("damm_diagnostic", {}).get("engine_input")
+    if binding is None:
+        raise PackagingError("workflow has no exact Stage 1 engine_input binding")
+    records = package_manifest.get("files")
+    if not isinstance(records, list):
+        raise PackagingError("package manifest files is not an array")
+    matches = [
+        record
+        for record in records
+        if isinstance(record, dict)
+        if record.get("stage_id") == "damm_diagnostic"
+        and record.get("artifact_id") == "engine_input"
+    ]
+    if len(matches) != 1:
+        raise PackagingError(
+            "package must contain exactly one exact Stage 1 engine_input payload"
+        )
+    record = matches[0]
+    if (
+        record.get("category") != "structured"
+        or record.get("source_sha256") != binding.sha256
+        or record.get("sha256") != binding.sha256
+    ):
+        raise PackagingError(
+            "packaged exact Stage 1 engine_input is not provenance-bound"
+        )
+    relative = _require_safe_relative_path(
+        record.get("path"), "package Stage 1 engine_input"
+    )
+    try:
+        content = (package_root / relative).read_bytes()
+    except OSError as error:
+        raise PackagingError(
+            f"cannot read packaged exact Stage 1 engine_input: {error}"
+        ) from error
+    if sha256_bytes(content) != binding.sha256:
+        raise PackagingError("packaged exact Stage 1 engine_input bytes do not match")
+    load_json_bytes(content, "packaged exact Stage 1 engine_input")
+
+
 def _validate_existing_package(
     *,
     package_root: Path,
@@ -1299,6 +1357,7 @@ def _validate_existing_package(
         raise PackagingError("existing package has no valid workflow_manifest_sha256")
 
     validate_package_files(package_root, manifest)
+    _validate_packaged_assessment_input_record(package_root, manifest, workflow)
     _validate_packaged_upload_records(package_root, manifest, uploads)
     identity_files = {
         "workflow/workflow_manifest.json": packaged_manifest_sha,
@@ -1737,6 +1796,9 @@ def build_export_package(
         package_manifest_path = package_root / "package-manifest.json"
         _write_verified_bytes(package_manifest_path, _canonical_json_bytes(package_manifest_value))
         validate_package_files(package_root, package_manifest_value)
+        _validate_packaged_assessment_input_record(
+            package_root, package_manifest_value, workflow
+        )
 
         if sha256_bytes(manifest_path.read_bytes()) != sha256_bytes(manifest_content):
             raise PackagingError("workflow manifest changed while Stage 8 was packaging it")

@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..")))
 
 import vendors as V
 import gates as G
+import automated_challenge as challenge
 import gate2
 from build_inputs import ladder_level
 
@@ -208,8 +209,8 @@ check("a foreign attribution is rejected",
       gates(value="Nigeria's registry covers 12 million farmers.",
             quote="Nigeria's registry covers 12 million farmers."), "reject")
 
-# ---------------------------------------------------------------- Gate 2's decisions
-section("What a Gate 2 finding does to a row")
+# ------------------------------------------------ automated-challenge decisions
+section("What an automated-challenge finding does to a row")
 SPEC = dict(id="9.9", name="Test", method="ladder", candidate=False, prerequisite=None,
             direction="higher-is-better", thresholds=[], pillar="C1")
 ROW = dict(value="v", cls="Documented", level=3, year=2024, src="s", note="", tier="T3",
@@ -223,7 +224,11 @@ def finding(verdict, kind, plevel, gate="pass", quote_verified=True):
 
 
 def decide(*a, **k):
-    return gate2.decide(SPEC, ROW, finding(*a, **k))
+    return challenge.decide(SPEC, ROW, finding(*a, **k))
+
+
+check("the retired gate2 import is a compatibility alias",
+      gate2.decide is challenge.decide, True)
 
 
 check("confirmed leaves the row alone", decide("confirmed", "", 5)[0], "upheld")
@@ -235,7 +240,7 @@ check("an unsupported source withdraws the level",
 check("a construct mismatch withdraws the level",
       decide("refuted", "construct mismatch", None)[0], "withdrawn")
 # A withdrawal is the only path that lowers a row, so it must rest on something the
-# reviewer actually read. Both countries' 7.12 withdrawals came from a reviewer that
+# challenger actually read. Both countries' 7.12 withdrawals came from a challenger that
 # asserted no value and verified no quote — an absence filed as a refutation.
 check("a withdrawal with nothing quoted is not a withdrawal",
       decide("refuted", "source does not support the value", None,
@@ -259,14 +264,14 @@ for verdict, kind, lvl in [("adjust", "better evidence exists", 4),
     check(f"the ratification note survives '{kind}'",
           (applied or ROW).get("defnote"), "an open question")
 
-# A gap the reviewer also could not fill leaves the gap standing.
+# A gap the challenger also could not fill leaves the gap standing.
 GAP = dict(ROW, cls="Gap", level=None)
 check("a gap the reviewer could not fill either stays a gap",
-      gate2.decide(SPEC, GAP, dict(verdict="refuted", refutation_kind="better evidence exists",
+      challenge.decide(SPEC, GAP, dict(verdict="refuted", refutation_kind="better evidence exists",
                                    reason="r", gate_verdict="pass",
                                    proposed_row=dict(GAP)))[0], "upheld")
 check("a gap the reviewer filled becomes evidence",
-      gate2.decide(SPEC, GAP, dict(verdict="refuted", refutation_kind="better evidence exists",
+      challenge.decide(SPEC, GAP, dict(verdict="refuted", refutation_kind="better evidence exists",
                                    reason="r", gate_verdict="pass",
                                    proposed_row=dict(ROW, level=3)))[0], "filled")
 
@@ -309,25 +314,63 @@ check("the legacy aggregate scan share is not a second canonical allocation",
 check("historical all-lane scans retain their old aggregate cap",
       V.Ledger(ceiling=500).cap("scans"), 75.0)
 
+_legacy_challenge = V.Ledger(ceiling=0.05, label="legacy-challenge")
+_legacy_challenge.record("exa", "g2", searches=2)
+check("legacy g2 spend counts against the canonical challenge pass",
+      _legacy_challenge.spent("automated_challenge"), 0.01)
+try:
+    _legacy_challenge.check("automated_challenge")
+    check("legacy g2 spend cannot replay the canonical allocation",
+          "no raise", "BudgetExhausted")
+except V.BudgetExhausted:
+    check("legacy g2 spend cannot replay the canonical allocation",
+          "BudgetExhausted", "BudgetExhausted")
+
 # ---------------------------------------------------------------- report
 
-section("A second review supersedes the first pass, for every document")
+section("The automated challenge supersedes the first machine pass for Draft generation")
 
 import tempfile, pathlib
 
 with tempfile.TemporaryDirectory() as _d:
     pathlib.Path(_d, "X_input.json").write_text("{}")
     p, rev = V.engine_input_for(_d, "X")
-    check("with no review, the first pass is read", p.endswith("X_input.json"), True)
-    check("and it says it was not reviewed", rev, False)
+    check("with no challenge, the first pass is read", p.endswith("X_input.json"), True)
+    check("and it says it was not challenged", rev, False)
 
+    pathlib.Path(_d, "X_automated_challenge_input.json").write_text("{}")
+    p, challenged = V.engine_input_for(_d, "X")
+    check("the canonical challenge output is read",
+          p.endswith("X_automated_challenge_input.json"), True)
+    check("and it is identified only as machine-challenged", challenged, True)
+
+with tempfile.TemporaryDirectory() as _d:
+    pathlib.Path(_d, "X_input.json").write_text("{}")
     pathlib.Path(_d, "X_g2_input.json").write_text("{}")
-    p, rev = V.engine_input_for(_d, "X")
-    # The rule lived only in the diagnostic. The foresight and roadmap passes read the
-    # unreviewed file, so a review could reopen a gap, fill it and withdraw a level, and
-    # the roadmap would still be written against the row as the first pass left it.
-    check("once reviewed, the reviewed pass is read", p.endswith("X_g2_input.json"), True)
-    check("and it says so", rev, True)
+    p, challenged = V.engine_input_for(_d, "X")
+    check("a legacy g2 filename remains readable", p.endswith("X_g2_input.json"), True)
+    check("the legacy file is still only machine-challenged", challenged, True)
+
+with tempfile.TemporaryDirectory() as _d:
+    pathlib.Path(_d, "X_input.json").write_text("{}")
+    pathlib.Path(_d, "X_automated_challenge_input.json").write_text("{}")
+    pathlib.Path(_d, "X_g2_input.json").write_text("{}")
+    p, challenged = V.engine_input_for(_d, "X")
+    check("identical canonical and legacy inputs prefer the canonical path",
+          p.endswith("X_automated_challenge_input.json"), True)
+    check("identical aliases remain only machine-challenged", challenged, True)
+
+with tempfile.TemporaryDirectory() as _d:
+    pathlib.Path(_d, "X_input.json").write_text("{}")
+    pathlib.Path(_d, "X_automated_challenge_input.json").write_text('{"new": true}')
+    pathlib.Path(_d, "X_g2_input.json").write_text('{"old": true}')
+    try:
+        V.engine_input_for(_d, "X")
+        check("conflicting canonical and legacy inputs fail closed",
+              "no raise", "ValueError")
+    except ValueError:
+        check("conflicting canonical and legacy inputs fail closed",
+              "ValueError", "ValueError")
 
 print()
 if FAIL:

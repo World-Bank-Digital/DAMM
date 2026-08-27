@@ -3,7 +3,7 @@
 
 Asked for by the reviewer before the rulings are recorded, and the ask was well placed:
 the package carried a first-pass cost of $0.26 in one appendix and "about $15.50" in the
-main paper, and two Gate 2 figures that a re-run had superseded.
+main paper, and two legacy automated-challenge figures that a re-run had superseded.
 
 Prose drifts from data whenever an artifact is regenerated and a sentence is not. This
 check makes that mechanical. It computes the canonical value of every figure the package
@@ -48,16 +48,18 @@ def canonical():
             sum(1 for r in rows if r["both_levelled"] and r["s_level"] > r["o_level"]))
         f[f"{co} levels withheld"] = str(
             sum(1 for r in rows if r["o_level"] is not None and r["s_level"] is None))
-        g2 = J(os.path.join(LOOP1, f"{iso}_shadow_g2_findings.json")) or []
+        challenge_findings = (
+            J(os.path.join(LOOP1, f"{iso}_shadow_g2_findings.json")) or []
+        )
         oc = {}
-        for x in g2:
+        for x in challenge_findings:
             oc[x["outcome"]] = oc.get(x["outcome"], 0) + 1
-        f[f"{co} Gate 2 rows reviewed"] = str(len(g2))
-        f[f"{co} Gate 2 levels changed"] = str(
+        f[f"{co} automated-challenge rows"] = str(len(challenge_findings))
+        f[f"{co} automated-challenge levels changed"] = str(
             sum(oc.get(k, 0) for k in ("filled", "withdrawn", "relevelled")))
         sp = J(os.path.join(LOOP1, f"{iso}_shadow_g2_spend.json"))
         if sp:
-            f[f"{co} Gate 2 cost"] = f"${sp['summary']['total']:.2f}"
+            f[f"{co} automated-challenge cost"] = f"${sp['summary']['total']:.2f}"
         sh = J(os.path.join(LOOP1, f"{iso}_shadow_g2.json"))
         v = J(os.path.join(LOOP1, f"{iso}_v17.json"))
         if sh and v:
@@ -79,13 +81,13 @@ def canonical():
 # Each is paired with what replaced it, so a failure names the correction rather than
 # only the problem.
 SUPERSEDED = [
-    (r"\$6\.39", "Egypt Gate 2 cost, superseded by the re-run"),
-    (r"\$6\.14", "Nigeria Gate 2 cost, superseded by the re-run"),
+    (r"\$6\.39", "Egypt automated-challenge cost, superseded by the re-run"),
+    (r"\$6\.14", "Nigeria automated-challenge cost, superseded by the re-run"),
     (r"\$21\.88", "Egypt two-pass total, from ledgers the resume bug truncated"),
     (r"\$21\.47", "Nigeria two-pass total, from ledgers the resume bug truncated"),
     (r"\bsix rows where\b", "there are eight rows above the verified assessments"),
     (r"changed three levels in each country",
-     "Gate 2 changed four levels in Egypt and five in Nigeria"),
+     "the automated challenge changed four levels in Egypt and five in Nigeria"),
     (r"\b24 of 57\b", "Egypt now records 29 of 57"),
     (r"\b30 of 57\b", "Nigeria now records 33 of 57"),
     (r"\b5 of 12\b", "both countries now match 8 of 12 prerequisites"),

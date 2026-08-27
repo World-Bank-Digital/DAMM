@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -131,6 +132,24 @@ class WorkflowExportIntegrationTest(unittest.TestCase):
         self.assertEqual(package["export_profiles"], self.contract["export_profiles"])
         suffixes = {Path(record["path"]).suffix for record in package["files"]}
         self.assertTrue({".md", ".html", ".docx", ".pdf", ".xlsx", ".csv", ".json"} <= suffixes)
+
+        stage1 = manifest["stages"][0]
+        source_record = next(
+            record for record in stage1["artifacts"] if record["key"] == "engine_input"
+        )
+        package_record = next(
+            record
+            for record in package["files"]
+            if record.get("stage_id") == "damm_diagnostic"
+            and record.get("artifact_id") == "engine_input"
+        )
+        source_bytes = (self.workspace / source_record["path"]).read_bytes()
+        package_bytes = (package_manifest.parent / package_record["path"]).read_bytes()
+        self.assertEqual(package_bytes, source_bytes)
+        self.assertEqual(
+            package_record["sha256"], hashlib.sha256(source_bytes).hexdigest()
+        )
+        self.assertEqual(package_record["source_sha256"], source_record["sha256"])
 
         events = [
             json.loads(line)

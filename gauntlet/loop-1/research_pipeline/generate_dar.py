@@ -435,16 +435,16 @@ def _assessment_row_errors(
 
 
 def assessment_input_errors(rows, spec=None):
-    """All reasons reviewed G2 rows cannot safely be passed to the scoring engine."""
+    """All reasons Stage 1 engine rows cannot safely be passed to the scorer."""
     if not isinstance(rows, dict):
-        return ["reviewed engine input is not a JSON object"]
+        return ["Stage 1 engine input is not a JSON object"]
 
     active_spec = SPEC if spec is None else spec
     errors = []
     absent_rows = [indicator_id for indicator_id in MODEL if indicator_id not in rows]
     if absent_rows:
         errors.append(
-            "reviewed engine input lacks model rows: " + ", ".join(absent_rows))
+            "Stage 1 engine input lacks model rows: " + ", ".join(absent_rows))
 
     for indicator_id in MODEL:
         if indicator_id in rows:
@@ -6494,7 +6494,7 @@ def main():
     manifest_path = run_path("dar_manifest.json")
     dar_json_path = run_path("dar.json")
     dar_html_path = run_path("dar.html")
-    inp = run_path("g2_input.json")
+    inp, _machine_challenged = V.engine_input_for(LOOP1, a.out)
     scans_path = run_path("scans.json")
     foresight_path = run_path("foresight.json")
     package_path = run_path("run_package.json")

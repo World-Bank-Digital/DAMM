@@ -9,6 +9,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
+AUTOMATED_CHALLENGE_SCRIPT = os.path.join(HERE, "automated_challenge.py")
 sys.path.insert(0, HERE)
 
 import vendors as V
@@ -18,12 +19,17 @@ def vendor_family(vendor):
     return str(vendor or "").split("/", 1)[0].strip()
 
 
-def independent_reviewer(primary):
+def independent_challenger(primary):
     primary_family = vendor_family(primary)
     for family in ("openai", "anthropic", "gemini"):
         if family != primary_family and V._MODEL_PREFS.get(family):
             return f"{family}/{V._MODEL_PREFS[family][0]}"
     raise ValueError("no configured vendor family can independently challenge the primary")
+
+
+# Compatibility for pre-canonical callers. Product copy and emitted events use
+# "challenger" so this machine actor cannot be mistaken for human G2.
+independent_reviewer = independent_challenger
 
 
 def run_command(argv):
@@ -59,11 +65,26 @@ def checkpoint_combined_spend(out):
     """Publish every known Stage 1 charge, including a failed child attempt."""
     totals = []
     source_ledgers = []
-    for suffix in ("spend", "g2_spend"):
-        name = f"{out}_{suffix}.json"
-        path = os.path.join(LOOP1, name)
-        if not os.path.isfile(path):
+    suffix_groups = (
+        ("spend",),
+        ("automated_challenge_spend", "g2_spend"),
+    )
+    for suffixes in suffix_groups:
+        candidates = []
+        for suffix in suffixes:
+            name = f"{out}_{suffix}.json"
+            path = os.path.join(LOOP1, name)
+            if V.regular_file_presence(path, "Stage 1 spend ledger"):
+                candidates.append((name, path))
+        if not candidates:
             continue
+        if len(candidates) > 1:
+            V.compatible_alias_presence(
+                candidates[0][1],
+                candidates[1][1],
+                "automated-challenge spend ledgers",
+            )
+        name, path = candidates[0]
         with open(path, encoding="utf-8") as handle:
             value = json.load(handle)
         total = (value.get("summary") or {}).get("total")
@@ -91,12 +112,17 @@ def main():
     parser.add_argument("--out", required=True)
     parser.add_argument("--ceiling", type=float, default=500.0)
     parser.add_argument("--vendor", default="anthropic/claude-opus-5")
-    parser.add_argument("--reviewer-vendor")
+    parser.add_argument(
+        "--challenge-vendor",
+        "--reviewer-vendor",
+        dest="challenge_vendor",
+        help="vendor for the Stage 1 automated challenge; --reviewer-vendor is deprecated",
+    )
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
 
-    reviewer = args.reviewer_vendor or independent_reviewer(args.vendor)
-    if vendor_family(reviewer) == vendor_family(args.vendor):
+    challenger = args.challenge_vendor or independent_challenger(args.vendor)
+    if vendor_family(challenger) == vendor_family(args.vendor):
         print("!! automated challenge vendor must be independent of the research vendor")
         return 1
 
@@ -105,8 +131,8 @@ def main():
     commands = [
         [sys.executable, os.path.join(HERE, "research_orchestrator.py"),
          *common, "--out", args.out, "--vendor", args.vendor],
-        [sys.executable, os.path.join(HERE, "gate2.py"),
-         *common, "--run", args.out, "--vendor", reviewer],
+        [sys.executable, AUTOMATED_CHALLENGE_SCRIPT,
+         *common, "--run", args.out, "--vendor", challenger],
         [sys.executable, os.path.join(HERE, "diagnostic.py"),
          *common, "--out", args.out],
     ]
@@ -126,8 +152,8 @@ def main():
 
     required = {
         "damm_observations": f"{args.out}_input.json",
-        "automated_challenge": f"{args.out}_g2_findings.json",
-        "engine_input": f"{args.out}_g2_input.json",
+        "automated_challenge": f"{args.out}_automated_challenge_findings.json",
+        "engine_input": f"{args.out}_automated_challenge_input.json",
         "scored_assessment": f"{args.out}_v17.json",
         "diagnostic_report": f"{args.out}_diagnostic.html",
         "source_inventory": f"{args.out}_research.json",
@@ -158,7 +184,7 @@ def main():
         "schema_version": "damm.workflow-event/v1",
         "event": "diagnostic_stage_complete",
         "primary_vendor": args.vendor,
-        "reviewer_vendor": reviewer,
+        "challenge_vendor": challenger,
         "artifacts": required,
     }, separators=(",", ":")))
     return 0

@@ -30,6 +30,8 @@ says which one in its own docstring.*
 | `run_audition.py` | The thirteen-cell vendor audition, with `--rescore` to re-apply a corrected rule to saved evidence. |
 | `audition_cells.json` | The thirteen cells, every one drawn from the verified assessments. |
 | `research_orchestrator.py` | Per-indicator research for one country → an engine input. |
+| `automated_challenge.py` | Stage 1 machine challenge by a different vendor; never human G1 or G2. |
+| `gate2.py` | Deprecated compatibility shim for historical commands and `_g2_*` checkpoints. |
 | `diagnostic_stage.py` | Canonical Stage 1 wrapper: research, independent automated challenge, scoring, report, sources, and combined spend. |
 | `scan_stage.py` | Canonical Stages 2 and 4 adapter for separate country-research and international-lessons products. |
 | `ai_assessment.py` | Canonical Stage 3 AI-in-digital-agriculture assessment. |
@@ -75,9 +77,10 @@ python3 run_workflow.py \
 `--resume` is safe on the first launch and resumes only the same hash-verified immutable
 run after an interruption. Optional uploads, when present, must be frozen in the canonical
 uploads manifest before this command starts. No upload, approval, retry choice, or budget
-decision is requested after launch. Stage 8 verifies and packages the manifest, each extracted
-text file, and each original upload byte-for-byte; a missing, changed, escaping, or symlinked
-input is a terminal integrity failure.
+decision is requested after launch. Stage 8 verifies and packages the manifest, the exact
+Stage 1 engine input reviewed later at human G1, each extracted text file, and each original
+upload byte-for-byte; a missing, changed, escaping, or symlinked input is a terminal integrity
+failure.
 
 ## Things worth knowing before changing anything
 

@@ -86,7 +86,10 @@ class WorkflowFixture:
         records = []
         output_hashes = {}
         narrative = E.NARRATIVE_ARTIFACTS[stage_id]
-        for key in stage["required_artifacts"]:
+        required_keys = list(stage["required_artifacts"])
+        if stage_id == "damm_diagnostic":
+            required_keys.extend(E.REQUIRED_SUPPLEMENTAL_ARTIFACTS[stage_id])
+        for key in required_keys:
             if key == "stage_manifest":
                 continue
             companion = None
@@ -120,7 +123,19 @@ class WorkflowFixture:
                 )
             else:
                 path = stage_dir / f"{key}.json"
-                if key == "source_inventory":
+                if key == "engine_input":
+                    value = {
+                        "1.1": {
+                            "value": "Exact machine-filled fixture row",
+                            "cls": "Documented",
+                            "level": 3,
+                            "year": 2026,
+                            "src": "Fixture source",
+                            "tier": "T1",
+                            "url": "https://example.test/engine-input",
+                        }
+                    }
+                elif key == "source_inventory":
                     value = [
                         {
                             "ref": f"SRC-{ordinal}",
@@ -366,8 +381,10 @@ class ExportPackageTest(unittest.TestCase):
             2,
         )
         for stage in self.fixture.contract["stages"][:7]:
+            expected = set(stage["required_artifacts"])
+            expected.update(E.REQUIRED_SUPPLEMENTAL_ARTIFACTS.get(stage["id"], ()))
             self.assertEqual(
-                set(validated.artifacts[stage["id"]]), set(stage["required_artifacts"])
+                set(validated.artifacts[stage["id"]]), expected
             )
 
     def test_manifest_validation_rejects_missing_narrative_and_wrong_run_identity(self):
@@ -379,6 +396,13 @@ class ExportPackageTest(unittest.TestCase):
             if item["key"] != "diagnostic_report"
         ]
         cases.append((missing, "missing required artifacts: diagnostic_report"))
+        missing_engine_input = json.loads(json.dumps(self.fixture.manifest))
+        missing_engine_input["stages"][0]["artifacts"] = [
+            item
+            for item in missing_engine_input["stages"][0]["artifacts"]
+            if item["key"] != "engine_input"
+        ]
+        cases.append((missing_engine_input, "missing required artifacts: engine_input"))
         wrong_contract = json.loads(json.dumps(self.fixture.manifest))
         wrong_contract["contract_sha256"] = "0" * 64
         cases.append((wrong_contract, "not bound to the canonical contract bytes"))
@@ -416,7 +440,7 @@ class ExportPackageTest(unittest.TestCase):
         self.assertEqual(manifest["lifecycle_state"], "draft")
         self.assertEqual(manifest["created_at"], "2026-08-26T12:00:00Z")
         self.assertEqual(manifest["export_profiles"], self.fixture.contract["export_profiles"])
-        self.assertEqual(manifest["file_count"], 57)
+        self.assertEqual(manifest["file_count"], 58)
         self.assertEqual(len(self.converters.pandoc_calls), 15)
         self.assertEqual(len(self.converters.pdf_calls), 7)
 
@@ -450,6 +474,21 @@ class ExportPackageTest(unittest.TestCase):
         )
         self.assertTrue(cost_benefit.is_file())
 
+        engine_source = self.fixture.artifact_paths[("damm_diagnostic", "engine_input")]
+        engine_records = [
+            record
+            for record in manifest["files"]
+            if record.get("stage_id") == "damm_diagnostic"
+            and record.get("artifact_id") == "engine_input"
+        ]
+        self.assertEqual(len(engine_records), 1)
+        engine_record = engine_records[0]
+        self.assertEqual(engine_record["category"], "structured")
+        self.assertEqual(engine_record["sha256"], digest(engine_source))
+        self.assertEqual(engine_record["source_sha256"], digest(engine_source))
+        packaged_engine = result.package_dir / engine_record["path"]
+        self.assertEqual(packaged_engine.read_bytes(), engine_source.read_bytes())
+
         E.validate_package_files(result.package_dir, manifest)
         for record in manifest["files"]:
             payload = result.package_dir / record["path"]
@@ -460,6 +499,9 @@ class ExportPackageTest(unittest.TestCase):
             root = result.package_dir.name + "/"
             self.assertIn(root + "package-manifest.json", archive.namelist())
             self.assertEqual(len(archive.namelist()), manifest["file_count"] + 1)
+            self.assertEqual(
+                archive.read(root + engine_record["path"]), engine_source.read_bytes()
+            )
 
     def test_upload_manifest_extracted_text_and_original_are_packaged_with_provenance(self):
         document = self.fixture.add_upload(
@@ -556,6 +598,24 @@ class ExportPackageTest(unittest.TestCase):
                 "EGY_20260826_dar_package_v1.0.0"
             ).exists()
         )
+
+    def test_engine_input_mutation_or_stale_stage_binding_is_terminal(self):
+        stage_id = "damm_diagnostic"
+        key = "engine_input"
+        path = self.fixture.artifact_paths[(stage_id, key)]
+        path.write_text('{"1.1":{"tampered":true}}\n', encoding="utf-8")
+
+        with self.assertRaisesRegex(E.PackagingError, "SHA-256 mismatch"):
+            self.build()
+        self.assertEqual(self.converters.pandoc_calls, [])
+
+        self.fixture.artifact_record(stage_id, key)["sha256"] = digest(path)
+        self.fixture.write_manifest()
+        with self.assertRaisesRegex(
+            E.ManifestValidationError, "output_hashes does not bind engine_input"
+        ):
+            self.build()
+        self.assertEqual(self.converters.pandoc_calls, [])
 
     def test_rehashed_artifact_still_fails_stale_stage_manifest_binding(self):
         stage_id = "country_research"
@@ -669,6 +729,26 @@ class ExportPackageTest(unittest.TestCase):
         with zipfile.ZipFile(result.zip_path, "a") as archive:
             archive.writestr("unexpected.txt", "tamper")
         with self.assertRaisesRegex(E.PackagingError, "content set does not match"):
+            self.build(resume=True)
+
+    def test_resume_rejects_package_without_exact_engine_input_payload(self):
+        result = self.build()
+        package_manifest = json.loads(
+            result.package_manifest.read_text(encoding="utf-8")
+        )
+        engine_records = [
+            record
+            for record in package_manifest["files"]
+            if record.get("stage_id") == "damm_diagnostic"
+            and record.get("artifact_id") == "engine_input"
+        ]
+        self.assertEqual(len(engine_records), 1)
+        (result.package_dir / engine_records[0]["path"]).unlink()
+        package_manifest["files"].remove(engine_records[0])
+        package_manifest["file_count"] = len(package_manifest["files"])
+        write_json(result.package_manifest, package_manifest)
+
+        with self.assertRaisesRegex(E.PackagingError, "exact Stage 1 engine_input"):
             self.build(resume=True)
 
 

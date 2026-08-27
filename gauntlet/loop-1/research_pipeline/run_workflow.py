@@ -340,8 +340,8 @@ def load_contract(path: str | os.PathLike[str] = DEFAULT_CONTRACT_PATH) -> Mappi
 def _legacy_paths(legacy_out: str) -> dict[str, Path]:
     return {
         "research": LOOP1 / f"{legacy_out}_research.json",
-        "engine_input": LOOP1 / f"{legacy_out}_g2_input.json",
-        "g2": LOOP1 / f"{legacy_out}_g2_findings.json",
+        "engine_input": LOOP1 / f"{legacy_out}_automated_challenge_input.json",
+        "automated_challenge": LOOP1 / f"{legacy_out}_automated_challenge_findings.json",
         "scored": LOOP1 / f"{legacy_out}_v17.json",
         "diagnostic": LOOP1 / f"{legacy_out}_diagnostic.html",
         "diagnostic_sources": LOOP1 / f"{legacy_out}_diagnostic_sources.json",
@@ -416,7 +416,7 @@ def build_existing_stage_commands(
             cwd=LOOP1,
             artifacts={
                 "damm_observations": paths["research"],
-                "automated_challenge": paths["g2"],
+                "automated_challenge": paths["automated_challenge"],
                 "scored_assessment": paths["scored"],
                 "diagnostic_report": paths["diagnostic"],
                 "source_inventory": paths["diagnostic_sources"],

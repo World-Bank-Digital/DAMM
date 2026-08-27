@@ -23,5 +23,7 @@ __pycache__/
 # the run again.
 *_shadow_state.json
 
-# Gate 2 resume checkpoints — redundant with the run's own findings file.
+# Historical machine-challenge and canonical challenge resume checkpoints.
+# Both are redundant with the run's own findings file.
 *_g2_state.json
+*_automated_challenge_state.json

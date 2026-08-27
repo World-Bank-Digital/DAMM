@@ -26,6 +26,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
 sys.path.insert(0, LOOP1)
 from engine_v17 import MODEL
+import vendors as V
 
 
 def id_key(i):
@@ -59,9 +60,14 @@ def main():
         if not comp:
             sys.exit(f"no comparison for {shadow} — run compare_shadow.py first")
         base = shadow[:-3] if shadow.endswith("_g2") else shadow
+        challenge = V.load_compatible_json_alias(
+            os.path.join(LOOP1, f"{base}_automated_challenge_findings.json"),
+            os.path.join(LOOP1, f"{base}_g2_findings.json"),
+            "automated-challenge findings",
+        )
         runs.append(dict(shadow=shadow, oracle=oracle, country=country, comp=comp,
                          research=load(base, "_research.json") or {},
-                         g2=load(base, "_g2_findings.json") or []))
+                         challenge=challenge or []))
 
     # ------------------------------------------------------------ per country
     for r in runs:
@@ -229,16 +235,21 @@ def main():
         w(f"- **{iid} {MODEL[iid]['name']}**"
           + ("  ⚑ prerequisite" if MODEL[iid]["prereq"] else ""))
 
-    if any(r["g2"] for r in runs):
-        w("\n## What the second review changed, in both countries\n")
+    if any(r["challenge"] for r in runs):
+        w("\n## What the automated challenge changed, in both countries\n")
         # Outcomes down the side rather than across the top. Seven columns rendered to
         # PDF at portrait width break their own headers mid-word ("relevelle d"), and a
         # reader should not have to reassemble a column name.
         counts, spends = [], []
         for r in runs:
-            counts.append(Counter(f["outcome"] for f in r["g2"]))
+            counts.append(Counter(f["outcome"] for f in r["challenge"]))
             base = r["shadow"][:-3] if r["shadow"].endswith("_g2") else r["shadow"]
-            spends.append((load(base, "_g2_spend.json") or {}).get("summary", {}))
+            spend = V.load_compatible_json_alias(
+                os.path.join(LOOP1, f"{base}_automated_challenge_spend.json"),
+                os.path.join(LOOP1, f"{base}_g2_spend.json"),
+                "automated-challenge spend ledgers",
+            )
+            spends.append((spend or {}).get("summary", {}))
         w("| outcome | " + " | ".join(r["country"] for r in runs) + " |")
         w("|---|" + "---|" * len(runs))
         for k in ("filled", "withdrawn", "relevelled", "adjusted", "upheld"):
