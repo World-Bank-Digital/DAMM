@@ -6,6 +6,7 @@ substitution is the true external dependency: recorded chapter responses stand i
 the live reasoning vendor so the run is deterministic and needs no keys or network.
 """
 
+import copy
 import hashlib
 import json
 import shutil
@@ -670,6 +671,34 @@ class GenerateDarCliTest(unittest.TestCase):
                 self.assertEqual(artifact["file"], path.name)
                 self.assertEqual(artifact["bytes"], len(content))
                 self.assertEqual(artifact["sha256"], hashlib.sha256(content).hexdigest())
+
+    def test_consistent_candidate_reuse_crosses_the_public_cli_seam(self):
+        with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as td:
+            run = Path(td) / "fixture"
+            copy_reference_inputs(run)
+
+            foresight_path = Path(f"{run}_foresight.json")
+            foresight = json.loads(foresight_path.read_text(encoding="utf-8"))
+            reused = copy.deepcopy(foresight["milestones"][2])
+            reused["statement"] = "A later milestone reuses the same candidate metric."
+            reused["target_year"] += 2
+            foresight["milestones"].append(reused)
+            foresight_path.write_text(json.dumps(foresight), encoding="utf-8")
+            refresh_run_package(run)
+
+            replay = Path(td) / "responses.json"
+            write_success_replay(replay, run=run)
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT),
+                 "--country", "Egypt", "--iso", "EGY", "--out", str(run),
+                 "--replay", str(replay)],
+                text=True, capture_output=True, check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            manifest = json.loads(
+                Path(f"{run}_dar_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["status"], "complete")
 
     def test_run_id_is_content_based_when_a_package_is_relocated(self):
         with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as left_td, \

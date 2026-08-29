@@ -39,6 +39,7 @@ sys.path.insert(0, LOOP1)
 
 import vendors as V
 import workflow_inputs as WI
+import foresight_contract as FC
 from engine_v17 import MODEL, run as engine_run
 
 PASS = "foresight"
@@ -71,6 +72,10 @@ UPLOAD_EXCERPT_CHARACTERS = 16000
 
 def known_indicator(indicator_id):
     return indicator_id in MODEL
+
+
+def refusal_record(milestone, reason):
+    return {"statement": milestone.get("statement", ""), "why": reason}
 
 
 def well_formed_candidate(cand):
@@ -109,6 +114,8 @@ def milestone_gate(m, levels, assessment_year=ASSESSMENT_YEAR, horizon=HORIZON_Y
             return f"{iid} is not in the model and {why}"
         if m["candidate_indicator"]["id"] != iid:
             return "it binds to one id and proposes another"
+    elif m.get("candidate_indicator") is not None:
+        return f"{iid} is a model indicator but also proposes a candidate"
 
     level = m.get("target_level")
     if not isinstance(level, int) or not 1 <= level <= 5:
@@ -131,6 +138,21 @@ def milestone_gate(m, levels, assessment_year=ASSESSMENT_YEAR, horizon=HORIZON_Y
     return None
 
 
+def candidate_registry_gate(milestones):
+    """Keep first-seen candidate definitions and refuse conflicting later reuse."""
+    registry = FC.build_candidate_registry(milestones)
+    conflicts = {conflict.milestone_index: conflict for conflict in registry.conflicts}
+    kept, refused = [], []
+    for index, milestone in enumerate(milestones):
+        conflict = conflicts.get(index)
+        if conflict is None:
+            kept.append(milestone)
+            continue
+        refused.append(refusal_record(
+            milestone, f"{conflict.candidate_id} {conflict.reason}"))
+    return kept, refused
+
+
 def provisionality_of(indicator_id):
     """The open decision governing this row, where one exists (F4, A3).
 
@@ -144,6 +166,25 @@ def provisionality_of(indicator_id):
         return ("This milestone binds to a proposed candidate indicator, which is not "
                 "part of the scored model and carries no ratified thresholds.")
     return None
+
+
+def milestone_contract_gate(milestones, levels):
+    """Apply the complete milestone contract to fresh or resumed model output."""
+    kept, refused = [], []
+    for milestone in milestones:
+        why = milestone_gate(milestone, levels)
+        if why:
+            refused.append(refusal_record(milestone, why))
+            continue
+        canonical = dict(milestone)
+        canonical["provisional_because"] = provisionality_of(
+            canonical["indicator_id"])
+        canonical["binds_to_candidate"] = not known_indicator(
+            canonical["indicator_id"])
+        kept.append(canonical)
+
+    kept, registry_refused = candidate_registry_gate(kept)
+    return kept, [*refused, *registry_refused]
 
 
 # ------------------------------------------------------------------ schemas
@@ -616,18 +657,14 @@ def main():
                 "candidate_indicator null.",
                 MILESTONE_SCHEMA, PASS, max_tokens=8000, detail="backcasting")
 
-            kept, refused = [], []
-            for m in ans["milestones"]:
-                why = milestone_gate(m, levels)
-                if why:
-                    refused.append({"statement": m.get("statement", ""), "why": why})
-                    continue
-                m["provisional_because"] = provisionality_of(m["indicator_id"])
-                m["binds_to_candidate"] = not known_indicator(m["indicator_id"])
-                kept.append(m)
-            state["milestones"] = kept
-            state["refused"] = refused
-            save()
+            state["milestones"] = ans["milestones"]
+            state["refused"] = []
+
+        state["milestones"], contract_refused = milestone_contract_gate(
+            state["milestones"], levels)
+        if contract_refused:
+            state["refused"] = [*(state.get("refused") or []), *contract_refused]
+        save()
         n_ref = len(state.get("refused") or [])
         report(3, steps[2]["id"], "written",
                f"{len(state['milestones'])} bound, {n_ref} refused", t0)
@@ -639,8 +676,7 @@ def main():
         save()
         return 0
 
-    candidates = [m["candidate_indicator"] for m in state["milestones"]
-                  if m.get("candidate_indicator")]
+    candidates = list(FC.build_candidate_registry(state["milestones"]).indicators)
     payload = {
         "country": a.country,
         "iso3": a.iso,

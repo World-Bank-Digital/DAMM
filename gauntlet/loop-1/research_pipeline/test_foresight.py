@@ -7,10 +7,11 @@ be refused rather than recorded.
 
     python3 test_foresight.py
 """
-import sys, os
+import copy, sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import foresight as F
+import foresight_contract as FC
 
 FAILED, COUNT = [], 0
 YEAR = F.ASSESSMENT_YEAR
@@ -100,6 +101,61 @@ check("binding to one id while proposing another is refused",
       F.milestone_gate(m(indicator_id="C2-CAND-A",
                          candidate_indicator=dict(good, id="C2-CAND-B")), LEVELS),
       "binds to one id and proposes another")
+check("a model indicator cannot also carry a candidate definition",
+      F.milestone_gate(m(indicator_id="2.1", candidate_indicator=good), LEVELS),
+      "model indicator but also proposes a candidate")
+
+_resume_kept, _resume_refused = F.milestone_contract_gate(
+    [m(indicator_id="2.1", candidate_indicator=good)], LEVELS)
+check("a resumed milestone is revalidated against the same contract",
+      _resume_kept, "[]")
+check("a resumed invalid candidate binding is explicitly refused",
+      _resume_refused[0]["why"],
+      "model indicator but also proposes a candidate")
+
+_valid_resume = m()
+_valid_resume_before = copy.deepcopy(_valid_resume)
+F.milestone_contract_gate([_valid_resume], LEVELS)
+check("contract validation does not mutate resumed milestone state",
+      _valid_resume == _valid_resume_before, "True")
+
+
+section("The candidate register has one definition per candidate id")
+
+_shared_candidate = dict(good, id="C2-CAND-SHARED")
+_shared_bindings = [
+    m(indicator_id="C2-CAND-SHARED", candidate_indicator=dict(_shared_candidate)),
+    m(indicator_id="C2-CAND-SHARED", candidate_indicator=dict(_shared_candidate),
+      statement="a later milestone using the same metric", target_year=YEAR + 7),
+]
+_shared_registry = FC.build_candidate_registry(_shared_bindings)
+check("two consistent milestone bindings produce one candidate register entry",
+      [candidate["id"] for candidate in _shared_registry.indicators],
+      "['C2-CAND-SHARED']")
+check("consistent reuse is not a candidate-definition conflict",
+      list(_shared_registry.conflicts), "[]")
+
+_conflicting_bindings = [
+    _shared_bindings[0],
+    m(indicator_id="C2-CAND-SHARED",
+      candidate_indicator=dict(_shared_candidate, name="A different metric definition"),
+      statement="a milestone whose candidate definition conflicts", target_year=YEAR + 8),
+]
+_conflicting_registry = FC.build_candidate_registry(_conflicting_bindings)
+check("conflicting reuse identifies the later milestone",
+      _conflicting_registry.conflicts[0].milestone_index, "1")
+check("conflicting reuse identifies the shared candidate id",
+      _conflicting_registry.conflicts[0].candidate_id, "C2-CAND-SHARED")
+check("conflicting reuse gives an explicit refusal reason",
+      _conflicting_registry.conflicts[0].reason,
+      "conflicts with its earlier definition")
+
+_kept, _refused = F.candidate_registry_gate(_conflicting_bindings)
+check("the first candidate definition remains bound",
+      [milestone["statement"] for milestone in _kept], "['s']")
+check("the conflicting later milestone is explicitly refused",
+      _refused[0]["why"],
+      "C2-CAND-SHARED conflicts with its earlier definition")
 
 
 section("Provisionality travels with the milestone")

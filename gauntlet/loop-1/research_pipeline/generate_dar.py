@@ -43,6 +43,7 @@ sys.path.insert(0, os.path.join(REPO, "model"))
 
 import vendors as V
 import workflow_inputs as WI
+import foresight_contract as FC
 from engine_v17 import MODEL, run as engine_run, tlevel
 from reference_scorer import Scorer as ReferenceScorer
 
@@ -6200,7 +6201,6 @@ def required_product_errors(scans, foresight, country):
 
     candidate_pattern = re.compile(SPEC["candidate_indicators"]["id_pattern"])
     candidate_fields = SPEC["candidate_indicators"]["required_fields"]
-    milestone_candidate_ids = []
     milestones = foresight.get("milestones")
     if not isinstance(milestones, list) or not milestones:
         errors.append("foresight.milestones is not a non-empty array")
@@ -6236,13 +6236,19 @@ def required_product_errors(scans, foresight, country):
                         text(candidate, field, f"{label}.candidate_indicator")
                     if candidate.get("id") != indicator_id:
                         errors.append(f"{label}.candidate_indicator id does not match")
-                    milestone_candidate_ids.append(candidate.get("id"))
                 if record.get("binds_to_candidate") is not True:
                     errors.append(f"{label} does not mark its candidate binding")
             elif indicator_id not in MODEL:
                 errors.append(f"{label}.indicator_id is not in the model or candidate namespace")
             elif candidate is not None or record.get("binds_to_candidate") is not False:
                 errors.append(f"{label} incorrectly carries a candidate binding")
+
+    registry = FC.build_candidate_registry(milestones) if isinstance(milestones, list) else None
+    if registry is not None:
+        for conflict in registry.conflicts:
+            errors.append(
+                f"foresight.milestones[{conflict.milestone_index}].candidate_indicator "
+                f"{conflict.candidate_id} {conflict.reason}")
 
     candidates = foresight.get("candidate_indicators")
     if not isinstance(candidates, list):
@@ -6260,7 +6266,8 @@ def required_product_errors(scans, foresight, country):
             if not isinstance(cid, str) or not candidate_pattern.fullmatch(cid):
                 errors.append(f"{label}.id is outside the candidate namespace")
             ids.append(cid)
-        if ids != milestone_candidate_ids or len(ids) != len(set(ids)):
+        expected_candidates = list(registry.indicators) if registry is not None else []
+        if candidates != expected_candidates or len(ids) != len(set(ids)):
             errors.append("foresight candidate register does not match milestone bindings")
 
     refused = foresight.get("refused_milestones")
