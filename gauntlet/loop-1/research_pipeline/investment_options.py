@@ -269,8 +269,8 @@ def validate_product(product):
         low, high = costs.get("low"), costs.get("high")
         if (low is None) != (high is None):
             errors.append(f"{label}.cost range must provide both bounds or neither")
-        if low is not None and (not math.isfinite(low) or not math.isfinite(high)
-                                or low < 0 or high < low):
+        elif low is not None and (not math.isfinite(low) or not math.isfinite(high)
+                                  or low < 0 or high < low):
             errors.append(f"{label}.cost range is invalid")
         if low is not None and not str(costs.get("basis") or "").strip():
             errors.append(f"{label}.cost range has no basis")
@@ -279,8 +279,8 @@ def validate_product(product):
             b_low, b_high = benefit.get("low"), benefit.get("high")
             if (b_low is None) != (b_high is None):
                 errors.append(f"{label} benefit range must provide both bounds or neither")
-            if b_low is not None and (not math.isfinite(b_low) or not math.isfinite(b_high)
-                                      or b_high < b_low):
+            elif b_low is not None and (not math.isfinite(b_low) or not math.isfinite(b_high)
+                                        or b_high < b_low):
                 errors.append(f"{label} benefit range is invalid")
             refs.extend(benefit.get("source_refs") or [])
         unknown = sorted(set(refs) - known_sources)
