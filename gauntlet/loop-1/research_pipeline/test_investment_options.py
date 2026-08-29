@@ -98,6 +98,47 @@ class InvestmentOptionsTest(unittest.TestCase):
         self.assertTrue(any("cost range is invalid" in error for error in errors))
         self.assertTrue(any("unknown sources" in error for error in errors))
 
+    def test_quantified_benefit_ranges_are_paired_and_ordered_without_crashing(self):
+        cases = (
+            (10.0, None, ["options[0] benefit range must provide both bounds or neither"]),
+            (None, 20.0, ["options[0] benefit range must provide both bounds or neither"]),
+            (None, None, []),
+            (10.0, 20.0, []),
+            (20.0, 10.0, ["options[0] benefit range is invalid"]),
+        )
+        for low, high, expected in cases:
+            with self.subTest(low=low, high=high):
+                product = self.product()
+                product["options"][0]["benefits"]["quantified"] = [{
+                    "name": "Yield improvement",
+                    "low": low,
+                    "high": high,
+                    "unit": "percent",
+                    "basis": "Illustrative planning assumption",
+                    "source_refs": ["SRC-001"],
+                }]
+
+                errors = [
+                    error for error in I.validate_product(product)
+                    if "benefit range" in error
+                ]
+
+                self.assertEqual(errors, expected)
+
+    def test_partial_cost_range_is_rejected_without_crashing(self):
+        for low, high in ((100.0, None), (None, 200.0)):
+            with self.subTest(low=low, high=high):
+                product = self.product()
+                product["options"][0]["costs"]["low"] = low
+                product["options"][0]["costs"]["high"] = high
+
+                errors = I.validate_product(product)
+
+                self.assertIn(
+                    "options[0].cost range must provide both bounds or neither",
+                    errors,
+                )
+
     def test_workbook_contains_required_sheets(self):
         with tempfile.TemporaryDirectory() as directory:
             path = os.path.join(directory, "cba.xlsx")
