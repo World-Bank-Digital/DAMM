@@ -270,6 +270,57 @@ class InvestmentOptionsTest(unittest.TestCase):
                 schema, 100, "logical unit")
         self.assertEqual(resumed.calls, [])
 
+    def test_cached_candidate_response_must_match_its_paid_ledger_result(self):
+        ledger = I.V.Ledger(ceiling=500, label="test")
+        llm = I.V.LLM(
+            "anthropic", ledger, model="test-model").enable_durable_outcomes()
+        mapped = {"candidates": [{
+            "title": f"Option {index}",
+            "problem": f"Problem {index}",
+            "recommendation_rationale": f"Rationale {index}",
+            "source_refs": ["SRC-001"],
+        } for index in range(1, 4)]}
+        transport = mock.Mock(return_value=(mapped, 10, 20))
+        llm._call_anthropic = transport
+        state = {"steps": {}}
+
+        I._checkpointed_candidate_call(
+            llm,
+            state,
+            lambda current: I._bind_state_to_spend_prefix(current, ledger),
+            "candidate-map-0001",
+            "system",
+            "user",
+            I.CANDIDATE_MAP_SCHEMA,
+            100,
+            "investment candidate map batch 1/1",
+            {"SRC-001"},
+        )
+        cached = state["steps"]["candidate-map-0001"]
+        cached["response"]["candidates"][0]["problem"] = "p" * 501
+        cached["response_sha256"] = I.V.stable_json_sha256(cached["response"])
+        transport.reset_mock()
+        transport.side_effect = AssertionError(
+            "tampered state authorized a new paid repair")
+
+        with self.assertRaisesRegex(
+                I.AppraisalCheckpointUnsafe, "spend ledger result"):
+            I._checkpointed_candidate_call(
+                llm,
+                state,
+                lambda current: I._bind_state_to_spend_prefix(current, ledger),
+                "candidate-map-0001",
+                "system",
+                "user",
+                I.CANDIDATE_MAP_SCHEMA,
+                100,
+                "investment candidate map batch 1/1",
+                {"SRC-001"},
+            )
+
+        transport.assert_not_called()
+        self.assertEqual(len(ledger.calls), 1)
+
     def test_unclaimed_durable_success_is_recovered_without_provider_replay(self):
         ledger = I.V.Ledger(ceiling=500, label="test")
         llm = I.V.LLM(
@@ -503,6 +554,9 @@ class InvestmentOptionsTest(unittest.TestCase):
                 self.ledger = ledger
                 return self
 
+            def enable_durable_outcomes(self):
+                return self
+
             def json_call(
                     self, _system, _user, _schema, _pass_name,
                     max_tokens=8000, detail=""):
@@ -556,6 +610,348 @@ class InvestmentOptionsTest(unittest.TestCase):
             self.assertEqual(state["steps"]["candidate-map-0001"]["status"], "truncated")
             self.assertFalse(os.path.exists(
                 os.path.join(directory, f"{out}_investment_options.json")))
+
+    def test_sparse_overlong_candidate_text_is_repaired_once_without_replay(self):
+        test_case = self
+        compact_problem_4 = "Compact evidence-backed problem 4."
+        compact_rationale_1 = "Compact evidence-backed rationale 1."
+        compact_rationale_2 = "Compact evidence-backed rationale 2."
+        compact_rationale_4 = "Compact evidence-backed rationale 4."
+
+        class RepairingLLM:
+            def __init__(self):
+                self.calls = []
+                self.final_input = None
+                self.mapped = [{
+                    "title": f"Option {index + 1}",
+                    "problem": "p" * 501 if index == 3 else f"Problem {index + 1}",
+                    "recommendation_rationale": (
+                        "r" * 501
+                        if index in {0, 1, 3}
+                        else f"Rationale {index + 1}"
+                    ),
+                    "source_refs": ["SRC-001"],
+                } for index in range(4)]
+
+            def json_call(
+                    self, _system, user, _schema, _pass_name,
+                    max_tokens=8000, detail=""):
+                del max_tokens
+                self.calls.append(detail)
+                if detail == "investment candidate map batch 1/1":
+                    test_case.assertIn(I.CANDIDATE_TEXT_LIMIT_GUIDANCE, user)
+                    return {"candidates": self.mapped}
+                if detail == (
+                        "investment candidate map batch 1/1 "
+                        "[local-length repair 1/1]"):
+                    required = json.loads(user.split(
+                        "REQUIRED_REPAIRS:\n", 1
+                    )[1].split("\n\nCANDIDATE_REGISTER:\n", 1)[0])
+                    test_case.assertEqual(required, [
+                        {
+                            "key": "candidate-0.recommendation_rationale",
+                            "max_characters": 500,
+                        },
+                        {
+                            "key": "candidate-1.recommendation_rationale",
+                            "max_characters": 500,
+                        },
+                        {
+                            "key": "candidate-3.problem",
+                            "max_characters": 500,
+                        },
+                        {
+                            "key": "candidate-3.recommendation_rationale",
+                            "max_characters": 500,
+                        },
+                    ])
+                    return {"repairs": {
+                        "candidate-0.recommendation_rationale": compact_rationale_1,
+                        "candidate-1.recommendation_rationale": compact_rationale_2,
+                        "candidate-3.problem": compact_problem_4,
+                        "candidate-3.recommendation_rationale": compact_rationale_4,
+                    }}
+                if detail == "investment candidate final register":
+                    supplied = user.split(
+                        "SUPPORTED CANDIDATE BRIEFS:\n", 1
+                    )[1].split("\n\nReturn", 1)[0]
+                    self.final_input = json.loads(supplied)
+                    return {"candidates": self.final_input}
+                if detail.startswith("investment appraisal INV-"):
+                    option = json.loads(json.dumps(
+                        test_case.product()["options"][0]))
+                    for field in (
+                            "option_id", "title", "problem",
+                            "recommendation_rationale", "financing_decision"):
+                        option.pop(field)
+                    return {"option": option}
+                if detail == "investment portfolio sequencing":
+                    return {
+                        "portfolio_sequencing": "Governance before procurement.",
+                        "cross_cutting_data_gaps": ["Validate unit costs."],
+                    }
+                raise AssertionError(f"unexpected model call: {detail}")
+
+        sources = [{
+            "ref": "SRC-001", "kind": "country_finding", "title": "Policy",
+            "text": "Evidence", "source": "https://example.test/policy",
+        }]
+        state = {"steps": {}}
+        llm = RepairingLLM()
+
+        response = I.synthesize_appraisal(
+            "Exampleland", sources, llm, state=state,
+        )
+        product = I.build_product("Exampleland", "EXP", response, sources)
+
+        self.assertEqual(I.validate_product(product), [])
+        by_title = {option["title"]: option for option in response["options"]}
+        self.assertEqual(
+            by_title["Option 1"]["recommendation_rationale"], compact_rationale_1)
+        self.assertEqual(
+            by_title["Option 2"]["recommendation_rationale"], compact_rationale_2)
+        self.assertEqual(by_title["Option 4"]["problem"], compact_problem_4)
+        self.assertEqual(
+            by_title["Option 4"]["recommendation_rationale"], compact_rationale_4)
+        self.assertTrue(all(
+            len(option["title"]) <= 160
+            and len(option["problem"]) <= 500
+            and len(option["recommendation_rationale"]) <= 500
+            for option in response["options"]
+        ))
+        self.assertEqual(
+            set(by_title), {"Option 1", "Option 2", "Option 3", "Option 4"})
+        self.assertEqual(by_title["Option 1"]["problem"], "Problem 1")
+        self.assertEqual(by_title["Option 2"]["problem"], "Problem 2")
+        self.assertEqual(by_title["Option 3"]["problem"], "Problem 3")
+        self.assertEqual(
+            by_title["Option 3"]["recommendation_rationale"], "Rationale 3")
+        expected_repaired = json.loads(json.dumps(llm.mapped))
+        expected_repaired[0]["recommendation_rationale"] = compact_rationale_1
+        expected_repaired[1]["recommendation_rationale"] = compact_rationale_2
+        expected_repaired[3].update({
+            "problem": compact_problem_4,
+            "recommendation_rationale": compact_rationale_4,
+        })
+        self.assertCountEqual(llm.final_input, expected_repaired)
+        self.assertEqual(llm.calls.count(
+            "investment candidate map batch 1/1"), 1)
+        self.assertEqual(llm.calls.count(
+            "investment candidate map batch 1/1 "
+            "[local-length repair 1/1]"), 1)
+
+        class NoReplayLLM:
+            def json_call(self, *_args, **_kwargs):
+                raise AssertionError("completed paid work was replayed")
+
+        resumed = I.synthesize_appraisal(
+            "Exampleland", sources, NoReplayLLM(), state=state,
+        )
+        self.assertEqual(resumed, response)
+
+    def test_overlong_candidate_title_remains_a_repairable_target(self):
+        original = {"candidates": [{
+            "title": "t" * 161 if index == 0 else f"Option {index + 1}",
+            "problem": f"Problem {index + 1}",
+            "recommendation_rationale": f"Rationale {index + 1}",
+            "source_refs": ["SRC-001"],
+        } for index in range(3)]}
+
+        repair = I._candidate_response_or_length_repair(
+            original, {"SRC-001"}, I.CANDIDATE_MAP_SCHEMA)
+
+        self.assertIsInstance(repair, I._CandidateLengthRepair)
+        self.assertEqual(repair.targets, ((0, "title", 160),))
+        repaired = I._apply_candidate_length_repairs(
+            {"repairs": {"candidate-0.title": "Compact title"}},
+            repair.response,
+            repair.targets,
+            {"SRC-001"},
+            I.CANDIDATE_MAP_SCHEMA,
+            I._candidate_length_repair_schema(repair.targets),
+        )
+        self.assertEqual(repaired["candidates"][0]["title"], "Compact title")
+        self.assertEqual(repaired["candidates"][0]["problem"], "Problem 1")
+        self.assertEqual(repaired["candidates"][1:], original["candidates"][1:])
+
+    def test_invalid_candidate_length_repair_is_terminal_and_not_replayed(self):
+        class InvalidRepairLLM:
+            def __init__(self):
+                self.calls = []
+
+            def json_call(self, *_args, detail="", **_kwargs):
+                self.calls.append(detail)
+                if detail == "investment candidate map batch 1/1":
+                    return {"candidates": [{
+                        "title": f"Option {index}",
+                        "problem": "p" * 501 if index == 1 else f"Problem {index}",
+                        "recommendation_rationale": f"Rationale {index}",
+                        "source_refs": ["SRC-001"],
+                    } for index in range(1, 4)]}
+                if detail == (
+                        "investment candidate map batch 1/1 "
+                        "[local-length repair 1/1]"):
+                    return {"repairs": {"candidate-0.problem": "p" * 501}}
+                raise AssertionError(f"unexpected model call: {detail}")
+
+        sources = [{
+            "ref": "SRC-001", "kind": "country_finding", "title": "Policy",
+            "text": "Evidence", "source": "https://example.test/policy",
+        }]
+        state = {"steps": {}}
+        first = InvalidRepairLLM()
+
+        with self.assertRaises(I.AppraisalOutputInvalid) as raised:
+            I.synthesize_appraisal(
+                "Exampleland", sources, first, state=state,
+            )
+
+        self.assertEqual(
+            raised.exception.step_id, "candidate-map-0001-length-repair")
+        self.assertEqual(first.calls, [
+            "investment candidate map batch 1/1",
+            "investment candidate map batch 1/1 [local-length repair 1/1]",
+        ])
+
+        resumed = InvalidRepairLLM()
+        with self.assertRaises(I.AppraisalOutputInvalid):
+            I.synthesize_appraisal(
+                "Exampleland", sources, resumed, state=state,
+            )
+        self.assertEqual(resumed.calls, [])
+
+    def test_durable_candidate_repair_is_claimed_after_state_write_crash(self):
+        test_case = self
+
+        class SimulatedCrash(Exception):
+            pass
+
+        sources = [{
+            "ref": "SRC-001", "kind": "country_finding", "title": "Policy",
+            "text": "Evidence", "source": "https://example.test/policy",
+        }]
+        mapped = [{
+            "title": f"Option {index}",
+            "problem": "p" * 501 if index == 1 else f"Problem {index}",
+            "recommendation_rationale": f"Rationale {index}",
+            "source_refs": ["SRC-001"],
+        } for index in range(1, 4)]
+        ledger = I.V.Ledger(ceiling=500, label="test")
+        llm = I.V.LLM(
+            "anthropic", ledger, model="test-model"
+        ).enable_durable_outcomes()
+        crashed = False
+        repair_transports = 0
+
+        def transport(_system, user, _schema, _max_tokens):
+            nonlocal repair_transports
+            if "REQUIRED_REPAIRS:\n" in user:
+                if crashed:
+                    raise AssertionError("durable repair outcome was replayed")
+                repair_transports += 1
+                return ({
+                    "repairs": {
+                        "candidate-0.problem": "Compact problem.",
+                    },
+                }, 10, 20)
+            if "\n\nMap this batch to 0-4" in user:
+                return ({"candidates": mapped}, 10, 20)
+            if "SUPPORTED CANDIDATE BRIEFS:\n" in user:
+                supplied = user.split(
+                    "SUPPORTED CANDIDATE BRIEFS:\n", 1
+                )[1].split("\n\nReturn", 1)[0]
+                return ({"candidates": json.loads(supplied)}, 10, 20)
+            if "CANDIDATE:\n" in user:
+                option = json.loads(json.dumps(
+                    test_case.product()["options"][0]))
+                for field in (
+                        "option_id", "title", "problem",
+                        "recommendation_rationale", "financing_decision"):
+                    option.pop(field)
+                return ({"option": option}, 10, 20)
+            if "BOUNDED OPTION PROJECTIONS:\n" in user:
+                return ({
+                    "portfolio_sequencing": "Governance before procurement.",
+                    "cross_cutting_data_gaps": ["Validate unit costs."],
+                }, 10, 20)
+            raise AssertionError("unexpected model request")
+
+        llm._call_anthropic = transport
+        state = {"steps": {}}
+        durable_state = []
+
+        def crashing_save(current):
+            nonlocal crashed
+            if "candidate-map-0001-length-repair" in current["steps"]:
+                crashed = True
+                raise SimulatedCrash()
+            I._bind_state_to_spend_prefix(current, ledger)
+            durable_state[:] = [json.loads(json.dumps(current))]
+
+        with self.assertRaises(SimulatedCrash):
+            I.synthesize_appraisal(
+                "Exampleland", sources, llm,
+                state=state, save_checkpoint=crashing_save,
+            )
+
+        self.assertTrue(crashed)
+        self.assertEqual(repair_transports, 1)
+        self.assertEqual(
+            set(durable_state[0]["steps"]), {"candidate-map-0001"})
+        self.assertEqual(durable_state[0]["spend_prefix"]["call_count"], 1)
+        self.assertEqual(len(ledger.calls), 2)
+
+        resumed_state = durable_state[0]
+
+        def resumed_save(current):
+            I._bind_state_to_spend_prefix(current, ledger)
+
+        response = I.synthesize_appraisal(
+            "Exampleland", sources, llm,
+            state=resumed_state, save_checkpoint=resumed_save,
+        )
+        product = I.build_product("Exampleland", "EXP", response, sources)
+
+        self.assertEqual(I.validate_product(product), [])
+        self.assertEqual(repair_transports, 1)
+
+    def test_mixed_candidate_defects_are_terminal_without_length_repair(self):
+        class MixedInvalidLLM:
+            def __init__(self):
+                self.calls = []
+
+            def json_call(self, *_args, detail="", **_kwargs):
+                self.calls.append(detail)
+                return {"candidates": [{
+                    "title": f"Option {index}",
+                    "problem": "p" * 501 if index == 1 else f"Problem {index}",
+                    "recommendation_rationale": f"Rationale {index}",
+                    "source_refs": [
+                        "SRC-NOT-KNOWN" if index == 1 else "SRC-001"
+                    ],
+                } for index in range(1, 4)]}
+
+        sources = [{
+            "ref": "SRC-001", "kind": "country_finding", "title": "Policy",
+            "text": "Evidence", "source": "https://example.test/policy",
+        }]
+        state = {"steps": {}}
+        first = MixedInvalidLLM()
+
+        with self.assertRaises(I.AppraisalOutputInvalid) as raised:
+            I.synthesize_appraisal(
+                "Exampleland", sources, first, state=state,
+            )
+
+        self.assertEqual(raised.exception.step_id, "candidate-map-0001")
+        self.assertEqual(first.calls, ["investment candidate map batch 1/1"])
+
+        resumed = MixedInvalidLLM()
+        with self.assertRaises(I.AppraisalOutputInvalid):
+            I.synthesize_appraisal(
+                "Exampleland", sources, resumed, state=state,
+            )
+        self.assertEqual(resumed.calls, [])
 
     def test_invalid_candidate_response_is_terminal_and_not_replayed(self):
         class InvalidLLM:
@@ -662,10 +1058,6 @@ class InvestmentOptionsTest(unittest.TestCase):
                     # retried. A paid failure without a durable outcome must fail closed.
                     self.fail_portfolio_once = False
                     raise I.V.VendorError("temporary portfolio failure")
-                self.ledger.record(
-                    "anthropic", "investment", model="test-model",
-                    in_tok=10, out_tok=20, detail=detail,
-                )
                 refs = sorted(set(re.findall(r"SRC-\d{3}", user)))
                 if detail.startswith("investment candidate map batch "):
                     self.register = [{
@@ -674,22 +1066,37 @@ class InvestmentOptionsTest(unittest.TestCase):
                         "recommendation_rationale": f"Rationale {index}",
                         "source_refs": refs,
                     } for index in range(1, 4)]
-                    return {"candidates": self.register}
-                if detail == "investment candidate final register":
-                    return {"candidates": self.register}
-                if detail.startswith("investment appraisal INV-"):
+                    response = {"candidates": self.register}
+                elif detail == "investment candidate final register":
+                    response = {"candidates": self.register}
+                elif detail.startswith("investment appraisal INV-"):
                     option = json.loads(json.dumps(test_case.product()["options"][0]))
                     for field in (
                             "option_id", "title", "problem",
                             "recommendation_rationale", "financing_decision"):
                         option.pop(field)
-                    return {"option": option}
-                if detail == "investment portfolio sequencing":
-                    return {
+                    response = {"option": option}
+                elif detail == "investment portfolio sequencing":
+                    response = {
                         "portfolio_sequencing": "Governance before procurement.",
                         "cross_cutting_data_gaps": ["Validate unit costs."],
                     }
-                raise AssertionError(f"legacy monolithic call was used: {detail}")
+                else:
+                    raise AssertionError(f"legacy monolithic call was used: {detail}")
+                request_sha256 = I.V.json_call_request_sha256(
+                    system, user, schema, pass_name, max_tokens, detail)
+                self.ledger.record(
+                    "anthropic", "investment", model="test-model",
+                    in_tok=10, out_tok=20, detail=detail,
+                    structured_result={
+                        "schema_version": "damm.structured-result/v1",
+                        "request_sha256": request_sha256,
+                        "outcome": "complete",
+                        "response_sha256": I.V.stable_json_sha256(response),
+                        "response": response,
+                    },
+                )
+                return response
 
         with tempfile.TemporaryDirectory() as directory:
             out = "EXP_checkpoint"
