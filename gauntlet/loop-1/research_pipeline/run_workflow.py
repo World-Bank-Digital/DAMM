@@ -118,6 +118,10 @@ class RetryableStageError(WorkflowError):
     """A stage failed in a way that may succeed within the bounded retry policy."""
 
 
+class NonRetryableStageError(WorkflowError):
+    """A command exhausted its own safe retry policy and must not be replayed."""
+
+
 class MissingRequiredArtifacts(RetryableStageError):
     """A stage returned a partial product eligible for bounded automatic retry."""
 
@@ -133,6 +137,11 @@ class WorkflowRunFailed(WorkflowError):
 ArtifactPath = str | os.PathLike[str]
 ArtifactValue = ArtifactPath | Sequence[ArtifactPath]
 StageHandler = Callable[["StageContext"], "StageResult | Mapping[str, ArtifactValue]"]
+
+# EX_CONFIG is reserved here as the command/coordinator terminal-failure contract.
+# Stage commands use it only after they have already exhausted their own bounded,
+# stateful retry and persisted authoritative spend.
+NONRETRYABLE_COMMAND_EXIT = 78
 
 
 @dataclass(frozen=True)
@@ -1191,7 +1200,12 @@ class WorkflowCoordinator:
             detail = "\n".join(part.strip() for part in (stdout, stderr) if part.strip())
             if len(detail) > 1200:
                 detail = detail[-1200:]
-            raise RetryableStageError(
+            error_type = (
+                NonRetryableStageError
+                if return_code == NONRETRYABLE_COMMAND_EXIT
+                else RetryableStageError
+            )
+            raise error_type(
                 f"command for {context.stage_id} exited {return_code}"
                 + (f": {detail}" if detail else "")
             )
