@@ -256,6 +256,8 @@ class Ledger:
         # `spent`, which takes the lock again. With a plain Lock that deadlocks, and it
         # deadlocks at the first checkpoint of every run rather than rarely.
         self._lock = threading.RLock()
+        self._reservations = {}
+        self._reservation_counter = 0
         self._carried_s = 0.0
         self._checkpoint_path = None
 
@@ -266,7 +268,8 @@ class Ledger:
         return table.get(model) or table.get("_default") or {}
 
     def record(self, vendor, pass_name, model="", in_tok=0, out_tok=0,
-               searches=0, content_pages=0, fetches=0, requests=0, detail=""):
+               searches=0, content_pages=0, fetches=0, requests=0, detail="",
+               structured_result=None, _reservation=None):
         p = self._price(vendor, model)
         cost = (in_tok / 1e6) * p.get("in_per_mtok", 0.0) \
              + (out_tok / 1e6) * p.get("out_per_mtok", 0.0) \
@@ -275,26 +278,58 @@ class Ledger:
              + fetches * PRICES.get("jina", {}).get("per_fetch", 0.0) \
              + requests * p.get("per_request", 0.0)
         with self._lock:
-            self.calls.append(dict(vendor=vendor, pass_name=pass_name, model=model,
-                                   in_tok=in_tok, out_tok=out_tok, searches=searches,
-                                   content_pages=content_pages, fetches=fetches,
-                                   requests=requests, cost=round(cost, 6),
-                                   detail=detail[:200],
-                                   at=round(time.time() - self._t0, 1)))
+            if (_reservation is not None
+                    and _reservation not in self._reservations):
+                raise ValueError("unknown budget reservation")
+            call = dict(vendor=vendor, pass_name=pass_name, model=model,
+                        in_tok=in_tok, out_tok=out_tok, searches=searches,
+                        content_pages=content_pages, fetches=fetches,
+                        requests=requests, cost=round(cost, 6),
+                        detail=detail[:200],
+                        at=round(time.time() - self._t0, 1))
+            if structured_result is not None:
+                if not isinstance(structured_result, dict):
+                    raise ValueError("structured result journal is not an object")
+                # Make the journal an immutable JSON value before publishing the call.
+                call["structured_result"] = strict_json_loads(json.dumps(
+                    structured_result, ensure_ascii=False, allow_nan=False))
+            self.calls.append(call)
             if self._checkpoint_path:
                 # Persist inside the same lock that publishes the call. A normal exception,
                 # coordinator retry, or process crash after this point cannot lose a paid
                 # attempt and later spend the same protected allocation again.
                 atomic_write_json(self._checkpoint_path, self.snapshot())
+            if _reservation is not None:
+                # Publish actual spend and retire worst-case headroom under one lock.
+                # No concurrent caller can observe both amounts for the same request.
+                self._reservations.pop(_reservation)
         return cost
 
-    # -- reading ---------------------------------------------------
-    def spent(self, pass_name=None):
-        aliases = (
-            {"automated_challenge", "g2"}
-            if pass_name in {"automated_challenge", "g2"}
-            else {pass_name}
+    def settle(self, reservation, vendor, pass_name, model="", in_tok=0,
+               out_tok=0, searches=0, content_pages=0, fetches=0, requests=0,
+               detail="", structured_result=None):
+        """Atomically replace a live reservation with its authoritative usage."""
+        self.record(
+            vendor, pass_name, model=model, in_tok=in_tok, out_tok=out_tok,
+            searches=searches, content_pages=content_pages, fetches=fetches,
+            requests=requests, detail=detail, structured_result=structured_result,
+            _reservation=reservation,
         )
+        # ``json_call_once`` assigns this result back to its local handle, making its
+        # finally cleanup conditional without a second racy reservation lookup.
+        return None
+
+    # -- reading ---------------------------------------------------
+    @staticmethod
+    def _pass_aliases(pass_name):
+        return (
+            frozenset({"automated_challenge", "g2"})
+            if pass_name in {"automated_challenge", "g2"}
+            else frozenset({pass_name})
+        )
+
+    def spent(self, pass_name=None):
+        aliases = self._pass_aliases(pass_name)
         with self._lock:
             return round(sum(c["cost"] for c in self.calls
                              if pass_name is None or c["pass_name"] in aliases), 6)
@@ -310,8 +345,34 @@ class Ledger:
 
     def check(self, pass_name, headroom=0.0):
         """Called before an outside call. Raises rather than degrading silently."""
-        if self.remaining(pass_name) <= headroom:
-            raise BudgetExhausted(pass_name, self.spent(pass_name), self.cap(pass_name))
+        if (not isinstance(headroom, (int, float)) or isinstance(headroom, bool)
+                or not math.isfinite(float(headroom)) or headroom < 0):
+            raise ValueError("budget headroom must be a finite nonnegative number")
+        with self._lock:
+            aliases = self._pass_aliases(pass_name)
+            reserved = sum(
+                amount for reserved_pass, amount in self._reservations.values()
+                if reserved_pass in aliases
+            )
+            if self.remaining(pass_name) - reserved <= headroom:
+                raise BudgetExhausted(
+                    pass_name, self.spent(pass_name), self.cap(pass_name))
+
+    def reserve(self, pass_name, headroom):
+        """Atomically reserve worst-case cost across a concurrent paid request."""
+        with self._lock:
+            self.check(pass_name, headroom=headroom)
+            self._reservation_counter += 1
+            reservation = self._reservation_counter
+            self._reservations[reservation] = (pass_name, float(headroom))
+            return reservation
+
+    def release(self, reservation):
+        """Release one in-process reservation after actual usage is recorded."""
+        with self._lock:
+            if reservation not in self._reservations:
+                raise ValueError("unknown budget reservation")
+            self._reservations.pop(reservation)
 
     def elapsed(self):
         return round(time.time() - self._t0 + self._carried_s, 1)
@@ -343,7 +404,7 @@ class Ledger:
         """Journal every subsequent vendor record to one durable spend checkpoint."""
         with self._lock:
             resolved = self._bind_checkpoint_path(path)
-            if not os.path.exists(resolved):
+            if not regular_file_presence(resolved, "spend checkpoint"):
                 atomic_write_json(resolved, self.snapshot())
         return resolved
 
@@ -429,6 +490,144 @@ class Ledger:
 
 class VendorError(Exception):
     pass
+
+
+class VendorOutputTruncated(VendorError):
+    """A paid structured-output response ended before its JSON was complete."""
+
+    code = "structured_output_truncated"
+
+    def __init__(
+            self, *, vendor, model, pass_name, detail, stop_reason, request_id,
+            max_tokens, input_tokens, output_tokens, thinking_tokens,
+            partial_output_chars, partial_output_sha256):
+        self.vendor = vendor
+        self.model = model
+        self.pass_name = pass_name
+        self.detail = detail
+        self.stop_reason = stop_reason
+        self.request_id = request_id
+        self.max_tokens = max_tokens
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        self.thinking_tokens = thinking_tokens
+        self.partial_output_chars = partial_output_chars
+        self.partial_output_sha256 = partial_output_sha256
+        super().__init__(
+            f"{model} structured output was truncated ({stop_reason}) after "
+            f"{output_tokens} output tokens, including {thinking_tokens} thinking tokens"
+        )
+
+
+class VendorMalformedOutput(VendorError):
+    """A paid completed response was not valid structured JSON."""
+
+    code = "structured_output_malformed"
+
+    def __init__(
+            self, *, vendor, model, pass_name, detail, stop_reason, request_id,
+            max_tokens, input_tokens, output_tokens, thinking_tokens,
+            partial_output_chars, partial_output_sha256, parse_error):
+        self.vendor = vendor
+        self.model = model
+        self.pass_name = pass_name
+        self.detail = detail
+        self.stop_reason = stop_reason
+        self.request_id = request_id
+        self.max_tokens = max_tokens
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        self.thinking_tokens = thinking_tokens
+        self.partial_output_chars = partial_output_chars
+        self.partial_output_sha256 = partial_output_sha256
+        self.parse_error = parse_error
+        super().__init__(
+            f"{model} returned malformed structured output "
+            f"({stop_reason or 'completed'}) after {output_tokens} output tokens: "
+            f"{parse_error}"
+        )
+
+
+class VendorOutputRejected(VendorError):
+    """A paid structured-output request was refused or blocked by safety policy."""
+
+    code = "structured_output_rejected"
+
+    def __init__(
+            self, *, vendor, model, pass_name, detail, stop_reason, request_id,
+            max_tokens, input_tokens, output_tokens, thinking_tokens,
+            partial_output_chars, partial_output_sha256):
+        self.vendor = vendor
+        self.model = model
+        self.pass_name = pass_name
+        self.detail = detail
+        self.stop_reason = stop_reason
+        self.request_id = request_id
+        self.max_tokens = max_tokens
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        self.thinking_tokens = thinking_tokens
+        self.partial_output_chars = partial_output_chars
+        self.partial_output_sha256 = partial_output_sha256
+        super().__init__(
+            f"{model} rejected structured output ({stop_reason}) after "
+            f"{output_tokens} output tokens, including {thinking_tokens} thinking tokens"
+        )
+
+
+class _ProviderOutputTruncated(Exception):
+    """Private transport result; ``json_call`` adds pass identity and accounting."""
+
+    def __init__(
+            self, *, stop_reason, request_id, max_tokens, input_tokens,
+            output_tokens, thinking_tokens, partial_output):
+        self.stop_reason = stop_reason
+        self.request_id = request_id
+        self.max_tokens = max_tokens
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        self.thinking_tokens = thinking_tokens
+        self.partial_output_chars = len(partial_output)
+        self.partial_output_sha256 = hashlib.sha256(
+            partial_output.encode("utf-8")
+        ).hexdigest()
+
+
+class _ProviderMalformedOutput(Exception):
+    """Private transport parse failure carrying authoritative usage metadata."""
+
+    def __init__(
+            self, *, stop_reason, request_id, max_tokens, input_tokens,
+            output_tokens, thinking_tokens, partial_output, parse_error):
+        self.stop_reason = stop_reason
+        self.request_id = request_id
+        self.max_tokens = max_tokens
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        self.thinking_tokens = thinking_tokens
+        self.partial_output_chars = len(partial_output)
+        self.partial_output_sha256 = hashlib.sha256(
+            partial_output.encode("utf-8")
+        ).hexdigest()
+        self.parse_error = str(parse_error)[:240]
+
+
+class _ProviderOutputRejected(Exception):
+    """Private billed refusal/safety result carrying authoritative usage metadata."""
+
+    def __init__(
+            self, *, stop_reason, request_id, max_tokens, input_tokens,
+            output_tokens, thinking_tokens, partial_output):
+        self.stop_reason = stop_reason
+        self.request_id = request_id
+        self.max_tokens = max_tokens
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        self.thinking_tokens = thinking_tokens
+        self.partial_output_chars = len(partial_output)
+        self.partial_output_sha256 = hashlib.sha256(
+            partial_output.encode("utf-8")
+        ).hexdigest()
 
 
 class ReplayExhausted(VendorError):
@@ -862,6 +1061,12 @@ class LLM:
         self.vendor, self.ledger = vendor, ledger
         self.model = model or self._resolve()
         self._client = None
+        self._durable_outcomes = False
+
+    def enable_durable_outcomes(self):
+        """Journal bounded provider outcomes with spend for crash-safe Stage 6."""
+        self._durable_outcomes = True
+        return self
 
     # -- model resolution ------------------------------------------
     def _resolve(self):
@@ -900,32 +1105,191 @@ class LLM:
         raise VendorError(f"unknown vendor {self.vendor}")
 
     # -- the one call ----------------------------------------------
-    def json_call(self, system, user, schema, pass_name, max_tokens=8000, detail=""):
-        """Return a dict validated against `schema` by the vendor's own JSON mode.
+    def _call_cost_headroom(self, system, user, schema, max_tokens):
+        """Conservative upper-bound cost before a bounded provider request starts."""
+        request_bytes = len((
+            str(system) + str(user)
+            + json.dumps(schema, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        ).encode("utf-8"))
+        # Tokenizers cannot emit more ordinary text tokens than input bytes. The fixed
+        # allowance covers provider wrappers and schema-mode control tokens not present
+        # in our serialized request estimate.
+        input_tokens = request_bytes + 4096
+        pricing = self.ledger._price(self.vendor, self.model)
+        return (
+            (input_tokens / 1e6) * pricing.get("in_per_mtok", 0.0)
+            + (max_tokens / 1e6) * pricing.get("out_per_mtok", 0.0)
+            + pricing.get("per_request", 0.0)
+        )
 
-        A reasoning model can spend its whole output allowance thinking and return an
-        empty body. That is a budget failure, not a refusal, and silently turning it
-        into a missing row would be the worst kind of gap — one caused by us. So an
-        empty or unparseable body is retried once with double the room, and only then
-        raises.
+    def _failure_journal(self, request_sha256, outcome, error):
+        if not self._durable_outcomes:
+            return None
+        return {
+            "schema_version": "damm.structured-result/v1",
+            "request_sha256": request_sha256,
+            "outcome": outcome,
+            "max_tokens": error.max_tokens,
+            "stop_reason": str(error.stop_reason or "unknown")[:80],
+            "input_tokens": int(error.input_tokens or 0),
+            "output_tokens": int(error.output_tokens or 0),
+            "thinking_tokens": int(error.thinking_tokens or 0),
+            "partial_output_chars": int(error.partial_output_chars or 0),
+            "partial_output_sha256": error.partial_output_sha256,
+        }
+
+    def _complete_journal(self, request_sha256, response):
+        if not self._durable_outcomes:
+            return None
+        return {
+            "schema_version": "damm.structured-result/v1",
+            "request_sha256": request_sha256,
+            "outcome": "complete",
+            "response_sha256": stable_json_sha256(response),
+            "response": response,
+        }
+
+    def json_call_once(
+            self, system, user, schema, pass_name, max_tokens=8000, detail=""):
+        """Make exactly one bounded provider request and journal its paid outcome.
+
+        One invocation makes one paid request and records its authoritative usage on
+        every outcome. Adaptive retries belong to a stage controller that can persist
+        the failure and change the request allowance without replaying paid work. A
+        stage still validates the unchanged local schema because provider wire subsets
+        cannot express every bound.
+        """
+        request_sha256 = json_call_request_sha256(
+            system, user, schema, pass_name, max_tokens, detail)
+        reservation = self.ledger.reserve(
+            pass_name,
+            self._call_cost_headroom(system, user, schema, max_tokens),
+        )
+        try:
+            fn = getattr(self, "_call_" + self.vendor)
+            try:
+                out, in_tok, out_tok = fn(system, user, schema, max_tokens)
+            except _ProviderOutputTruncated as error:
+                ledger_detail = (
+                    f"TRUNCATED {detail}; stop_reason={error.stop_reason}; "
+                    f"thinking_tokens={error.thinking_tokens}"
+                )
+                reservation = self.ledger.settle(
+                    reservation,
+                    self.vendor,
+                    pass_name,
+                    model=self.model,
+                    in_tok=error.input_tokens,
+                    out_tok=error.output_tokens,
+                    detail=ledger_detail,
+                    structured_result=self._failure_journal(
+                        request_sha256, VendorOutputTruncated.code, error),
+                )
+                raise VendorOutputTruncated(
+                    vendor=self.vendor,
+                    model=self.model,
+                    pass_name=pass_name,
+                    detail=detail,
+                    stop_reason=error.stop_reason,
+                    request_id=error.request_id,
+                    max_tokens=error.max_tokens,
+                    input_tokens=error.input_tokens,
+                    output_tokens=error.output_tokens,
+                    thinking_tokens=error.thinking_tokens,
+                    partial_output_chars=error.partial_output_chars,
+                    partial_output_sha256=error.partial_output_sha256,
+                ) from None
+            except _ProviderMalformedOutput as error:
+                ledger_detail = (
+                    f"MALFORMED {detail}; stop_reason={error.stop_reason}; "
+                    f"thinking_tokens={error.thinking_tokens}"
+                )
+                reservation = self.ledger.settle(
+                    reservation,
+                    self.vendor,
+                    pass_name,
+                    model=self.model,
+                    in_tok=error.input_tokens,
+                    out_tok=error.output_tokens,
+                    detail=ledger_detail,
+                    structured_result=self._failure_journal(
+                        request_sha256, VendorMalformedOutput.code, error),
+                )
+                raise VendorMalformedOutput(
+                    vendor=self.vendor,
+                    model=self.model,
+                    pass_name=pass_name,
+                    detail=detail,
+                    stop_reason=error.stop_reason,
+                    request_id=error.request_id,
+                    max_tokens=error.max_tokens,
+                    input_tokens=error.input_tokens,
+                    output_tokens=error.output_tokens,
+                    thinking_tokens=error.thinking_tokens,
+                    partial_output_chars=error.partial_output_chars,
+                    partial_output_sha256=error.partial_output_sha256,
+                    parse_error=error.parse_error,
+                ) from None
+            except _ProviderOutputRejected as error:
+                ledger_detail = (
+                    f"REJECTED {detail}; stop_reason={error.stop_reason}; "
+                    f"thinking_tokens={error.thinking_tokens}"
+                )
+                reservation = self.ledger.settle(
+                    reservation,
+                    self.vendor,
+                    pass_name,
+                    model=self.model,
+                    in_tok=error.input_tokens,
+                    out_tok=error.output_tokens,
+                    detail=ledger_detail,
+                    structured_result=self._failure_journal(
+                        request_sha256, VendorOutputRejected.code, error),
+                )
+                raise VendorOutputRejected(
+                    vendor=self.vendor,
+                    model=self.model,
+                    pass_name=pass_name,
+                    detail=detail,
+                    stop_reason=error.stop_reason,
+                    request_id=error.request_id,
+                    max_tokens=error.max_tokens,
+                    input_tokens=error.input_tokens,
+                    output_tokens=error.output_tokens,
+                    thinking_tokens=error.thinking_tokens,
+                    partial_output_chars=error.partial_output_chars,
+                    partial_output_sha256=error.partial_output_sha256,
+                ) from None
+            reservation = self.ledger.settle(
+                reservation,
+                self.vendor, pass_name, model=self.model,
+                in_tok=in_tok, out_tok=out_tok, detail=detail,
+                structured_result=self._complete_journal(request_sha256, out))
+            return out
+        finally:
+            if reservation is not None:
+                self.ledger.release(reservation)
+
+    def json_call(self, system, user, schema, pass_name, max_tokens=8000, detail=""):
+        """Legacy adaptive interface used by stages without unit checkpoints.
+
+        Stage 6 calls :meth:`json_call_once` and owns a durable, stateful retry. Older
+        stages retain their historical one-larger-retry behavior so this change does
+        not turn a single truncated cell into a replay of an entire stage.
         """
         last = None
         for attempt in range(2):
-            self.ledger.check(pass_name)
-            fn = getattr(self, "_call_" + self.vendor)
             try:
-                out, in_tok, out_tok = fn(system, user, schema, max_tokens * (attempt + 1))
-            except json.JSONDecodeError as e:
-                last = VendorError(f"{self.model} returned no parseable JSON "
-                                   f"(likely the output allowance was spent on "
-                                   f"reasoning): {e}")
-                self.ledger.record(self.vendor, pass_name, model=self.model,
-                                   out_tok=max_tokens * (attempt + 1),
-                                   detail=f"EMPTY {detail}")
-                continue
-            self.ledger.record(self.vendor, pass_name, model=self.model,
-                               in_tok=in_tok, out_tok=out_tok, detail=detail)
-            return out
+                return self.json_call_once(
+                    system,
+                    user,
+                    schema,
+                    pass_name,
+                    max_tokens=max_tokens * (attempt + 1),
+                    detail=detail,
+                )
+            except (VendorOutputTruncated, VendorMalformedOutput) as error:
+                last = error
         raise last
 
     def _call_anthropic(self, system, user, schema, max_tokens):
@@ -934,10 +1298,75 @@ class LLM:
         r = self._client.messages.create(
             model=self.model, max_tokens=max_tokens, system=system,
             messages=[{"role": "user", "content": user}],
-            output_config={"format": {"type": "json_schema", "schema": schema}},
+            output_config={
+                "format": {
+                    "type": "json_schema",
+                    "schema": anthropic.transform_schema(
+                        _anthropic_schema_input(schema)),
+                }
+            },
         )
-        text = next((b.text for b in r.content if b.type == "text"), "{}")
-        return strict_json_loads(text), r.usage.input_tokens, r.usage.output_tokens
+        text = next((b.text for b in r.content if b.type == "text"), "")
+        usage = r.usage
+        details = getattr(usage, "output_tokens_details", None)
+        input_tokens = sum(
+            getattr(usage, field, 0) or 0
+            for field in (
+                "input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
+        )
+        output_tokens = getattr(usage, "output_tokens", 0) or 0
+        thinking_tokens = getattr(details, "thinking_tokens", 0) or 0
+        stop_reason = str(getattr(r, "stop_reason", "") or "")
+        stop_details = getattr(r, "stop_details", None)
+        if (stop_reason == "refusal"
+                or getattr(stop_details, "type", None) == "refusal"):
+            raise _ProviderOutputRejected(
+                stop_reason="refusal",
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        if stop_reason == "max_tokens":
+            raise _ProviderOutputTruncated(
+                stop_reason=stop_reason,
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        if stop_reason != "end_turn":
+            # A syntactically complete-looking prefix is not a completed response.
+            # In particular, increasing max_tokens cannot repair a context-window
+            # failure caused by the unchanged input, and pause/tool states require a
+            # continuation protocol this JSON adapter deliberately does not provide.
+            raise _ProviderOutputRejected(
+                stop_reason=f"non_complete:{stop_reason or 'missing'}"[:80],
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        try:
+            parsed = strict_json_loads(text)
+        except ValueError as error:
+            raise _ProviderMalformedOutput(
+                stop_reason=str(getattr(r, "stop_reason", "") or "completed"),
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+                parse_error=f"{type(error).__name__}: {error}",
+            ) from None
+        return parsed, input_tokens, output_tokens
 
     def _call_openai(self, system, user, schema, max_tokens):
         import openai
@@ -948,11 +1377,97 @@ class LLM:
             input=user,
             max_output_tokens=max_tokens,
             text={"format": {"type": "json_schema", "name": "research_cell",
-                             "schema": schema, "strict": True}},
+                             "schema": _openai_schema(schema), "strict": True}},
         )
         u = r.usage
-        return (strict_json_loads(r.output_text),
-                getattr(u, "input_tokens", 0), getattr(u, "output_tokens", 0))
+        details = getattr(u, "output_tokens_details", None)
+        input_tokens = getattr(u, "input_tokens", 0) or 0
+        output_tokens = getattr(u, "output_tokens", 0) or 0
+        thinking_tokens = getattr(details, "reasoning_tokens", 0) or 0
+        text = str(getattr(r, "output_text", "") or "")
+        incomplete = getattr(r, "incomplete_details", None)
+        reason = str(getattr(incomplete, "reason", "") or "")
+        refusal = ""
+        for item in getattr(r, "output", None) or []:
+            if getattr(item, "type", None) != "message":
+                continue
+            for content in getattr(item, "content", None) or []:
+                if getattr(content, "type", None) == "refusal":
+                    refusal = str(getattr(content, "refusal", "") or "")
+                    break
+            if refusal:
+                break
+        response_error = getattr(r, "error", None)
+        response_status = str(getattr(r, "status", "") or "")
+        if response_status == "failed" or response_error is not None:
+            error_code = str(
+                getattr(response_error, "code", "") or "response_failed"
+            )
+            raise _ProviderOutputRejected(
+                # The provider's error message can contain request material. Persist
+                # only its bounded machine-readable code in the Stage 6 checkpoint.
+                stop_reason=f"failed:{error_code}"[:80],
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=getattr(r, "max_output_tokens", None) or max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        if ((getattr(r, "status", None) == "incomplete"
+             and reason == "content_filter") or refusal):
+            raise _ProviderOutputRejected(
+                stop_reason=reason or "refusal",
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=getattr(r, "max_output_tokens", None) or max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text or refusal,
+            )
+        if getattr(r, "status", None) == "incomplete" and reason == "max_output_tokens":
+            raise _ProviderOutputTruncated(
+                stop_reason=reason,
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=getattr(r, "max_output_tokens", None) or max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        if response_status != "completed":
+            # Only the provider's completed terminal state can authorize parsing.
+            # Queued/in-progress/cancelled and unknown incomplete states may expose
+            # valid-looking partial text, but accepting it would publish unpaid-for
+            # assumptions as a complete structured result.
+            state = (
+                f"incomplete:{reason or 'unknown'}"
+                if response_status == "incomplete"
+                else f"non_complete:{response_status or 'missing'}"
+            )
+            raise _ProviderOutputRejected(
+                stop_reason=state[:80],
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=getattr(r, "max_output_tokens", None) or max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        try:
+            parsed = strict_json_loads(text)
+        except ValueError as error:
+            raise _ProviderMalformedOutput(
+                stop_reason=(reason or str(getattr(r, "status", "") or "completed")),
+                request_id=str(getattr(r, "id", "") or ""),
+                max_tokens=getattr(r, "max_output_tokens", None) or max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+                parse_error=f"{type(error).__name__}: {error}",
+            ) from None
+        return parsed, input_tokens, output_tokens
 
     def _call_gemini(self, system, user, schema, max_tokens):
         from google import genai
@@ -963,25 +1478,210 @@ class LLM:
             contents=user,
             config=types.GenerateContentConfig(
                 system_instruction=system,
-                # Thinking tokens are drawn from this same allowance, so a budget
-                # sized for the answer alone returns an empty body. The floor buys
-                # the model room to think and still answer.
-                max_output_tokens=max(max_tokens, 16000),
+                # Thinking tokens share this allowance. Stage controllers can make one
+                # persisted, larger retry; the adapter must honor the requested cap.
+                max_output_tokens=max_tokens,
                 response_mime_type="application/json",
                 response_json_schema=_gemini_schema(schema),
             ),
         )
         u = r.usage_metadata
-        return (strict_json_loads(r.text or ""),
-                getattr(u, "prompt_token_count", 0) or 0,
-                (getattr(u, "candidates_token_count", 0) or 0)
-                + (getattr(u, "thoughts_token_count", 0) or 0))
+        input_tokens = getattr(u, "prompt_token_count", 0) or 0
+        answer_tokens = getattr(u, "candidates_token_count", 0) or 0
+        thinking_tokens = getattr(u, "thoughts_token_count", 0) or 0
+        output_tokens = answer_tokens + thinking_tokens
+        try:
+            text = str(getattr(r, "text", "") or "")
+        except (AttributeError, ValueError):
+            # Safety-blocked responses can have no candidate from which the SDK can
+            # synthesize its convenience ``text`` property.
+            text = ""
+        candidates = getattr(r, "candidates", None) or []
+        finish = getattr(candidates[0], "finish_reason", None) if candidates else None
+        reason = (
+            getattr(finish, "name", None)
+            or getattr(finish, "value", None)
+            or str(finish or "")
+        )
+        reason = str(reason).rsplit(".", 1)[-1]
+        prompt_feedback = getattr(r, "prompt_feedback", None)
+        blocked = getattr(prompt_feedback, "block_reason", None)
+        blocked_reason = (
+            getattr(blocked, "name", None)
+            or getattr(blocked, "value", None)
+            or str(blocked or "")
+        )
+        blocked_reason = str(blocked_reason).rsplit(".", 1)[-1]
+        if (blocked_reason and blocked_reason != "BLOCKED_REASON_UNSPECIFIED"):
+            raise _ProviderOutputRejected(
+                stop_reason=blocked_reason,
+                request_id=str(getattr(r, "response_id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        if not candidates:
+            raise _ProviderOutputRejected(
+                stop_reason="NO_CANDIDATE",
+                request_id=str(getattr(r, "response_id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        if reason.upper() == "MAX_TOKENS":
+            raise _ProviderOutputTruncated(
+                stop_reason="MAX_TOKENS",
+                request_id=str(getattr(r, "response_id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        if reason.upper() != "STOP":
+            raise _ProviderOutputRejected(
+                stop_reason=reason.upper() or "UNKNOWN_FINISH_REASON",
+                request_id=str(getattr(r, "response_id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+            )
+        try:
+            parsed = strict_json_loads(text)
+        except ValueError as error:
+            raise _ProviderMalformedOutput(
+                stop_reason=reason or "completed",
+                request_id=str(getattr(r, "response_id", "") or ""),
+                max_tokens=max_tokens,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                thinking_tokens=thinking_tokens,
+                partial_output=text,
+                parse_error=f"{type(error).__name__}: {error}",
+            ) from None
+        return parsed, input_tokens, output_tokens
+
+
+def _constraint_description(name, value):
+    if name == "minLength":
+        return f"Use at least {value} characters."
+    if name == "maxLength":
+        return f"Use at most {value} characters."
+    if name == "uniqueItems" and value is True:
+        return "Array elements must be unique."
+    if name == "additionalProperties" and value is False:
+        return "Do not include properties other than those explicitly listed."
+    return ""
+
+
+_ANTHROPIC_UNION_OUTER_FIELDS = {
+    # Annotations and definitions apply to the union as a whole. Anthropic's SDK
+    # accepts these beside ``anyOf`` and recursively transforms the variants.
+    "$anchor", "$comment", "$defs", "$dynamicAnchor", "$id", "$schema",
+    "const", "default", "definitions", "deprecated", "description", "enum",
+    "examples", "readOnly", "title", "writeOnly",
+}
+_ANTHROPIC_COMPLEX_UNION_FIELDS = {
+    # Distributing these over a generated anyOf needs a full schema algebra. None is
+    # used by this pipeline, so reject a future ambiguous combination explicitly.
+    "$ref", "allOf", "anyOf", "if", "not", "oneOf", "then", "else",
+}
+
+
+def _anthropic_schema_input(schema):
+    """Canonicalize list-valued JSON Schema types before the SDK transformer.
+
+    Anthropic's API accepts JSON Schema type arrays, but current Python SDK releases
+    assert before transport when ``transform_schema`` receives one. Convert only the
+    wire copy to an equivalent ``anyOf``. Type-specific constraints travel with each
+    concrete branch; they are omitted from a null branch because JSON Schema ignores
+    those constraints for a null instance. The caller's authoritative local schema is
+    never mutated.
+    """
+    if isinstance(schema, list):
+        return [_anthropic_schema_input(value) for value in schema]
+    if not isinstance(schema, dict):
+        return schema
+
+    normalized = {
+        name: _anthropic_schema_input(value)
+        for name, value in schema.items()
+    }
+    type_union = normalized.get("type")
+    if not isinstance(type_union, list):
+        return normalized
+    if (not type_union
+            or any(not isinstance(value, str) or not value for value in type_union)
+            or len(set(type_union)) != len(type_union)):
+        raise VendorError("invalid list-valued JSON Schema type for Anthropic")
+    complex_fields = sorted(
+        _ANTHROPIC_COMPLEX_UNION_FIELDS.intersection(normalized))
+    if complex_fields:
+        raise VendorError(
+            "cannot normalize an Anthropic type union combined with "
+            + ", ".join(complex_fields)
+        )
+
+    outer = {
+        name: value for name, value in normalized.items()
+        if name in _ANTHROPIC_UNION_OUTER_FIELDS
+    }
+    branch_constraints = {
+        name: value for name, value in normalized.items()
+        if name != "type" and name not in _ANTHROPIC_UNION_OUTER_FIELDS
+    }
+    branches = []
+    for value_type in type_union:
+        branch = {"type": value_type}
+        if value_type != "null":
+            branch.update(branch_constraints)
+        branches.append(branch)
+    outer["anyOf"] = branches
+    return outer
+
+
+def _wire_schema(schema, unsupported):
+    """Return a provider subset while preserving stripped constraints as guidance."""
+    if isinstance(schema, dict):
+        transformed = {}
+        guidance = []
+        for name, value in schema.items():
+            if name in unsupported:
+                clause = _constraint_description(name, value)
+                if clause:
+                    guidance.append(clause)
+                continue
+            transformed[name] = _wire_schema(value, unsupported)
+        if guidance:
+            description = str(transformed.get("description") or "").strip()
+            transformed["description"] = " ".join(
+                ([description] if description else []) + guidance
+            )
+        return transformed
+    if isinstance(schema, list):
+        return [_wire_schema(value, unsupported) for value in schema]
+    return schema
 
 
 def _gemini_schema(schema):
-    """Gemini's JSON-schema dialect rejects `additionalProperties`; strip it only."""
-    if isinstance(schema, dict):
-        return {k: _gemini_schema(v) for k, v in schema.items() if k != "additionalProperties"}
-    if isinstance(schema, list):
-        return [_gemini_schema(v) for v in schema]
-    return schema
+    """Transform Stage-6 constraints outside Gemini's documented schema subset."""
+    return _wire_schema(
+        schema,
+        {"additionalProperties", "minLength", "maxLength", "uniqueItems"},
+    )
+
+
+def _openai_schema(schema):
+    """Strip constraints outside OpenAI's documented strict-schema subset.
+
+    Stage controllers validate the unchanged schema after the provider returns. This
+    wire-only copy prevents a strict request from failing before generation while
+    retaining the bounded contract locally.
+    """
+    return _wire_schema(schema, {"minLength", "maxLength", "uniqueItems"})

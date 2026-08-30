@@ -547,6 +547,49 @@ class WorkflowCoordinatorTest(unittest.TestCase):
         self.assertEqual(failure["cumulative_spent_usd"], 4.75)
         self.assertEqual(failure["failed_stage_spent_usd"], 3.5)
 
+    def test_nonretryable_command_exit_stops_without_replaying_paid_work(self):
+        handlers = self.all_handlers()
+        handlers.pop("investment_options")
+        spend_path = Path(self.temp.name) / "investment-spend.json"
+        spend_path.write_text(
+            json.dumps({"summary": {"total": 2.5}}), encoding="utf-8"
+        )
+        command = W.CommandSpec(
+            argv=("fake-command",), artifacts={}, spend_path=spend_path
+        )
+        calls = []
+
+        def terminal_failure(_spec, _context):
+            calls.append(True)
+            return SimpleNamespace(
+                returncode=W.NONRETRYABLE_COMMAND_EXIT,
+                stdout="",
+                stderr="structured output exhausted its bounded retry",
+            )
+
+        with self.assertRaises(W.WorkflowRunFailed) as caught:
+            self.coordinator(
+                handlers,
+                commands={"investment_options": command},
+                command_runner=terminal_failure,
+            ).run(country="Egypt", iso3="EGY", run_id="terminal-command")
+
+        self.assertEqual(calls, [True])
+        failed = next(
+            stage for stage in caught.exception.manifest["stages"]
+            if stage["id"] == "investment_options"
+        )
+        self.assertEqual(failed["attempts"], 1)
+        self.assertEqual(
+            caught.exception.manifest["failure"]["type"],
+            "NonRetryableStageError",
+        )
+        events = [
+            json.loads(line)
+            for line in (self.workspace / "workflow-events.jsonl").read_text().splitlines()
+        ]
+        self.assertNotIn("retry", [event["event"] for event in events])
+
     def test_command_cannot_spend_another_stages_protected_allocation(self):
         handlers = self.all_handlers()
         handlers.pop("country_research")
