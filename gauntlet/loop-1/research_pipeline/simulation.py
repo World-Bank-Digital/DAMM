@@ -43,6 +43,15 @@ PRODUCTION_CODE_FILES = {
     "model/DAMM-v1.7-model.json": REPO_ROOT / "model" / "DAMM-v1.7-model.json",
     "workflow/dar-workflow-v1.json": REPO_ROOT / "workflow" / "dar-workflow-v1.json",
 }
+OVERLENGTH_REPAIR_TARGETS = (
+    (0, "problem", 500),
+    (0, "recommendation_rationale", 500),
+    (1, "problem", 500),
+    (1, "recommendation_rationale", 500),
+    (2, "problem", 500),
+    (2, "recommendation_rationale", 500),
+    (3, "problem", 500),
+)
 
 _SENSITIVE_ENV_MARKERS = (
     "API_KEY",
@@ -135,7 +144,10 @@ def _load_scenario(scenario_id: str) -> tuple[dict[str, Any], Path, str]:
         )
     if value.get("scenario_id") != scenario_id:
         raise SimulationError(f"scenario file identity does not match {scenario_id}")
-    if value.get("kind") not in {"stage6_failure_reproduction", "eight_stage_happy"}:
+    if value.get("kind") not in {
+        "stage6_repair_recovery",
+        "eight_stage_happy",
+    }:
         raise SimulationError(f"scenario {scenario_id} has an unsupported kind")
     profiles = value.get("profiles")
     if not isinstance(profiles, list) or not profiles or any(
@@ -152,14 +164,18 @@ def _load_scenario(scenario_id: str) -> tuple[dict[str, Any], Path, str]:
         "fixture_call_count",
         "code_sha256",
     }
-    if value["kind"] == "stage6_failure_reproduction":
-        required_expected.add("step_id")
     if set(expected) != required_expected:
         raise SimulationError(
             f"scenario {scenario_id} expected outcome has unexpected or missing fields"
         )
     if expected["workflow_status"] not in {"complete", "failed"}:
         raise SimulationError(f"scenario {scenario_id} workflow_status is invalid")
+    if expected["workflow_status"] == "complete" and (
+        expected["failed_stage"] is not None or expected["error_code"] is not None
+    ):
+        raise SimulationError(
+            f"scenario {scenario_id} complete outcome cannot declare a failure"
+        )
     if (
         not isinstance(expected["fixture_call_count"], int)
         or isinstance(expected["fixture_call_count"], bool)
@@ -173,9 +189,19 @@ def _load_scenario(scenario_id: str) -> tuple[dict[str, Any], Path, str]:
     fixture = value.get("fixture")
     if not isinstance(fixture, dict):
         raise SimulationError(f"scenario {scenario_id} has no fixture controls")
-    if value["kind"] == "stage6_failure_reproduction":
-        if set(fixture) != {"evidence_batches", "failed_batch", "repair_lengths"}:
-            raise SimulationError(f"scenario {scenario_id} failure fixture is malformed")
+    if value["kind"] == "stage6_repair_recovery":
+        if set(fixture) != {
+            "evidence_batches",
+            "failed_batch",
+            "repair_lengths",
+            "recovery_lengths",
+            "candidate_count",
+        }:
+            raise SimulationError(
+                f"scenario {scenario_id} recovery fixture is malformed"
+            )
+        repair_lengths = fixture["repair_lengths"]
+        recovery_lengths = fixture["recovery_lengths"]
         if (
             not isinstance(fixture["evidence_batches"], int)
             or isinstance(fixture["evidence_batches"], bool)
@@ -183,16 +209,54 @@ def _load_scenario(scenario_id: str) -> tuple[dict[str, Any], Path, str]:
             or not isinstance(fixture["failed_batch"], int)
             or isinstance(fixture["failed_batch"], bool)
             or not 1 <= fixture["failed_batch"] <= fixture["evidence_batches"]
-            or not isinstance(fixture["repair_lengths"], list)
-            or not fixture["repair_lengths"]
+            or not isinstance(repair_lengths, list)
+            or len(repair_lengths) != len(OVERLENGTH_REPAIR_TARGETS)
             or any(
                 not isinstance(length, int)
                 or isinstance(length, bool)
-                or length < 0
-                for length in fixture["repair_lengths"]
+                or length < 1
+                for length in repair_lengths
             )
+            or not any(
+                length > limit
+                for length, (_index, _field, limit) in zip(
+                    repair_lengths, OVERLENGTH_REPAIR_TARGETS
+                )
+            )
+            or not isinstance(recovery_lengths, list)
+            or any(
+                not isinstance(length, int)
+                or isinstance(length, bool)
+                or length < 1
+                for length in recovery_lengths
+            )
+            or len(recovery_lengths) != sum(
+                length > limit
+                for length, (_index, _field, limit) in zip(
+                    repair_lengths, OVERLENGTH_REPAIR_TARGETS
+                )
+            )
+            or any(
+                length > (limit * 9) // 10
+                for length, (_index, _field, limit) in zip(
+                    recovery_lengths,
+                    (
+                        target
+                        for raw_length, target in zip(
+                            repair_lengths, OVERLENGTH_REPAIR_TARGETS
+                        )
+                        if raw_length > target[2]
+                    ),
+                )
+            )
+            or not isinstance(fixture["candidate_count"], int)
+            or isinstance(fixture["candidate_count"], bool)
+            or fixture["candidate_count"] != fixture["evidence_batches"] + 3
+            or not 3 <= fixture["candidate_count"] <= 7
         ):
-            raise SimulationError(f"scenario {scenario_id} failure fixture is invalid")
+            raise SimulationError(
+                f"scenario {scenario_id} recovery fixture is invalid"
+            )
     else:
         if set(fixture) != {"source_count_by_profile", "candidate_count"}:
             raise SimulationError(f"scenario {scenario_id} happy fixture is malformed")
@@ -412,7 +476,7 @@ class _HappyFixtureLLM:
 
 
 class _OverlengthFixtureLLM:
-    """Reproduce the exact repair-length class observed in Nigeria batch 2/3."""
+    """Exercise the exact Nigeria repair lengths through one stricter recovery."""
 
     vendor = "fixture"
     model = "nigeria-stage6-overlength-v1"
@@ -420,19 +484,29 @@ class _OverlengthFixtureLLM:
     def __init__(
         self,
         repair_lengths: list[int],
+        recovery_lengths: list[int],
         *,
         evidence_batches: int,
         failed_batch: int,
+        candidate_count: int,
     ):
         self.calls: list[str] = []
         self.repair_lengths = list(repair_lengths)
+        self.recovery_lengths = list(recovery_lengths)
         self.evidence_batches = evidence_batches
         self.failed_batch = failed_batch
+        self.candidate_count = candidate_count
         self.observed_repair_lengths: list[int] = []
+        self.observed_recovery_lengths: list[int] = []
+        self.observed_effective_lengths: list[int] = []
+        self.observed_recovery_max_tokens: int | None = None
 
     @staticmethod
-    def _overlong_batch(source_ref: str) -> list[dict[str, Any]]:
-        candidates = [_candidate(index, source_ref) for index in range(1, 5)]
+    def _overlong_batch(source_ref: str, start_index: int) -> list[dict[str, Any]]:
+        candidates = [
+            _candidate(index, source_ref)
+            for index in range(start_index, start_index + 4)
+        ]
         candidates[0]["problem"] = "p" * 560
         candidates[0]["recommendation_rationale"] = "r" * 560
         candidates[1]["problem"] = "p" * 560
@@ -451,32 +525,33 @@ class _OverlengthFixtureLLM:
         max_tokens: int = 8000,
         detail: str = "",
     ) -> dict[str, Any]:
-        del max_tokens
         self.calls.append(detail)
         map_match = re.fullmatch(r"investment candidate map batch (\d+)/(\d+)", detail)
         if map_match:
             batch = int(map_match.group(1))
             total = int(map_match.group(2))
-            if total != self.evidence_batches or batch > self.failed_batch:
+            if total != self.evidence_batches or not 1 <= batch <= total:
                 raise AssertionError(f"unexpected fixture call: {detail}")
-            if batch < self.failed_batch:
-                return {"candidates": [_candidate(batch, f"SRC-{batch:03d}")]}
+            if batch == self.failed_batch:
+                return {
+                    "candidates": self._overlong_batch(
+                        f"SRC-{self.failed_batch:03d}", self.failed_batch
+                    )
+                }
+            candidate_index = batch if batch < self.failed_batch else batch + 3
             return {
-                "candidates": self._overlong_batch(f"SRC-{self.failed_batch:03d}")
+                "candidates": [
+                    _candidate(candidate_index, f"SRC-{batch:03d}")
+                ]
             }
         repair_detail = (
             f"investment candidate map batch {self.failed_batch}/"
             f"{self.evidence_batches} [local-length repair 1/1]"
         )
         if detail == repair_detail:
-            keys = (
-                "candidate-0.problem",
-                "candidate-0.recommendation_rationale",
-                "candidate-1.problem",
-                "candidate-1.recommendation_rationale",
-                "candidate-2.problem",
-                "candidate-2.recommendation_rationale",
-                "candidate-3.problem",
+            keys = tuple(
+                I._candidate_repair_key(index, field)
+                for index, field, _limit in OVERLENGTH_REPAIR_TARGETS
             )
             repairs = {
                 key: chr(97 + index) * length
@@ -484,6 +559,69 @@ class _OverlengthFixtureLLM:
             }
             self.observed_repair_lengths = [len(repairs[key]) for key in keys]
             return {"repairs": repairs}
+        recovery_detail = (
+            f"investment candidate map batch {self.failed_batch}/"
+            f"{self.evidence_batches} [local-length repair 2/2]"
+        )
+        if detail == recovery_detail:
+            self.observed_recovery_max_tokens = max_tokens
+            residual = [
+                (index, field, limit)
+                for length, (index, field, limit) in zip(
+                    self.repair_lengths, OVERLENGTH_REPAIR_TARGETS
+                )
+                if length > limit
+            ]
+            keys = tuple(
+                I._candidate_repair_key(index, field)
+                for index, field, _limit in residual
+            )
+            repairs = {
+                key: chr(65 + index) * length
+                for index, (key, length) in enumerate(
+                    zip(keys, self.recovery_lengths)
+                )
+            }
+            self.observed_recovery_lengths = [len(repairs[key]) for key in keys]
+            return {"repairs": repairs}
+        if detail == "investment candidate final register":
+            serialized = _user.split("SUPPORTED CANDIDATE BRIEFS:\n", 1)[1].split(
+                "\n\nReturn", 1
+            )[0]
+            candidates = json.loads(serialized)
+            if len(candidates) != self.candidate_count:
+                raise AssertionError(
+                    "unexpected recovered candidate count: " + str(len(candidates))
+                )
+            by_title = {candidate["title"]: candidate for candidate in candidates}
+            self.observed_effective_lengths = [
+                len(
+                    by_title[
+                        f"Synthetic investment option {self.failed_batch + index}"
+                    ][field]
+                )
+                for index, field, _limit in OVERLENGTH_REPAIR_TARGETS
+            ]
+            return {"candidates": candidates}
+        if detail.startswith("investment appraisal INV-"):
+            candidate = json.loads(
+                _user.split("CANDIDATE:\n", 1)[1].split(
+                    "\n\nCURRENT APPRAISAL", 1
+                )[0]
+            )
+            option_index = int(detail.split("INV-", 1)[1].split(" ", 1)[0])
+            return {
+                "option": _option_body(candidate["source_refs"][0], option_index)
+            }
+        if detail == "investment portfolio sequencing":
+            return {
+                "portfolio_sequencing": (
+                    "Synthetic sequencing exercises governance before procurement."
+                ),
+                "cross_cutting_data_gaps": [
+                    "Replace fixture costs and benefits with reviewed evidence."
+                ],
+            }
         raise AssertionError(f"unexpected fixture call: {detail}")
 
 
@@ -721,12 +859,16 @@ def _simulate_overlength(
 ) -> dict[str, Any]:
     fixture = scenario["fixture"]
     repair_lengths = list(fixture["repair_lengths"])
+    recovery_lengths = list(fixture["recovery_lengths"])
     evidence_batches = int(fixture["evidence_batches"])
     failed_batch = int(fixture["failed_batch"])
+    candidate_count = int(fixture["candidate_count"])
     llm = _OverlengthFixtureLLM(
         repair_lengths,
+        recovery_lengths,
         evidence_batches=evidence_batches,
         failed_batch=failed_batch,
+        candidate_count=candidate_count,
     )
     sources = [
         _source(f"SRC-{index:03d}", index, characters=900)
@@ -740,14 +882,31 @@ def _simulate_overlength(
     )
     observed_batches = I.batch_evidence(sources, limits.evidence_batch_characters)
     failure: Exception | None = None
+    response: dict[str, Any] | None = None
+    product: dict[str, Any] | None = None
+    product_errors: list[str] = []
     try:
-        I.synthesize_appraisal(report["country"], sources, llm, limits=limits)
-    except Exception as error:  # the scenario verifies the exact typed failure below
+        response = I.synthesize_appraisal(
+            report["country"], sources, llm, limits=limits
+        )
+        product = I.build_product(
+            report["country"], report["iso3"], response, sources
+        )
+        product_errors = I.validate_product(product)
+        if product_errors:
+            raise SimulationError(
+                "recovered Stage 6 product failed validation: "
+                + "; ".join(product_errors)
+            )
+    except Exception as error:
         failure = error
 
-    error_code = getattr(failure, "code", None) if failure is not None else None
+    error_code = (
+        getattr(failure, "code", type(failure).__name__)
+        if failure is not None
+        else None
+    )
     failed_stage = "investment_options" if failure is not None else None
-    step_id = getattr(failure, "step_id", None) if failure is not None else None
     message = str(failure) if failure is not None else None
     report["observed"] = {
         "workflow_status": "failed" if failure is not None else "complete",
@@ -756,15 +915,61 @@ def _simulate_overlength(
         "error_sha256": _error_sha256(error_code, failed_stage, message),
     }
     expected = scenario["expected"]
+    recovery_iterator = iter(recovery_lengths)
+    expected_effective_lengths = [
+        next(recovery_iterator) if raw_length > limit else raw_length
+        for raw_length, (_index, _field, limit) in zip(
+            repair_lengths, OVERLENGTH_REPAIR_TARGETS
+        )
+    ]
+    residual_limits = [
+        limit
+        for raw_length, (_index, _field, limit) in zip(
+            repair_lengths, OVERLENGTH_REPAIR_TARGETS
+        )
+        if raw_length > limit
+    ]
+    expected_recovery_max_tokens = I._candidate_length_retry_max_tokens(
+        [
+            (index, field, (limit * 9) // 10)
+            for raw_length, (index, field, limit) in zip(
+                repair_lengths, OVERLENGTH_REPAIR_TARGETS
+            )
+            if raw_length > limit
+        ],
+        limits.candidate_output_tokens,
+    )
+    expected_calls = []
+    for index in range(1, evidence_batches + 1):
+        map_detail = f"investment candidate map batch {index}/{evidence_batches}"
+        expected_calls.append(map_detail)
+        if index == failed_batch:
+            expected_calls.extend([
+                f"{map_detail} [local-length repair 1/1]",
+                f"{map_detail} [local-length repair 2/2]",
+            ])
+    expected_calls.extend([
+        "investment candidate final register",
+        *[
+            f"investment appraisal INV-{index} batch 1/1"
+            for index in range(1, candidate_count + 1)
+        ],
+        "investment portfolio sequencing",
+    ])
     checks = [
-        ("real_stage6_typed_failure", isinstance(failure, I.AppraisalOutputInvalid), type(failure).__name__ if failure else "no failure"),
+        ("real_stage6_recovered", failure is None, type(failure).__name__ if failure else "complete"),
         ("expected_workflow_status", report["observed"]["workflow_status"] == expected["workflow_status"], report["observed"]["workflow_status"]),
         ("expected_failed_stage", failed_stage == expected["failed_stage"], str(failed_stage)),
         ("expected_error_code", error_code == expected["error_code"], str(error_code)),
-        ("exact_failed_step", step_id == expected["step_id"], str(step_id)),
         ("declared_evidence_batches", len(observed_batches) == evidence_batches, str(len(observed_batches))),
-        ("declared_failed_batch", step_id == f"candidate-map-{failed_batch:04d}-length-repair", str(failed_batch)),
         ("exact_repair_lengths", llm.observed_repair_lengths == repair_lengths, str(llm.observed_repair_lengths)),
+        ("exact_recovery_lengths", llm.observed_recovery_lengths == recovery_lengths, str(llm.observed_recovery_lengths)),
+        ("bounded_recovery_tokens", llm.observed_recovery_max_tokens == expected_recovery_max_tokens, str(llm.observed_recovery_max_tokens)),
+        ("recovery_within_ninety_percent", all(length <= (limit * 9) // 10 for length, limit in zip(llm.observed_recovery_lengths, residual_limits)), str(llm.observed_recovery_lengths)),
+        ("exact_effective_lengths", llm.observed_effective_lengths == expected_effective_lengths, str(llm.observed_effective_lengths)),
+        ("declared_candidate_count", response is not None and len(response.get("options") or []) == candidate_count, str(len(response.get("options") or []) if response else None)),
+        ("real_stage6_product", product is not None and not product_errors, "; ".join(product_errors) or "valid"),
+        ("exact_fixture_call_sequence", llm.calls == expected_calls, str(llm.calls)),
         ("fixture_call_count", len(llm.calls) == expected["fixture_call_count"], str(len(llm.calls))),
         ("zero_external_spend", True, "$0.00"),
     ]
@@ -778,14 +983,20 @@ def _simulate_overlength(
         {
             "ordinal": ordinal,
             "stage_id": stage_id,
-            "status": "failed" if stage_id == "investment_options" else "not_run",
+            "status": (
+                "complete"
+                if failure is None and stage_id == "investment_options"
+                else "failed"
+                if failure is not None and stage_id == "investment_options"
+                else "not_run"
+            ),
             "attempts": 1 if stage_id == "investment_options" else 0,
             "spent_usd": 0,
         }
         for ordinal, stage_id in enumerate(W.EXPECTED_STAGE_IDS, 1)
     ]
-    reproduction = _write_json(output / "artifacts" / "stage6-reproduction.json", {
-        "schema_version": "damm.stage6-reproduction/v1",
+    recovery = _write_json(output / "artifacts" / "stage6-recovery.json", {
+        "schema_version": "damm.stage6-recovery/v1",
         "label": SIMULATION_LABEL,
         "acceptance_eligible": False,
         "scenario_id": report["scenario_id"],
@@ -793,18 +1004,34 @@ def _simulate_overlength(
         "vendor": report["vendor"],
         "code_identity": report["code_identity"],
         "observed_repair_lengths": llm.observed_repair_lengths,
+        "observed_recovery_lengths": llm.observed_recovery_lengths,
+        "observed_recovery_max_tokens": llm.observed_recovery_max_tokens,
+        "observed_effective_lengths": llm.observed_effective_lengths,
         "fixture_calls": llm.calls,
         "observed": report["observed"],
     })
     report["artifacts"] = [{
         "stage_id": "investment_options",
-        "key": "failure_reproduction",
-        "path": reproduction.relative_to(output).as_posix(),
-        "sha256": _file_sha256(reproduction),
-        "size_bytes": reproduction.stat().st_size,
+        "key": "repair_recovery",
+        "path": recovery.relative_to(output).as_posix(),
+        "sha256": _file_sha256(recovery),
+        "size_bytes": recovery.stat().st_size,
         "media_type": "application/json",
         "label": SIMULATION_LABEL,
     }]
+    if product is not None:
+        product_path = _write_json(
+            output / "artifacts" / "investment-options.json", product
+        )
+        report["artifacts"].append({
+            "stage_id": "investment_options",
+            "key": "appraisal_data",
+            "path": product_path.relative_to(output).as_posix(),
+            "sha256": _file_sha256(product_path),
+            "size_bytes": product_path.stat().st_size,
+            "media_type": "application/json",
+            "label": SIMULATION_LABEL,
+        })
     return report
 
 
@@ -976,7 +1203,7 @@ def simulate_workflow(
         "capabilities_minted": 0,
     }
     with _simulation_boundary(counters):
-        if scenario["kind"] == "stage6_failure_reproduction":
+        if scenario["kind"] == "stage6_repair_recovery":
             report = _simulate_overlength(scenario, report, output)
         else:
             report = _simulate_happy(scenario, report, output, provenance)

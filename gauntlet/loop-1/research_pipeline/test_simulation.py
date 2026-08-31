@@ -15,6 +15,7 @@ import unittest
 from unittest import mock
 import zipfile
 
+import investment_options as I
 import run_workflow as W
 import simulate_workflow as CLI
 import simulation as S
@@ -32,7 +33,7 @@ class SimulationHarnessTest(unittest.TestCase):
         digest = value.pop("report_sha256")
         return digest, hashlib.sha256(S._stable_bytes(value)).hexdigest()
 
-    def test_nigeria_stage6_scenario_reproduces_exact_failure_without_spend(self):
+    def test_nigeria_stage6_scenario_recovers_exact_overlength_vector_without_spend(self):
         output = self.root / "stage6"
         report = S.simulate_workflow("nigeria-stage6-overlength-v1", output)
 
@@ -42,10 +43,10 @@ class SimulationHarnessTest(unittest.TestCase):
         self.assertIs(report["acceptance_eligible"], False)
         self.assertTrue(report["run_id"].startswith("sim-"))
         self.assertEqual(report["harness_verdict"], "pass")
-        self.assertEqual(report["observed"]["workflow_status"], "failed")
-        self.assertEqual(report["observed"]["failed_stage"], "investment_options")
-        self.assertEqual(report["observed"]["error_code"], "appraisal_output_invalid")
-        self.assertRegex(report["observed"]["error_sha256"], r"^[0-9a-f]{64}$")
+        self.assertEqual(report["observed"]["workflow_status"], "complete")
+        self.assertIsNone(report["observed"]["failed_stage"])
+        self.assertIsNone(report["observed"]["error_code"])
+        self.assertIsNone(report["observed"]["error_sha256"])
         self.assertEqual(report["external_spend_usd"], 0.0)
         self.assertEqual(report["external_io"], {
             "network_calls": 0,
@@ -54,16 +55,54 @@ class SimulationHarnessTest(unittest.TestCase):
             "subprocess_calls": 0,
         })
         self.assertIs(type(report["external_spend_usd"]), int)
-        self.assertEqual(report["fixture_call_count"], 3)
+        self.assertEqual(report["fixture_call_count"], 13)
         self.assertEqual(
             set(report["code_identity"]["files"]),
             set(S.PRODUCTION_CODE_FILES),
         )
         self.assertTrue(all(assertion["ok"] for assertion in report["assertions"]))
-        lengths = json.loads(
-            (output / "artifacts/stage6-reproduction.json").read_text(encoding="utf-8")
-        )["observed_repair_lengths"]
-        self.assertEqual(lengths, [501, 504, 536, 516, 543, 505, 490])
+        recovery = json.loads(
+            (output / "artifacts/stage6-recovery.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            recovery["observed_repair_lengths"],
+            [501, 504, 536, 516, 543, 505, 490],
+        )
+        self.assertEqual(
+            recovery["observed_recovery_lengths"],
+            [450, 450, 450, 450, 450, 450],
+        )
+        self.assertEqual(recovery["observed_recovery_max_tokens"], 2956)
+        self.assertEqual(
+            recovery["observed_effective_lengths"],
+            [450, 450, 450, 450, 450, 450, 490],
+        )
+        self.assertEqual(recovery["fixture_calls"], [
+            "investment candidate map batch 1/3",
+            "investment candidate map batch 2/3",
+            "investment candidate map batch 2/3 [local-length repair 1/1]",
+            "investment candidate map batch 2/3 [local-length repair 2/2]",
+            "investment candidate map batch 3/3",
+            "investment candidate final register",
+            "investment appraisal INV-1 batch 1/1",
+            "investment appraisal INV-2 batch 1/1",
+            "investment appraisal INV-3 batch 1/1",
+            "investment appraisal INV-4 batch 1/1",
+            "investment appraisal INV-5 batch 1/1",
+            "investment appraisal INV-6 batch 1/1",
+            "investment portfolio sequencing",
+        ])
+        product = json.loads(
+            (output / "artifacts/investment-options.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(len(product["options"]), 6)
+        self.assertEqual(I.validate_product(product), [])
+        stage6 = next(
+            stage
+            for stage in report["stages"]
+            if stage["stage_id"] == "investment_options"
+        )
+        self.assertEqual(stage6["status"], "complete")
         self.assertEqual(self.report_hash(report)[0], self.report_hash(report)[1])
         self.assertEqual(
             json.loads((output / S.REPORT_NAME).read_text(encoding="utf-8")),
@@ -206,6 +245,28 @@ class SimulationHarnessTest(unittest.TestCase):
             scenario_path.write_text(json.dumps(boolean_count), encoding="utf-8")
             with self.assertRaisesRegex(S.SimulationError, "happy fixture"):
                 S._load_scenario("eight-stage-happy-v1")
+
+        recovery_source = json.loads(
+            (S.SCENARIO_DIR / "nigeria-stage6-overlength-v1.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        recovery_path = scenario_dir / "nigeria-stage6-overlength-v1.json"
+        with mock.patch.object(S, "SCENARIO_DIR", scenario_dir):
+            unsafe_recovery = json.loads(json.dumps(recovery_source))
+            unsafe_recovery["fixture"]["recovery_lengths"][0] = 451
+            recovery_path.write_text(json.dumps(unsafe_recovery), encoding="utf-8")
+            with self.assertRaisesRegex(S.SimulationError, "recovery fixture"):
+                S._load_scenario("nigeria-stage6-overlength-v1")
+
+            no_overlength_trigger = json.loads(json.dumps(recovery_source))
+            no_overlength_trigger["fixture"]["repair_lengths"] = [500] * 7
+            no_overlength_trigger["fixture"]["recovery_lengths"] = []
+            recovery_path.write_text(
+                json.dumps(no_overlength_trigger), encoding="utf-8"
+            )
+            with self.assertRaisesRegex(S.SimulationError, "recovery fixture"):
+                S._load_scenario("nigeria-stage6-overlength-v1")
 
     def test_report_hash_uses_the_node_canonical_integer_zero_vector(self):
         vector = {

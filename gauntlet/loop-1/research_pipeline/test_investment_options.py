@@ -409,6 +409,64 @@ class InvestmentOptionsTest(unittest.TestCase):
         self.assertEqual(
             len(state["steps"]["unit-step"]["truncations"]), 1)
 
+    def test_single_attempt_checkpoint_claims_pending_truncation_without_replay(self):
+        ledger = I.V.Ledger(ceiling=500, label="test")
+        llm = I.V.LLM(
+            "anthropic", ledger, model="test-model"
+        ).enable_durable_outcomes()
+        schema = {"type": "object"}
+        attempts = []
+
+        def transport(_system, _user, _schema, max_tokens):
+            attempts.append(max_tokens)
+            raise I.V._ProviderOutputTruncated(
+                stop_reason="max_tokens",
+                request_id="single-attempt",
+                max_tokens=max_tokens,
+                input_tokens=10,
+                output_tokens=max_tokens,
+                thinking_tokens=max_tokens - 1,
+                partial_output="",
+            )
+
+        llm._call_anthropic = transport
+        with self.assertRaises(I.V.VendorOutputTruncated):
+            llm.json_call_once(
+                "system", "user", schema, I.PASS,
+                max_tokens=100, detail="logical unit",
+            )
+        self.assertEqual(attempts, [100])
+
+        state = {"steps": {}}
+        with self.assertRaises(I.AppraisalOutputExhausted) as raised:
+            I._checkpointed_json_call(
+                llm,
+                state,
+                lambda current: I._bind_state_to_spend_prefix(current, ledger),
+                "unit-step",
+                "system",
+                "user",
+                schema,
+                100,
+                "logical unit",
+                attempt_limit=1,
+            )
+
+        self.assertEqual(raised.exception.attempt_limit, 1)
+        self.assertEqual(attempts, [100])
+        self.assertEqual(len(ledger.calls), 1)
+        self.assertEqual(state["spend_prefix"]["call_count"], 1)
+        self.assertEqual(state["steps"]["unit-step"]["status"], "truncated")
+        self.assertEqual(
+            len(state["steps"]["unit-step"]["truncations"]), 1)
+
+        with self.assertRaises(I.AppraisalOutputExhausted):
+            I._checkpointed_json_call(
+                llm, state, None, "unit-step", "system", "user", schema,
+                100, "logical unit", attempt_limit=1,
+            )
+        self.assertEqual(attempts, [100])
+
     def test_checkpointed_call_adapts_once_after_malformed_output(self):
         test_case = self
 
@@ -611,9 +669,13 @@ class InvestmentOptionsTest(unittest.TestCase):
             self.assertFalse(os.path.exists(
                 os.path.join(directory, f"{out}_investment_options.json")))
 
-    def test_sparse_overlong_candidate_text_is_repaired_once_without_replay(self):
+    def test_sparse_overlong_candidate_text_uses_bounded_second_repair_without_replay(self):
         test_case = self
         compact_problem_4 = "Compact evidence-backed problem 4."
+        original_rationale_1 = (
+            "Original caveat: this option is not approved. " + "o" * 501
+        )
+        overlong_repair_rationale_1 = "r" * 501
         compact_rationale_1 = "Compact evidence-backed rationale 1."
         compact_rationale_2 = "Compact evidence-backed rationale 2."
         compact_rationale_4 = "Compact evidence-backed rationale 4."
@@ -626,7 +688,9 @@ class InvestmentOptionsTest(unittest.TestCase):
                     "title": f"Option {index + 1}",
                     "problem": "p" * 501 if index == 3 else f"Problem {index + 1}",
                     "recommendation_rationale": (
-                        "r" * 501
+                        original_rationale_1
+                        if index == 0
+                        else "r" * 501
                         if index in {0, 1, 3}
                         else f"Rationale {index + 1}"
                     ),
@@ -636,7 +700,6 @@ class InvestmentOptionsTest(unittest.TestCase):
             def json_call(
                     self, _system, user, _schema, _pass_name,
                     max_tokens=8000, detail=""):
-                del max_tokens
                 self.calls.append(detail)
                 if detail == "investment candidate map batch 1/1":
                     test_case.assertIn(I.CANDIDATE_TEXT_LIMIT_GUIDANCE, user)
@@ -666,10 +729,34 @@ class InvestmentOptionsTest(unittest.TestCase):
                         },
                     ])
                     return {"repairs": {
-                        "candidate-0.recommendation_rationale": compact_rationale_1,
+                        "candidate-0.recommendation_rationale": (
+                            overlong_repair_rationale_1
+                        ),
                         "candidate-1.recommendation_rationale": compact_rationale_2,
                         "candidate-3.problem": compact_problem_4,
                         "candidate-3.recommendation_rationale": compact_rationale_4,
+                    }}
+                if detail == (
+                        "investment candidate map batch 1/1 "
+                        "[local-length repair 2/2]"):
+                    required = json.loads(user.split(
+                        "REQUIRED_REPAIRS:\n", 1
+                    )[1].split("\n\nCANDIDATE_REGISTER:\n", 1)[0])
+                    test_case.assertEqual(required, [{
+                        "key": "candidate-0.recommendation_rationale",
+                        "max_characters": 450,
+                    }])
+                    supplied = json.loads(user.split(
+                        "CANDIDATE_REGISTER:\n", 1
+                    )[1])
+                    test_case.assertEqual(
+                        supplied["candidates"][0]["recommendation_rationale"],
+                        original_rationale_1,
+                    )
+                    test_case.assertNotIn(overlong_repair_rationale_1, user)
+                    test_case.assertEqual(max_tokens, 706)
+                    return {"repairs": {
+                        "candidate-0.recommendation_rationale": compact_rationale_1,
                     }}
                 if detail == "investment candidate final register":
                     supplied = user.split(
@@ -739,6 +826,17 @@ class InvestmentOptionsTest(unittest.TestCase):
         self.assertEqual(llm.calls.count(
             "investment candidate map batch 1/1 "
             "[local-length repair 1/1]"), 1)
+        self.assertEqual(llm.calls.count(
+            "investment candidate map batch 1/1 "
+            "[local-length repair 2/2]"), 1)
+        self.assertEqual(
+            state["steps"]["candidate-map-0001-length-repair"]["status"],
+            "complete",
+        )
+        self.assertEqual(
+            state["steps"]["candidate-map-0001-length-repair-0002"]["status"],
+            "complete",
+        )
 
         class NoReplayLLM:
             def json_call(self, *_args, **_kwargs):
@@ -774,7 +872,7 @@ class InvestmentOptionsTest(unittest.TestCase):
         self.assertEqual(repaired["candidates"][0]["problem"], "Problem 1")
         self.assertEqual(repaired["candidates"][1:], original["candidates"][1:])
 
-    def test_invalid_candidate_length_repair_is_terminal_and_not_replayed(self):
+    def test_structurally_invalid_candidate_repair_is_terminal_and_not_replayed(self):
         class InvalidRepairLLM:
             def __init__(self):
                 self.calls = []
@@ -791,7 +889,7 @@ class InvestmentOptionsTest(unittest.TestCase):
                 if detail == (
                         "investment candidate map batch 1/1 "
                         "[local-length repair 1/1]"):
-                    return {"repairs": {"candidate-0.problem": "p" * 501}}
+                    return {"repairs": {"candidate-0.problem": 42}}
                 raise AssertionError(f"unexpected model call: {detail}")
 
         sources = [{
@@ -820,7 +918,127 @@ class InvestmentOptionsTest(unittest.TestCase):
             )
         self.assertEqual(resumed.calls, [])
 
-    def test_durable_candidate_repair_is_claimed_after_state_write_crash(self):
+    def test_second_overlong_candidate_repair_is_terminal_and_not_replayed(self):
+        class TwiceOverlongLLM:
+            def __init__(self):
+                self.calls = []
+
+            def json_call(self, *_args, detail="", **_kwargs):
+                self.calls.append(detail)
+                if detail == "investment candidate map batch 1/1":
+                    return {"candidates": [{
+                        "title": f"Option {index}",
+                        "problem": "p" * 501 if index == 1 else f"Problem {index}",
+                        "recommendation_rationale": f"Rationale {index}",
+                        "source_refs": ["SRC-001"],
+                    } for index in range(1, 4)]}
+                if detail == (
+                        "investment candidate map batch 1/1 "
+                        "[local-length repair 1/1]"):
+                    return {"repairs": {"candidate-0.problem": "p" * 501}}
+                if detail == (
+                        "investment candidate map batch 1/1 "
+                        "[local-length repair 2/2]"):
+                    return {"repairs": {"candidate-0.problem": "p" * 451}}
+                raise AssertionError(f"unexpected model call: {detail}")
+
+        sources = [{
+            "ref": "SRC-001", "kind": "country_finding", "title": "Policy",
+            "text": "Evidence", "source": "https://example.test/policy",
+        }]
+        state = {"steps": {}}
+        first = TwiceOverlongLLM()
+
+        with self.assertRaises(I.AppraisalOutputInvalid) as raised:
+            I.synthesize_appraisal(
+                "Exampleland", sources, first, state=state,
+            )
+
+        self.assertEqual(
+            raised.exception.step_id,
+            "candidate-map-0001-length-repair-0002",
+        )
+        self.assertEqual(first.calls, [
+            "investment candidate map batch 1/1",
+            "investment candidate map batch 1/1 [local-length repair 1/1]",
+            "investment candidate map batch 1/1 [local-length repair 2/2]",
+        ])
+        self.assertEqual(
+            state["steps"]["candidate-map-0001-length-repair"]["status"],
+            "complete",
+        )
+        self.assertEqual(
+            state["steps"]["candidate-map-0001-length-repair-0002"]["status"],
+            "invalid",
+        )
+
+        resumed = TwiceOverlongLLM()
+        with self.assertRaises(I.AppraisalOutputInvalid):
+            I.synthesize_appraisal(
+                "Exampleland", sources, resumed, state=state,
+            )
+        self.assertEqual(resumed.calls, [])
+
+    def test_second_length_repair_has_one_bounded_attempt_and_is_not_replayed(self):
+        test_case = self
+
+        class TruncatedSecondRepairLLM:
+            def __init__(self):
+                self.calls = []
+
+            def json_call(
+                    self, _system, _user, _schema, _pass_name,
+                    max_tokens=8000, detail=""):
+                self.calls.append((max_tokens, detail))
+                if detail == "investment candidate map batch 1/1":
+                    return {"candidates": [{
+                        "title": f"Option {index}",
+                        "problem": "p" * 501 if index == 1 else f"Problem {index}",
+                        "recommendation_rationale": f"Rationale {index}",
+                        "source_refs": ["SRC-001"],
+                    } for index in range(1, 4)]}
+                if detail == (
+                        "investment candidate map batch 1/1 "
+                        "[local-length repair 1/1]"):
+                    return {"repairs": {"candidate-0.problem": "p" * 501}}
+                if detail == (
+                        "investment candidate map batch 1/1 "
+                        "[local-length repair 2/2]"):
+                    raise test_case.truncated(detail, max_tokens)
+                raise AssertionError(f"unexpected model call: {detail}")
+
+        sources = [{
+            "ref": "SRC-001", "kind": "country_finding", "title": "Policy",
+            "text": "Evidence", "source": "https://example.test/policy",
+        }]
+        state = {"steps": {}}
+        first = TruncatedSecondRepairLLM()
+
+        with self.assertRaises(I.AppraisalOutputExhausted) as raised:
+            I.synthesize_appraisal(
+                "Exampleland", sources, first, state=state,
+            )
+
+        self.assertEqual(raised.exception.attempt_limit, 1)
+        self.assertEqual(first.calls[-1], (
+            706,
+            "investment candidate map batch 1/1 [local-length repair 2/2]",
+        ))
+        self.assertEqual(len(first.calls), 3)
+        retry_step = state["steps"][
+            "candidate-map-0001-length-repair-0002"
+        ]
+        self.assertEqual(retry_step["status"], "truncated")
+        self.assertEqual(len(retry_step["truncations"]), 1)
+
+        resumed = TruncatedSecondRepairLLM()
+        with self.assertRaises(I.AppraisalOutputExhausted):
+            I.synthesize_appraisal(
+                "Exampleland", sources, resumed, state=state,
+            )
+        self.assertEqual(resumed.calls, [])
+
+    def test_durable_overlong_repair_is_claimed_before_second_repair(self):
         test_case = self
 
         class SimulatedCrash(Exception):
@@ -841,17 +1059,27 @@ class InvestmentOptionsTest(unittest.TestCase):
             "anthropic", ledger, model="test-model"
         ).enable_durable_outcomes()
         crashed = False
-        repair_transports = 0
+        first_repair_transports = 0
+        second_repair_transports = 0
+        second_repair_token_limits = []
 
-        def transport(_system, user, _schema, _max_tokens):
-            nonlocal repair_transports
-            if "REQUIRED_REPAIRS:\n" in user:
-                if crashed:
-                    raise AssertionError("durable repair outcome was replayed")
-                repair_transports += 1
+        def transport(_system, user, _schema, transport_max_tokens):
+            nonlocal first_repair_transports, second_repair_transports
+            if "The first targeted candidate-register repair" in user:
+                second_repair_transports += 1
+                second_repair_token_limits.append(transport_max_tokens)
                 return ({
                     "repairs": {
                         "candidate-0.problem": "Compact problem.",
+                    },
+                }, 10, 20)
+            if "REQUIRED_REPAIRS:\n" in user:
+                if crashed:
+                    raise AssertionError("durable repair outcome was replayed")
+                first_repair_transports += 1
+                return ({
+                    "repairs": {
+                        "candidate-0.problem": "p" * 501,
                     },
                 }, 10, 20)
             if "\n\nMap this batch to 0-4" in user:
@@ -882,7 +1110,9 @@ class InvestmentOptionsTest(unittest.TestCase):
 
         def crashing_save(current):
             nonlocal crashed
-            if "candidate-map-0001-length-repair" in current["steps"]:
+            if (
+                    not crashed
+                    and "candidate-map-0001-length-repair" in current["steps"]):
                 crashed = True
                 raise SimulatedCrash()
             I._bind_state_to_spend_prefix(current, ledger)
@@ -895,7 +1125,8 @@ class InvestmentOptionsTest(unittest.TestCase):
             )
 
         self.assertTrue(crashed)
-        self.assertEqual(repair_transports, 1)
+        self.assertEqual(first_repair_transports, 1)
+        self.assertEqual(second_repair_transports, 0)
         self.assertEqual(
             set(durable_state[0]["steps"]), {"candidate-map-0001"})
         self.assertEqual(durable_state[0]["spend_prefix"]["call_count"], 1)
@@ -913,7 +1144,9 @@ class InvestmentOptionsTest(unittest.TestCase):
         product = I.build_product("Exampleland", "EXP", response, sources)
 
         self.assertEqual(I.validate_product(product), [])
-        self.assertEqual(repair_transports, 1)
+        self.assertEqual(first_repair_transports, 1)
+        self.assertEqual(second_repair_transports, 1)
+        self.assertEqual(second_repair_token_limits, [706])
 
     def test_mixed_candidate_defects_are_terminal_without_length_repair(self):
         class MixedInvalidLLM:

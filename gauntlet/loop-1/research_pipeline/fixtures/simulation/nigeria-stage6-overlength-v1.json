@@ -1,8 +1,8 @@
 {
   "schema_version": "damm.simulation-scenario/v1",
   "scenario_id": "nigeria-stage6-overlength-v1",
-  "description": "Cost-free reproduction of the Nigeria Stage 6 candidate-map batch 2/3 repair response that still exceeded local prose limits.",
-  "kind": "stage6_failure_reproduction",
+  "description": "Cost-free regression of the Nigeria Stage 6 candidate-map batch 2/3 response through one overlong repair, one stricter recovery, and the remaining real appraisal pipeline.",
+  "kind": "stage6_repair_recovery",
   "default_country": "Nigeria",
   "default_iso3": "NGA",
   "default_profile": "typical",
@@ -12,12 +12,11 @@
     "dense"
   ],
   "expected": {
-    "workflow_status": "failed",
-    "failed_stage": "investment_options",
-    "error_code": "appraisal_output_invalid",
-    "step_id": "candidate-map-0002-length-repair",
-    "fixture_call_count": 3,
-    "code_sha256": "7deaf200562ee1ec25c1c0733943131cea84d7c0756e73d0a35388e4112b5214"
+    "workflow_status": "complete",
+    "failed_stage": null,
+    "error_code": null,
+    "fixture_call_count": 13,
+    "code_sha256": "7355d95dae5ed462045ca3316df202a6aa455bc2ee75f30143053d7de5a602e7"
   },
   "fixture": {
     "evidence_batches": 3,
@@ -30,6 +29,15 @@
       543,
       505,
       490
-    ]
+    ],
+    "recovery_lengths": [
+      450,
+      450,
+      450,
+      450,
+      450,
+      450
+    ],
+    "candidate_count": 6
   }
 }
