@@ -1,0 +1,29 @@
+{
+  "schema_version": "damm.simulation-scenario/v1",
+  "scenario_id": "eight-stage-happy-v1",
+  "description": "All eight canonical stages with deterministic synthetic evidence and a fixture LLM at the external vendor seam.",
+  "kind": "eight_stage_happy",
+  "default_country": "Nigeria",
+  "default_iso3": "NGA",
+  "default_profile": "typical",
+  "profiles": [
+    "minimal",
+    "typical",
+    "dense"
+  ],
+  "expected": {
+    "workflow_status": "complete",
+    "failed_stage": null,
+    "error_code": null,
+    "fixture_call_count": 6,
+    "code_sha256": "7deaf200562ee1ec25c1c0733943131cea84d7c0756e73d0a35388e4112b5214"
+  },
+  "fixture": {
+    "source_count_by_profile": {
+      "minimal": 1,
+      "typical": 3,
+      "dense": 9
+    },
+    "candidate_count": 3
+  }
+}

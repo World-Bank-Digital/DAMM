@@ -1,0 +1,35 @@
+{
+  "schema_version": "damm.simulation-scenario/v1",
+  "scenario_id": "nigeria-stage6-overlength-v1",
+  "description": "Cost-free reproduction of the Nigeria Stage 6 candidate-map batch 2/3 repair response that still exceeded local prose limits.",
+  "kind": "stage6_failure_reproduction",
+  "default_country": "Nigeria",
+  "default_iso3": "NGA",
+  "default_profile": "typical",
+  "profiles": [
+    "minimal",
+    "typical",
+    "dense"
+  ],
+  "expected": {
+    "workflow_status": "failed",
+    "failed_stage": "investment_options",
+    "error_code": "appraisal_output_invalid",
+    "step_id": "candidate-map-0002-length-repair",
+    "fixture_call_count": 3,
+    "code_sha256": "7deaf200562ee1ec25c1c0733943131cea84d7c0756e73d0a35388e4112b5214"
+  },
+  "fixture": {
+    "evidence_batches": 3,
+    "failed_batch": 2,
+    "repair_lengths": [
+      501,
+      504,
+      536,
+      516,
+      543,
+      505,
+      490
+    ]
+  }
+}

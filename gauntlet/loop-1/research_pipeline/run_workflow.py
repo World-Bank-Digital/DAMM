@@ -58,6 +58,8 @@ WORKFLOW_INPUT_SCHEMA = "damm.workflow-input-snapshot/v1"
 WORKFLOW_STAGE_SCHEMA = "damm.workflow-stage/v1"
 UPLOADS_SCHEMA = "damm.uploads-manifest/v1"
 CHECKPOINT_BINDING_SCHEMA = "damm.legacy-namespace/v1"
+SIMULATION_PROVENANCE_SCHEMA = "damm.simulation-provenance/v1"
+SIMULATION_LABEL = "SIMULATED — NOT ACCEPTANCE EVIDENCE"
 
 EXPECTED_STAGE_IDS = (
     "damm_diagnostic",
@@ -132,6 +134,70 @@ class WorkflowRunFailed(WorkflowError):
     def __init__(self, message: str, manifest: Mapping[str, Any]):
         super().__init__(message)
         self.manifest = dict(manifest)
+
+
+def validate_simulation_provenance(value: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate the narrow marker accepted by the coordinator's test-only seam.
+
+    Production callers do not pass this value.  Keeping the marker both explicit and
+    closed prevents a caller from making simulated output resemble acceptance evidence.
+    """
+
+    if not isinstance(value, Mapping):
+        raise WorkflowConfigurationError("simulation_provenance must be an object")
+    expected_fields = {
+        "schema_version",
+        "label",
+        "execution_kind",
+        "acceptance_eligible",
+        "scenario_id",
+        "scenario_sha256",
+        "code_sha256",
+        "profile",
+    }
+    if set(value) != expected_fields:
+        raise WorkflowConfigurationError(
+            "simulation_provenance has unexpected or missing fields"
+        )
+    if value.get("schema_version") != SIMULATION_PROVENANCE_SCHEMA:
+        raise WorkflowConfigurationError(
+            f"simulation_provenance must use {SIMULATION_PROVENANCE_SCHEMA}"
+        )
+    if value.get("label") != SIMULATION_LABEL:
+        raise WorkflowConfigurationError(
+            f"simulation_provenance label must be {SIMULATION_LABEL!r}"
+        )
+    if value.get("execution_kind") != "simulation":
+        raise WorkflowConfigurationError(
+            "simulation_provenance execution_kind must be simulation"
+        )
+    if value.get("acceptance_eligible") is not False:
+        raise WorkflowConfigurationError(
+            "simulation_provenance acceptance_eligible must be false"
+        )
+    scenario_id = value.get("scenario_id")
+    if not isinstance(scenario_id, str) or not re.fullmatch(
+        r"[a-z0-9][a-z0-9-]{2,80}", scenario_id
+    ):
+        raise WorkflowConfigurationError("simulation_provenance scenario_id is invalid")
+    scenario_sha256 = value.get("scenario_sha256")
+    if not isinstance(scenario_sha256, str) or not re.fullmatch(
+        r"[0-9a-f]{64}", scenario_sha256
+    ):
+        raise WorkflowConfigurationError(
+            "simulation_provenance scenario_sha256 is not lowercase SHA-256"
+        )
+    code_sha256 = value.get("code_sha256")
+    if not isinstance(code_sha256, str) or not re.fullmatch(
+        r"[0-9a-f]{64}", code_sha256
+    ):
+        raise WorkflowConfigurationError(
+            "simulation_provenance code_sha256 is not lowercase SHA-256"
+        )
+    profile = value.get("profile")
+    if not isinstance(profile, str) or not re.fullmatch(r"[a-z][a-z0-9_-]{1,31}", profile):
+        raise WorkflowConfigurationError("simulation_provenance profile is invalid")
+    return json.loads(json.dumps(dict(value)))
 
 
 ArtifactPath = str | os.PathLike[str]
@@ -583,6 +649,7 @@ class WorkflowCoordinator:
         sleep: Callable[[float], None] = time.sleep,
         clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
         monotonic: Callable[[], float] = time.monotonic,
+        simulation_provenance: Mapping[str, Any] | None = None,
     ):
         self.contract = validate_contract(contract)
         self.contract_sha256 = _contract_sha256(self.contract)
@@ -600,6 +667,11 @@ class WorkflowCoordinator:
         self.sleep = sleep
         self.clock = clock
         self.monotonic = monotonic
+        self.simulation_provenance = (
+            validate_simulation_provenance(simulation_provenance)
+            if simulation_provenance is not None
+            else None
+        )
         self.manifest_path = self.workspace / "workflow-manifest.json"
         self.events_path = self.workspace / "workflow-events.jsonl"
         self._sequence = 0
@@ -1124,6 +1196,8 @@ class WorkflowCoordinator:
             "ceiling_usd": ceiling_usd,
             "vendor": vendor,
         }
+        if self.simulation_provenance is not None:
+            snapshot["simulation_provenance"] = self.simulation_provenance
         path = self.workspace / "inputs" / "input-snapshot.json"
         payload = _stable_json_bytes(snapshot) + b"\n"
         _atomic_write_bytes(path, payload)
@@ -1393,6 +1467,8 @@ class WorkflowCoordinator:
             "spend_usd": spend_usd,
             "status": "complete",
         }
+        if self.simulation_provenance is not None:
+            stage_manifest["simulation_provenance"] = self.simulation_provenance
         _atomic_write_json(stage_manifest_path, stage_manifest)
         records.append(self._artifact_record("stage_manifest", stage_manifest_path))
         return records
@@ -1494,6 +1570,8 @@ class WorkflowCoordinator:
             "ceiling_usd": ceiling_usd,
             "vendor": vendor,
         }
+        if self.simulation_provenance is not None:
+            expected_root["simulation_provenance"] = self.simulation_provenance
         for key, expected in expected_root.items():
             if manifest.get(key) != expected:
                 raise WorkflowConfigurationError(
@@ -1523,6 +1601,8 @@ class WorkflowCoordinator:
             "ceiling_usd": ceiling_usd,
             "vendor": vendor,
         }
+        if self.simulation_provenance is not None:
+            expected_snapshot["simulation_provenance"] = self.simulation_provenance
         if snapshot != expected_snapshot:
             raise WorkflowConfigurationError("frozen input snapshot does not match checkpoint")
 
@@ -1781,6 +1861,8 @@ class WorkflowCoordinator:
                 for stage in self.contract["stages"]
             ],
             }
+            if self.simulation_provenance is not None:
+                self._manifest["simulation_provenance"] = self.simulation_provenance
             self._checkpoint_public()
         workflow_started = self.monotonic()
         if resumed:
