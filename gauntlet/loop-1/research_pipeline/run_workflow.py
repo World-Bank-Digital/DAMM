@@ -427,9 +427,11 @@ def _legacy_paths(legacy_out: str) -> dict[str, Path]:
         "foresight_sources": LOOP1 / f"{legacy_out}_foresight_sources.json",
         "ai_json": LOOP1 / f"{legacy_out}_ai_assessment.json",
         "ai_md": LOOP1 / f"{legacy_out}_ai_assessment.md",
+        "ai_html": LOOP1 / f"{legacy_out}_ai_assessment.html",
         "ai_sources": LOOP1 / f"{legacy_out}_ai_sources.json",
         "investment_json": LOOP1 / f"{legacy_out}_investment_options.json",
         "investment_md": LOOP1 / f"{legacy_out}_investment_options.md",
+        "investment_html": LOOP1 / f"{legacy_out}_investment_options.html",
         "investment_sources": LOOP1 / f"{legacy_out}_investment_sources.json",
         "cost_benefit": LOOP1 / f"{legacy_out}_cost_benefit.xlsx",
         "dar_json": LOOP1 / f"{legacy_out}_dar.json",
@@ -524,7 +526,7 @@ def build_existing_stage_commands(
             ),
             cwd=LOOP1,
             artifacts={
-                "ai_assessment_report": paths["ai_md"],
+                "ai_assessment_report": (paths["ai_md"], paths["ai_html"]),
                 "ai_evidence_data": paths["ai_json"],
                 "source_inventory": paths["ai_sources"],
                 "ai_assessment": paths["ai_json"],
@@ -577,7 +579,10 @@ def build_existing_stage_commands(
             ),
             cwd=LOOP1,
             artifacts={
-                "investment_options_report": paths["investment_md"],
+                "investment_options_report": (
+                    paths["investment_md"],
+                    paths["investment_html"],
+                ),
                 "cost_benefit_workbook": paths["cost_benefit"],
                 "appraisal_data": paths["investment_json"],
                 "source_inventory": paths["investment_sources"],

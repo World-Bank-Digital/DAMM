@@ -407,6 +407,18 @@ class WorkflowCoordinatorTest(unittest.TestCase):
         self.assertIn("ai_assessment.py", defaults["ai_digital_agriculture"].argv[1])
         self.assertIn("investment_options.py", defaults["investment_options"].argv[1])
         self.assertIn("export_package.py", defaults["export_package"].argv[1])
+        self.assertEqual(
+            tuple(path.suffix for path in defaults["ai_digital_agriculture"].artifacts[
+                "ai_assessment_report"
+            ]),
+            (".md", ".html"),
+        )
+        self.assertEqual(
+            tuple(path.suffix for path in defaults["investment_options"].artifacts[
+                "investment_options_report"
+            ]),
+            (".md", ".html"),
+        )
         self.assertIn("--resume", defaults["export_package"].argv)
         self.assertEqual(
             defaults["country_research"].spend_path.name,

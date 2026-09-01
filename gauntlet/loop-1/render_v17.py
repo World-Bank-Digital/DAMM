@@ -993,20 +993,19 @@ def build_brief(d):
 </div></div>"""
 brief = build_brief(d)
 
-html_out = f"""<meta charset="utf-8">
-<title>{CFG['country']} Digital Agriculture Diagnostic</title>
+html_out = f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>{esc(CFG['country'])} Digital Agriculture Diagnostic</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
-<style>{CSS}</style>
+<style>{CSS}</style></head><body>
 <div class="wrap">
 
 <header class="mast">
   <div class="kicker">Digital Agriculture Maturity Model · <b>DAMM v1.7 draft</b> · Diagnostic Package</div>
-  <h1>{CFG['country']}</h1>
-  <p class="subtitle">Digital agriculture diagnostic — the starting document for the National Digital Agriculture Roadmap {CFG['period']}.</p>
+  <h1>{esc(CFG['country'])}</h1>
+  <p class="subtitle">Digital agriculture diagnostic — the starting document for the National Digital Agriculture Roadmap {esc(CFG['period'])}.</p>
   <div class="metarow">
-    <span>Assessment: <b>{CFG['assessment']}</b></span>
+    <span>Assessment: <b>{esc(CFG['assessment'])}</b></span>
     <span>Model: <b>DAMM v1.7</b></span>
     <span>Evidence compiled: <b>22 Aug 2026</b></span>
     <span>Rendered: <b>22 Aug 2026</b></span>
@@ -1082,12 +1081,13 @@ html_out = f"""<meta charset="utf-8">
 <li>Source tiers (T1–T5) are reported, never weighted. Researched narrative cites scored rows; <b>no narrative claim sets a level.</b></li>
 </ol>
 <p class="qcline"><b>Automated quality control:</b> {len(QC)}/{len(QC)} renderer checks passed (consistency, provenance, reconciliation and presentation \u2014 a failed check blocks the render). <b>Stage 1 automated challenge:</b> {CFG.get("automated_challenge") or "not recorded \u2014 machine QC only; does not satisfy G1 or G2"}. <b>Human gates:</b> G1, assessor confirmation of every machine-filled row \u2014 {HUMAN_GATES["G1"]}; G2, independent peer review of all prerequisite and Judged rows plus a 15% sample of the remainder \u2014 {HUMAN_GATES["G2"]}; G3, task team leader/country-owner sign-off against all seven QC affirmations \u2014 {HUMAN_GATES["G3"]}.</p>\n<p class="prohib">Prohibitions: no cross-country ranking · no band as a project development objective (PDO), disbursement-linked indicator (DLI), or disbursement condition · no automatic financing decisions ·
-no public claim before human review. Rendered by the DAMM v1.7 engine and report pipeline from the scored indicator set and the initiative register for {CFG["country"]}; the same pipeline renders any country&#8217;s assessment. Source tiers are assigned by the DAMM Source-Tier Protocol lookup.</p>
+no public claim before human review. Rendered by the DAMM v1.7 engine and report pipeline from the scored indicator set and the initiative register for {esc(CFG["country"])}; the same pipeline renders any country&#8217;s assessment. Source tiers are assigned by the DAMM Source-Tier Protocol lookup.</p>
 {GLOSS.replace("{CFG.get('gloss_extra','')}", CFG.get('gloss_extra',''))}
 </div>
 
 </div>
 <script>{JS}</script>
+</body></html>
 """
 
 open(OUT, "w").write(html_out)

@@ -10,7 +10,6 @@ agenda is visibly proposed and never an automatic financing decision.
 import argparse
 import datetime
 import hashlib
-import html
 import json
 import os
 import sys
@@ -21,6 +20,7 @@ REPO = os.path.abspath(os.path.join(LOOP1, "..", ".."))
 sys.path.insert(0, HERE)
 
 import gates as G
+import report_design as R
 import vendors as V
 import workflow_inputs as WI
 
@@ -318,12 +318,127 @@ def render_markdown(product):
     return "\n".join(lines).rstrip() + "\n"
 
 
-def render_html(markdown_text, title):
-    paragraphs = "".join(
-        f"<p>{html.escape(line)}</p>" for line in markdown_text.splitlines() if line
+def _text_blocks(values):
+    return "".join(R.paragraph(value) for value in values if str(value or "").strip())
+
+
+def _generic_html(markdown_text, title):
+    body = _text_blocks(line for line in str(markdown_text).splitlines() if line)
+    return R.document(
+        title=title,
+        country="DAR working paper",
+        subtitle="Evidence-backed analytical output",
+        status="Draft — post-completion review pending",
+        body=R.section("Report", body),
     )
-    return ("<!doctype html><html><head><meta charset='utf-8'><title>"
-            + html.escape(title) + "</title></head><body>" + paragraphs + "</body></html>")
+
+
+def render_html(product, title="AI in digital agriculture"):
+    """Render the structured Stage 3 product as an offline consulting report."""
+    if not isinstance(product, dict):
+        return _generic_html(product, title)
+
+    as_is = (product.get("as_is") or {}).get("findings") or []
+    peer = (product.get("peer_experience") or {}).get("findings") or []
+    agenda = (product.get("recommended_agenda") or {}).get("actions") or []
+    as_is_gaps = (product.get("as_is") or {}).get("data_gaps") or []
+    peer_gaps = (product.get("peer_experience") or {}).get("data_gaps") or []
+    gaps = list(as_is_gaps) + list(peer_gaps)
+    sources = product.get("source_inventory") or []
+
+    metrics = R.metric_cards((
+        ("As-is findings", len(as_is), "Country evidence"),
+        ("Peer lessons", len(peer), "Transfer references"),
+        ("Proposed actions", len(agenda), "Require validation"),
+        ("Recorded gaps", len(gaps), "Explicit uncertainty"),
+    ))
+    coverage = R.composition_bar_svg(
+        "Evidence coverage",
+        (("Country as-is evidence", len(as_is)),
+         ("Peer-country evidence", len(peer)),
+         ("Recorded data gaps", len(gaps))),
+    )
+    as_is_table = R.table(
+        ("Dimension", "Country finding", "Why it matters", "Limitation", "Source"),
+        ((item.get("dimension") or "Not classified", item.get("statement") or "",
+          item.get("why_it_matters") or "", item.get("limitation") or "",
+          item.get("source_name") or item.get("source_url") or "Not stated")
+         for item in as_is),
+    )
+    peer_table = R.table(
+        ("Country", "Dimension", "Peer lesson", "Transfer boundary", "Source"),
+        ((item.get("about_country") or "Other country",
+          item.get("dimension") or "Not classified", item.get("statement") or "",
+          item.get("limitation") or "",
+          item.get("source_name") or item.get("source_url") or "Not stated")
+         for item in peer),
+    )
+    agenda_table = R.table(
+        ("Priority", "Proposed action", "Horizon", "Proposed lead", "Rationale", "Evidence anchors"),
+        ((item.get("priority") or "Not stated", item.get("action") or "",
+          item.get("horizon") or "Not stated", item.get("lead") or "Not stated",
+          item.get("rationale") or "", ", ".join(item.get("evidence_ids") or []) or "Data gap")
+         for item in agenda),
+    )
+    implementation_table = R.table(
+        ("Action", "Prerequisites", "Risks and safeguards", "Indicators"),
+        ((item.get("action") or "", "; ".join(item.get("prerequisites") or []) or "Not stated",
+          "; ".join(item.get("risks_and_safeguards") or []) or "Not stated",
+          "; ".join(item.get("indicators") or []) or "Not stated") for item in agenda),
+    )
+    source_table = R.table(
+        ("ID", "Source", "Tier", "Kind", "Location"),
+        ((source.get("id") or "Not stated", source.get("source_name") or "Unnamed source",
+          source.get("tier") or "Unrated", source.get("source_kind") or "published_source",
+          source.get("source_url") or "TTL-provided document") for source in sources),
+    )
+    body = (
+        R.section(
+            "Executive perspective",
+            metrics + R.notice(
+                "Decision boundary",
+                "The assessment distinguishes verified country evidence, peer experience, and proposed actions. It is not an automatic financing decision.",
+            ),
+            lede=("A grounded view of the country's current AI position, relevant peer "
+                  "experience, and a sequenced agenda for validation."),
+        )
+        + R.section("Evidence coverage", coverage,
+                    lede=("The visual counts accepted evidence records and separately labels "
+                          "recorded data gaps; neither is a quality score."))
+        + R.section("As-is position", as_is_table)
+        + R.section("Peer-country experience", peer_table)
+        + R.section(
+            "Proposed national agenda",
+            R.notice(
+                "Proposed / unratified",
+                "Every action below requires post-completion validation and remains separate from evidence findings.",
+                tone="proposal",
+            ) + agenda_table + R.notice(
+                "Sequencing note",
+                (product.get("recommended_agenda") or {}).get("sequencing_note")
+                or "No sequencing note was recorded.",
+                tone="proposal",
+            ) + implementation_table,
+        )
+        + R.section(
+            "Data gaps",
+            _text_blocks(gaps) if gaps else R.paragraph("No data gap was recorded.", muted=True),
+        )
+        + R.section("Source inventory", source_table)
+    )
+    return R.document(
+        title="AI in digital agriculture",
+        country=product.get("country") or "Country not stated",
+        subtitle="Current position, peer experience and a validation-gated national agenda.",
+        status="Draft — recommendations require post-completion validation",
+        metadata=(
+            ("Workflow stage", "3"),
+            ("ISO3", product.get("iso3") or "Not stated"),
+            ("Assessment date", product.get("assessment_date") or "Not stated"),
+            ("Execution mode", product.get("execution_mode") or "Not stated"),
+        ),
+        body=body,
+    )
 
 
 def main():
@@ -415,7 +530,7 @@ def main():
     markdown = render_markdown(product)
     V.atomic_write_json(json_path, product)
     V.atomic_write_text(md_path, markdown)
-    V.atomic_write_text(html_path, render_html(markdown, "AI in digital agriculture"))
+    V.atomic_write_text(html_path, render_html(product))
     V.atomic_write_json(sources_path, product["source_inventory"])
     ledger.save(spend_path)
     print(json.dumps({

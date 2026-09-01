@@ -10,7 +10,6 @@ against the focused product for the requested lane.
 import argparse
 import datetime
 import hashlib
-import html
 import json
 import math
 import os
@@ -22,6 +21,7 @@ LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
 
 import scans as SC
+import report_design as R
 import vendors as V
 import workflow_inputs as WI
 
@@ -676,21 +676,166 @@ def render_markdown(product, lane):
     return "\n".join(lines).rstrip() + "\n"
 
 
-def render_html(markdown_text, title):
-    """A dependency-free, readable HTML rendering; Stage 8 creates DOCX/PDF."""
-    body = []
-    for line in markdown_text.splitlines():
-        if line.startswith("# "):
-            body.append(f"<h1>{html.escape(line[2:])}</h1>")
-        elif line.startswith("## "):
-            body.append(f"<h2>{html.escape(line[3:])}</h2>")
-        elif line.startswith("- "):
-            body.append(f"<p>• {html.escape(line[2:])}</p>")
-        elif line:
-            body.append(f"<p>{html.escape(line)}</p>")
-    return ("<!doctype html><html><head><meta charset='utf-8'><title>"
-            + html.escape(title) + "</title></head><body>" + "".join(body)
-            + "</body></html>")
+def _source_composition(sources):
+    """Return a stable, explicit source-tier denominator for the report visual."""
+    counts = {}
+    missing = 0
+    for source in sources or []:
+        tier = " ".join(str(source.get("tier") or "").split())
+        if tier:
+            counts[tier] = counts.get(tier, 0) + 1
+        else:
+            missing += 1
+    order = {f"T{number}": number for number in range(1, 6)}
+    items = sorted(
+        counts.items(),
+        key=lambda item: (order.get(item[0], 99), item[0].casefold()),
+    )
+    return tuple(items), missing
+
+
+def _text_blocks(values):
+    return "".join(R.paragraph(value) for value in values if str(value or "").strip())
+
+
+def _generic_html(markdown_text, title):
+    """Keep the historical string interface for non-workflow callers."""
+    body = _text_blocks(line for line in str(markdown_text).splitlines() if line)
+    return R.document(
+        title=title,
+        country="DAR working paper",
+        subtitle="Evidence-backed analytical output",
+        status="Draft — post-completion review pending",
+        body=R.section("Report", body),
+    )
+
+
+def render_html(product, lane=None):
+    """Render a consulting-style Stage 2/4 report from the structured product.
+
+    All evidence remains escaped text. Charts are inline SVG with explicit denominators;
+    the document has no remote style, font, script, or image dependency.
+    """
+    if not isinstance(product, dict):
+        return _generic_html(product, lane or "Research report")
+    if lane not in {"country", "international"}:
+        raise ValueError("lane must be country or international")
+
+    country = product.get("country") or "Country not stated"
+    sources = product.get("source_inventory") or []
+    ttl_documents = product.get("ttl_documents") or []
+    mix, missing = _source_composition(sources)
+    chart = R.composition_bar_svg("Source composition", mix, missing=missing)
+
+    if lane == "country":
+        title = "Country research and credible-source inventory"
+        findings = product.get("country_findings") or []
+        initiatives = product.get("initiative_register") or []
+        metrics = R.metric_cards((
+            ("Country findings", len(findings), "Evidence statements retained"),
+            ("Initiatives", len(initiatives), "Register entries"),
+            ("Cited sources", len(sources), "Explicit report denominator"),
+            ("TTL documents", len(ttl_documents), "Frozen inputs considered"),
+        ))
+        evidence = R.table(
+            ("DAR chapter", "Evidence-backed finding", "Source", "Tier"),
+            ((item.get("chapter") or "—", item.get("statement") or "",
+              item.get("source_name") or item.get("source_url") or "Not stated",
+              item.get("tier") or "Unrated") for item in findings),
+        )
+        register = R.table(
+            ("Initiative", "Status", "Lead", "Scale"),
+            ((item.get("name") or "Unnamed", item.get("status") or "Unclear",
+              item.get("lead") or "Not stated", item.get("scale") or "Not stated")
+             for item in initiatives),
+        )
+        body = (
+            R.section(
+                "Executive perspective",
+                metrics + R.notice(
+                    "Evidence boundary",
+                    "Findings and initiative records support roadmap drafting; they do not set a DAMM score or constitute a financing decision.",
+                ),
+                lede=("A decision-oriented inventory of country evidence, active initiatives, "
+                      "and the sources available for roadmap design."),
+            )
+            + R.section("Evidence base", chart,
+                        lede="The denominator includes every source retained in this stage product.")
+            + R.section("Country findings", evidence)
+            + R.section("Initiative register", register)
+        )
+    else:
+        title = "International strategies and lessons"
+        strategies = product.get("strategies") or []
+        peer_countries = {
+            str(item.get("about_country") or "").strip()
+            for item in strategies if str(item.get("about_country") or "").strip()
+        }
+        metrics = R.metric_cards((
+            ("Strategy lessons", len(strategies), "Transfer candidates"),
+            ("Peer countries", len(peer_countries), "Not a ranking"),
+            ("Cited sources", len(sources), "Explicit report denominator"),
+            ("TTL documents", len(ttl_documents), "Frozen inputs considered"),
+        ))
+        lessons = R.table(
+            ("Country", "Chapter", "Transferable signal", "Why it may matter", "Source tier"),
+            ((item.get("about_country") or "Other country", item.get("chapter") or "—",
+              item.get("statement") or "", item.get("why_it_matters") or "",
+              item.get("tier") or "Unrated") for item in strategies),
+        )
+        body = (
+            R.section(
+                "Executive perspective",
+                metrics + R.notice(
+                    "Adaptation boundary",
+                    product.get("selection_rule") or (
+                        "Foreign approaches are adaptation candidates, not recommendations to copy."
+                    ),
+                    tone="proposal",
+                ),
+                lede=("A curated set of international approaches relevant to the roadmap, "
+                      "presented as lessons rather than comparative performance claims."),
+            )
+            + R.section("Source base", chart,
+                        lede="Sources are grouped by their recorded tier; missing ratings remain visible.")
+            + R.section("Strategy lessons", lessons)
+        )
+
+    ttl_rows = R.table(
+        ("Document", "Category", "Analysis coverage", "Synthesis status"),
+        ((doc.get("filename") or "Document", doc.get("category") or "Not stated",
+          (doc.get("analysis_coverage") or {}).get("mode") or "Not stated",
+          doc.get("synthesis_status") or "Considered") for doc in ttl_documents),
+    ) if ttl_documents else R.paragraph(
+        "No optional TTL document was supplied; autonomous research was used.", muted=True)
+    source_rows = R.table(
+        ("Source", "Tier", "Kind", "Published", "Location"),
+        ((source.get("source_name") or "Unnamed source", source.get("tier") or "Unrated",
+          source.get("source_kind") or "published_source",
+          source.get("published_year") or "Not stated",
+          source.get("source_url") or "TTL-provided document") for source in sources),
+    )
+    gaps = product.get("ttl_synthesis_data_gaps") or []
+    if gaps:
+        body += R.section("TTL synthesis data gaps", _text_blocks(gaps))
+    body += (
+        R.section("TTL-provided documents", ttl_rows)
+        + R.section("Source inventory", source_rows)
+        + R.section("Limitations", _text_blocks(product.get("limitations") or []))
+    )
+    return R.document(
+        title=title,
+        country=country,
+        subtitle=("Structured evidence and decision context for the canonical Draft DAR workflow."),
+        status="Draft — post-completion review pending",
+        metadata=(
+            ("Workflow stage", "2" if lane == "country" else "4"),
+            ("ISO3", product.get("iso3") or "Not stated"),
+            ("Assessment year", product.get("assessment_year") or "Not stated"),
+            ("Execution mode", product.get("execution_mode") or "Not stated"),
+        ),
+        body=body,
+    )
 
 
 def main():
@@ -788,8 +933,7 @@ def main():
         markdown = render_markdown(product, args.lane)
         V.atomic_write_json(json_path, product)
         V.atomic_write_text(md_path, markdown)
-        V.atomic_write_text(
-            html_path, render_html(markdown, stem.replace("_", " ").title()))
+        V.atomic_write_text(html_path, render_html(product, args.lane))
         V.atomic_write_json(sources_path, product["source_inventory"])
         checkpoint_lane_spend(
             args.lane, shared_spend_path, lane_spend_path, complete=True)

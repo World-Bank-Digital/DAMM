@@ -6,19 +6,24 @@ must bind the canonical workflow contract, identify completed stages 1--7, and
 carry a hash-bound artifact record for every product required by those stages.
 Stage 8 does not discover similarly named files in a working directory.
 
-Narrative source artifacts may be Markdown or HTML.  They are normalized to
-Markdown, then exported to standalone HTML and DOCX with pandoc; PDF is produced
-from that DOCX with LibreOffice/soffice.  Missing converters, invalid output, or
-any artifact/hash mismatch is a terminal packaging error.
+Narrative source artifacts may be Markdown or HTML.  When a stage publishes both,
+the styled HTML is canonical: Stage 8 preserves those exact bytes for the HTML
+deliverable and derives Markdown and DOCX from that source.  Markdown-only stages
+are exported to standalone HTML and DOCX with pandoc.  PDF is produced from DOCX
+with LibreOffice/soffice.  Missing converters, invalid output, or any artifact/hash
+mismatch is a terminal packaging error.
 """
 
 from __future__ import annotations
 
 import argparse
+import base64
 import csv
 from dataclasses import dataclass
 import datetime as _datetime
 import hashlib
+import html as _html
+import io
 import json
 import os
 from pathlib import Path
@@ -29,6 +34,7 @@ import sys
 import tempfile
 from typing import Any, Callable, Iterable, Mapping, Sequence
 import zipfile
+import xml.etree.ElementTree as ET
 
 
 HERE = Path(__file__).resolve().parent
@@ -429,7 +435,7 @@ def validate_workflow_manifest(
                     candidates,
                     key=lambda binding: (
                         0
-                        if Path(binding.path).suffix.lower() in {".md", ".markdown"}
+                        if Path(binding.path).suffix.lower() in {".html", ".htm"}
                         else 1,
                         binding.path,
                     ),
@@ -494,6 +500,10 @@ def _validate_input_snapshot(
         "ceiling_usd": workflow_manifest.get("ceiling_usd"),
         "vendor": workflow_manifest.get("vendor"),
     }
+    if workflow_manifest.get("simulation_provenance") is not None:
+        expected["simulation_provenance"] = workflow_manifest[
+            "simulation_provenance"
+        ]
     if snapshot != expected:
         raise ManifestValidationError(
             "input_snapshot does not exactly bind the canonical workflow launch inputs"
@@ -807,6 +817,385 @@ def _normalize_text(content: bytes, label: str) -> str:
     return text
 
 
+_REMOTE_URL = r"(?:https?:)?//"
+
+
+def _strip_legacy_remote_subresources(source_html: str) -> str:
+    """Remove network-fetching resources while retaining legacy report content.
+
+    Historical DAMM renderers published HTML fragments, including a Stage 1
+    fragment with a Google Fonts stylesheet.  Stage 8 may package those already
+    hash-bound publications, but the packaged report must remain self-contained.
+    Hyperlinks are intentionally retained because they are evidence citations;
+    only subresources that a browser would fetch automatically are removed.
+    """
+
+    sanitized = re.sub(
+        rf"<link\b(?=[^>]*\bhref\s*=\s*(['\"]){_REMOTE_URL})[^>]*>",
+        "",
+        source_html,
+        flags=re.IGNORECASE,
+    )
+    sanitized = re.sub(
+        rf"<script\b(?=[^>]*\bsrc\s*=\s*(['\"]){_REMOTE_URL})[^>]*>.*?</script\s*>",
+        "",
+        sanitized,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    sanitized = re.sub(
+        rf"<(?:iframe|object|embed)\b(?=[^>]*\b(?:src|data)\s*=\s*(['\"]){_REMOTE_URL})[^>]*>.*?</(?:iframe|object)\s*>",
+        "",
+        sanitized,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    sanitized = re.sub(
+        rf"\s(?:src|poster)\s*=\s*(['\"]){_REMOTE_URL}.*?\1",
+        "",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
+    sanitized = re.sub(
+        r"<meta\b(?=[^>]*\bhttp-equiv\s*=\s*(['\"])refresh\1)[^>]*>",
+        "",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
+    sanitized = re.sub(
+        rf"@import\s+(?:url\(\s*)?(['\"]?){_REMOTE_URL}.*?(?:\1\s*\)|\1)\s*;?",
+        "",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
+    sanitized = re.sub(
+        rf"url\(\s*(['\"]?){_REMOTE_URL}.*?\1\s*\)",
+        "none",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
+    return sanitized.strip()
+
+
+def _wrap_legacy_html_fragment(source_html: str) -> str:
+    """Promote a pre-standalone, hash-bound report fragment to offline HTML."""
+
+    body = _strip_legacy_remote_subresources(source_html)
+    return (
+        '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        "<title>Legacy DAMM stage report</title>\n"
+        "<style>html{color:#17322a;background:#f4f1e8}body{margin:0;font-family:Arial,"
+        "sans-serif}.legacy-report{max-width:1120px;margin:0 auto;padding:32px;"
+        "background:#fff;box-sizing:border-box}@media print{body{background:#fff}"
+        ".legacy-report{max-width:none;padding:0}}</style></head><body>\n"
+        f'<main class="legacy-report">{body}</main>\n'
+        "</body></html>\n"
+    )
+
+
+def _office_conversion_html(source_html: str) -> str:
+    """Keep visible report furniture when Pandoc derives DOCX/PDF.
+
+    Pandoc treats HTML5 ``header`` and ``footer`` elements as metadata and can
+    omit their visible content.  These elements are layout-only in DAMM reports,
+    so neutral divs preserve title, country, lifecycle, content and footer in
+    office formats while the published HTML bytes remain untouched.
+    """
+
+    converted = re.sub(
+        r"<(/?)(?:article|header|main|section|footer)\b",
+        lambda match: f"<{match.group(1)}div",
+        source_html,
+        flags=re.IGNORECASE,
+    )
+    converted = re.sub(
+        r"<head\b[^>]*>.*?</head\s*>",
+        lambda match: re.sub(
+            r"<title\b[^>]*>.*?</title\s*>",
+            "",
+            match.group(0),
+            flags=re.IGNORECASE | re.DOTALL,
+        ),
+        converted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    converted = re.sub(
+        r"<table\b[^>]*>(?:(?!</table\s*>).)*?"
+        r"<tbody\b[^>]*>\s*</tbody\s*>"
+        r"(?:(?!</table\s*>).)*?</table\s*>",
+        "",
+        converted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    converted = re.sub(
+        r"<(?P<sr_tag>span|caption)\b[^>]*\bclass=[\"'][^\"']*\bsr-only\b"
+        r"[^\"']*[\"'][^>]*>.*?</(?P=sr_tag)\s*>",
+        "",
+        converted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    converted = re.sub(
+        r"(<div\b[^>]*\bclass=[\"'][^\"']*\bnotice\b[^\"']*[\"'][^>]*>"
+        r"\s*<strong\b[^>]*>.*?</strong\s*>)(?!\s*<br\b)",
+        r"\1<br>",
+        converted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    def office_metric_row(match: re.Match[str]) -> str:
+        note = match.group("note") or ""
+        return (
+            '<tr class="office-metric">'
+            f'<td>{match.group("label")}</td>'
+            f'<td>{match.group("value")}</td>'
+            f'<td>{note}</td></tr>'
+        )
+
+    converted = re.sub(
+        r'<div class="card">\s*<div class="value">(?P<value>.*?)</div>\s*'
+        r'<div class="label">(?P<label>.*?)</div>\s*'
+        r'(?:<div class="note">(?P<note>.*?)</div>\s*)?</div>',
+        office_metric_row,
+        converted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    converted = re.sub(
+        r'<div class="cards">\s*'
+        r'(?P<rows>(?:<tr class="office-metric">.*?</tr>\s*)+)</div>',
+        lambda match: (
+            '<table class="office-metrics"><thead><tr>'
+            '<th>Metric</th><th>Value</th><th>Context</th>'
+            f'</tr></thead><tbody>{match.group("rows")}</tbody></table>'
+        ),
+        converted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    def embed_svg(match: re.Match[str]) -> str:
+        svg = match.group(0)
+        label_match = re.search(r'\baria-label\s*=\s*(["\'])(.*?)\1', svg, re.IGNORECASE)
+        title_match = re.search(r"<title\b[^>]*>(.*?)</title\s*>", svg, re.IGNORECASE | re.DOTALL)
+        label = (
+            label_match.group(2)
+            if label_match
+            else re.sub(r"<[^>]+>", "", title_match.group(1)).strip()
+            if title_match
+            else "Report visualization"
+        )
+        encoded = base64.b64encode(svg.encode("utf-8")).decode("ascii")
+        return (
+            '<p class="office-figure"><img src="data:image/svg+xml;base64,'
+            f'{encoded}" alt="{_html.escape(label, quote=True)}"></p>'
+        )
+
+    return re.sub(
+        r"<svg\b[^>]*>.*?</svg\s*>",
+        embed_svg,
+        converted,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+
+_WORD_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+
+
+def _word_tag(local: str) -> str:
+    return f"{{{_WORD_NS}}}{local}"
+
+
+def _word_child(parent: ET.Element, local: str) -> ET.Element:
+    child = parent.find(_word_tag(local))
+    return child if child is not None else ET.SubElement(parent, _word_tag(local))
+
+
+def _style_word_run(style: ET.Element, *, color: str, size: str, font: str) -> None:
+    run = _word_child(style, "rPr")
+    fonts = _word_child(run, "rFonts")
+    for attribute in list(fonts.attrib):
+        if attribute.endswith("Theme"):
+            del fonts.attrib[attribute]
+    for attribute in ("ascii", "hAnsi", "cs", "eastAsia"):
+        fonts.set(_word_tag(attribute), font)
+    color_node = _word_child(run, "color")
+    color_node.attrib.clear()
+    color_node.set(_word_tag("val"), color)
+    for local in ("sz", "szCs"):
+        size_node = _word_child(run, local)
+        size_node.set(_word_tag("val"), size)
+
+
+def _consulting_reference_bytes(default_reference: bytes) -> bytes:
+    """Apply the report palette and hierarchy to Pandoc's compatible reference DOCX."""
+
+    ET.register_namespace("w", _WORD_NS)
+    source = io.BytesIO(default_reference)
+    if not zipfile.is_zipfile(source):
+        raise PackagingError("pandoc did not provide a valid reference DOCX")
+    source.seek(0)
+    files: dict[str, bytes] = {}
+    with zipfile.ZipFile(source) as archive:
+        for name in archive.namelist():
+            files[name] = archive.read(name)
+
+    try:
+        styles = ET.fromstring(files["word/styles.xml"])
+    except (KeyError, ET.ParseError) as error:
+        raise PackagingError("pandoc reference DOCX has no usable style catalog") from error
+    palette = {
+        "Title": ("245844", "46", "Aptos Display"),
+        "TitleChar": ("245844", "46", "Aptos Display"),
+        "Subtitle": ("719783", "26", "Aptos"),
+        "SubtitleChar": ("719783", "26", "Aptos"),
+        "Heading1": ("245844", "34", "Aptos Display"),
+        "Heading1Char": ("245844", "34", "Aptos Display"),
+        "Heading2": ("17322A", "28", "Aptos Display"),
+        "Heading2Char": ("17322A", "28", "Aptos Display"),
+        "Heading3": ("245844", "24", "Aptos"),
+        "Heading3Char": ("245844", "24", "Aptos"),
+        "Normal": ("17322A", "22", "Aptos"),
+        "BodyText": ("17322A", "22", "Aptos"),
+    }
+    for style in styles.findall(_word_tag("style")):
+        style_id = style.get(_word_tag("styleId"), "")
+        if style_id in palette:
+            color, size, font = palette[style_id]
+            _style_word_run(style, color=color, size=size, font=font)
+        if style_id == "Hyperlink":
+            _style_word_run(style, color="1B6550", size="22", font="Aptos")
+        if style_id == "Table":
+            table_properties = _word_child(style, "tblPr")
+            borders = _word_child(table_properties, "tblBorders")
+            for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
+                border = _word_child(borders, edge)
+                border.set(_word_tag("val"), "single")
+                border.set(_word_tag("sz"), "4")
+                border.set(_word_tag("color"), "D7E0DA")
+            first_row = next(
+                (item for item in style.findall(_word_tag("tblStylePr"))
+                 if item.get(_word_tag("type")) == "firstRow"),
+                None,
+            )
+            if first_row is None:
+                first_row = ET.SubElement(
+                    style, _word_tag("tblStylePr"), {_word_tag("type"): "firstRow"}
+                )
+            cell_properties = _word_child(first_row, "tcPr")
+            shading = _word_child(cell_properties, "shd")
+            shading.set(_word_tag("fill"), "17322A")
+            _style_word_run(first_row, color="FFFFFF", size="20", font="Aptos")
+    defaults = styles.find(f"{_word_tag('docDefaults')}/{_word_tag('rPrDefault')}")
+    if defaults is not None:
+        _style_word_run(defaults, color="17322A", size="22", font="Aptos")
+    files["word/styles.xml"] = ET.tostring(
+        styles, encoding="utf-8", xml_declaration=True
+    )
+
+    try:
+        document = ET.fromstring(files["word/document.xml"])
+        section = document.find(f".//{_word_tag('sectPr')}")
+        if section is not None:
+            page_size = section.find(_word_tag("pgSz"))
+            if page_size is None:
+                page_size = ET.Element(_word_tag("pgSz"))
+                margins = section.find(_word_tag("pgMar"))
+                section.insert(
+                    list(section).index(margins) if margins is not None else len(section),
+                    page_size,
+                )
+            page_size.set(_word_tag("w"), "11906")
+            page_size.set(_word_tag("h"), "16838")
+            margins = _word_child(section, "pgMar")
+            for name in ("top", "right", "bottom", "left"):
+                margins.set(_word_tag(name), "720")
+            files["word/document.xml"] = ET.tostring(
+                document, encoding="utf-8", xml_declaration=True
+            )
+    except (KeyError, ET.ParseError) as error:
+        raise PackagingError("pandoc reference DOCX has no usable document settings") from error
+
+    output = io.BytesIO()
+    with zipfile.ZipFile(
+        output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
+    ) as archive:
+        for name in sorted(files):
+            info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 0
+            archive.writestr(info, files[name])
+    return output.getvalue()
+
+
+def _write_consulting_reference_docx(executable: str, target: Path) -> None:
+    try:
+        result = subprocess.run(
+            [executable, "--print-default-data-file", "reference.docx"],
+            capture_output=True,
+            check=False,
+            timeout=60,
+        )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise PackagingError(f"cannot obtain pandoc reference DOCX: {error}") from error
+    if result.returncode != 0 or not result.stdout:
+        detail = result.stderr.decode("utf-8", "replace").strip()[-1000:]
+        raise PackagingError(f"cannot obtain pandoc reference DOCX: {detail}")
+    target.write_bytes(_consulting_reference_bytes(result.stdout))
+
+
+def _polish_consulting_docx(path: Path) -> None:
+    """Apply renderer-stable table header colors directly to Pandoc output."""
+
+    try:
+        with zipfile.ZipFile(path) as archive:
+            files = {name: archive.read(name) for name in archive.namelist()}
+        document = ET.fromstring(files["word/document.xml"])
+    except (KeyError, OSError, ET.ParseError, zipfile.BadZipFile) as error:
+        raise PackagingError(
+            f"pandoc output {path.name} cannot be styled for office rendering: {error}"
+        ) from error
+
+    for table in document.findall(f".//{_word_tag('tbl')}"):
+        header = table.find(_word_tag("tr"))
+        if header is None:
+            continue
+        row_properties = header.find(_word_tag("trPr"))
+        if row_properties is None:
+            row_properties = ET.Element(_word_tag("trPr"))
+            header.insert(0, row_properties)
+        repeat = _word_child(row_properties, "tblHeader")
+        repeat.set(_word_tag("val"), "on")
+        for cell in header.findall(_word_tag("tc")):
+            cell_properties = cell.find(_word_tag("tcPr"))
+            if cell_properties is None:
+                cell_properties = ET.Element(_word_tag("tcPr"))
+                cell.insert(0, cell_properties)
+            shading = _word_child(cell_properties, "shd")
+            shading.attrib.clear()
+            shading.set(_word_tag("val"), "clear")
+            shading.set(_word_tag("color"), "auto")
+            shading.set(_word_tag("fill"), "17322A")
+            for run in cell.findall(f".//{_word_tag('r')}"):
+                run_properties = run.find(_word_tag("rPr"))
+                if run_properties is None:
+                    run_properties = ET.Element(_word_tag("rPr"))
+                    run.insert(0, run_properties)
+                _style_word_run(run, color="FFFFFF", size="20", font="Aptos")
+                bold = _word_child(run_properties, "b")
+                bold.set(_word_tag("val"), "1")
+
+    files["word/document.xml"] = ET.tostring(
+        document, encoding="utf-8", xml_declaration=True
+    )
+    output = io.BytesIO()
+    with zipfile.ZipFile(
+        output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
+    ) as archive:
+        for name in sorted(files):
+            info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 0
+            archive.writestr(info, files[name])
+    path.write_bytes(output.getvalue())
+
+
 def default_pandoc_converter(source: Path, target: Path) -> None:
     executable = shutil.which("pandoc")
     if not executable:
@@ -814,17 +1203,24 @@ def default_pandoc_converter(source: Path, target: Path) -> None:
     command = [executable, str(source), "--standalone", "--output", str(target)]
     if target.suffix.lower() == ".md":
         command[2:2] = ["--to", "gfm"]
-    try:
-        result = subprocess.run(
-            command, text=True, capture_output=True, check=False, timeout=180
-        )
-    except (OSError, subprocess.TimeoutExpired) as error:
-        raise PackagingError(f"pandoc conversion failed for {source.name}: {error}") from error
-    if result.returncode != 0:
-        detail = (result.stderr or result.stdout).strip()[-1000:]
-        raise PackagingError(
-            f"pandoc conversion failed for {source.name} with exit {result.returncode}: {detail}"
-        )
+    with tempfile.TemporaryDirectory(prefix="damm-pandoc-reference-") as temp_name:
+        if target.suffix.lower() == ".docx":
+            reference = Path(temp_name) / "consulting-reference.docx"
+            _write_consulting_reference_docx(executable, reference)
+            command[2:2] = ["--reference-doc", str(reference)]
+        try:
+            result = subprocess.run(
+                command, text=True, capture_output=True, check=False, timeout=180
+            )
+        except (OSError, subprocess.TimeoutExpired) as error:
+            raise PackagingError(f"pandoc conversion failed for {source.name}: {error}") from error
+        if result.returncode != 0:
+            detail = (result.stderr or result.stdout).strip()[-1000:]
+            raise PackagingError(
+                f"pandoc conversion failed for {source.name} with exit {result.returncode}: {detail}"
+            )
+    if target.suffix.lower() == ".docx":
+        _polish_consulting_docx(target)
 
 
 def default_pdf_converter(source_docx: Path, target_pdf: Path) -> None:
@@ -872,17 +1268,51 @@ def _require_conversion_output(path: Path, kind: str) -> None:
         try:
             with zipfile.ZipFile(path) as archive:
                 names = set(archive.namelist())
+                relationships = (
+                    archive.read("_rels/.rels") if "_rels/.rels" in names else b""
+                )
         except (OSError, zipfile.BadZipFile) as error:
             raise PackagingError(f"cannot inspect DOCX output {path.name}: {error}") from error
         if "[Content_Types].xml" not in names or "word/document.xml" not in names:
             raise PackagingError(f"pandoc output {path.name} is missing DOCX document parts")
+        if not relationships:
+            raise PackagingError(
+                f"pandoc output {path.name} is missing the DOCX package relationship"
+            )
+        try:
+            root = ET.fromstring(relationships)
+        except ET.ParseError as error:
+            raise PackagingError(
+                f"pandoc output {path.name} has an invalid DOCX package relationship"
+            ) from error
+        targets = [
+            str(item.attrib.get("Target") or "").lstrip("/")
+            for item in root
+            if str(item.attrib.get("Type") or "").endswith("/officeDocument")
+        ]
+        if "word/document.xml" not in targets:
+            raise PackagingError(
+                f"pandoc output {path.name} has no DOCX officeDocument relationship"
+            )
     elif kind == "PDF":
         try:
-            header = path.read_bytes()[:5]
+            content = path.read_bytes()
         except OSError as error:
             raise PackagingError(f"cannot inspect PDF output {path.name}: {error}") from error
-        if header != b"%PDF-":
+        if content[:5] != b"%PDF-":
             raise PackagingError(f"soffice output {path.name} is not a PDF")
+        match = re.search(rb"startxref\s+(\d+)\s+%%EOF\s*$", content)
+        if not match:
+            raise PackagingError(f"soffice output {path.name} is not a complete PDF")
+        xref_offset = int(match.group(1))
+        if xref_offset >= len(content):
+            raise PackagingError(f"soffice output {path.name} has an invalid PDF xref")
+        xref_target = content[xref_offset:xref_offset + 32]
+        if not (
+            xref_target.startswith(b"xref")
+            or re.match(rb"\d+\s+\d+\s+obj\b", xref_target)
+        ):
+            raise PackagingError(f"soffice output {path.name} has an invalid PDF xref")
 
 
 def _write_verified_bytes(destination: Path, content: bytes) -> None:
@@ -911,31 +1341,63 @@ def _convert_narrative(
     pdf_path = destination_stem.with_suffix(".pdf")
 
     suffix = source_suffix.lower()
+    temporary_office_source: Path | None = None
     if suffix in {".md", ".markdown"}:
         markdown_path.write_text(
             _normalize_text(source_content, destination_stem.name), encoding="utf-8", newline="\n"
         )
+        pandoc_converter(markdown_path, html_path)
+        if not html_path.is_file() or html_path.stat().st_size == 0:
+            raise PackagingError(f"pandoc did not create {html_path.name}")
+        normalized_html = _normalize_text(html_path.read_bytes(), html_path.name)
+        if "<html" not in normalized_html.casefold():
+            raise PackagingError(f"pandoc output {html_path.name} is not standalone HTML")
+        html_path.write_text(normalized_html, encoding="utf-8", newline="\n")
+        document_source = markdown_path
     else:
-        source_html = work_dir / f"{destination_stem.name}-source.html"
-        source_html.write_text(
-            _normalize_text(source_content, destination_stem.name), encoding="utf-8", newline="\n"
-        )
-        pandoc_converter(source_html, markdown_path)
-        if not markdown_path.is_file() or markdown_path.stat().st_size == 0:
-            raise PackagingError(f"pandoc did not create {markdown_path.name}")
-        normalized = _normalize_text(markdown_path.read_bytes(), markdown_path.name)
-        markdown_path.write_text(normalized, encoding="utf-8", newline="\n")
+        # Decode and inspect without normalizing: the package HTML is the exact
+        # hash-bound stage publication, including its embedded consulting design.
+        source_html = _normalize_text(source_content, destination_stem.name)
+        if "<html" in source_html.casefold():
+            _write_verified_bytes(html_path, source_content)
+        else:
+            # Pre-consulting-design renderers emitted fragments.  Their original
+            # bytes remain hash-bound in the workflow manifest; Stage 8 creates a
+            # deterministic, offline presentation copy for the download package.
+            html_path.write_text(
+                _wrap_legacy_html_fragment(source_html),
+                encoding="utf-8",
+                newline="\n",
+            )
+        work_dir.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            newline="\n",
+            prefix=f".{destination_stem.name}-office-",
+            suffix=".html",
+            dir=work_dir,
+            delete=False,
+        ) as handle:
+            handle.write(_office_conversion_html(html_path.read_text(encoding="utf-8")))
+            temporary_office_source = Path(handle.name)
+        document_source = temporary_office_source
+        try:
+            pandoc_converter(document_source, markdown_path)
+            if not markdown_path.is_file() or markdown_path.stat().st_size == 0:
+                raise PackagingError(f"pandoc did not create {markdown_path.name}")
+            normalized = _normalize_text(markdown_path.read_bytes(), markdown_path.name)
+            markdown_path.write_text(normalized, encoding="utf-8", newline="\n")
+        except Exception:
+            temporary_office_source.unlink(missing_ok=True)
+            raise
 
-    pandoc_converter(markdown_path, html_path)
-    if not html_path.is_file() or html_path.stat().st_size == 0:
-        raise PackagingError(f"pandoc did not create {html_path.name}")
-    normalized_html = _normalize_text(html_path.read_bytes(), html_path.name)
-    if "<html" not in normalized_html.casefold():
-        raise PackagingError(f"pandoc output {html_path.name} is not standalone HTML")
-    html_path.write_text(normalized_html, encoding="utf-8", newline="\n")
-
-    pandoc_converter(markdown_path, docx_path)
-    _require_conversion_output(docx_path, "DOCX")
+    try:
+        pandoc_converter(document_source, docx_path)
+        _require_conversion_output(docx_path, "DOCX")
+    finally:
+        if temporary_office_source is not None:
+            temporary_office_source.unlink(missing_ok=True)
     pdf_converter(docx_path, pdf_path)
     _require_conversion_output(pdf_path, "PDF")
     return [markdown_path, docx_path, pdf_path, html_path]
@@ -981,6 +1443,34 @@ def _tabular_value(value: Any) -> Any:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
 
 
+_SPREADSHEET_FORMULA_PREFIX = re.compile(r"^[\s\x00-\x1f]*[=+\-@]")
+
+
+def _spreadsheet_value(value: Any) -> Any:
+    """Return a spreadsheet-safe scalar while retaining genuine numeric types."""
+
+    normalized = _tabular_value(value)
+    if not isinstance(normalized, str):
+        return normalized
+
+    def xml_character(character: str) -> bool:
+        codepoint = ord(character)
+        return (
+            codepoint in (0x09, 0x0A, 0x0D)
+            or 0x20 <= codepoint <= 0xD7FF
+            or 0xE000 <= codepoint <= 0xFFFD
+            or 0x10000 <= codepoint <= 0x10FFFF
+        )
+
+    cleaned = "".join(
+        character if xml_character(character) else "\ufffd"
+        for character in normalized
+    )
+    if _SPREADSHEET_FORMULA_PREFIX.match(normalized):
+        return "'" + cleaned
+    return cleaned
+
+
 def _inventory_columns(rows: Sequence[Mapping[str, Any]]) -> list[str]:
     preferred = [
         "stage_id",
@@ -1007,9 +1497,11 @@ def _write_inventory_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
     try:
         with path.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=columns, lineterminator="\n")
-            writer.writeheader()
+            writer.writerow({key: _spreadsheet_value(key) for key in columns})
             for row in rows:
-                writer.writerow({key: _tabular_value(row.get(key)) for key in columns})
+                writer.writerow(
+                    {key: _spreadsheet_value(row.get(key)) for key in columns}
+                )
     except (OSError, csv.Error) as error:
         raise PackagingError(f"cannot write consolidated source inventory CSV: {error}") from error
 
@@ -1024,9 +1516,9 @@ def _write_inventory_xlsx(path: Path, rows: Sequence[Mapping[str, Any]]) -> None
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = "Sources"
-    sheet.append(columns)
+    sheet.append([_spreadsheet_value(column) for column in columns])
     for row in rows:
-        sheet.append([_tabular_value(row.get(key)) for key in columns])
+        sheet.append([_spreadsheet_value(row.get(key)) for key in columns])
     for cell in sheet[1]:
         cell.font = Font(bold=True)
     sheet.freeze_panes = "A2"

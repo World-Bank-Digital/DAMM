@@ -44,6 +44,7 @@ sys.path.insert(0, os.path.join(REPO, "model"))
 import vendors as V
 import workflow_inputs as WI
 import foresight_contract as FC
+import report_design as R
 from engine_v17 import MODEL, run as engine_run, tlevel
 from reference_scorer import Scorer as ReferenceScorer
 
@@ -5904,106 +5905,324 @@ def final_publication_blockers(
 
 # ------------------------------------------------------------------ render
 
+def _report_records(value):
+    return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
+
+
+def _report_list(value):
+    return value if isinstance(value, list) else []
+
+
+def _joined_report_values(value):
+    return "; ".join(str(item) for item in _report_list(value) if str(item).strip())
+
+
+def _cost_range_text(costs):
+    if not isinstance(costs, dict):
+        return "Not yet quantified"
+    low, high = costs.get("low"), costs.get("high")
+    if (isinstance(low, bool) or isinstance(high, bool)
+            or not isinstance(low, (int, float))
+            or not isinstance(high, (int, float))):
+        return "Not yet quantified"
+    currency = str(costs.get("currency") or "Currency not stated")
+    return f"{currency} {low:,.0f}–{high:,.0f}"
+
+
+def _render_annex(annex):
+    """Turn the audit record into decision-readable tables without hiding raw data.
+
+    The complete machine-readable record remains in the separately hash-bound DAR JSON.
+    The reader-facing report surfaces its denominators, decisions, and limitations rather
+    than reproducing JSON syntax in a consulting document.
+    """
+    if not isinstance(annex, dict):
+        return R.section(
+            "Decision annex",
+            R.notice("Annex unavailable", "No structured annex record was supplied.", tone="risk"),
+        )
+
+    indicators = _report_records(annex.get("indicator_evidence"))
+    candidates = _report_records(annex.get("candidate_rows"))
+    country_findings = _report_records(annex.get("country_findings"))
+    international = _report_records(annex.get("international_pointers"))
+    initiatives = _report_records(annex.get("initiative_register"))
+    abstentions = _report_list(annex.get("scan_abstentions"))
+    ai = annex.get("ai_digital_agriculture")
+    ai = ai if isinstance(ai, dict) else {}
+    ai_as_is = _report_records((ai.get("as_is") or {}).get("findings")
+                               if isinstance(ai.get("as_is"), dict) else [])
+    ai_peer = _report_records((ai.get("peer_experience") or {}).get("findings")
+                              if isinstance(ai.get("peer_experience"), dict) else [])
+    ai_agenda = ai.get("recommended_agenda")
+    ai_actions = _report_records(ai_agenda.get("actions")
+                                 if isinstance(ai_agenda, dict) else [])
+    investment = annex.get("investment_options")
+    investment = investment if isinstance(investment, dict) else {}
+    options = _report_records(investment.get("options"))
+    foresight = annex.get("foresight")
+    foresight = foresight if isinstance(foresight, dict) else {}
+    milestones = _report_records(foresight.get("milestones"))
+
+    overview = R.metric_cards((
+        ("Indicator records", len(indicators), "Complete technical register"),
+        ("Research findings", len(country_findings) + len(international),
+         "Country and international"),
+        ("Investment options", len(options), "No financing decision"),
+        ("Candidate measures", len(candidates), "Outside aggregates"),
+    )) + R.notice(
+        "Auditability",
+        "This is a reader-oriented view of the workflow-bound annex. The complete structured record is retained in the companion DAR JSON.",
+    )
+    sections = [R.section(
+        "Decision annex overview",
+        overview,
+        lede="The annex connects the narrative to evidence, analytical registers and decision boundaries.",
+    )]
+
+    country_body = R.table(
+        ("DAR chapter", "Finding", "Source", "Tier"),
+        ((item.get("chapter") or "—", item.get("statement") or "",
+          item.get("source_name") or item.get("source") or "Not stated",
+          item.get("tier") or "Unrated") for item in country_findings),
+    ) if country_findings else R.paragraph("No country finding was retained.", muted=True)
+    international_body = R.table(
+        ("Country", "DAR chapter", "Transferable lesson", "Source", "Tier"),
+        ((item.get("about_country") or "International", item.get("chapter") or "—",
+          item.get("statement") or "", item.get("source_name")
+          or item.get("source") or "Not stated", item.get("tier") or "Unrated")
+         for item in international),
+    ) if international else R.paragraph("No international pointer was retained.", muted=True)
+    sections.append(R.section(
+        "Research and comparative evidence",
+        "<h3>Country findings</h3>" + country_body
+        + "<h3>International pointers</h3>" + international_body,
+        lede="International examples are adaptation pointers, not country rankings or recommendations to copy.",
+    ))
+
+    candidate_body = R.table(
+        ("Candidate ID", "Observed value", "Class", "Year", "Source", "Evidence note"),
+        ((item.get("id") or "—",
+          item.get("value") if item.get("value") is not None else "Withheld",
+          item.get("cls") or item.get("class") or "Not stated",
+          item.get("year") or "Not stated", item.get("src") or "Not stated",
+          item.get("note") or "") for item in candidates),
+        numeric_columns=(1, 3),
+    ) if candidates else R.paragraph(
+        "No candidate observation was carried outside the ratified aggregate.", muted=True)
+    sections.append(R.section(
+        "Candidate rows",
+        candidate_body,
+        lede="Candidate measures remain unscored and outside every DAMM aggregate.",
+    ))
+
+    if ai_as_is or ai_peer or ai_actions or milestones:
+        future_body = R.metric_cards((
+            ("AI as-is findings", len(ai_as_is), "Country evidence"),
+            ("AI peer lessons", len(ai_peer), "Transfer references"),
+            ("Proposed AI actions", len(ai_actions), "Validation-gated"),
+            ("Backcast milestones", len(milestones), "Measurable pathway"),
+        ))
+        if ai_actions:
+            future_body += "<h3>Proposed AI agenda</h3>" + R.table(
+                ("Priority", "Action", "Horizon", "Proposed lead"),
+                ((item.get("priority") or "—", item.get("action") or "",
+                  item.get("horizon") or "Not stated", item.get("lead") or "Not stated")
+                 for item in ai_actions),
+            )
+        if milestones:
+            future_body += "<h3>Foresight record</h3>" + R.table(
+                ("Target year", "Milestone", "Indicator", "Target level", "Status"),
+                ((item.get("target_year") or "—", item.get("statement") or "",
+                  item.get("indicator_id") or "Candidate measure",
+                  item.get("target_level") or "—",
+                  "Proposed / unratified" if item.get("candidate_indicator") else "Bound to instrument")
+                 for item in milestones),
+                numeric_columns=(0, 3),
+            )
+        sections.append(R.section(
+            "AI agenda and strategic pathway",
+            future_body + R.notice(
+                "Proposal boundary",
+                "Agenda actions and candidate-bound milestones remain proposals until post-completion validation and human decision.",
+                tone="proposal",
+            ),
+        ))
+
+    if options:
+        ranges = []
+        for option in options:
+            costs = option.get("costs") if isinstance(option.get("costs"), dict) else {}
+            ranges.append({
+                "label": option.get("option_id") or option.get("title") or "Option",
+                "currency": costs.get("currency"),
+                "low": costs.get("low"),
+                "high": costs.get("high"),
+            })
+        investment_body = (
+            R.range_bar_svg("Preliminary option cost ranges", ranges)
+            + R.table(
+                ("Option", "Investment concept", "Preliminary range", "Evidence status", "Financing decision"),
+                ((option.get("option_id") or "—", option.get("title") or "Untitled",
+                  _cost_range_text(option.get("costs")),
+                  option.get("evidence_status") or "Not stated",
+                  option.get("financing_decision") or "None") for option in options),
+            )
+        )
+        sequencing = str(investment.get("portfolio_sequencing") or "").strip()
+        if sequencing:
+            investment_body += R.notice("Preliminary sequencing", sequencing, tone="proposal")
+        gaps = _joined_report_values(investment.get("cross_cutting_data_gaps"))
+        if gaps:
+            investment_body += R.notice("Cross-cutting data gaps", gaps, tone="risk")
+        sections.append(R.section(
+            "Investment decision support",
+            investment_body,
+            lede="Planning ranges support diligence and comparison; they are not rankings, approvals or financing decisions.",
+        ))
+
+    if initiatives:
+        sections.append(R.section(
+            "Initiative register",
+            R.table(
+                ("Initiative", "Status", "Lead", "Scale", "Source"),
+                ((item.get("name") or item.get("title") or "Unnamed",
+                  item.get("status") or "Not stated", item.get("lead") or "Not stated",
+                  item.get("scale") or "Not stated",
+                  item.get("source_name") or item.get("source") or "Not stated")
+                 for item in initiatives),
+            ),
+        ))
+
+    source_table = R.table(
+        ("ID", "Indicator", "Value", "Class", "Level", "Year", "Source", "Tier", "Evidence note"),
+        ((row.get("id") or "—", row.get("name") or "Unnamed",
+          row.get("value") if row.get("value") is not None else "Withheld",
+          row.get("class") or "Not stated",
+          row.get("level") if row.get("level") is not None else "Withheld",
+          row.get("year") or "Not stated",
+          (row.get("source") or {}).get("title")
+          if isinstance(row.get("source"), dict) else "Not stated",
+          (row.get("source") or {}).get("tier")
+          if isinstance(row.get("source"), dict) else "Unrated",
+          row.get("note") or "") for row in indicators),
+        numeric_columns=(2, 4, 5),
+    )
+    sections.append(R.section(
+        "Technical indicator evidence",
+        source_table,
+        lede=f"The register contains {len(indicators)} indicator records; withheld values remain visibly withheld.",
+    ))
+
+    if abstentions:
+        sections.append(R.section(
+            "Method record and omissions",
+            R.notice(
+                "Research abstentions retained",
+                f"{len(abstentions)} proposed scan records were not admitted to the evidence register.",
+                tone="risk",
+            ),
+        ))
+    return "".join(sections)
+
+
 def render_html(doc):
-    c = html.escape
     final = doc.get("final") is True
     expected_status = "Final DAR" if final else "Draft DAR"
     actual_status = str(doc.get("status") or "")
     if not actual_status.startswith(expected_status):
         raise ValueError(
             f"document status {actual_status!r} contradicts final={final!r}")
-    publication_label = ("Final Digital Agriculture Roadmap"
-                         if final
+    publication_label = ("Final Digital Agriculture Roadmap" if final
                          else "Draft Digital Agriculture Roadmap")
-    parts = [
-        "<meta charset='utf-8'>",
-        f"<title>{c(doc['country'])} — {publication_label}</title>",
-        "<style>",
-        "body{font:16px/1.65 Georgia,serif;max-width:820px;margin:40px auto;padding:0 20px;color:#1a1a1a}",
-        "h1{font-size:2rem;margin-bottom:.2em}h2{margin-top:2.2em;border-bottom:1px solid #ddd;padding-bottom:.2em}",
-        ".banner{background:#f4f2ec;border-left:3px solid #9aa;padding:.6em .9em;font:13px/1.5 system-ui;margin:.6em 0 1.2em}",
-        ".proposed{background:#fff7e6;border-left:3px solid #d9a441}",
-        ".status{display:inline-block;font:600 11px system-ui;text-transform:uppercase;letter-spacing:.06em;padding:.2em .5em;border-radius:3px;background:#eee}",
-        ".status.proposed{background:#d9a441;color:#fff}",
-        ".fid{font:13px/1.6 system-ui;background:#f4f2ec;padding:1em;margin:1.5em 0}",
-        ".prohib{font:12px/1.6 system-ui;color:#666;border-top:1px solid #ddd;margin-top:3em;padding-top:1em}",
-        "table{border-collapse:collapse;width:100%;font:12px/1.4 system-ui}",
-        "th,td{border:1px solid #ddd;padding:.4em;vertical-align:top;text-align:left}",
-        "pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f7f7;padding:1em;"
-        "font:11px/1.45 ui-monospace,monospace}",
-        "</style>",
-        f"<h1>{c(doc['country'])} — {publication_label}</h1>",
-        f"<p><em>{c(doc['status'])} DAMM {c(doc['model_version'])}, assessment year "
-        f"{doc['assessment_year']}.</em></p>",
-        "<div class='fid'>",
-        f"<b>Figure traceability: {doc['fidelity']['rate']:.1%}</b> — "
-        f"{doc['fidelity']['supported']} of {doc['fidelity']['claimed']} figures carry "
-        "a validated evidence, calculation, benchmark or planning-assumption basis. ",
-        "Every chapter states what it was allowed to draw on. Chapters marked "
-        "<span class='status proposed'>proposed</span> are recommendations built on the "
-        "assessment, not findings from it.",
-        "</div>",
-    ]
-    if doc.get("final") is not True:
-        blockers = [str(item) for item in doc.get("publication_blockers") or []]
-        detail = ("<ul>" + "".join(f"<li>{c(item)}</li>" for item in blockers) + "</ul>"
-                  if blockers else
-                  " Final-publication criteria have not been met.")
-        parts.append("<div class='banner proposed'><b>Publication hold.</b> "
-                     + detail + "</div>")
-    for ch in doc["chapters"]:
-        prescriptive = ch["kind"] == "prescriptive"
-        parts.append(f"<h2>{c(str(ch['n']))}. {c(ch['title'])} "
-                     + (f"<span class='status proposed'>proposed, not evidenced</span>"
-                        if prescriptive else "<span class='status'>evidenced</span>")
-                     + "</h2>")
-        parts.append(f"<div class='banner{" proposed" if prescriptive else ""}'>"
-                     f"{c(ch['provenance'])}</div>")
-        for para in ch["prose"].split("\n\n"):
+    chapters = [chapter for chapter in doc.get("chapters") or []
+                if isinstance(chapter, dict)]
+    standing_guardrails = []
+    seen_guardrails = set()
+    for item in PROHIBITIONS:
+        text = str(item).strip()
+        if text and text.casefold() not in seen_guardrails:
+            standing_guardrails.append(text)
+            seen_guardrails.add(text.casefold())
+    for chapter in chapters:
+        annex = chapter.get("annex")
+        annex = annex if isinstance(annex, dict) else {}
+        method = annex.get("method_record")
+        method = method if isinstance(method, dict) else {}
+        for item in _report_list(method.get("prohibitions")):
+            text = str(item).strip()
+            if text and text.casefold() not in seen_guardrails:
+                standing_guardrails.append(text)
+                seen_guardrails.add(text.casefold())
+    fidelity = doc.get("fidelity") if isinstance(doc.get("fidelity"), dict) else {}
+    supported = int(fidelity.get("supported") or 0)
+    claimed = int(fidelity.get("claimed") or 0)
+    unsupported = max(0, claimed - supported)
+    prescriptive_count = sum(chapter.get("kind") == "prescriptive" for chapter in chapters)
+
+    assurance = R.metric_cards((
+        ("Chapters", len(chapters), "Including the technical annex"),
+        ("Figure traceability", f"{float(fidelity.get('rate') or 0):.0%}",
+         f"{supported} of {claimed} figures"),
+        ("Evidenced chapters", len(chapters) - prescriptive_count, "Assessment-bound"),
+        ("Proposed chapters", prescriptive_count, "Not presented as findings"),
+    )) + R.composition_bar_svg(
+        "Figure traceability",
+        (("Supported", supported), ("Unsupported", unsupported)),
+    )
+    blockers = [str(item) for item in doc.get("publication_blockers") or []]
+    if final:
+        assurance += R.notice(
+            "Publication status",
+            "Inputs, narrative and methodology passed the recorded final-publication gates.",
+        )
+    else:
+        assurance += R.notice(
+            "Publication hold",
+            "; ".join(blockers) if blockers else "Final-publication criteria have not been met.",
+            tone="proposal",
+        )
+    body = R.section(
+        "Executive assurance",
+        assurance,
+        lede="A roadmap whose recommendations remain visibly separate from the evidence that informs them.",
+    )
+
+    for chapter in chapters:
+        prescriptive = chapter.get("kind") == "prescriptive"
+        chapter_body = R.notice(
+            "Proposed recommendation" if prescriptive else "Assessment finding",
+            chapter.get("provenance") or "No provenance statement supplied.",
+            tone="proposal" if prescriptive else "neutral",
+        )
+        for para in str(chapter.get("prose") or "").split("\n\n"):
             if para.strip():
-                parts.append(f"<p>{c(para.strip())}</p>")
-        annex = ch.get("annex")
-        if annex:
-            parts.append("<h3>Indicator evidence</h3><table><thead><tr>"
-                         "<th>ID</th><th>Indicator</th><th>Value</th><th>Class</th>"
-                         "<th>Level</th><th>Year</th><th>Source</th><th>Tier</th>"
-                         "<th>Evidence note</th></tr></thead><tbody>")
-            for row in annex["indicator_evidence"]:
-                source = row["source"]
-                source_text = c(source["title"])
-                url = source.get("url") or ""
-                if re.match(r"^https?://", url, re.I):
-                    source_text += (f"<br><a href='{c(url, quote=True)}'>"
-                                    f"{c(url)}</a>")
-                parts.append(
-                    "<tr>" + "".join(f"<td>{value}</td>" for value in (
-                        c(row["id"]), c(row["name"]), c(str(row["value"])),
-                        c(str(row["class"])), c(str(row["level"])),
-                        c(str(row["year"])), source_text, c(source.get("tier") or ""),
-                        c(row.get("note") or ""))) + "</tr>")
-            parts.append("</tbody></table>")
-            annex_sections = (
-                ("Run record", annex.get("run_record") or {}),
-                ("Complete indicator records", annex.get("indicator_evidence") or []),
-                ("Candidate rows", annex.get("candidate_rows") or []),
-                ("Derived assessment", annex.get("derived_assessment") or {}),
-                ("Country findings", annex.get("country_findings") or []),
-                ("International pointers", annex.get("international_pointers") or []),
-                ("Initiative register", annex.get("initiative_register") or []),
-                ("Scan abstentions", annex.get("scan_abstentions") or []),
-                ("AI in digital agriculture", annex.get("ai_digital_agriculture") or {}),
-                ("Investment options and cost-benefit analysis",
-                 annex.get("investment_options") or {}),
-                ("Foresight record", annex.get("foresight") or {}),
-                ("Method record", annex.get("method_record") or {}),
-            )
-            for heading, value in annex_sections:
-                rendered = c(json.dumps(
-                    value, indent=2, ensure_ascii=False, default=str))
-                parts.append(f"<h3>{c(heading)}</h3><pre>{rendered}</pre>")
-    parts.append("<div class='prohib'><b>Standing prohibitions.</b> "
-                 + c(" ".join(str(p) for p in PROHIBITIONS)) + "</div>")
-    return "\n".join(parts)
+                chapter_body += R.paragraph(para.strip())
+        body += R.section(
+            f"{chapter.get('n', '—')}. {chapter.get('title') or 'Untitled chapter'}",
+            chapter_body,
+        )
+        if chapter.get("annex") is not None:
+            body += _render_annex(chapter.get("annex"))
+
+    body += R.section(
+        "Standing prohibitions",
+        R.table(("Guardrail",), ((item,) for item in standing_guardrails)),
+    )
+    return R.document(
+        title=publication_label,
+        country=doc.get("country") or "Country not stated",
+        subtitle="An evidence-backed national roadmap with explicit proposal and publication boundaries.",
+        status=doc.get("status") or ("Final DAR" if final else "Draft DAR"),
+        metadata=(
+            ("DAMM model", doc.get("model_version") or "Not stated"),
+            ("Assessment year", doc.get("assessment_year") or "Not stated"),
+            ("Lifecycle", "Final" if final else "Draft — review pending"),
+            ("Figure traceability", f"{supported}/{claimed}"),
+        ),
+        body=body,
+        footer="DAR Studio · Integrated roadmap · Evidence and proposal boundaries retained",
+    )
 
 
 # ------------------------------------------------------------------ main

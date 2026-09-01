@@ -3542,6 +3542,59 @@ except ValueError as _error:
 check("contradictory Final/Draft state is rejected",
       _contradictory_render, "contradicts final=True")
 
+_annex_doc = dict(
+    _render_doc,
+    fidelity={"rate": 0.75, "supported": 3, "claimed": 4},
+    chapters=[{
+        "n": "A",
+        "title": "Evidence and decision annex",
+        "kind": "diagnostic",
+        "provenance": "Generated from the workflow-bound record.",
+        "prose": "Structured evidence accompanies the narrative.",
+        "annex": {
+            "indicator_evidence": [{
+                "id": "1.1", "name": "Connectivity <coverage>", "value": 42,
+                "class": "Documented", "level": 2, "year": 2026,
+                "source": {"title": "Official source", "tier": "T1"},
+                "note": "Validated & retained", "stale": False,
+            }],
+            "candidate_rows": [],
+            "country_findings": [{
+                "chapter": 3, "statement": "A country finding",
+                "source_name": "Country source", "tier": "T1",
+            }],
+            "international_pointers": [],
+            "initiative_register": [],
+            "scan_abstentions": [],
+            "ai_digital_agriculture": {},
+            "investment_options": {
+                "options": [{
+                    "option_id": "INV-1", "title": "Advisory platform",
+                    "costs": {"currency": "USD", "low": 10, "high": 20},
+                    "evidence_status": "Preliminary", "financing_decision": "None",
+                }],
+                "portfolio_sequencing": "Validate before sequencing.",
+                "cross_cutting_data_gaps": ["Unit-cost evidence"],
+            },
+            "foresight": {},
+            "method_record": {"prohibitions": list(D.PROHIBITIONS)},
+        },
+    }],
+)
+_consulting_html = D.render_html(_annex_doc)
+check("the integrated DAR uses the shared standalone consulting design",
+      _consulting_html.startswith("<!doctype html>"), True)
+check("the integrated DAR visualizes its figure-traceability denominator",
+      _consulting_html, 'aria-label="Figure traceability"')
+check("the annex presents investment decision support as a report section",
+      _consulting_html, "Investment decision support")
+check("the integrated report escapes annex data",
+      _consulting_html, "Connectivity &lt;coverage&gt;")
+check("the integrated report does not dump raw JSON into the reader-facing annex",
+      "<pre" in _consulting_html, False)
+check("standing prohibitions are rendered once rather than duplicated in the annex",
+      _consulting_html.count(D.PROHIBITIONS[0]), 1)
+
 
 section("Every figure must trace to the engine (E3)")
 

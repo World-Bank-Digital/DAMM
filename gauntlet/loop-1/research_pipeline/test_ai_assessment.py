@@ -144,6 +144,26 @@ class AiAssessmentTest(unittest.TestCase):
         self.assertIn("Peer-country experience", text)
         self.assertIn("Lesson boundary", text)
 
+    def test_html_is_deterministic_offline_and_distinguishes_proposals(self):
+        product = self.product()
+        product["recommended_agenda"]["actions"][0]["action"] = (
+            "Create <script>alert('unsafe')</script> governance sandbox"
+        )
+
+        first = A.render_html(product)
+        second = A.render_html(product)
+
+        self.assertEqual(first, second)
+        self.assertTrue(first.startswith("<!doctype html>"))
+        self.assertIn("AI in digital agriculture", first)
+        self.assertIn("Evidence coverage", first)
+        self.assertIn('role="img"', first)
+        self.assertIn("Proposed national agenda", first)
+        self.assertIn("not an automatic financing decision", first)
+        self.assertIn("&lt;script&gt;alert(&#x27;unsafe&#x27;)&lt;/script&gt;", first)
+        self.assertNotIn("<script>", first)
+        self.assertNotRegex(first, r"<(?:link|script)[^>]+https?://")
+
 
 if __name__ == "__main__":
     unittest.main()

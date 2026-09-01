@@ -215,6 +215,31 @@ check("the standing prohibitions are on the page", _H, "prohibitions")
 check("nothing is left unescaped from the model text", "<script" in _H, "False")
 
 
+section("The standalone report is an offline consulting working paper")
+
+check("the report is a complete HTML document", _H.lstrip().lower(), "<!doctype html>")
+check("the report identifies the lifecycle state", _H, "Lifecycle")
+check("the report includes an accessible milestone timeline", _H,
+      'aria-label="Backcast milestone timeline"')
+check("the timeline presents milestones chronologically",
+      _H.index(str(YEAR + 5)) < _H.index(str(YEAR + 7)), "True")
+check("the timeline distinguishes candidate milestones from findings", _H,
+      "Proposed / unratified")
+check("the report has print rules", _H, "@media print")
+check("the report contains no remote stylesheet or script dependency",
+      any(token in _H.lower() for token in ("@import", "<script", "src=\"http",
+                                             "src='http")), "False")
+check("rendering the same payload is byte deterministic", F.render_html(_P) == _H, "True")
+
+_hostile = copy.deepcopy(_P)
+_hostile["scenarios"][0]["narrative"] = '<img src=x onerror="alert(1)">'
+_hostile["milestones"][0]["statement"] = "Measure <script>alert(1)</script>"
+_hostile_html = F.render_html(_hostile)
+check("scenario prose is escaped", _hostile_html,
+      "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;")
+check("milestone labels are escaped", "<script" in _hostile_html, "False")
+
+
 section("TTL documents are evidence, not instructions")
 
 _LONG = ("START_MARKER" + "a" * 18000 + "MIDDLE_MARKER"

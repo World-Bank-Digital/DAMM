@@ -177,6 +177,9 @@ class DiagnosticStageTest(unittest.TestCase):
             source_config["data_path"] = str(loop1 / "EGY_v17.json")
             source_config["register_path"] = str(loop1 / "research/EGY_register.json")
             source_config["out_path"] = str(output)
+            source_config["country"] = '<img src=x onerror="alert(1)">'
+            source_config["period"] = "<script>alert(2)</script>"
+            source_config["assessment"] = '<svg onload="alert(3)">'
             with tempfile.NamedTemporaryFile(
                 mode="w",
                 encoding="utf-8",
@@ -201,6 +204,15 @@ class DiagnosticStageTest(unittest.TestCase):
             self.assertNotIn("prerequisite rows re-verified and confirmed", rendered)
             self.assertIn("named human assessor review required", rendered)
             self.assertIn("independent human review required after G1", rendered)
+            self.assertTrue(rendered.startswith("<!doctype html>"))
+            self.assertIn('<html lang="en">', rendered)
+            self.assertIn("</body></html>", rendered)
+            self.assertNotIn("fonts.googleapis.com", rendered)
+            self.assertNotIn('<link rel="stylesheet"', rendered)
+            self.assertNotIn('<img src=x onerror="alert(1)">', rendered)
+            self.assertNotIn("<script>alert(2)</script>", rendered)
+            self.assertNotIn('<svg onload="alert(3)">', rendered)
+            self.assertIn("&lt;img src=x onerror=&quot;alert(1)&quot;&gt;", rendered)
 
 
 if __name__ == "__main__":

@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
+import re
 import socket
 import sqlite3
 import subprocess
@@ -14,6 +16,7 @@ import tempfile
 import unittest
 from unittest import mock
 import zipfile
+import xml.etree.ElementTree as ET
 
 import investment_options as I
 import run_workflow as W
@@ -32,6 +35,70 @@ class SimulationHarnessTest(unittest.TestCase):
         value = json.loads(json.dumps(report))
         digest = value.pop("report_sha256")
         return digest, hashlib.sha256(S._stable_bytes(value)).hexdigest()
+
+    @staticmethod
+    def archive_member(archive, suffix):
+        matches = [name for name in archive.namelist() if name.endswith(suffix)]
+        if len(matches) != 1:
+            raise AssertionError(
+                f"expected one archive member ending {suffix!r}, found {matches!r}"
+            )
+        return matches[0]
+
+    def test_simulated_converters_are_deterministic_valid_and_source_traceable(self):
+        source = self.root / "source.html"
+        source.write_text(
+            "<!doctype html><html><head><meta charset='utf-8'>"
+            "<title>NGA Stage 6 source title 7a13</title>"
+            "<style>body{font-family:serif}</style></head>"
+            "<body><h1>NGA Stage 6 source title 7a13</h1>"
+            "<p>Offline source narrative.</p></body></html>\n",
+            encoding="utf-8",
+        )
+        expected_marker = (
+            "SIMULATION-SOURCE-"
+            + hashlib.sha256(source.read_bytes()).hexdigest()[:16].upper()
+        )
+        markdown = self.root / "first.md"
+        first_docx = self.root / "first.docx"
+        second_docx = self.root / "second.docx"
+        first_pdf = self.root / "first.pdf"
+        second_pdf = self.root / "second.pdf"
+
+        S._simulation_pandoc(source, markdown)
+        S._simulation_pandoc(source, first_docx)
+        S._simulation_pandoc(source, second_docx)
+        S._simulation_pdf(first_docx, first_pdf)
+        S._simulation_pdf(first_docx, second_pdf)
+
+        markdown_text = markdown.read_text(encoding="utf-8")
+        self.assertIn("NGA Stage 6 source title 7a13", markdown_text)
+        self.assertIn(expected_marker, markdown_text)
+        self.assertEqual(first_docx.read_bytes(), second_docx.read_bytes())
+        with zipfile.ZipFile(first_docx) as archive:
+            names = set(archive.namelist())
+            self.assertTrue({
+                "[Content_Types].xml",
+                "_rels/.rels",
+                "docProps/core.xml",
+                "word/document.xml",
+                "word/_rels/document.xml.rels",
+            }.issubset(names))
+            for name in names:
+                if name.endswith((".xml", ".rels")):
+                    ET.fromstring(archive.read(name))
+            document_xml = archive.read("word/document.xml").decode("utf-8")
+        self.assertIn("NGA Stage 6 source title 7a13", document_xml)
+        self.assertIn(expected_marker, document_xml)
+
+        self.assertEqual(first_pdf.read_bytes(), second_pdf.read_bytes())
+        pdf = first_pdf.read_bytes()
+        self.assertTrue(pdf.startswith(b"%PDF-1.4"))
+        self.assertTrue(pdf.rstrip().endswith(b"%%EOF"))
+        self.assertIn(b"NGA Stage 6 source title 7a13", pdf)
+        self.assertIn(expected_marker.encode("ascii"), pdf)
+        startxref = int(pdf.rsplit(b"startxref\n", 1)[1].splitlines()[0])
+        self.assertEqual(pdf[startxref:startxref + 5], b"xref\n")
 
     def test_nigeria_stage6_scenario_recovers_exact_overlength_vector_without_spend(self):
         output = self.root / "stage6"
@@ -55,7 +122,7 @@ class SimulationHarnessTest(unittest.TestCase):
             "subprocess_calls": 0,
         })
         self.assertIs(type(report["external_spend_usd"]), int)
-        self.assertEqual(report["fixture_call_count"], 13)
+        self.assertEqual(report["fixture_call_count"], 18)
         self.assertEqual(
             set(report["code_identity"]["files"]),
             set(S.PRODUCTION_CODE_FILES),
@@ -72,7 +139,7 @@ class SimulationHarnessTest(unittest.TestCase):
             recovery["observed_recovery_lengths"],
             [450, 450, 450, 450, 450, 450],
         )
-        self.assertEqual(recovery["observed_recovery_max_tokens"], 2956)
+        self.assertEqual(recovery["observed_recovery_max_tokens"], 1156)
         self.assertEqual(
             recovery["observed_effective_lengths"],
             [450, 450, 450, 450, 450, 450, 490],
@@ -80,8 +147,13 @@ class SimulationHarnessTest(unittest.TestCase):
         self.assertEqual(recovery["fixture_calls"], [
             "investment candidate map batch 1/3",
             "investment candidate map batch 2/3",
-            "investment candidate map batch 2/3 [local-length repair 1/1]",
-            "investment candidate map batch 2/3 [local-length repair 2/2]",
+            "investment candidate map batch 2/3 [local-length repair 1/1 chunk 1/4]",
+            "investment candidate map batch 2/3 [local-length repair 1/1 chunk 2/4]",
+            "investment candidate map batch 2/3 [local-length repair 1/1 chunk 3/4]",
+            "investment candidate map batch 2/3 [local-length repair 1/1 chunk 4/4]",
+            "investment candidate map batch 2/3 [local-length repair 2/2 chunk 1/3]",
+            "investment candidate map batch 2/3 [local-length repair 2/2 chunk 2/3]",
+            "investment candidate map batch 2/3 [local-length repair 2/2 chunk 3/3]",
             "investment candidate map batch 3/3",
             "investment candidate final register",
             "investment appraisal INV-1 batch 1/1",
@@ -107,6 +179,222 @@ class SimulationHarnessTest(unittest.TestCase):
         self.assertEqual(
             json.loads((output / S.REPORT_NAME).read_text(encoding="utf-8")),
             report,
+        )
+
+    def test_nigeria_recovery_flows_through_draft_and_export_package(self):
+        output = self.root / "nigeria-package"
+
+        report = S.simulate_workflow(
+            "nigeria-stage6-through-package-v1", output
+        )
+
+        self.assertEqual(report["harness_verdict"], "pass")
+        self.assertEqual(report["observed"]["workflow_status"], "complete")
+        self.assertEqual(report["fixture_call_count"], 18)
+        self.assertEqual(report["external_spend_usd"], 0)
+        self.assertEqual(report["external_io"], {
+            "network_calls": 0,
+            "database_writes": 0,
+            "capabilities_minted": 0,
+            "subprocess_calls": 0,
+        })
+        self.assertEqual(len(report["stages"]), 8)
+        self.assertTrue(all(
+            stage["status"] == "complete" for stage in report["stages"]
+        ))
+        self.assertEqual(report["scenario_scope"], {
+            "claim": "Stage 6 recovery through Stage 8 packaging only",
+            "focus_stage_ids": [
+                "investment_options", "draft_dar", "export_package",
+            ],
+            "synthetic_predecessor_stage_ids": [
+                "damm_diagnostic",
+                "country_research",
+                "ai_digital_agriculture",
+                "international_lessons",
+                "strategic_foresight",
+            ],
+            "production_modules_exercised": [
+                "gauntlet/loop-1/research_pipeline/investment_options.py",
+                "gauntlet/loop-1/research_pipeline/report_design.py",
+                "gauntlet/loop-1/research_pipeline/generate_dar.py",
+                "gauntlet/loop-1/research_pipeline/export_package.py",
+                "gauntlet/loop-1/research_pipeline/run_workflow.py",
+            ],
+            "bound_transitive_modules": [
+                "gauntlet/loop-1/research_pipeline/vendors.py",
+                "gauntlet/loop-1/research_pipeline/workflow_inputs.py",
+                "gauntlet/loop-1/research_pipeline/foresight_contract.py",
+                "gauntlet/loop-1/engine_v17.py",
+                "model/reference_scorer.py",
+            ],
+            "simulation_harness_module": (
+                "gauntlet/loop-1/research_pipeline/simulation.py"
+            ),
+        })
+        bound_modules = set(report["scenario_scope"]["production_modules_exercised"])
+        bound_modules.update(report["scenario_scope"]["bound_transitive_modules"])
+        bound_modules.add(report["scenario_scope"]["simulation_harness_module"])
+        self.assertTrue(bound_modules.issubset(report["code_identity"]["files"]))
+
+        workflow_manifest = json.loads(
+            (output / "workflow/workflow-manifest.json").read_text(encoding="utf-8")
+        )
+        expected_narrative_suffixes = {
+            "damm_diagnostic": {".html"},
+            "country_research": {".md", ".html"},
+            "ai_digital_agriculture": {".md", ".html"},
+            "international_lessons": {".md", ".html"},
+            "strategic_foresight": {".html"},
+        }
+        narrative_keys = {
+            "damm_diagnostic": "diagnostic_report",
+            "country_research": "country_research_report",
+            "ai_digital_agriculture": "ai_assessment_report",
+            "international_lessons": "international_lessons_report",
+            "strategic_foresight": "foresight_report",
+        }
+        for stage_id, expected_suffixes in expected_narrative_suffixes.items():
+            stage = next(
+                item for item in workflow_manifest["stages"] if item["id"] == stage_id
+            )
+            records = [
+                item for item in stage["artifacts"]
+                if item["key"] == narrative_keys[stage_id]
+            ]
+            self.assertEqual(
+                {Path(item["path"]).suffix for item in records},
+                expected_suffixes,
+            )
+            for record in records:
+                if Path(record["path"]).suffix == ".html":
+                    html_text = (output / "workflow" / record["path"]).read_text(
+                        encoding="utf-8"
+                    )
+                    self.assertIn("<!doctype html>", html_text.casefold())
+                    self.assertIn("<html", html_text.casefold())
+                    self.assertNotRegex(
+                        html_text,
+                        r"(?i)<(?:link|script|img|iframe)[^>]+(?:href|src)="
+                        r"[\"']https?://",
+                    )
+
+        draft_record = next(
+            artifact for artifact in report["artifacts"]
+            if artifact["stage_id"] == "draft_dar"
+            and artifact["key"] == "dar_source_data"
+        )
+        draft = json.loads(
+            (output / draft_record["path"]).read_text(encoding="utf-8")
+        )
+        annex = draft["annexes"]["investment_options_and_cost_benefit"]
+        self.assertEqual(len(annex["options"]), 6)
+        self.assertEqual(
+            annex["decision_status"], "no_financing_decision_made"
+        )
+        repaired_option = next(
+            option for option in annex["options"]
+            if option["title"] == "Synthetic investment option 2"
+        )
+        self.assertEqual(len(repaired_option["problem"]), 450)
+        stage6_html_record = next(
+            artifact for artifact in report["artifacts"]
+            if artifact["stage_id"] == "investment_options"
+            and artifact["key"] == "investment_options_report"
+            and artifact["path"].endswith(".html")
+        )
+        stage6_html = (output / stage6_html_record["path"]).read_text(encoding="utf-8")
+        self.assertIn("Preliminary investment cost ranges", stage6_html)
+        self.assertIn("Currencies use separate scales", stage6_html)
+        draft_html_record = next(
+            artifact for artifact in report["artifacts"]
+            if artifact["stage_id"] == "draft_dar"
+            and artifact["key"] == "draft_dar_report"
+        )
+        draft_html = (output / draft_html_record["path"]).read_text(encoding="utf-8")
+        self.assertIn('aria-label="Figure traceability"', draft_html)
+        self.assertIn("Investment decision support", draft_html)
+
+        bundle_record = next(
+            artifact for artifact in report["artifacts"]
+            if artifact["stage_id"] == "export_package"
+            and artifact["key"] == "complete_bundle"
+        )
+        stage6_source = (output / stage6_html_record["path"]).read_text(
+            encoding="utf-8"
+        )
+        stage6_marker_match = re.search(
+            r"SIMULATION-SOURCE-[0-9A-F]{16}", stage6_source
+        )
+        self.assertIsNotNone(stage6_marker_match)
+        stage6_marker = stage6_marker_match.group(0)
+        with zipfile.ZipFile(output / bundle_record["path"]) as archive:
+            members = set(archive.namelist())
+            stage6_markdown = archive.read(self.archive_member(
+                archive,
+                "narratives/06_investment_options/investment_options_report.md",
+            )).decode("utf-8")
+            stage6_document = archive.read(self.archive_member(
+                archive,
+                "narratives/06_investment_options/investment_options_report.docx",
+            ))
+            stage6_pdf = archive.read(self.archive_member(
+                archive,
+                "narratives/06_investment_options/investment_options_report.pdf",
+            ))
+        with zipfile.ZipFile(io.BytesIO(stage6_document)) as archive:
+            stage6_document_xml = archive.read("word/document.xml").decode("utf-8")
+        self.assertIn("Stage 6", stage6_markdown)
+        self.assertIn(stage6_marker, stage6_markdown)
+        self.assertIn(stage6_marker, stage6_document_xml)
+        self.assertIn(stage6_marker.encode("ascii"), stage6_pdf)
+        self.assertTrue(stage6_pdf.rstrip().endswith(b"%%EOF"))
+        self.assertTrue(any(
+            name.endswith("/package-manifest.json") for name in members
+        ))
+        self.assertTrue(any(
+            name.endswith(
+                "narratives/06_investment_options/"
+                "investment_options_report.pdf"
+            )
+            for name in members
+        ))
+        self.assertTrue(any(
+            name.endswith("narratives/07_draft_dar/draft_dar_report.pdf")
+            for name in members
+        ))
+        self.assertTrue(any(
+            name.endswith(
+                "structured/06_investment_options/cost_benefit.xlsx"
+            )
+            for name in members
+        ))
+
+    def test_identical_nigeria_package_simulations_are_byte_reproducible(self):
+        first_output = self.root / "first-nigeria-package"
+        second_output = self.root / "second-nigeria-package"
+
+        first = S.simulate_workflow(
+            "nigeria-stage6-through-package-v1", first_output
+        )
+        second = S.simulate_workflow(
+            "nigeria-stage6-through-package-v1", second_output
+        )
+
+        self.assertEqual(first, second)
+        first_bundle = next(
+            artifact for artifact in first["artifacts"]
+            if artifact["stage_id"] == "export_package"
+            and artifact["key"] == "complete_bundle"
+        )
+        second_bundle = next(
+            artifact for artifact in second["artifacts"]
+            if artifact["stage_id"] == "export_package"
+            and artifact["key"] == "complete_bundle"
+        )
+        self.assertEqual(
+            (first_output / first_bundle["path"]).read_bytes(),
+            (second_output / second_bundle["path"]).read_bytes(),
         )
 
     def test_happy_scenario_runs_real_coordinator_and_stage6_for_each_profile(self):
@@ -152,13 +440,26 @@ class SimulationHarnessTest(unittest.TestCase):
                     artifact for artifact in stage6["artifacts"]
                     if artifact["key"] == "cost_benefit_workbook"
                 )
-                with zipfile.ZipFile(output / "workflow" / workbook["path"]) as archive:
+                workbook_path = output / "workflow" / workbook["path"]
+                with zipfile.ZipFile(workbook_path) as archive:
                     workbook_strings = "".join(
                         archive.read(name).decode("utf-8", errors="ignore")
                         for name in archive.namelist()
                         if name.endswith(".xml")
                     )
                 self.assertIn("SIMULATED", workbook_strings)
+                from openpyxl import load_workbook
+
+                opened = load_workbook(workbook_path, read_only=False, data_only=False)
+                self.addCleanup(opened.close)
+                notice = opened["SIMULATED"]
+                self.assertIs(notice.sheet_view.showGridLines, False)
+                self.assertEqual(notice.page_setup.orientation, "landscape")
+                self.assertEqual(notice.page_setup.fitToWidth, 1)
+                self.assertEqual(notice.page_setup.fitToHeight, 1)
+                self.assertGreaterEqual(notice["A1"].font.sz, 18)
+                self.assertTrue(notice["A1"].font.bold)
+                self.assertEqual(notice["A1"].fill.fgColor.rgb[-6:], "17322A")
 
     def test_simulation_scrubs_credentials_and_restores_the_process_environment(self):
         output = self.root / "scrubbed"
