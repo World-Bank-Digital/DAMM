@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import hashlib
+import io
 import json
 import os
 import re
@@ -2040,7 +2041,12 @@ class InvestmentOptionsTest(unittest.TestCase):
             response["options"].append(option)
         sources = [{"ref": "SRC-001", "kind": "country_finding", "title": "Policy",
                     "source": "https://example.gov/policy", "text": "Policy evidence"}]
-        return I.build_product("Exampleland", "EXP", response, sources)
+        product = I.build_product("Exampleland", "EXP", response, sources)
+        # Keep this fixture independent of the host timezone.  The workbook must
+        # bind its metadata to the product's assessment date, not to the calendar
+        # date on whichever machine happens to run the test.
+        product["assessment_date"] = "2026-09-02"
+        return product
 
     def test_valid_product_makes_no_financing_decision(self):
         product = self.product()
@@ -2267,6 +2273,31 @@ class InvestmentOptionsTest(unittest.TestCase):
                 self.assertTrue(sheet.sheet_properties.pageSetUpPr.fitToPage)
             self.assertEqual(workbook["Options"].print_title_cols, "$A:$B")
             workbook.close()
+
+    def test_workbook_normalizer_rejects_missing_or_ambiguous_core_metadata(self):
+        def archive(core_properties):
+            payload = io.BytesIO()
+            with zipfile.ZipFile(payload, "w") as workbook:
+                workbook.writestr("xl/workbook.xml", b"<workbook/>")
+                if core_properties is not None:
+                    workbook.writestr("docProps/core.xml", core_properties)
+            return payload.getvalue()
+
+        duplicate_created = (
+            b'<core xmlns:dcterms="urn:test">'
+            b"<dcterms:created>first</dcterms:created>"
+            b"<dcterms:created>second</dcterms:created>"
+            b"<dcterms:modified>only</dcterms:modified>"
+            b"</core>"
+        )
+        timestamp = I._workbook_timestamp("2026-09-02")
+        for label, raw in (
+            ("missing core", archive(None)),
+            ("duplicate timestamp", archive(duplicate_created)),
+        ):
+            with self.subTest(label=label):
+                with self.assertRaisesRegex(ValueError, "unique"):
+                    I._stable_workbook_bytes(raw, timestamp)
 
     def test_workbook_never_turns_model_or_source_text_into_excel_formulas(self):
         product = self.product()

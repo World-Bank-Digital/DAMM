@@ -2153,6 +2153,74 @@ def render_html(product_or_markdown, title):
     )
 
 
+def _workbook_timestamp(assessment_date):
+    try:
+        return datetime.datetime.combine(
+            datetime.date.fromisoformat(str(assessment_date)), datetime.time()
+        )
+    except ValueError:
+        return datetime.datetime(2000, 1, 1)
+
+
+def _stable_workbook_bytes(raw_content, workbook_timestamp):
+    """Return deterministic XLSX bytes bound to one product timestamp."""
+
+    stable_timestamp = workbook_timestamp.strftime(
+        "%Y-%m-%dT%H:%M:%SZ"
+    ).encode("ascii")
+    raw = io.BytesIO(raw_content)
+    normalized = io.BytesIO()
+    with zipfile.ZipFile(raw, "r") as source_archive:
+        names = source_archive.namelist()
+        if len(names) != len(set(names)):
+            raise ValueError("workbook contains duplicate ZIP members")
+        if names.count("docProps/core.xml") != 1:
+            raise ValueError("workbook has no unique core-properties member")
+        with zipfile.ZipFile(
+                normalized, "w", compression=zipfile.ZIP_DEFLATED,
+                compresslevel=9) as target_archive:
+            for name in sorted(names):
+                source_info = source_archive.getinfo(name)
+                target_info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+                target_info.compress_type = zipfile.ZIP_DEFLATED
+                target_info.external_attr = source_info.external_attr
+                target_info.create_system = 0
+                content = source_archive.read(name)
+                if name == "docProps/core.xml":
+                    for property_name in (b"created", b"modified"):
+                        pattern = (
+                            rb"(<dcterms:" + property_name
+                            + rb"\b[^>]*>)[^<]*(</dcterms:" + property_name + rb">)"
+                        )
+                        content, substitutions = re.subn(
+                            pattern,
+                            lambda match: (
+                                match.group(1) + stable_timestamp + match.group(2)
+                            ),
+                            content,
+                        )
+                        if substitutions != 1:
+                            raise ValueError(
+                                "workbook core properties have no unique "
+                                f"dcterms:{property_name.decode('ascii')} timestamp"
+                            )
+                target_archive.writestr(target_info, content)
+    return normalized.getvalue()
+
+
+def stabilize_workbook(path, assessment_date):
+    """Remove wall-clock metadata after a caller has modified an XLSX file."""
+
+    with open(path, "rb") as handle:
+        raw_content = handle.read()
+    V.atomic_write_bytes(
+        path,
+        _stable_workbook_bytes(
+            raw_content, _workbook_timestamp(assessment_date)
+        ),
+    )
+
+
 def write_workbook(product, path):
     try:
         from openpyxl import Workbook
@@ -2510,11 +2578,7 @@ def write_workbook(product, path):
     options.print_title_cols = "A:B"
 
     assessment_date = str(product.get("assessment_date") or "2000-01-01")
-    try:
-        workbook_timestamp = datetime.datetime.combine(
-            datetime.date.fromisoformat(assessment_date), datetime.time())
-    except ValueError:
-        workbook_timestamp = datetime.datetime(2000, 1, 1)
+    workbook_timestamp = _workbook_timestamp(assessment_date)
     workbook.properties.creator = "DAR Studio"
     workbook.properties.title = "Investment options and cost-benefit analysis"
     workbook.properties.subject = "Preliminary decision support; no financing decision"
@@ -2526,30 +2590,9 @@ def write_workbook(product, path):
     raw = io.BytesIO()
     workbook.save(raw)
     workbook.close()
-    raw.seek(0)
-    normalized = io.BytesIO()
-    with zipfile.ZipFile(raw, "r") as source_archive:
-        with zipfile.ZipFile(
-                normalized, "w", compression=zipfile.ZIP_DEFLATED,
-                compresslevel=9) as target_archive:
-            for name in sorted(source_archive.namelist()):
-                source_info = source_archive.getinfo(name)
-                target_info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
-                target_info.compress_type = zipfile.ZIP_DEFLATED
-                target_info.external_attr = source_info.external_attr
-                target_info.create_system = 0
-                content = source_archive.read(name)
-                if name == "docProps/core.xml":
-                    stable_timestamp = workbook_timestamp.strftime(
-                        "%Y-%m-%dT%H:%M:%SZ").encode("ascii")
-                    content = re.sub(
-                        rb"(<dcterms:modified\b[^>]*>)[^<]*(</dcterms:modified>)",
-                        lambda match: match.group(1) + stable_timestamp + match.group(2),
-                        content,
-                        count=1,
-                    )
-                target_archive.writestr(target_info, content)
-    V.atomic_write_bytes(path, normalized.getvalue())
+    V.atomic_write_bytes(
+        path, _stable_workbook_bytes(raw.getvalue(), workbook_timestamp)
+    )
 
 
 def _limits_record(limits):

@@ -1506,14 +1506,95 @@ def _write_inventory_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
         raise PackagingError(f"cannot write consolidated source inventory CSV: {error}") from error
 
 
-def _write_inventory_xlsx(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
+def _xlsx_timestamp(value: str) -> tuple[_datetime.datetime, bytes]:
+    candidate = value.strip()
+    try:
+        parsed = _datetime.datetime.fromisoformat(
+            candidate[:-1] + "+00:00" if candidate.endswith("Z") else candidate
+        )
+    except ValueError as error:
+        raise PackagingError(
+            "created_at must be an ISO-8601 timestamp for XLSX metadata"
+        ) from error
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=_datetime.timezone.utc)
+    parsed = parsed.astimezone(_datetime.timezone.utc).replace(tzinfo=None)
+    stable_timestamp = parsed.strftime("%Y-%m-%dT%H:%M:%SZ").encode("ascii")
+    return parsed, stable_timestamp
+
+
+def _stable_xlsx_bytes(raw_content: bytes, stable_timestamp: bytes) -> bytes:
+    raw = io.BytesIO(raw_content)
+    normalized = io.BytesIO()
+    try:
+        with zipfile.ZipFile(raw, "r") as source_archive:
+            names = source_archive.namelist()
+            if len(names) != len(set(names)):
+                raise PackagingError(
+                    "consolidated source inventory XLSX has duplicate ZIP members"
+                )
+            if names.count("docProps/core.xml") != 1:
+                raise PackagingError(
+                    "consolidated source inventory XLSX has no unique "
+                    "core-properties member"
+                )
+            with zipfile.ZipFile(
+                normalized,
+                "w",
+                compression=zipfile.ZIP_DEFLATED,
+                compresslevel=9,
+            ) as target_archive:
+                for name in sorted(names):
+                    source_info = source_archive.getinfo(name)
+                    target_info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+                    target_info.compress_type = zipfile.ZIP_DEFLATED
+                    target_info.external_attr = source_info.external_attr
+                    target_info.create_system = 0
+                    content = source_archive.read(name)
+                    if name == "docProps/core.xml":
+                        for property_name in (b"created", b"modified"):
+                            pattern = (
+                                rb"(<dcterms:" + property_name
+                                + rb"\b[^>]*>)[^<]*(</dcterms:"
+                                + property_name + rb">)"
+                            )
+                            content, substitutions = re.subn(
+                                pattern,
+                                lambda match: (
+                                    match.group(1)
+                                    + stable_timestamp
+                                    + match.group(2)
+                                ),
+                                content,
+                            )
+                            if substitutions != 1:
+                                raise PackagingError(
+                                    "consolidated source inventory XLSX has no unique "
+                                    f"dcterms:{property_name.decode('ascii')} timestamp"
+                                )
+                    target_archive.writestr(target_info, content)
+    except zipfile.BadZipFile as error:
+        raise PackagingError(
+            "consolidated source inventory XLSX is not a valid ZIP archive"
+        ) from error
+    return normalized.getvalue()
+
+
+def _write_inventory_xlsx(
+    path: Path,
+    rows: Sequence[Mapping[str, Any]],
+    created_at: str,
+) -> None:
     try:
         from openpyxl import Workbook, load_workbook
         from openpyxl.styles import Font
     except ImportError as error:
         raise PackagingError("openpyxl is required for structured XLSX exports") from error
+    workbook_timestamp, stable_timestamp = _xlsx_timestamp(created_at)
     columns = _inventory_columns(rows)
     workbook = Workbook()
+    workbook.properties.created = workbook_timestamp
+    workbook.properties.modified = workbook_timestamp
     sheet = workbook.active
     sheet.title = "Sources"
     sheet.append([_spreadsheet_value(column) for column in columns])
@@ -1530,8 +1611,10 @@ def _write_inventory_xlsx(path: Path, rows: Sequence[Mapping[str, Any]]) -> None
             max(observed) + 2, 60
         )
     try:
-        workbook.save(path)
+        raw = io.BytesIO()
+        workbook.save(raw)
         workbook.close()
+        path.write_bytes(_stable_xlsx_bytes(raw.getvalue(), stable_timestamp))
         verification = load_workbook(path, read_only=True, data_only=False)
         if verification.sheetnames != ["Sources"]:
             raise PackagingError("consolidated source inventory XLSX has unexpected sheets")
@@ -2067,6 +2150,8 @@ def build_export_package(
     if final_zip.exists():
         raise PackagingError(f"complete bundle ZIP already exists: {final_zip}")
 
+    package_created_at = _created_at(created_at)
+
     resolved: dict[tuple[str, str], tuple[ArtifactBinding, Path, bytes]] = {}
     for stage_id, grouped in workflow.artifact_records.items():
         for key, bindings in grouped.items():
@@ -2178,7 +2263,7 @@ def build_export_package(
         inventory_csv = package_root / "source-inventory" / "source_inventory.csv"
         inventory_xlsx = package_root / "source-inventory" / "source_inventory.xlsx"
         _write_inventory_csv(inventory_csv, inventory_rows)
-        _write_inventory_xlsx(inventory_xlsx, inventory_rows)
+        _write_inventory_xlsx(inventory_xlsx, inventory_rows, package_created_at)
         records.extend(
             [
                 _file_record(
@@ -2275,7 +2360,7 @@ def build_export_package(
             "country": workflow.country,
             "iso3": workflow.iso3,
             "lifecycle_state": contract_value["execution_policy"]["output_lifecycle_state"],
-            "created_at": _created_at(created_at),
+            "created_at": package_created_at,
             "export_profiles": contract_value["export_profiles"],
             "upload_inputs": _upload_input_signature(uploads),
             "generating_code": {
