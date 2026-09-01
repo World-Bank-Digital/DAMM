@@ -4,11 +4,14 @@
 from __future__ import annotations
 
 import csv
+import datetime
 import hashlib
+import io
 import json
 from pathlib import Path
 import shutil
 import tempfile
+import types
 import unittest
 from unittest import mock
 import zipfile
@@ -398,6 +401,79 @@ class ExportPackageTest(unittest.TestCase):
             created_at="2026-08-26T12:00:00Z",
             resume=resume,
         )
+
+    def test_consolidated_inventory_xlsx_is_stable_for_package_timestamp(self):
+        rows = [{
+            "stage_id": "country_research",
+            "source_inventory_artifact": "source_inventory",
+            "source_index": 1,
+            "ref": "SRC-001",
+            "title": "Country strategy",
+        }]
+        first = self.root / "first-inventory.xlsx"
+        second = self.root / "second-inventory.xlsx"
+        created_at = "2026-08-26T12:00:00Z"
+
+        def openpyxl_clock(second_value):
+            return types.SimpleNamespace(
+                datetime=types.SimpleNamespace(
+                    now=lambda tz=None: datetime.datetime(
+                        2026, 9, 2, 0, 0, second_value, tzinfo=tz
+                    )
+                ),
+                timezone=datetime.timezone,
+            )
+
+        first_clock = openpyxl_clock(2)
+        second_clock = openpyxl_clock(8)
+        with (
+            mock.patch("openpyxl.packaging.core.datetime", first_clock),
+            mock.patch("openpyxl.writer.excel.datetime", first_clock),
+        ):
+            E._write_inventory_xlsx(first, rows, created_at)
+        with (
+            mock.patch("openpyxl.packaging.core.datetime", second_clock),
+            mock.patch("openpyxl.writer.excel.datetime", second_clock),
+        ):
+            E._write_inventory_xlsx(second, rows, created_at)
+
+        self.assertEqual(first.read_bytes(), second.read_bytes())
+        with zipfile.ZipFile(first) as archive:
+            self.assertTrue(all(
+                item.date_time == (1980, 1, 1, 0, 0, 0)
+                for item in archive.infolist()
+            ))
+            core = archive.read("docProps/core.xml").decode("utf-8")
+        self.assertIn(
+            ">2026-08-26T12:00:00Z</dcterms:created>", core
+        )
+        self.assertIn(
+            ">2026-08-26T12:00:00Z</dcterms:modified>", core
+        )
+
+    def test_inventory_xlsx_normalizer_rejects_ambiguous_core_metadata(self):
+        def archive(core_properties):
+            payload = io.BytesIO()
+            with zipfile.ZipFile(payload, "w") as workbook:
+                workbook.writestr("xl/workbook.xml", b"<workbook/>")
+                if core_properties is not None:
+                    workbook.writestr("docProps/core.xml", core_properties)
+            return payload.getvalue()
+
+        duplicate_modified = (
+            b'<core xmlns:dcterms="urn:test">'
+            b"<dcterms:created>only</dcterms:created>"
+            b"<dcterms:modified>first</dcterms:modified>"
+            b"<dcterms:modified>second</dcterms:modified>"
+            b"</core>"
+        )
+        for label, raw in (
+            ("missing core", archive(None)),
+            ("duplicate timestamp", archive(duplicate_modified)),
+        ):
+            with self.subTest(label=label):
+                with self.assertRaisesRegex(E.PackagingError, "unique"):
+                    E._stable_xlsx_bytes(raw, b"2026-08-26T12:00:00Z")
 
     def test_legacy_html_fragment_is_wrapped_offline_instead_of_rejected(self):
         fragment = (

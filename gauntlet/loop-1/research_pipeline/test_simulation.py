@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime
 import hashlib
 import io
 import json
@@ -13,6 +14,7 @@ import socket
 import sqlite3
 import subprocess
 import tempfile
+import types
 import unittest
 from unittest import mock
 import zipfile
@@ -374,12 +376,32 @@ class SimulationHarnessTest(unittest.TestCase):
         first_output = self.root / "first-nigeria-package"
         second_output = self.root / "second-nigeria-package"
 
-        first = S.simulate_workflow(
-            "nigeria-stage6-through-package-v1", first_output
-        )
-        second = S.simulate_workflow(
-            "nigeria-stage6-through-package-v1", second_output
-        )
+        def openpyxl_clock(second):
+            return types.SimpleNamespace(
+                datetime=types.SimpleNamespace(
+                    now=lambda tz=None: datetime.datetime(
+                        2026, 9, 2, 0, 0, second, tzinfo=tz
+                    )
+                ),
+                timezone=datetime.timezone,
+            )
+
+        first_clock = openpyxl_clock(2)
+        second_clock = openpyxl_clock(8)
+        with (
+            mock.patch("openpyxl.packaging.core.datetime", first_clock),
+            mock.patch("openpyxl.writer.excel.datetime", first_clock),
+        ):
+            first = S.simulate_workflow(
+                "nigeria-stage6-through-package-v1", first_output
+            )
+        with (
+            mock.patch("openpyxl.packaging.core.datetime", second_clock),
+            mock.patch("openpyxl.writer.excel.datetime", second_clock),
+        ):
+            second = S.simulate_workflow(
+                "nigeria-stage6-through-package-v1", second_output
+            )
 
         self.assertEqual(first, second)
         first_bundle = next(

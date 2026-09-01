@@ -916,6 +916,8 @@ def _stage6_handler(
             notice.print_area = "A1:H10"
             notice.oddFooter.center.text = "DAR Studio · SIMULATED · NOT ACCEPTANCE EVIDENCE"
             workbook.save(workbook_path)
+            workbook.close()
+            I.stabilize_workbook(workbook_path, product["assessment_date"])
         except ImportError as error:
             raise SimulationError("openpyxl is required for the happy simulation") from error
 
