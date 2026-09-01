@@ -131,6 +131,37 @@ class ScanStageTest(unittest.TestCase):
         self.assertIn("autonomous research was used", text)
         self.assertIn("not a recommendation to copy", text)
 
+    def test_country_html_is_deterministic_offline_and_visualizes_source_mix(self):
+        scans = dict(self.scans)
+        scans["country_findings"] = [dict(
+            self.scans["country_findings"][0],
+            statement="A strategy exists <script>alert('unsafe')</script>.",
+        )]
+        product = S.build_product(scans, "country")
+
+        first = S.render_html(product, "country")
+        second = S.render_html(product, "country")
+
+        self.assertEqual(first, second)
+        self.assertTrue(first.startswith("<!doctype html>"))
+        self.assertIn("Country research and credible-source inventory", first)
+        self.assertIn("Source composition", first)
+        self.assertIn('role="img"', first)
+        self.assertIn("@media print", first)
+        self.assertIn("&lt;script&gt;alert(&#x27;unsafe&#x27;)&lt;/script&gt;", first)
+        self.assertNotIn("<script>", first)
+        self.assertNotRegex(first, r"<(?:link|script)[^>]+https?://")
+
+    def test_international_html_keeps_transfer_boundary_visible(self):
+        product = S.build_product(self.scans, "international")
+
+        report = S.render_html(product, "international")
+
+        self.assertIn("International strategies and lessons", report)
+        self.assertIn("Adaptation boundary", report)
+        self.assertIn("not rankings, endorsements, or proof of transferability", report)
+        self.assertIn("Peerland", report)
+
     def test_upload_cannot_replace_required_international_lesson(self):
         scans = dict(self.scans, international_pointers=[])
         product = S.build_product(scans, "international", [{

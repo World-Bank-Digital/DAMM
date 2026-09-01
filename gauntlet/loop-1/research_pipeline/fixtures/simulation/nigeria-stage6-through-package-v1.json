@@ -1,15 +1,13 @@
 {
   "schema_version": "damm.simulation-scenario/v1",
-  "scenario_id": "nigeria-stage6-overlength-v1",
-  "description": "Cost-free regression of the Nigeria Stage 6 candidate-map batch 2/3 response through bounded overlong-repair chunks, bounded stricter-recovery chunks, and the remaining real appraisal pipeline.",
-  "kind": "stage6_repair_recovery",
+  "scenario_id": "nigeria-stage6-through-package-v1",
+  "description": "Zero-spend Nigeria-shaped acceptance from the recorded Stage 6 repair vector through a bound integrated Draft and the production Stage 8 package builder.",
+  "kind": "stage6_through_package",
   "default_country": "Nigeria",
   "default_iso3": "NGA",
   "default_profile": "typical",
   "profiles": [
-    "minimal",
-    "typical",
-    "dense"
+    "typical"
   ],
   "expected": {
     "workflow_status": "complete",

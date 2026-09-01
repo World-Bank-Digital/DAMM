@@ -7,6 +7,7 @@ import re
 import sys
 import tempfile
 import unittest
+import zipfile
 from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -669,6 +670,278 @@ class InvestmentOptionsTest(unittest.TestCase):
             self.assertFalse(os.path.exists(
                 os.path.join(directory, f"{out}_investment_options.json")))
 
+    def test_recorded_nigeria_multi_target_repair_continues_in_bounded_chunks(self):
+        # Production incident e96a93fd-d4a9-4c83-96d9-3488483729a9: candidate-map
+        # batch 2/3 had these four exact overlength fields. Its one bulk repair spent
+        # both 4k and 8k output allowances entirely on thinking and emitted zero text.
+        test_case = self
+        compact_repairs = {
+            "candidate-0.recommendation_rationale": "Compact rationale 1.",
+            "candidate-1.recommendation_rationale": "Compact rationale 2.",
+            "candidate-2.recommendation_rationale": "Compact rationale 3.",
+            "candidate-3.problem": "Compact problem 4.",
+        }
+
+        class RecordedRepairLLM:
+            def __init__(self):
+                self.calls = []
+                self.repair_target_counts = []
+                self.repaired_keys = set()
+
+            def json_call(
+                    self, _system, user, schema, _pass_name,
+                    max_tokens=8000, detail=""):
+                self.calls.append((max_tokens, detail))
+                mapped = re.fullmatch(
+                    r"investment candidate map batch (\d)/3", detail)
+                if mapped:
+                    batch = int(mapped.group(1))
+                    if batch != 2:
+                        return {"candidates": [{
+                            "title": f"Batch {batch} candidate",
+                            "problem": f"Batch {batch} problem",
+                            "recommendation_rationale": f"Batch {batch} rationale",
+                            "source_refs": [f"SRC-{batch:03d}"],
+                        }]}
+                    lengths = (
+                        (114, 478, 568),
+                        (140, 497, 531),
+                        (138, 456, 551),
+                        (121, 555, 487),
+                    )
+                    return {"candidates": [{
+                        "title": chr(65 + index) * title_length,
+                        "problem": "p" * problem_length,
+                        "recommendation_rationale": "r" * rationale_length,
+                        "source_refs": ["SRC-002"],
+                    } for index, (
+                        title_length, problem_length, rationale_length,
+                    ) in enumerate(lengths)]}
+
+                repair_properties = (
+                    schema.get("properties", {}).get("repairs", {})
+                    .get("properties")
+                )
+                if repair_properties is not None:
+                    keys = tuple(repair_properties)
+                    self.repair_target_counts.append(len(keys))
+                    if len(keys) > 2:
+                        raise I.V.VendorOutputTruncated(
+                            vendor="anthropic",
+                            model="claude-opus-5",
+                            pass_name=I.PASS,
+                            detail=detail,
+                            stop_reason="max_tokens",
+                            request_id="recorded-shape-synthetic",
+                            max_tokens=max_tokens,
+                            input_tokens=2741,
+                            output_tokens=max_tokens,
+                            thinking_tokens=max_tokens,
+                            partial_output_chars=0,
+                            partial_output_sha256=hashlib.sha256(b"").hexdigest(),
+                        )
+                    self.repaired_keys.update(keys)
+                    return {"repairs": {
+                        key: compact_repairs[key]
+                        for key in keys
+                    }}
+
+                if detail == "investment candidate final register":
+                    supplied = user.split(
+                        "SUPPORTED CANDIDATE BRIEFS:\n", 1
+                    )[1].split("\n\nReturn", 1)[0]
+                    return {"candidates": json.loads(supplied)}
+                if detail.startswith("investment appraisal INV-"):
+                    candidate = json.loads(
+                        user.split("CANDIDATE:\n", 1)[1].split(
+                            "\n\nCURRENT APPRAISAL", 1
+                        )[0]
+                    )
+                    option = json.loads(json.dumps(
+                        test_case.product()["options"][0]))
+                    for field in (
+                            "option_id", "title", "problem",
+                            "recommendation_rationale", "financing_decision"):
+                        option.pop(field)
+                    option["costs"]["source_refs"] = candidate["source_refs"]
+                    return {"option": option}
+                if detail == "investment portfolio sequencing":
+                    return {
+                        "portfolio_sequencing": "Governance before procurement.",
+                        "cross_cutting_data_gaps": ["Validate unit costs."],
+                    }
+                raise AssertionError(f"unexpected model call: {detail}")
+
+        sources = [{
+            "ref": f"SRC-{index:03d}",
+            "kind": "country_finding",
+            "title": f"Evidence {index}",
+            "text": "e" * 180,
+            "source": f"https://example.test/{index}",
+        } for index in range(1, 4)]
+        batch_characters = max(
+            len(I.evidence_prompt([source])) for source in sources)
+        limits = I.AppraisalLimits(
+            evidence_batch_characters=batch_characters,
+            candidate_output_tokens=4000,
+            option_output_tokens=7000,
+            portfolio_output_tokens=2500,
+        )
+        state = {"steps": {}}
+        llm = RecordedRepairLLM()
+
+        response = I.synthesize_appraisal(
+            "Nigeria", sources, llm, limits=limits, state=state)
+        product = I.build_product("Nigeria", "NGA", response, sources)
+
+        self.assertEqual(I.validate_product(product), [])
+        self.assertEqual(llm.repaired_keys, set(compact_repairs))
+        self.assertTrue(llm.repair_target_counts)
+        self.assertTrue(all(
+            1 <= count <= 2 for count in llm.repair_target_counts))
+        self.assertTrue(all(
+            len(option["title"]) <= 160
+            and len(option["problem"]) <= 500
+            and len(option["recommendation_rationale"]) <= 500
+            for option in response["options"]
+        ))
+
+        class SimulatedCrash(Exception):
+            pass
+
+        interrupted_state = {"steps": {}}
+        durable_state = []
+        interrupted_llm = RecordedRepairLLM()
+
+        def crash_after_first_repair_chunk(current):
+            if (
+                    "candidate-map-0002-length-repair-chunk-0001"
+                    in current["steps"]
+                    and "candidate-map-0002-length-repair-chunk-0002"
+                    not in current["steps"]):
+                durable_state[:] = [json.loads(json.dumps(current))]
+                raise SimulatedCrash()
+
+        with self.assertRaises(SimulatedCrash):
+            I.synthesize_appraisal(
+                "Nigeria",
+                sources,
+                interrupted_llm,
+                limits=limits,
+                state=interrupted_state,
+                save_checkpoint=crash_after_first_repair_chunk,
+            )
+
+        resumed_llm = RecordedRepairLLM()
+        resumed = I.synthesize_appraisal(
+            "Nigeria",
+            sources,
+            resumed_llm,
+            limits=limits,
+            state=durable_state[0],
+        )
+        self.assertEqual(resumed, response)
+        self.assertNotIn(
+            (4000,
+             "investment candidate map batch 2/3 "
+             "[local-length repair 1/1 chunk 1/2]"),
+            resumed_llm.calls,
+        )
+        self.assertIn(
+            (4000,
+             "investment candidate map batch 2/3 "
+             "[local-length repair 1/1 chunk 2/2]"),
+            resumed_llm.calls,
+        )
+
+        class NoReplayLLM:
+            def json_call(self, *_args, **_kwargs):
+                raise AssertionError("completed paid work was replayed")
+
+        self.assertEqual(
+            I.synthesize_appraisal(
+                "Nigeria", sources, NoReplayLLM(), limits=limits, state=state),
+            response,
+        )
+
+    def test_multi_chunk_repair_semantic_failure_is_durable_and_not_replayed(self):
+        class DuplicateTitleRepairLLM:
+            def __init__(self):
+                self.calls = []
+
+            def json_call(
+                    self, _system, _user, schema, _pass_name,
+                    max_tokens=8000, detail=""):
+                self.calls.append((max_tokens, detail))
+                if detail == "investment candidate map batch 1/1":
+                    return {"candidates": [
+                        {
+                            "title": "A" * 161,
+                            "problem": "p" * 501,
+                            "recommendation_rationale": "Rationale 1",
+                            "source_refs": ["SRC-001"],
+                        },
+                        {
+                            "title": "B" * 161,
+                            "problem": "Problem 2",
+                            "recommendation_rationale": "Rationale 2",
+                            "source_refs": ["SRC-001"],
+                        },
+                        {
+                            "title": "Option 3",
+                            "problem": "Problem 3",
+                            "recommendation_rationale": "Rationale 3",
+                            "source_refs": ["SRC-001"],
+                        },
+                    ]}
+                if "[local-length repair 1/1 chunk " in detail:
+                    keys = schema["properties"]["repairs"]["required"]
+                    replacements = {
+                        "candidate-0.title": "Duplicate title",
+                        "candidate-0.problem": "Compact problem 1",
+                        "candidate-1.title": "Duplicate title",
+                    }
+                    return {"repairs": {
+                        key: replacements[key] for key in keys
+                    }}
+                raise AssertionError(f"unexpected model call: {detail}")
+
+        sources = [{
+            "ref": "SRC-001",
+            "kind": "country_finding",
+            "title": "Policy",
+            "text": "Evidence",
+            "source": "https://example.test/policy",
+        }]
+        state = {"steps": {}}
+        first = DuplicateTitleRepairLLM()
+
+        with self.assertRaises(I.AppraisalOutputInvalid) as raised:
+            I.synthesize_appraisal("Exampleland", sources, first, state=state)
+
+        self.assertEqual(
+            raised.exception.step_id,
+            "candidate-map-0001-length-repair-chunk-0002",
+        )
+        self.assertEqual(
+            state["steps"][
+                "candidate-map-0001-length-repair-chunk-0001"
+            ]["status"],
+            "complete",
+        )
+        self.assertEqual(
+            state["steps"][
+                "candidate-map-0001-length-repair-chunk-0002"
+            ]["status"],
+            "invalid",
+        )
+
+        resumed = DuplicateTitleRepairLLM()
+        with self.assertRaises(I.AppraisalOutputInvalid):
+            I.synthesize_appraisal(
+                "Exampleland", sources, resumed, state=state)
+        self.assertEqual(resumed.calls, [])
+
     def test_sparse_overlong_candidate_text_uses_bounded_second_repair_without_replay(self):
         test_case = self
         compact_problem_4 = "Compact evidence-backed problem 4."
@@ -698,56 +971,43 @@ class InvestmentOptionsTest(unittest.TestCase):
                 } for index in range(4)]
 
             def json_call(
-                    self, _system, user, _schema, _pass_name,
+                    self, _system, user, schema, _pass_name,
                     max_tokens=8000, detail=""):
                 self.calls.append(detail)
                 if detail == "investment candidate map batch 1/1":
                     test_case.assertIn(I.CANDIDATE_TEXT_LIMIT_GUIDANCE, user)
                     return {"candidates": self.mapped}
-                if detail == (
-                        "investment candidate map batch 1/1 "
-                        "[local-length repair 1/1]"):
+                if "[local-length repair 1/1 chunk " in detail:
                     required = json.loads(user.split(
                         "REQUIRED_REPAIRS:\n", 1
-                    )[1].split("\n\nCANDIDATE_REGISTER:\n", 1)[0])
-                    test_case.assertEqual(required, [
-                        {
-                            "key": "candidate-0.recommendation_rationale",
-                            "max_characters": 500,
-                        },
-                        {
-                            "key": "candidate-1.recommendation_rationale",
-                            "max_characters": 500,
-                        },
-                        {
-                            "key": "candidate-3.problem",
-                            "max_characters": 500,
-                        },
-                        {
-                            "key": "candidate-3.recommendation_rationale",
-                            "max_characters": 500,
-                        },
-                    ])
-                    return {"repairs": {
+                    )[1].split("\n\nCANDIDATE_CONTEXT:\n", 1)[0])
+                    keys = tuple(
+                        schema["properties"]["repairs"]["required"])
+                    test_case.assertEqual(
+                        tuple(item["key"] for item in required), keys)
+                    replacements = {
                         "candidate-0.recommendation_rationale": (
                             overlong_repair_rationale_1
                         ),
                         "candidate-1.recommendation_rationale": compact_rationale_2,
                         "candidate-3.problem": compact_problem_4,
                         "candidate-3.recommendation_rationale": compact_rationale_4,
+                    }
+                    return {"repairs": {
+                        key: replacements[key] for key in keys
                     }}
                 if detail == (
                         "investment candidate map batch 1/1 "
                         "[local-length repair 2/2]"):
                     required = json.loads(user.split(
                         "REQUIRED_REPAIRS:\n", 1
-                    )[1].split("\n\nCANDIDATE_REGISTER:\n", 1)[0])
+                    )[1].split("\n\nCANDIDATE_CONTEXT:\n", 1)[0])
                     test_case.assertEqual(required, [{
                         "key": "candidate-0.recommendation_rationale",
                         "max_characters": 450,
                     }])
                     supplied = json.loads(user.split(
-                        "CANDIDATE_REGISTER:\n", 1
+                        "CANDIDATE_CONTEXT:\n", 1
                     )[1])
                     test_case.assertEqual(
                         supplied["candidates"][0]["recommendation_rationale"],
@@ -825,12 +1085,23 @@ class InvestmentOptionsTest(unittest.TestCase):
             "investment candidate map batch 1/1"), 1)
         self.assertEqual(llm.calls.count(
             "investment candidate map batch 1/1 "
-            "[local-length repair 1/1]"), 1)
+            "[local-length repair 1/1 chunk 1/2]"), 1)
+        self.assertEqual(llm.calls.count(
+            "investment candidate map batch 1/1 "
+            "[local-length repair 1/1 chunk 2/2]"), 1)
         self.assertEqual(llm.calls.count(
             "investment candidate map batch 1/1 "
             "[local-length repair 2/2]"), 1)
         self.assertEqual(
-            state["steps"]["candidate-map-0001-length-repair"]["status"],
+            state["steps"][
+                "candidate-map-0001-length-repair-chunk-0001"
+            ]["status"],
+            "complete",
+        )
+        self.assertEqual(
+            state["steps"][
+                "candidate-map-0001-length-repair-chunk-0002"
+            ]["status"],
             "complete",
         )
         self.assertEqual(
@@ -1866,8 +2137,162 @@ class InvestmentOptionsTest(unittest.TestCase):
             path = os.path.join(directory, "cba.xlsx")
             I.write_workbook(self.product(), path)
             from openpyxl import load_workbook
-            workbook = load_workbook(path, read_only=True)
-            self.assertEqual(workbook.sheetnames, ["Options", "Benefits", "Sensitivity", "Sources"])
+            workbook = load_workbook(path, read_only=False, data_only=False)
+            self.assertEqual(workbook.sheetnames, [
+                "Executive Summary", "Cost Ranges", "Options", "Benefits",
+                "Sensitivity", "Assumptions & Gaps", "Sources",
+            ])
+            self.assertEqual(workbook["Options"].freeze_panes, "A2")
+            self.assertTrue(workbook["Options"].auto_filter.ref)
+            self.assertGreater(workbook["Options"].column_dimensions["B"].width, 20)
+            self.assertEqual(workbook["Options"]["L2"].number_format, "0.0%")
+            self.assertLessEqual(workbook["Executive Summary"]["A1"].font.sz, 20)
+            self.assertTrue(workbook["Executive Summary"]["A1"].alignment.wrap_text)
+            self.assertIn(
+                "No financing decision",
+                " ".join(str(cell.value or "") for row in workbook["Executive Summary"]
+                         for cell in row),
+            )
+            assumptions = " ".join(
+                str(cell.value or "") for row in workbook["Assumptions & Gaps"]
+                for cell in row
+            )
+            self.assertIn("Illustrative planning range", assumptions)
+            self.assertIn("Validate user volumes and unit costs", assumptions)
+            ranges_text = " ".join(
+                str(cell.value or "") for row in workbook["Cost Ranges"] for cell in row
+            )
+            self.assertIn("All options have paired low–high ranges", ranges_text)
+            self.assertNotIn("No defensible range", ranges_text)
+            workbook.close()
+
+    def test_unbounded_benefit_is_presented_as_quantification_pending(self):
+        product = self.product()
+        product["options"][0]["benefits"]["quantified"] = [{
+            "name": "Avoided duplicate enrollment",
+            "low": None,
+            "high": None,
+            "unit": "households",
+            "basis": "Quantify during appraisal",
+            "source_refs": ["SRC-001"],
+        }]
+
+        rendered = I.render_html(product, "Investment options and CBA")
+
+        self.assertIn(
+            '<div class="value">0</div><div class="label">Quantified benefits</div>',
+            rendered,
+        )
+        self.assertIn("Quantification pending", rendered)
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "pending-benefit.xlsx")
+            I.write_workbook(product, path)
+            from openpyxl import load_workbook
+            workbook = load_workbook(path, read_only=False, data_only=False)
+            self.assertEqual(workbook["Benefits"]["B2"].value, "Quantification pending")
+            workbook.close()
+
+    def test_html_is_offline_escaped_and_visualizes_ranges_without_ranking(self):
+        product = self.product()
+        product["options"][0]["title"] = "Registry <script>alert(1)</script>"
+        product["options"][1]["costs"].update({
+            "currency": "NGN", "low": 1000.0, "high": 2400.0,
+        })
+        product["options"][2]["costs"].update({"low": None, "high": None})
+
+        rendered = I.render_html(product, "Investment options and CBA")
+
+        self.assertEqual(
+            rendered,
+            I.render_html(product, "Investment options and CBA"),
+        )
+        self.assertIn('<html lang="en">', rendered)
+        self.assertIn('role="img"', rendered)
+        self.assertIn("USD — independently scaled", rendered)
+        self.assertIn("NGN — independently scaled", rendered)
+        self.assertIn("not a ranking", rendered)
+        self.assertIn("1 option has no defensible cost range", rendered)
+        self.assertIn("Registry &lt;script&gt;alert(1)&lt;/script&gt;", rendered)
+        self.assertNotIn("<script>alert(1)</script>", rendered)
+        self.assertNotIn("<link", rendered)
+        self.assertNotIn("@import", rendered)
+
+    def test_workbook_has_separate_currency_visuals_and_stable_bytes(self):
+        product = self.product()
+        product["options"][1]["costs"].update({
+            "currency": "NGN", "low": 1000.0, "high": 2400.0,
+        })
+        product["options"][2]["costs"].update({"low": None, "high": None})
+        with tempfile.TemporaryDirectory() as directory:
+            first = os.path.join(directory, "first.xlsx")
+            second = os.path.join(directory, "second.xlsx")
+
+            I.write_workbook(product, first)
+            I.write_workbook(product, second)
+
+            with open(first, "rb") as handle:
+                first_bytes = handle.read()
+            with open(second, "rb") as handle:
+                second_bytes = handle.read()
+            self.assertEqual(first_bytes, second_bytes)
+            with zipfile.ZipFile(first) as archive:
+                core_properties = archive.read("docProps/core.xml").decode("utf-8")
+            self.assertIn(
+                "<dcterms:modified", core_properties,
+            )
+            self.assertIn(
+                ">2026-09-02T00:00:00Z</dcterms:modified>", core_properties,
+            )
+
+            from openpyxl import load_workbook
+            workbook = load_workbook(first, read_only=False, data_only=False)
+            ranges = workbook["Cost Ranges"]
+            text = " ".join(str(cell.value or "") for row in ranges for cell in row)
+            self.assertIn("USD", text)
+            self.assertIn("NGN", text)
+            self.assertIn("separate scale", text)
+            self.assertIn("not a ranking", text)
+            self.assertIn("No defensible range", text)
+            self.assertEqual(len(ranges._charts), 2)
+            self.assertTrue(all(chart.legend is None for chart in ranges._charts))
+            self.assertEqual(ranges["D7"].data_type, "f")
+            self.assertEqual(workbook["Executive Summary"]["B9"].data_type, "f")
+            self.assertEqual(workbook["Executive Summary"]["E9"].data_type, "f")
+            self.assertEqual(workbook["Executive Summary"]["H9"].data_type, "f")
+            for sheet in workbook.worksheets:
+                expected_width = 2 if sheet.title == "Options" else 1
+                self.assertEqual(sheet.page_setup.fitToWidth, expected_width)
+                self.assertEqual(sheet.page_setup.fitToHeight, 0)
+                self.assertEqual(sheet.page_setup.orientation, "landscape")
+                self.assertTrue(sheet.sheet_properties.pageSetUpPr.fitToPage)
+            self.assertEqual(workbook["Options"].print_title_cols, "$A:$B")
+            workbook.close()
+
+    def test_workbook_never_turns_model_or_source_text_into_excel_formulas(self):
+        product = self.product()
+        product["options"][0]["title"] = '=HYPERLINK("https://example.test","click")'
+        product["options"][0]["problem"] = "+2+3"
+        product["options"][0]["costs"]["currency"] = "USD\x01"
+        product["options"][0]["recommendation_rationale"] = "bad\uffffvalue"
+        product["options"][0]["data_gaps"] = ["bad\ud800value"]
+        product["source_inventory"][0]["title"] = "@SUM(A1:A2)"
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "safe.xlsx")
+            I.write_workbook(product, path)
+
+            from openpyxl import load_workbook
+            workbook = load_workbook(path, read_only=False, data_only=False)
+            self.assertNotEqual(workbook["Options"]["B2"].data_type, "f")
+            self.assertNotEqual(workbook["Options"]["C2"].data_type, "f")
+            self.assertNotEqual(workbook["Sources"]["C2"].data_type, "f")
+            self.assertTrue(str(workbook["Options"]["B2"].value).startswith("'="))
+            self.assertTrue(str(workbook["Options"]["C2"].value).startswith("'+"))
+            self.assertTrue(str(workbook["Sources"]["C2"].value).startswith("'@"))
+            self.assertEqual(workbook["Options"]["F2"].value, "USD\ufffd")
+            self.assertEqual(workbook["Options"]["R2"].value, "bad\ufffdvalue")
+            self.assertEqual(workbook["Options"]["T2"].value, "bad\ufffdvalue")
+            self.assertIsNone(workbook["Cost Ranges"]._charts[0].legend)
+            workbook.close()
 
 
 if __name__ == "__main__":

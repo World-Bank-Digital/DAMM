@@ -29,7 +29,7 @@ milestones aimed at levels nobody has measured.
     python3 foresight.py --country Egypt --iso EGY --out EGY_shadow [--ceiling 500] [--resume]
 """
 
-import argparse, html, json, os, re, sys, time
+import argparse, json, os, re, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
@@ -40,6 +40,7 @@ sys.path.insert(0, LOOP1)
 import vendors as V
 import workflow_inputs as WI
 import foresight_contract as FC
+import report_design as RD
 from engine_v17 import MODEL, run as engine_run
 
 PASS = "foresight"
@@ -410,100 +411,181 @@ def render_html(payload):
     the instrument, and one that binds to a proposed candidate is standing on something
     the model has not ratified.
     """
-    c = html.escape
     p = payload
-    out = [
-        "<meta charset='utf-8'>",
-        f"<title>{c(p['country'])} — Strategic Foresight</title>",
-        "<style>",
-        "body{font:16px/1.65 Georgia,serif;max-width:820px;margin:40px auto;padding:0 20px;color:#1a1a1a}",
-        "h1{font-size:2rem;margin-bottom:.15em}h2{margin-top:2.4em;border-bottom:1px solid #ddd;padding-bottom:.2em}",
-        "h3{margin-bottom:.2em}",
-        ".note{background:#f4f2ec;border-left:3px solid #9aa;padding:.7em 1em;font:13px/1.6 system-ui;margin:1em 0}",
-        ".normative{background:#fff7e6;border-left:3px solid #d9a441}",
-        ".drivers{font:13px/1.6 system-ui;color:#555}",
-        "table{border-collapse:collapse;width:100%;font:14px/1.5 system-ui;margin:1em 0}",
-        "th,td{border-bottom:1px solid #e5e5e5;padding:.5em .4em;text-align:left;vertical-align:top}",
-        "th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#666}",
-        ".prov{color:#8a6d1f;font:12px/1.5 system-ui}",
-        ".cand{background:#fff7e6}",
-        ".refused{font:13px/1.6 system-ui;color:#666}",
-        ".prohib{font:12px/1.6 system-ui;color:#666;border-top:1px solid #ddd;margin-top:3em;padding-top:1em}",
-        "</style>",
-        f"<h1>{c(p['country'])} — Strategic Foresight</h1>",
-        f"<p><em>Pre-review draft. Method: {c(p['method'])}"
-        + ("" if p.get("method_ratified") else " — the method is declared in the model file and is not yet ratified")
-        + f". Assessment year {p['assessment_year']}.</em></p>",
+    scenarios = p.get("scenarios") or []
+    milestones = p.get("milestones") or []
+    candidates = p.get("candidate_indicators") or []
+    refused = p.get("refused_milestones") or []
+
+    method_standing = (
+        "The foresight method is ratified."
+        if p.get("method_ratified")
+        else "The method is declared in the model file and is not yet ratified."
+    )
+    scenario_rows = [
+        (
+            scenario.get("name", ""),
+            scenario.get("narrative", ""),
+            ", ".join(str(item) for item in (scenario.get("drivers") or [])),
+            scenario.get("what_would_make_it_happen", ""),
+            scenario.get("implication_for_the_sector", ""),
+        )
+        for scenario in scenarios
     ]
+    scenario_body = (
+        RD.notice("Interpretation boundary", p.get("scenario_status", ""))
+        + RD.table(
+            ("Scenario", "Narrative", "Principal drivers", "What could bring it about",
+             "Sector implication"),
+            scenario_rows,
+        )
+    )
 
-    out.append("<h2>Scenarios</h2>")
-    out.append(f"<div class='note'>{c(p['scenario_status'])}</div>")
-    for sc in p["scenarios"]:
-        out.append(f"<h3>{c(sc['name'])}</h3>")
-        out.append(f"<p>{c(sc['narrative'])}</p>")
-        if sc.get("drivers"):
-            out.append(f"<p class='drivers'><b>Driven by:</b> "
-                       f"{c(', '.join(sc['drivers']))}</p>")
-        if sc.get("what_would_make_it_happen"):
-            out.append(f"<p class='drivers'><b>What would bring it about:</b> "
-                       f"{c(sc['what_would_make_it_happen'])}</p>")
-        if sc.get("implication_for_the_sector"):
-            out.append(f"<p class='drivers'><b>Implication:</b> "
-                       f"{c(sc['implication_for_the_sector'])}</p>")
+    preferred = p.get("preferred_future") or {}
+    preferred_body = (
+        RD.notice(
+            "Normative choice — not an evidence finding",
+            p.get("preferred_future_status", ""),
+            tone="proposal",
+        )
+        + RD.paragraph(preferred.get("narrative", ""))
+        + RD.table(
+            ("Preferred future", "Drawn from scenarios", "What is being chosen",
+             "Who would have to agree"),
+            ((
+                preferred.get("name", ""),
+                ", ".join(str(item) for item in
+                          (preferred.get("drawn_from_scenarios") or [])),
+                preferred.get("what_is_being_chosen", ""),
+                preferred.get("who_would_have_to_agree", ""),
+            ),),
+        )
+    )
 
-    pf = p["preferred_future"]
-    out.append("<h2>The preferred future</h2>")
-    out.append(f"<div class='note normative'>{c(p['preferred_future_status'])}</div>")
-    out.append(f"<h3>{c(pf['name'])}</h3><p>{c(pf['narrative'])}</p>")
-    if pf.get("what_is_being_chosen"):
-        out.append(f"<p><b>What is being chosen:</b> {c(pf['what_is_being_chosen'])}</p>")
-    if pf.get("who_would_have_to_agree"):
-        out.append(f"<p><b>Who would have to agree:</b> {c(pf['who_would_have_to_agree'])}</p>")
+    timeline = RD.milestone_timeline_svg(
+        "Backcast milestone timeline",
+        [
+            {
+                "year": milestone.get("target_year"),
+                "label": (
+                    f"{milestone.get('statement', '')} · {milestone.get('indicator_id', '')} "
+                    f"· level {milestone.get('target_level', '')}"
+                ),
+                "candidate": bool(milestone.get("binds_to_candidate")),
+            }
+            for milestone in milestones
+        ],
+    )
+    milestone_rows = []
+    for milestone in sorted(
+            milestones,
+            key=lambda item: (item.get("target_year", 0), str(item.get("indicator_id", "")))):
+        candidate = bool(milestone.get("binds_to_candidate"))
+        standing = ""
+        if candidate:
+            standing = "proposed candidate — outside every aggregate"
+        if milestone.get("provisional_because"):
+            standing = "; ".join(filter(None, (
+                standing, str(milestone.get("provisional_because")),
+            )))
+        milestone_rows.append((
+            milestone.get("statement", ""),
+            milestone.get("indicator_id", ""),
+            f"Level {milestone.get('target_level', '')}",
+            milestone.get("target_year", ""),
+            milestone.get("why_this_step", ""),
+            standing,
+        ))
+    milestone_body = (
+        RD.keep_together(
+            RD.notice("Binding rule", p.get("note", "")),
+            timeline,
+        )
+        + RD.table(
+            ("Milestone", "Binds to", "Target", "By", "Why this step", "Standing"),
+            milestone_rows,
+            numeric_columns=(3,),
+        )
+    )
 
-    out.append("<h2>Milestones</h2>")
-    out.append(f"<div class='note'>{c(p['note'])}</div>")
-    out.append("<table><thead><tr><th>Milestone</th><th>Binds to</th><th>Target</th>"
-               "<th>By</th></tr></thead><tbody>")
-    for m in p["milestones"]:
-        cand = m.get("binds_to_candidate")
-        out.append(
-            f"<tr{' class=cand' if cand else ''}><td>{c(m['statement'])}"
-            + (f"<div class='drivers'>{c(m.get('why_this_step',''))}</div>"
-               if m.get("why_this_step") else "")
-            + (f"<div class='prov'>{c(m['provisional_because'])}</div>"
-               if m.get("provisional_because") else "")
-            + f"</td><td>{c(m['indicator_id'])}"
-            + ("<div class='prov'>proposed candidate — outside every aggregate</div>"
-               if cand else "")
-            + f"</td><td>Level {m['target_level']}</td><td>{m['target_year']}</td></tr>")
-    out.append("</tbody></table>")
+    candidate_body = ""
+    if candidates:
+        candidate_body = RD.section(
+            "Candidate indicators proposed",
+            RD.keep_together(
+                RD.notice("Ratification item", p.get("candidate_status", ""), tone="proposal"),
+                RD.table(
+                    ("ID", "Name", "Pillar", "Rationale"),
+                    ((candidate.get("id", ""), candidate.get("name", ""),
+                      candidate.get("proposed_pillar", ""), candidate.get("rationale", ""))
+                     for candidate in candidates),
+                ),
+            ),
+            lede=("These measures were proposed by backcasting. They remain outside the "
+                  "scored model and every aggregate until ratified."),
+        )
 
-    if p.get("candidate_indicators"):
-        out.append("<h2>Candidate indicators proposed</h2>")
-        out.append(f"<div class='note normative'>{c(p['candidate_status'])}</div>")
-        out.append("<table><thead><tr><th>Id</th><th>Name</th><th>Pillar</th>"
-                   "<th>Why</th></tr></thead><tbody>")
-        for cd in p["candidate_indicators"]:
-            out.append(f"<tr><td>{c(cd['id'])}</td><td>{c(cd['name'])}</td>"
-                       f"<td>{c(cd['proposed_pillar'])}</td>"
-                       f"<td>{c(cd.get('rationale',''))}</td></tr>")
-        out.append("</tbody></table>")
-
-    if p.get("refused_milestones"):
+    refused_body = ""
+    if refused:
         # Shown, not dropped. A milestone the exercise produced and the binding rule
         # refused is a fact about the exercise, and hiding it would make the kept ones
         # look like everything it had to say.
-        out.append("<h2>Proposed and not recorded</h2>")
-        out.append("<p class='refused'>These were produced by the backcasting step and "
-                   "refused, because a milestone that cannot be measured against the "
-                   "instrument is not a milestone.</p><ul class='refused'>")
-        for r in p["refused_milestones"]:
-            out.append(f"<li>{c(r.get('statement',''))} — <i>{c(r.get('why',''))}</i></li>")
-        out.append("</ul>")
+        refused_body = RD.section(
+            "Proposed and not recorded",
+            RD.notice(
+                "Quality-control refusal",
+                "These were produced by backcasting and refused because a milestone that "
+                "cannot be measured against the instrument is not a milestone.",
+                tone="risk",
+            )
+            + RD.table(
+                ("Proposed milestone", "Why it was refused"),
+                ((item.get("statement", ""), item.get("why", "")) for item in refused),
+            ),
+        )
 
-    out.append("<div class='prohib'><b>Standing prohibitions.</b> "
-               + c(" ".join(str(x) for x in SPEC.get("prohibitions", []))) + "</div>")
-    return "\n".join(out)
+    body = "".join((
+        RD.section(
+            "Decision frame",
+            RD.notice("Method standing", method_standing, tone="proposal")
+            + RD.metric_cards((
+                ("Scenarios", len(scenarios), "Plausible futures, not forecasts"),
+                ("Bound milestones", len(milestones), "Dated and measurable"),
+                ("Candidate measures", len(candidates), "Proposed / unratified"),
+                ("Refused milestones", len(refused), "Retained in the audit trail"),
+            )),
+            lede=("This working paper separates plausible futures, a normative preferred "
+                  "future and measurable backcast milestones."),
+        ),
+        RD.section("Scenario set", scenario_body),
+        RD.section("The preferred future", preferred_body),
+        RD.section("Backcast milestones", milestone_body),
+        candidate_body,
+        refused_body,
+        RD.section(
+            "Use constraints",
+            RD.notice(
+                "Standing prohibitions",
+                " ".join(str(item) for item in SPEC.get("prohibitions", [])),
+                tone="risk",
+            ),
+        ),
+    ))
+    return RD.document(
+        title="Strategic foresight",
+        country=p.get("country", ""),
+        subtitle="Scenario exploration, normative choice and measurable backcasting",
+        status=("Pre-review draft. " + method_standing
+                + " Candidate-bound milestones remain proposals until ratified."),
+        body=body,
+        metadata=(
+            ("ISO3", p.get("iso3", "")),
+            ("Assessment year", p.get("assessment_year", "")),
+            ("Method", p.get("method", "")),
+            ("Milestones", len(milestones)),
+        ),
+        footer="DAR Studio · Strategic foresight working paper · Human review required",
+    )
 
 
 # ------------------------------------------------------------------ main
