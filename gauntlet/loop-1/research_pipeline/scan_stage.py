@@ -269,6 +269,19 @@ def autonomous_lane_complete(state, lane):
     if not isinstance(state, dict) or not isinstance(state.get(lane), dict):
         return False
     abstained = state.get("abstained") if isinstance(state.get("abstained"), dict) else {}
+    failures = state.get("failures", {})
+    if not isinstance(failures, dict):
+        return False
+    blocking_lanes = (
+        {"country", "register", "register_discovery"}
+        if lane == "country"
+        else {"country", "register", "register_discovery", lane}
+    )
+    for failure in failures.values():
+        if not isinstance(failure, dict):
+            return False
+        if failure.get("lane") in blocking_lanes:
+            return False
     for chapter in SC.prescriptive_chapters():
         key = f"{lane}:{chapter['n']}"
         if key not in state[lane] and key not in abstained:
