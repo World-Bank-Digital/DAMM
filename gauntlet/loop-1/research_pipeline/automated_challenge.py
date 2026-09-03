@@ -551,7 +551,8 @@ def main(argv=None):
 
     vendor, _, mname = args.vendor.partition("/")
     ledger = V.Ledger(ceiling=args.ceiling, label=f"{args.run}_{PASS}")
-    llm = V.LLM(vendor, ledger, model=mname or None)
+    llm = V.LLM(
+        vendor, ledger, model=mname or None).enable_durable_outcomes()
 
     state_path = paths["state"]
     spend_path = paths["spend"]
@@ -615,7 +616,7 @@ def main(argv=None):
                               llm, ledger, prereq, gaps, holds, log)
         except V.BudgetExhausted as e:
             with lock:
-                stopped = str(e)
+                stopped = V.prefer_terminal_stage_failure(stopped, e)
             return
         except Exception as e:
             log(f"  ! {iid} failed: {type(e).__name__}: {str(e)[:160]}")
@@ -642,15 +643,15 @@ def main(argv=None):
     if stopped or missing:
         # A partial challenge is valuable checkpoint data, but it is not a completed
         # automated challenge and must not produce an engine input whose filename
-        # would authorize downstream stages. The canonical coordinator may retry; if it
-        # still cannot finish, the workflow fails terminally rather than awaiting a
-        # person or relabelling unchallenged rows as upheld.
+        # would authorize downstream stages. The canonical coordinator may retry an
+        # ordinary incomplete result, but a terminal paid outcome uses exit 78 and is
+        # never replayed.
         V.atomic_write_json(state_path, state)
         ledger.save(spend_path)
         if missing:
             print(f"!! automated challenge incomplete — {len(missing)} rows remain: "
                   f"{', '.join(missing[:12])}")
-        return 1
+        return V.stage_failure_exit(stopped, 1)
 
     return finish(
         args,
@@ -715,4 +716,4 @@ def finish(
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

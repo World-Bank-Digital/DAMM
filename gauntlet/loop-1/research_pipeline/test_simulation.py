@@ -47,6 +47,50 @@ class SimulationHarnessTest(unittest.TestCase):
             )
         return matches[0]
 
+    def test_code_identity_includes_stage4_scan_runtime(self):
+        for path in (
+            "gauntlet/loop-1/research_pipeline/scans.py",
+            "gauntlet/loop-1/research_pipeline/prices.json",
+        ):
+            with self.subTest(path=path):
+                self.assertIn(path, S.PRODUCTION_CODE_FILES)
+
+    def test_code_identity_covers_canonical_entrypoints_and_local_dependencies(self):
+        commands = W.build_existing_stage_commands(
+            country="Exampleland", iso3="EXP", legacy_out="EXP_identity",
+            ceiling_usd=500, vendor="anthropic/claude-opus-5",
+            workflow_version="1.1.0", python_executable="python3",
+        )
+        command_entrypoints = {
+            Path(spec.argv[1]).resolve().relative_to(S.REPO_ROOT).as_posix()
+            for spec in commands.values()
+        }
+        required_runtime = command_entrypoints | {
+            "gauntlet/loop-1/research_pipeline/simulate_workflow.py",
+            "gauntlet/loop-1/research_pipeline/research_orchestrator.py",
+            "gauntlet/loop-1/research_pipeline/automated_challenge.py",
+            "gauntlet/loop-1/research_pipeline/diagnostic.py",
+            "gauntlet/loop-1/research_pipeline/gates.py",
+            "gauntlet/loop-1/research_pipeline/cell_schema.py",
+            "gauntlet/loop-1/research_pipeline/nso_registry.py",
+            "gauntlet/loop-1/research_pipeline/country_names.py",
+            "gauntlet/loop-1/research_pipeline/countries.json",
+            "gauntlet/loop-1/research_pipeline/nso_registry.json",
+            "gauntlet/loop-1/build_inputs.py",
+            "gauntlet/loop-1/machine_pass.py",
+            "gauntlet/loop-1/survey_pass.py",
+            "gauntlet/loop-1/render_v17.py",
+            "gauntlet/loop-1/build_workbook_v17.py",
+            "gauntlet/loop-1/verify_workbook_parity.py",
+            "gauntlet/loop-1/definition_notes.json",
+            "model/export_model.py",
+        }
+
+        self.assertEqual(
+            required_runtime - set(S.PRODUCTION_CODE_FILES),
+            set(),
+        )
+
     def test_simulated_converters_are_deterministic_valid_and_source_traceable(self):
         source = self.root / "source.html"
         source.write_text(
@@ -418,6 +462,33 @@ class SimulationHarnessTest(unittest.TestCase):
             (first_output / first_bundle["path"]).read_bytes(),
             (second_output / second_bundle["path"]).read_bytes(),
         )
+
+    def test_identical_happy_simulations_pin_stage8_zip_metadata(self):
+        first_output = self.root / "first-happy"
+        second_output = self.root / "second-happy"
+
+        first = S.simulate_workflow("eight-stage-happy-v1", first_output)
+        second = S.simulate_workflow("eight-stage-happy-v1", second_output)
+
+        def bundle(report, output):
+            artifact = next(
+                item for item in report["artifacts"]
+                if item["stage_id"] == "export_package"
+                and item["key"] == "complete_bundle"
+            )
+            return output / artifact["path"]
+
+        first_bundle = bundle(first, first_output)
+        second_bundle = bundle(second, second_output)
+        with zipfile.ZipFile(first_bundle) as archive:
+            self.assertTrue(all(
+                info.date_time == (1980, 1, 1, 0, 0, 0)
+                and info.create_system == 3
+                and info.external_attr == 0o100644 << 16
+                for info in archive.infolist()
+            ))
+        self.assertEqual(first, second)
+        self.assertEqual(first_bundle.read_bytes(), second_bundle.read_bytes())
 
     def test_happy_scenario_runs_real_coordinator_and_stage6_for_each_profile(self):
         expected_source_counts = {"minimal": 1, "typical": 3, "dense": 9}

@@ -313,7 +313,7 @@ CANDIDATE_LENGTH_REPAIR_BATCH_ITEMS = 2
 CANDIDATE_LENGTH_REPAIR_BATCH_CHARACTERS = 1000
 CANDIDATE_LENGTH_RETRY_TOKEN_FLOOR = 512
 CANDIDATE_LENGTH_RETRY_TOKEN_OVERHEAD = 256
-NONRETRYABLE_STAGE_EXIT = 78
+NONRETRYABLE_STAGE_EXIT = V.NONRETRYABLE_STAGE_EXIT
 
 
 class AppraisalOutputExhausted(V.VendorError):
@@ -2752,6 +2752,7 @@ def main():
         product = build_product(args.country, args.iso, response, sources, uploads)
         errors = validate_product(product)
     except (
+            V.VendorPaidRequestTerminal,
             AppraisalOutputExhausted,
             AppraisalOutputRejected,
             AppraisalOutputInvalid,
@@ -2801,4 +2802,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

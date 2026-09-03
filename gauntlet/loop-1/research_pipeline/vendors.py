@@ -142,6 +142,16 @@ def strict_json_loads(value):
         json.loads(value, parse_constant=_invalid_json_constant))
 
 
+def _usage_token_count(usage, field, *, optional=False):
+    """Return one authoritative nonnegative SDK token count."""
+    value = getattr(usage, field, None) if usage is not None else None
+    if value is None and optional:
+        return 0
+    if (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+        raise ValueError(f"provider usage field {field} is missing or invalid")
+    return value
+
+
 def compatible_alias_presence(canonical_path, legacy_path, label):
     """Return which alias files exist, rejecting divergent duplicate identities."""
     canonical_present = regular_file_presence(canonical_path, f"{label} alias")
@@ -257,66 +267,199 @@ class Ledger:
         # deadlocks at the first checkpoint of every run rather than rarely.
         self._lock = threading.RLock()
         self._reservations = {}
+        self._reservation_journal = []
         self._reservation_counter = 0
+        self._retrieval_request_locks = {}
         self._carried_s = 0.0
         self._checkpoint_path = None
 
     # -- pricing ---------------------------------------------------
     @staticmethod
-    def _price(vendor, model):
+    def _price(vendor, model, in_tok=0):
         table = PRICES.get(vendor, {})
-        return table.get(model) or table.get("_default") or {}
+        price = table.get(model) if model else table.get("_default")
+        if model and vendor in {"anthropic", "openai", "gemini", "perplexity"}:
+            if not isinstance(price, dict):
+                raise VendorError(
+                    f"no explicit tariff for {vendor}/{model}; refusing paid request"
+                )
+        price = price if isinstance(price, dict) else {}
+        threshold = price.get("long_context_threshold_tokens")
+        if (threshold is not None and in_tok > threshold
+                and isinstance(price.get("long_context"), dict)):
+            return {**price, **price["long_context"]}
+        return price
 
-    def record(self, vendor, pass_name, model="", in_tok=0, out_tok=0,
-               searches=0, content_pages=0, fetches=0, requests=0, detail="",
-               structured_result=None, _reservation=None):
-        p = self._price(vendor, model)
-        cost = (in_tok / 1e6) * p.get("in_per_mtok", 0.0) \
+    def estimated_cost(self, vendor, model="", in_tok=0, out_tok=0,
+                       searches=0, content_pages=0, fetches=0, requests=0):
+        """Price measured or bounded usage through the same path used by ``record``."""
+        p = self._price(vendor, model, in_tok=in_tok)
+        return (in_tok / 1e6) * p.get("in_per_mtok", 0.0) \
              + (out_tok / 1e6) * p.get("out_per_mtok", 0.0) \
              + searches * PRICES.get("exa", {}).get("per_search", 0.0) \
              + content_pages * PRICES.get("exa", {}).get("per_content_page", 0.0) \
              + fetches * PRICES.get("jina", {}).get("per_fetch", 0.0) \
              + requests * p.get("per_request", 0.0)
+
+    def record(self, vendor, pass_name, model="", in_tok=0, out_tok=0,
+               searches=0, content_pages=0, fetches=0, requests=0, detail="",
+               structured_result=None, billed_cost=None, _reservation=None):
+        derived_cost = self.estimated_cost(
+            vendor, model=model, in_tok=in_tok, out_tok=out_tok,
+            searches=searches, content_pages=content_pages, fetches=fetches,
+            requests=requests,
+        )
+        if billed_cost is not None:
+            if (isinstance(billed_cost, bool)
+                    or not isinstance(billed_cost, (int, float))
+                    or not math.isfinite(float(billed_cost))
+                    or billed_cost < 0):
+                raise ValueError("provider-reported cost is invalid")
+            cost = float(billed_cost)
+        else:
+            cost = derived_cost
         with self._lock:
             if (_reservation is not None
                     and _reservation not in self._reservations):
                 raise ValueError("unknown budget reservation")
+            reservation_entry = (
+                self._reservations[_reservation]
+                if _reservation is not None else None)
+            reserved_upper_bound = (
+                reservation_entry["headroom"]
+                if _reservation is not None else None)
+            usage_exceeded = (
+                reserved_upper_bound is not None
+                and cost > reserved_upper_bound + 1e-9
+            )
+            if usage_exceeded:
+                # Never publish an over-bound provider response as replayable success.
+                # The actual charge remains in the append-only ledger, while the exact
+                # request becomes a permanent terminal outcome across process restart.
+                structured_result = {
+                    "schema_version": "damm.structured-result/v1",
+                    "request_sha256": reservation_entry["request_sha256"],
+                    "outcome": VendorUsageExceededReservation.code,
+                    "reserved_cost": float(reserved_upper_bound),
+                    "actual_cost": float(cost),
+                }
             call = dict(vendor=vendor, pass_name=pass_name, model=model,
                         in_tok=in_tok, out_tok=out_tok, searches=searches,
                         content_pages=content_pages, fetches=fetches,
-                        requests=requests, cost=round(cost, 6),
+                        requests=requests, cost=float(cost),
                         detail=detail[:200],
                         at=round(time.time() - self._t0, 1))
+            if _reservation is not None:
+                call["reservation_id"] = _reservation
             if structured_result is not None:
                 if not isinstance(structured_result, dict):
                     raise ValueError("structured result journal is not an object")
                 # Make the journal an immutable JSON value before publishing the call.
                 call["structured_result"] = strict_json_loads(json.dumps(
                     structured_result, ensure_ascii=False, allow_nan=False))
+            if billed_cost is not None:
+                call["provider_reported_cost"] = float(billed_cost)
+                call["derived_cost"] = float(derived_cost)
             self.calls.append(call)
+            if _reservation is not None:
+                # The append-only reservation entry and this linked paid-call record
+                # are one durable resolution. Removing the live headroom before the
+                # snapshot means its summary counts actual usage, not actual+reserved.
+                self._reservations.pop(_reservation)
             if self._checkpoint_path:
                 # Persist inside the same lock that publishes the call. A normal exception,
                 # coordinator retry, or process crash after this point cannot lose a paid
                 # attempt and later spend the same protected allocation again.
                 atomic_write_json(self._checkpoint_path, self.snapshot())
-            if _reservation is not None:
-                # Publish actual spend and retire worst-case headroom under one lock.
-                # No concurrent caller can observe both amounts for the same request.
-                self._reservations.pop(_reservation)
+            if usage_exceeded:
+                raise VendorUsageExceededReservation(
+                    vendor=vendor, model=model, pass_name=pass_name,
+                    reserved=reserved_upper_bound, actual=cost,
+                )
         return cost
 
     def settle(self, reservation, vendor, pass_name, model="", in_tok=0,
                out_tok=0, searches=0, content_pages=0, fetches=0, requests=0,
-               detail="", structured_result=None):
+               detail="", structured_result=None, billed_cost=None):
         """Atomically replace a live reservation with its authoritative usage."""
         self.record(
             vendor, pass_name, model=model, in_tok=in_tok, out_tok=out_tok,
             searches=searches, content_pages=content_pages, fetches=fetches,
             requests=requests, detail=detail, structured_result=structured_result,
+            billed_cost=billed_cost,
             _reservation=reservation,
         )
         # ``json_call_once`` assigns this result back to its local handle, making its
         # finally cleanup conditional without a second racy reservation lookup.
+        return None
+
+    def retrieval_request_lock(
+            self, vendor, pass_name, request_sha256, model=""):
+        """Serialize identical live retrievals so one paid result serves all peers."""
+        identity = (vendor, pass_name, model, request_sha256)
+        with self._lock:
+            return self._retrieval_request_locks.setdefault(
+                identity, threading.Lock())
+
+    def claim_retrieval_result(
+            self, vendor, pass_name, request_sha256, model=""):
+        """Return the oldest matching durable retrieval result as an exact cache."""
+        with self._lock:
+            for index, call in enumerate(self.calls):
+                journal = call.get("structured_result")
+                if (not isinstance(journal, dict)
+                        or journal.get("request_sha256") != request_sha256):
+                    continue
+                if (call.get("vendor") != vendor
+                        or call.get("pass_name") != pass_name
+                        or (call.get("model") or "") != model):
+                    # Historical or independently generated journals can share a
+                    # payload digest across protected lanes. They are not candidates
+                    # for this call; keep scanning rather than cross-claiming or failing.
+                    continue
+                if journal.get("schema_version") != "damm.structured-result/v1":
+                    raise VendorError("durable retrieval result is invalid")
+                outcome = journal.get("outcome")
+                if outcome == "retrieval_transport_ambiguous":
+                    # This is deliberately not marked consumed: every later invocation
+                    # of the same logical request must fail from the durable record,
+                    # never reissue an attempt whose billing outcome is unresolved.
+                    raise VendorPaidRequestTerminal(
+                        f"durable {vendor} retrieval failure: {outcome}")
+                if outcome == "retrieval_usage_missing":
+                    raise VendorUsageUnmetered(
+                        vendor=vendor, model=model, pass_name=pass_name,
+                        detail="durable retrieval usage missing",
+                    )
+                if outcome == "retrieval_output_malformed":
+                    raise VendorError(
+                        f"durable {vendor} retrieval failure: {outcome}")
+                if outcome == VendorUsageExceededReservation.code:
+                    reserved_cost = journal.get("reserved_cost")
+                    actual_cost = journal.get("actual_cost")
+                    if any(
+                            isinstance(value, bool)
+                            or not isinstance(value, (int, float))
+                            or not math.isfinite(float(value))
+                            or value < 0
+                            for value in (reserved_cost, actual_cost)):
+                        raise VendorError(
+                            "durable usage-exceeded result is invalid")
+                    raise VendorUsageExceededReservation(
+                        vendor=vendor, model=model, pass_name=pass_name,
+                        reserved=float(reserved_cost), actual=float(actual_cost),
+                    )
+                response = journal.get("response")
+                if (outcome != "complete" or not isinstance(response, dict)
+                        or stable_json_sha256(response)
+                        != journal.get("response_sha256")):
+                    raise VendorError("durable retrieval result is invalid")
+                return True, strict_json_loads(json.dumps(response, allow_nan=False))
+        return False, None
+
+    def mark_retrieval_result_consumed(
+            self, vendor, pass_name, request_sha256, model=""):
+        """Compatibility no-op: exact retrieval outcomes are reusable within a run."""
         return None
 
     # -- reading ---------------------------------------------------
@@ -331,8 +474,16 @@ class Ledger:
     def spent(self, pass_name=None):
         aliases = self._pass_aliases(pass_name)
         with self._lock:
-            return round(sum(c["cost"] for c in self.calls
-                             if pass_name is None or c["pass_name"] in aliases), 6)
+            actual = math.fsum(
+                c["cost"] for c in self.calls
+                if pass_name is None or c["pass_name"] in aliases
+            )
+            unresolved = math.fsum(
+                reservation["headroom"]
+                for reservation in self._reservations.values()
+                if pass_name is None or reservation["pass_name"] in aliases
+            )
+            return actual + unresolved
 
     def cap(self, pass_name):
         share = self.ALLOCATION.get(
@@ -349,30 +500,66 @@ class Ledger:
                 or not math.isfinite(float(headroom)) or headroom < 0):
             raise ValueError("budget headroom must be a finite nonnegative number")
         with self._lock:
-            aliases = self._pass_aliases(pass_name)
-            reserved = sum(
-                amount for reserved_pass, amount in self._reservations.values()
-                if reserved_pass in aliases
-            )
-            if self.remaining(pass_name) - reserved <= headroom:
+            if self.remaining(pass_name) <= headroom:
                 raise BudgetExhausted(
                     pass_name, self.spent(pass_name), self.cap(pass_name))
 
-    def reserve(self, pass_name, headroom):
-        """Atomically reserve worst-case cost across a concurrent paid request."""
+    def reserve(
+            self, pass_name, headroom, *, vendor="", model="",
+            request_sha256=""):
+        """Durably reserve worst-case cost before a bounded paid request starts."""
         with self._lock:
+            if request_sha256 and not re.fullmatch(r"[0-9a-f]{64}", request_sha256):
+                raise ValueError("reservation request identity is not a SHA-256 digest")
+            for pending in self._reservations.values():
+                if (request_sha256
+                        and pending["request_sha256"] == request_sha256
+                        and pending["vendor"] == vendor
+                        and pending["model"] == model
+                        and pending["pass_name"] == pass_name):
+                    raise VendorRequestPending(
+                        vendor=vendor, model=model, pass_name=pass_name,
+                        request_sha256=request_sha256,
+                        headroom=pending["headroom"],
+                    )
             self.check(pass_name, headroom=headroom)
             self._reservation_counter += 1
             reservation = self._reservation_counter
-            self._reservations[reservation] = (pass_name, float(headroom))
+            entry = {
+                "event": "reserved",
+                "reservation_id": reservation,
+                "pass_name": pass_name,
+                "headroom": float(headroom),
+                "vendor": str(vendor),
+                "model": str(model),
+                "request_sha256": str(request_sha256),
+                "at": round(time.time() - self._t0, 1),
+            }
+            self._reservation_journal.append(entry)
+            self._reservations[reservation] = dict(entry)
+            if self._checkpoint_path:
+                # This write occurs before transport. A SIGKILL after the provider
+                # accepts the request cannot make its worst-case charge disappear.
+                atomic_write_json(self._checkpoint_path, self.snapshot())
             return reservation
 
     def release(self, reservation):
-        """Release one in-process reservation after actual usage is recorded."""
+        """Durably release a reservation only when no paid request was attempted."""
         with self._lock:
             if reservation not in self._reservations:
                 raise ValueError("unknown budget reservation")
             self._reservations.pop(reservation)
+            self._reservation_journal.append({
+                "event": "released",
+                "reservation_id": reservation,
+                "at": round(time.time() - self._t0, 1),
+            })
+            if self._checkpoint_path:
+                atomic_write_json(self._checkpoint_path, self.snapshot())
+
+    def reservation_pending(self, reservation):
+        with self._lock:
+            return reservation in self._reservations
 
     def elapsed(self):
         return round(time.time() - self._t0 + self._carried_s, 1)
@@ -382,16 +569,28 @@ class Ledger:
         for c in self.calls:
             by_pass[c["pass_name"]] = round(by_pass.get(c["pass_name"], 0) + c["cost"], 4)
             by_vendor[c["vendor"]] = round(by_vendor.get(c["vendor"], 0) + c["cost"], 4)
+        for pending in self._reservations.values():
+            pass_name = pending["pass_name"]
+            vendor = pending["vendor"] or "unresolved"
+            headroom = pending["headroom"]
+            by_pass[pass_name] = round(by_pass.get(pass_name, 0) + headroom, 4)
+            by_vendor[vendor] = round(by_vendor.get(vendor, 0) + headroom, 4)
         value = dict(label=self.label, ceiling=self.ceiling, total=self.spent(),
                      calls=len(self.calls), elapsed_s=self.elapsed(),
-                     by_pass=by_pass, by_vendor=by_vendor)
+                     by_pass=by_pass, by_vendor=by_vendor,
+                     unresolved_reservations=len(self._reservations),
+                     reserved_upper_bound=round(sum(
+                         row["headroom"] for row in self._reservations.values()), 6))
         if self.checkpoint_identity:
             value["checkpoint_identity_sha256"] = self.checkpoint_identity
         return value
 
     def snapshot(self):
         with self._lock:
-            return dict(summary=self.summary(), calls=list(self.calls))
+            return dict(
+                summary=self.summary(), calls=list(self.calls),
+                reservation_journal=list(self._reservation_journal),
+            )
 
     def _bind_checkpoint_path(self, path):
         resolved = os.path.abspath(path)
@@ -415,11 +614,95 @@ class Ledger:
 
     def restore(self, saved):
         """Restore one prior snapshot into a fresh ledger and return its call count."""
-        prior, elapsed = self._validated_snapshot(saved)
+        prior, elapsed, journal, unresolved = self._validated_snapshot(saved)
         with self._lock:
+            if self._reservation_journal or self._reservations:
+                raise ValueError(
+                    "cannot restore a spend ledger over live reservations")
             self.calls = prior + self.calls
+            self._reservation_journal = journal
+            self._reservations = unresolved
+            self._reservation_counter = max(
+                [0] + [row["reservation_id"] for row in journal])
             self._carried_s = elapsed
         return len(prior)
+
+    @staticmethod
+    def _validated_reservations(journal, calls):
+        if (not isinstance(journal, list)
+                or any(not isinstance(event, dict) for event in journal)):
+            raise ValueError("spend reservation journal is not an array of objects")
+        reserved = {}
+        resolved = set()
+        for event in journal:
+            event_type = event.get("event")
+            reservation_id = event.get("reservation_id")
+            if (isinstance(reservation_id, bool)
+                    or not isinstance(reservation_id, int)
+                    or reservation_id <= 0):
+                raise ValueError("spend reservation id is invalid")
+            if event_type == "reserved":
+                headroom = event.get("headroom")
+                request_sha256 = event.get("request_sha256") or ""
+                if (reservation_id in reserved
+                        or isinstance(headroom, bool)
+                        or not isinstance(headroom, (int, float))
+                        or not math.isfinite(float(headroom))
+                        or headroom < 0
+                        or not isinstance(event.get("pass_name"), str)
+                        or not event["pass_name"]
+                        or not isinstance(event.get("vendor"), str)
+                        or not isinstance(event.get("model"), str)
+                        or not isinstance(request_sha256, str)
+                        or (request_sha256 and not re.fullmatch(
+                            r"[0-9a-f]{64}", request_sha256))):
+                    raise ValueError("spend reservation entry is invalid")
+                reserved[reservation_id] = dict(event)
+            elif event_type == "released":
+                if reservation_id not in reserved or reservation_id in resolved:
+                    raise ValueError("spend reservation release is invalid")
+                resolved.add(reservation_id)
+            else:
+                raise ValueError("spend reservation event is invalid")
+        for call in calls:
+            reservation_id = call.get("reservation_id")
+            if reservation_id is None:
+                continue
+            if (isinstance(reservation_id, bool)
+                    or not isinstance(reservation_id, int)):
+                raise ValueError("spend reservation settlement is invalid")
+            reservation = reserved.get(reservation_id)
+            if (reservation is None
+                    or reservation_id in resolved
+                    or call.get("pass_name")
+                    != reservation["pass_name"]
+                    or call.get("vendor") != reservation["vendor"]
+                    or (call.get("model") or "") != reservation["model"]):
+                raise ValueError("spend reservation settlement is invalid")
+            cost = call.get("cost")
+            if (isinstance(cost, bool) or not isinstance(cost, (int, float))
+                    or not math.isfinite(float(cost)) or cost < 0):
+                raise ValueError("spend reservation settlement cost is invalid")
+            journal = call.get("structured_result")
+            outcome = journal.get("outcome") if isinstance(journal, dict) else None
+            exceeded = float(cost) > reservation["headroom"] + 1e-9
+            if exceeded:
+                if (outcome != VendorUsageExceededReservation.code
+                        or journal.get("request_sha256")
+                        != reservation["request_sha256"]
+                        or journal.get("actual_cost") != cost
+                        or journal.get("reserved_cost")
+                        != reservation["headroom"]):
+                    raise ValueError(
+                        "over-bound spend settlement is not terminal")
+            elif outcome == VendorUsageExceededReservation.code:
+                raise ValueError("usage-exceeded settlement did not exceed its bound")
+            resolved.add(reservation_id)
+        return {
+            reservation_id: dict(entry)
+            for reservation_id, entry in reserved.items()
+            if reservation_id not in resolved
+        }
 
     def _validated_snapshot(self, saved):
         if not isinstance(saved, dict):
@@ -442,11 +725,13 @@ class Ledger:
         prior = saved.get("calls") or []
         if not isinstance(prior, list) or any(not isinstance(call, dict) for call in prior):
             raise ValueError("spend ledger calls is not an array of objects")
+        journal = saved.get("reservation_journal") or []
+        unresolved = self._validated_reservations(journal, prior)
         elapsed = summary.get("elapsed_s", 0) or 0
         if (isinstance(elapsed, bool) or not isinstance(elapsed, (int, float))
                 or not math.isfinite(float(elapsed)) or elapsed < 0):
             raise ValueError("spend ledger elapsed_s is invalid")
-        return list(prior), float(elapsed)
+        return list(prior), float(elapsed), list(journal), unresolved
 
     def reconcile(self, saved):
         """Keep the longer of two prefix-compatible crash checkpoints.
@@ -456,13 +741,25 @@ class Ledger:
         the other. They are compatible only when one ordered call list is a prefix of
         the other; anything else is stale or tampered state and must fail closed.
         """
-        prior, elapsed = self._validated_snapshot(saved)
+        prior, elapsed, journal, _unresolved = self._validated_snapshot(saved)
         with self._lock:
             current = list(self.calls)
             if current == prior[:len(current)]:
                 self.calls = prior
             elif prior != current[:len(prior)]:
                 raise ValueError("spend ledger checkpoints have divergent call histories")
+            current_journal = list(self._reservation_journal)
+            if current_journal == journal[:len(current_journal)]:
+                self._reservation_journal = journal
+            elif journal != current_journal[:len(journal)]:
+                raise ValueError(
+                    "spend reservation checkpoints have divergent histories")
+            self._reservations = self._validated_reservations(
+                self._reservation_journal, self.calls)
+            self._reservation_counter = max(
+                [0] + [
+                    row["reservation_id"] for row in self._reservation_journal
+                ])
             self._carried_s = max(self._carried_s, elapsed)
             if self._checkpoint_path:
                 atomic_write_json(self._checkpoint_path, self.snapshot())
@@ -490,6 +787,131 @@ class Ledger:
 
 class VendorError(Exception):
     pass
+
+
+class VendorPaidRequestTerminal(VendorError, BudgetExhausted):
+    """A paid accounting outcome that must use the existing budget-stop path.
+
+    Canonical stage runners already propagate ``BudgetExhausted`` through every
+    evidence fallback and stop later work. These outcomes do not necessarily mean
+    the numeric pass cap was exhausted; inheriting that stop signal prevents an
+    ambiguous, unresolved, unmetered, or over-bound paid request from being mistaken
+    for ordinary source unavailability.
+    """
+
+    def __init__(self, message):
+        # BudgetExhausted has a different constructor. Initialize the shared
+        # Exception base directly while preserving both public error families.
+        Exception.__init__(self, message)
+
+
+class VendorHTTPRejected(VendorError):
+    """The provider returned an explicit unsuccessful HTTP response."""
+
+
+class VendorNetworkError(VendorError):
+    """No authoritative provider response was received after one transport attempt."""
+
+
+class VendorRequestPending(VendorPaidRequestTerminal):
+    """A pre-network durable reservation has no matching settlement after restart."""
+
+    def __init__(
+            self, *, vendor, model, pass_name, request_sha256, headroom):
+        self.vendor = vendor
+        self.model = model
+        self.pass_name = pass_name
+        self.request_sha256 = request_sha256
+        self.headroom = headroom
+        super().__init__(
+            f"{vendor}/{model or '-'} request {request_sha256[:12]} has an "
+            f"unresolved ${headroom:.6f} reservation in {pass_name}; "
+            "refusing to reissue a possibly billed request"
+        )
+
+
+class VendorTransportAmbiguous(VendorPaidRequestTerminal):
+    """One bounded paid request returned no authoritative outcome or usage."""
+
+    code = "transport_outcome_ambiguous"
+
+    def __init__(
+            self, *, vendor, model, pass_name, detail, max_tokens,
+            input_tokens, output_tokens):
+        self.vendor = vendor
+        self.model = model
+        self.pass_name = pass_name
+        self.detail = detail
+        self.max_tokens = max_tokens
+        self.input_tokens = input_tokens
+        self.output_tokens = output_tokens
+        super().__init__(
+            f"{vendor}/{model or '-'} paid request outcome is ambiguous; "
+            f"charged the bounded upper estimate in {pass_name} and refused retry"
+        )
+
+
+class VendorUsageExceededReservation(VendorPaidRequestTerminal):
+    """Provider-reported usage exceeded the pre-network hard reservation."""
+
+    code = "usage_exceeded_reservation"
+
+    def __init__(self, *, vendor, model, pass_name, reserved, actual):
+        self.vendor = vendor
+        self.model = model
+        self.pass_name = pass_name
+        self.reserved = reserved
+        self.actual = actual
+        super().__init__(
+            f"{vendor}/{model or '-'} actual charge ${actual:.6f} exceeded "
+            f"its ${reserved:.6f} reserved upper bound in {pass_name}"
+        )
+
+
+class VendorUsageUnmetered(VendorPaidRequestTerminal):
+    """A nominally successful paid response omitted authoritative billed usage."""
+
+    code = "usage_unmetered"
+
+    def __init__(self, *, vendor, model, pass_name, detail=""):
+        self.vendor = vendor
+        self.model = model
+        self.pass_name = pass_name
+        self.detail = detail
+        super().__init__(
+            f"{vendor}/{model or '-'} response omitted authoritative "
+            f"billed-token usage, provider-reported token usage, or "
+            f"provider-reported total cost in {pass_name}; charged the "
+            "reserved upper bound"
+        )
+
+
+NONRETRYABLE_STAGE_EXIT = 78
+
+
+def stage_failure_exit(error, default=1):
+    """Map a terminal paid outcome onto the coordinator's no-retry exit."""
+    return (
+        NONRETRYABLE_STAGE_EXIT
+        if isinstance(error, VendorPaidRequestTerminal)
+        else default
+    )
+
+
+def prefer_terminal_stage_failure(current, candidate):
+    """Keep a terminal paid stop from being hidden by a concurrent budget stop."""
+    if current is None or isinstance(candidate, VendorPaidRequestTerminal):
+        return candidate
+    return current
+
+
+def run_stage_main(main):
+    """Keep an uncaught terminal paid outcome out of the retryable CLI channel."""
+    try:
+        return main()
+    except VendorPaidRequestTerminal as error:
+        print(f"!! terminal paid request outcome: {error}")
+        return NONRETRYABLE_STAGE_EXIT
 
 
 class VendorOutputTruncated(VendorError):
@@ -648,7 +1070,36 @@ def json_call_request_sha256(system, user, schema, pass_name, max_tokens, detail
     })
 
 
-def _http(url, data=None, headers=None, method=None, timeout=90, retries=3):
+def _retrieval_request_sha256(
+        operation, payload, *, vendor, pass_name, model=""):
+    return stable_json_sha256({
+        "operation": operation,
+        "vendor": vendor,
+        "model": model,
+        "pass_name": pass_name,
+        "payload": payload,
+    })
+
+
+def _retrieval_result_journal(request_sha256, response):
+    return {
+        "schema_version": "damm.structured-result/v1",
+        "request_sha256": request_sha256,
+        "outcome": "complete",
+        "response_sha256": stable_json_sha256(response),
+        "response": response,
+    }
+
+
+def _retrieval_failure_journal(request_sha256, outcome):
+    return {
+        "schema_version": "damm.structured-result/v1",
+        "request_sha256": request_sha256,
+        "outcome": outcome,
+    }
+
+
+def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
     body = json.dumps(data, allow_nan=False).encode() if data is not None else None
     h = {"Content-Type": "application/json", "Accept": "application/json"}
     h.update(headers or {})
@@ -664,7 +1115,8 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=3):
                 return raw
         except urllib.error.HTTPError as e:
             detail = e.read().decode("utf-8", "replace")[:400]
-            last = VendorError(f"{e.code} {url.split('?')[0]} :: {detail}")
+            last = VendorHTTPRejected(
+                f"{e.code} {url.split('?')[0]} :: {detail}")
             if e.code in (400, 401, 403, 404, 422):   # not retryable
                 raise last
             if e.code == 429:
@@ -678,7 +1130,8 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=3):
                 time.sleep(max(wait, 8 * (attempt + 1)))
                 continue
         except Exception as e:                        # timeouts, connection resets
-            last = VendorError(f"{type(e).__name__} {url.split('?')[0]} :: {e}")
+            last = VendorNetworkError(
+                f"{type(e).__name__} {url.split('?')[0]} :: {e}")
         time.sleep(2 * (attempt + 1))
     raise last
 
@@ -833,8 +1286,30 @@ def quote_verify(quote, page_text):
 
 def exa_search(query, ledger, pass_name, num_results=8, include_domains=None,
                start_published=None, category=None, text_chars=0):
+    lock_sha256 = stable_json_sha256({
+        "query": query,
+        "num_results": num_results,
+        "include_domains": include_domains,
+        "start_published": start_published,
+        "category": category,
+        "text_chars": text_chars,
+    })
+    with ledger.retrieval_request_lock(
+            "exa", pass_name, lock_sha256):
+        return _exa_search_unlocked(
+            query, ledger, pass_name, num_results=num_results,
+            include_domains=include_domains, start_published=start_published,
+            category=category, text_chars=text_chars,
+        )
+
+
+def _exa_search_unlocked(
+        query, ledger, pass_name, num_results=8, include_domains=None,
+        start_published=None, category=None, text_chars=0):
     """Discovery. Domain and date filters are how the tier protocol reaches the API."""
-    ledger.check(pass_name)
+    if (isinstance(num_results, bool) or not isinstance(num_results, int)
+            or not 1 <= num_results <= 10):
+        raise ValueError("Exa num_results must be an integer from 1 to 10")
     payload = {"query": query, "numResults": num_results, "type": "auto"}
     if include_domains:
         payload["includeDomains"] = include_domains
@@ -844,32 +1319,197 @@ def exa_search(query, ledger, pass_name, num_results=8, include_domains=None,
         payload["category"] = category
     if text_chars:
         payload["contents"] = {"text": {"maxCharacters": text_chars}}
-    j = _http("https://api.exa.ai/search", payload, {"x-api-key": key("EXA_API_KEY")})
-    results = j.get("results", []) if isinstance(j, dict) else []
-    ledger.record("exa", pass_name, searches=1,
-                  content_pages=(len(results) if text_chars else 0),
-                  detail=query)
-    return [dict(title=r.get("title") or "", url=r.get("url") or "",
-                 published=r.get("publishedDate") or "", text=r.get("text") or "",
-                 tier=tier_for_url(r.get("url") or "")) for r in results]
+    request_sha256 = _retrieval_request_sha256(
+        "exa.search/v1", payload, vendor="exa", pass_name=pass_name)
+    claimed, cached = ledger.claim_retrieval_result(
+        "exa", pass_name, request_sha256)
+    if claimed:
+        results = cached.get("results")
+        if not isinstance(results, list) or not all(
+                isinstance(result, dict) for result in results):
+            raise VendorError("durable Exa result is invalid")
+        return results
+
+    # Auto search is a fixed-price request through ten results, including text
+    # contents. Keeping this helper inside that documented shape makes its maximum
+    # charge knowable before transport; new summary/additional-result shapes need a
+    # new explicit tariff rather than silently inheriting this bound.
+    reservation = ledger.reserve(
+        pass_name,
+        ledger.estimated_cost("exa", searches=1),
+        vendor="exa", request_sha256=request_sha256,
+    )
+    transport_attempted = False
+    try:
+        try:
+            transport_attempted = True
+            j = _http(
+                "https://api.exa.ai/search", payload,
+                {"x-api-key": key("EXA_API_KEY")}, retries=1,
+            )
+        except VendorError as error:
+            reservation = ledger.settle(
+                reservation, "exa", pass_name, searches=1,
+                detail=f"AMBIGUOUS-UPPER-BOUND {query}",
+                structured_result=_retrieval_failure_journal(
+                    request_sha256, "retrieval_transport_ambiguous"),
+            )
+            raise VendorTransportAmbiguous(
+                vendor="exa", model="", pass_name=pass_name, detail=query,
+                max_tokens=0, input_tokens=0, output_tokens=0,
+            ) from error
+        if (not isinstance(j, dict) or "results" not in j
+                or not isinstance(j.get("results"), list)
+                or not all(isinstance(result, dict)
+                           for result in j["results"])):
+            reservation = ledger.settle(
+                reservation, "exa", pass_name, searches=1,
+                detail=f"MALFORMED-UPPER-BOUND {query}",
+                structured_result=_retrieval_failure_journal(
+                    request_sha256, "retrieval_output_malformed"),
+            )
+            raise VendorError("malformed Exa response: results is not an object array")
+        raw_results = j["results"]
+        results = [
+            dict(
+                title=result.get("title") or "",
+                url=result.get("url") or "",
+                published=result.get("publishedDate") or "",
+                text=result.get("text") or "",
+                tier=tier_for_url(result.get("url") or ""),
+            )
+            for result in raw_results
+        ]
+        journal = _retrieval_result_journal(
+            request_sha256, {"results": results})
+        reservation = ledger.settle(
+            reservation, "exa", pass_name, searches=1,
+            content_pages=(len(results) if text_chars else 0), detail=query,
+            structured_result=journal,
+        )
+        ledger.mark_retrieval_result_consumed(
+            "exa", pass_name, request_sha256)
+        return results
+    finally:
+        if (reservation is not None and not transport_attempted
+                and ledger.reservation_pending(reservation)):
+            ledger.release(reservation)
 
 
 def jina_fetch(url, ledger, pass_name, max_chars=120000, timeout=90):
+    lock_sha256 = stable_json_sha256({
+        "url": url,
+        "max_chars": max_chars,
+    })
+    with ledger.retrieval_request_lock(
+            "jina", pass_name, lock_sha256):
+        return _jina_fetch_unlocked(
+            url, ledger, pass_name, max_chars=max_chars, timeout=timeout)
+
+
+def _jina_fetch_unlocked(
+        url, ledger, pass_name, max_chars=120000, timeout=90):
     """Fetch page text a quote can be verified against. Returns '' on failure."""
-    ledger.check(pass_name)
+    if (isinstance(max_chars, bool) or not isinstance(max_chars, int)
+            or max_chars <= 0):
+        raise ValueError("Jina max_chars must be a positive integer")
+    # Reader's hard token controls are both at least 500. A token can represent more
+    # than one character, so matching the token ceiling to the requested character
+    # ceiling is conservative; the local character slice remains the caller contract.
+    token_budget = max(500, max_chars)
+    request_payload = {
+        "url": url,
+        "token_budget": token_budget,
+        "max_characters": max_chars,
+        "return_format": "text",
+    }
+    request_sha256 = _retrieval_request_sha256(
+        "jina.reader/v1", request_payload, vendor="jina", pass_name=pass_name)
+    claimed, cached = ledger.claim_retrieval_result(
+        "jina", pass_name, request_sha256)
+    if claimed:
+        text = cached.get("text")
+        if not isinstance(text, str):
+            raise VendorError("durable Jina result is invalid")
+        return text
+    reservation = ledger.reserve(
+        pass_name,
+        ledger.estimated_cost("jina", out_tok=token_budget),
+        vendor="jina", request_sha256=request_sha256,
+    )
+    transport_attempted = False
     target = "https://r.jina.ai/" + url
     try:
-        txt = _http(target, headers={"Authorization": "Bearer " + key("JINA_API_KEY"),
-                                     "X-Return-Format": "text",
-                                     "Accept": "text/plain"},
-                    method="GET", timeout=timeout, retries=2)
-    except VendorError as e:
-        ledger.record("jina", pass_name, fetches=1, detail=f"FAIL {url}")
-        return ""
-    if isinstance(txt, dict):
-        txt = (txt.get("data") or {}).get("text") or txt.get("text") or json.dumps(txt)
-    ledger.record("jina", pass_name, fetches=1, detail=url)
-    return (txt or "")[:max_chars]
+        try:
+            transport_attempted = True
+            response = _http(
+                target,
+                headers={
+                    "Authorization": "Bearer " + key("JINA_API_KEY"),
+                    "X-Return-Format": "text",
+                    "X-Token-Budget": str(token_budget),
+                    "X-Max-Tokens": str(token_budget),
+                    "Accept": "application/json",
+                },
+                method="GET", timeout=timeout, retries=1,
+            )
+        except VendorHTTPRejected:
+            # Jina documents failed Reader requests as zero-token deductions. Keep the
+            # failed attempt visible while atomically retiring its reservation.
+            reservation = ledger.settle(
+                reservation, "jina", pass_name, fetches=1,
+                detail=f"FAIL {url}",
+            )
+            raise
+        except VendorError as error:
+            reservation = ledger.settle(
+                reservation, "jina", pass_name, out_tok=token_budget, fetches=1,
+                detail=f"AMBIGUOUS-UPPER-BOUND {url}",
+                structured_result=_retrieval_failure_journal(
+                    request_sha256, "retrieval_transport_ambiguous"),
+            )
+            raise VendorTransportAmbiguous(
+                vendor="jina", model="", pass_name=pass_name, detail=url,
+                max_tokens=token_budget, input_tokens=0,
+                output_tokens=token_budget,
+            ) from error
+
+        data = response.get("data") if isinstance(response, dict) else None
+        if not isinstance(data, dict):
+            data = {}
+        usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
+        usage_tokens = usage.get("tokens")
+        if (isinstance(usage_tokens, bool) or not isinstance(usage_tokens, int)
+                or usage_tokens < 0):
+            # A successful response without its documented billed-token field cannot
+            # be accounted exactly. Charge the full hard provider cap and fail closed
+            # instead of making further requests against possibly-spent headroom.
+            text = ""
+            journal = _retrieval_failure_journal(
+                request_sha256, "retrieval_usage_missing")
+            reservation = ledger.settle(
+                reservation, "jina", pass_name, out_tok=token_budget, fetches=1,
+                detail=f"UNMETERED-UPPER-BOUND {url}",
+                structured_result=journal,
+            )
+            raise VendorUsageUnmetered(
+                vendor="jina", model="", pass_name=pass_name, detail=url)
+
+        text = data.get("content") or data.get("text") or response.get("text") or ""
+        text = str(text)[:max_chars]
+        journal = _retrieval_result_journal(
+            request_sha256, {"text": text})
+        reservation = ledger.settle(
+            reservation, "jina", pass_name, out_tok=usage_tokens, fetches=1,
+            detail=url, structured_result=journal,
+        )
+        ledger.mark_retrieval_result_consumed(
+            "jina", pass_name, request_sha256)
+        return text
+    finally:
+        if (reservation is not None and not transport_attempted
+                and ledger.reservation_pending(reservation)):
+            ledger.release(reservation)
 
 
 def url_resolves(url, timeout=25, retries=2):
@@ -918,9 +1558,26 @@ def url_resolves(url, timeout=25, retries=2):
 _PPX_LOCK = threading.Lock()
 _PPX_MIN_GAP = 1.5
 _ppx_last = [0.0]
+PERPLEXITY_MAX_TOKENS = 1200
 
 
-def perplexity_citations(question, ledger, pass_name, model="sonar-pro"):
+def perplexity_citations(
+        question, ledger, pass_name, model="sonar-pro",
+        max_tokens=PERPLEXITY_MAX_TOKENS):
+    lock_sha256 = stable_json_sha256({
+        "question": question,
+        "model": model,
+        "max_tokens": max_tokens,
+    })
+    with ledger.retrieval_request_lock(
+            "perplexity", pass_name, lock_sha256, model=model):
+        return _perplexity_citations_unlocked(
+            question, ledger, pass_name, model=model, max_tokens=max_tokens)
+
+
+def _perplexity_citations_unlocked(
+        question, ledger, pass_name, model="sonar-pro",
+        max_tokens=PERPLEXITY_MAX_TOKENS):
     """Discovery peer (decision C6).
 
     Returns the citation URLs and, separately, the prose. The prose is a lead, never
@@ -928,29 +1585,133 @@ def perplexity_citations(question, ledger, pass_name, model="sonar-pro"):
     archivable document, and the tier protocol requires both. Callers re-fetch the
     citations through Jina and quote-verify there.
     """
-    ledger.check(pass_name)
-    with _PPX_LOCK:
-        gap = _PPX_MIN_GAP - (time.time() - _ppx_last[0])
-        if gap > 0:
-            time.sleep(gap)
-        j = _http("https://api.perplexity.ai/chat/completions",
-                  {"model": model, "messages": [{"role": "user", "content": question}]},
-                  {"Authorization": "Bearer " + key("PERPLEXITY_API_KEY")})
-        _ppx_last[0] = time.time()
-    u = (j.get("usage") or {}) if isinstance(j, dict) else {}
-    ledger.record("perplexity", pass_name, model=model, requests=1,
-                  in_tok=u.get("prompt_tokens", 0), out_tok=u.get("completion_tokens", 0),
-                  detail=question[:120])
-    cites = j.get("citations") or []
-    for sr in (j.get("search_results") or []):
-        if sr.get("url") and sr["url"] not in cites:
-            cites.append(sr["url"])
-    prose = ""
+    if (isinstance(max_tokens, bool) or not isinstance(max_tokens, int)
+            or not 1 <= max_tokens <= 128000):
+        raise ValueError("Perplexity max_tokens must be an integer from 1 to 128000")
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": question}],
+        "max_tokens": max_tokens,
+        # Pin the request-fee tier rather than relying on a mutable provider default.
+        "web_search_options": {"search_context_size": "low"},
+    }
+    request_sha256 = _retrieval_request_sha256(
+        "perplexity.chat-completions/v1", payload, vendor="perplexity",
+        pass_name=pass_name, model=model)
+    claimed, cached = ledger.claim_retrieval_result(
+        "perplexity", pass_name, request_sha256, model=model)
+    if claimed:
+        result = cached.get("result")
+        if (not isinstance(result, dict)
+                or not isinstance(result.get("citations"), list)
+                or not all(isinstance(url, str)
+                           for url in result["citations"])
+                or not isinstance(result.get("lead_prose"), str)):
+            raise VendorError("durable Perplexity result is invalid")
+        return result
+    # Ordinary text tokenization cannot exceed UTF-8 bytes. The fixed allowance
+    # covers the request wrapper and provider control tokens not present in question.
+    input_token_bound = len(json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+    ).encode("utf-8")) + 4096
+    reservation = ledger.reserve(
+        pass_name,
+        ledger.estimated_cost(
+            "perplexity", model=model, in_tok=input_token_bound,
+            out_tok=max_tokens, requests=1,
+        ),
+        vendor="perplexity", model=model, request_sha256=request_sha256,
+    )
+    transport_attempted = False
     try:
-        prose = j["choices"][0]["message"]["content"]
-    except Exception:
-        pass
-    return dict(citations=cites, lead_prose=prose)
+        try:
+            with _PPX_LOCK:
+                gap = _PPX_MIN_GAP - (time.time() - _ppx_last[0])
+                if gap > 0:
+                    time.sleep(gap)
+                transport_attempted = True
+                j = _http(
+                    "https://api.perplexity.ai/chat/completions", payload,
+                    {"Authorization": "Bearer " + key("PERPLEXITY_API_KEY")},
+                    retries=1,
+                )
+                _ppx_last[0] = time.time()
+        except VendorError as error:
+            reservation = ledger.settle(
+                reservation, "perplexity", pass_name, model=model, requests=1,
+                in_tok=input_token_bound, out_tok=max_tokens,
+                detail=f"AMBIGUOUS-UPPER-BOUND {question[:120]}",
+                structured_result=_retrieval_failure_journal(
+                    request_sha256, "retrieval_transport_ambiguous"),
+            )
+            raise VendorTransportAmbiguous(
+                vendor="perplexity", model=model, pass_name=pass_name,
+                detail=question[:120], max_tokens=max_tokens,
+                input_tokens=input_token_bound, output_tokens=max_tokens,
+            ) from error
+        u = (j.get("usage") or {}) if isinstance(j, dict) else {}
+        prompt_tokens = u.get("prompt_tokens")
+        completion_tokens = u.get("completion_tokens")
+        cost_data = u.get("cost") if isinstance(u.get("cost"), dict) else {}
+        total_cost = cost_data.get("total_cost")
+        if any(
+                isinstance(value, bool) or not isinstance(value, int) or value < 0
+                for value in (prompt_tokens, completion_tokens)) or (
+                isinstance(total_cost, bool)
+                or not isinstance(total_cost, (int, float))
+                or not math.isfinite(float(total_cost))
+                or total_cost < 0):
+            # As with Reader, a nominally successful response without its documented
+            # usage cannot release unknown spend. Consume the full provider-bounded
+            # reservation and discard the unmetered lead.
+            result = {"citations": [], "lead_prose": ""}
+            journal = _retrieval_failure_journal(
+                request_sha256, "retrieval_usage_missing")
+            reservation = ledger.settle(
+                reservation, "perplexity", pass_name, model=model, requests=1,
+                in_tok=input_token_bound, out_tok=max_tokens,
+                detail=f"UNMETERED-UPPER-BOUND {question[:120]}",
+                structured_result=journal,
+            )
+            raise VendorUsageUnmetered(
+                vendor="perplexity", model=model, pass_name=pass_name,
+                detail=question[:120],
+            )
+        raw_citations = j.get("citations") if isinstance(j, dict) else []
+        cites = ([url for url in raw_citations if isinstance(url, str)]
+                 if isinstance(raw_citations, list) else [])
+        raw_search_results = (
+            j.get("search_results") if isinstance(j, dict) else [])
+        raw_search_results = (
+            raw_search_results if isinstance(raw_search_results, list) else [])
+        for sr in raw_search_results:
+            if (isinstance(sr, dict) and isinstance(sr.get("url"), str)
+                    and sr["url"] not in cites):
+                cites.append(sr["url"])
+        prose = ""
+        try:
+            prose = j["choices"][0]["message"]["content"]
+        except Exception:
+            pass
+        result = dict(
+            citations=cites,
+            lead_prose=prose if isinstance(prose, str) else "",
+        )
+        journal = _retrieval_result_journal(
+            request_sha256, {"result": result})
+        reservation = ledger.settle(
+            reservation, "perplexity", pass_name, model=model, requests=1,
+            in_tok=prompt_tokens, out_tok=completion_tokens,
+            detail=question[:120], structured_result=journal,
+            billed_cost=total_cost,
+        )
+        ledger.mark_retrieval_result_consumed(
+            "perplexity", pass_name, request_sha256, model=model)
+        return result
+    finally:
+        if (reservation is not None and not transport_attempted
+                and ledger.reservation_pending(reservation)):
+            ledger.release(reservation)
 
 
 # ---------------------------------------------------------------- reasoning
@@ -962,7 +1723,7 @@ _MODEL_PREFS = {
     # report, so the choice is never invisible.
     "anthropic": ["claude-opus-5", "claude-opus-4-8", "claude-sonnet-5"],
     "openai": ["gpt-5.6-terra", "gpt-5.6-luna", "gpt-5.6-sol"],
-    "gemini": ["gemini-3.1-pro-preview", "gemini-2.5-pro", "gemini-pro-latest"],
+    "gemini": ["gemini-3.1-pro-preview", "gemini-2.5-pro"],
 }
 
 # Substrings that mark a model as built for something other than text reasoning.
@@ -1060,13 +1821,140 @@ class LLM:
     def __init__(self, vendor, ledger, model=None):
         self.vendor, self.ledger = vendor, ledger
         self.model = model or self._resolve()
+        # Model resolution may discover a new or near-matching identifier. Never let
+        # that convenience silently route a paid request through a generic tariff.
+        self.ledger._price(self.vendor, self.model)
         self._client = None
         self._durable_outcomes = False
+        self._claimed_durable_calls = set()
+        self._durable_claim_lock = threading.Lock()
 
     def enable_durable_outcomes(self):
-        """Journal bounded provider outcomes with spend for crash-safe Stage 6."""
+        """Journal and claim bounded provider outcomes for crash-safe stage resume."""
         self._durable_outcomes = True
         return self
+
+    def _durable_outcome(self, request_sha256):
+        """Claim the oldest matching paid outcome not used by this process."""
+        if not self._durable_outcomes:
+            return None
+        # Appends and checkpoint loads publish under the ledger lock. Snapshotting and
+        # claiming under that same lock prevents a concurrent append from changing the
+        # index set halfway through a scan.
+        with self._durable_claim_lock, self.ledger._lock:
+            for index, call in enumerate(self.ledger.calls):
+                if index in self._claimed_durable_calls:
+                    continue
+                journal = call.get("structured_result")
+                if (not isinstance(journal, dict)
+                        or journal.get("request_sha256") != request_sha256):
+                    continue
+                if (call.get("vendor") != self.vendor
+                        or call.get("model") != self.model):
+                    raise VendorError(
+                        "durable structured result vendor/model does not match resume"
+                    )
+                if journal.get("schema_version") != "damm.structured-result/v1":
+                    raise VendorError("durable structured result schema is invalid")
+                outcome = journal.get("outcome")
+                if outcome == "complete":
+                    response = journal.get("response")
+                    if (not isinstance(response, dict)
+                            or stable_json_sha256(response)
+                            != journal.get("response_sha256")):
+                        raise VendorError("durable structured result hash is invalid")
+                    value = strict_json_loads(json.dumps(response, allow_nan=False))
+                elif outcome in {
+                        VendorOutputTruncated.code,
+                        VendorMalformedOutput.code,
+                        VendorOutputRejected.code,
+                        VendorTransportAmbiguous.code,
+                        VendorUsageExceededReservation.code,
+                }:
+                    def count(name, default=0):
+                        item = journal.get(name, default)
+                        return (item if isinstance(item, int)
+                                and not isinstance(item, bool) and item >= 0 else default)
+
+                    common = dict(
+                        vendor=self.vendor,
+                        model=self.model,
+                        pass_name=call.get("pass_name") or "",
+                        detail=call.get("detail") or "",
+                        stop_reason=str(journal.get("stop_reason") or "recorded")[:80],
+                        request_id="durable-ledger",
+                        max_tokens=count("max_tokens"),
+                        input_tokens=count("input_tokens"),
+                        output_tokens=count("output_tokens"),
+                        thinking_tokens=count("thinking_tokens"),
+                        partial_output_chars=count("partial_output_chars"),
+                        partial_output_sha256=(
+                            str(journal.get("partial_output_sha256") or "")
+                            or hashlib.sha256(b"").hexdigest()
+                        ),
+                    )
+                    if outcome == VendorUsageExceededReservation.code:
+                        reserved_cost = journal.get("reserved_cost")
+                        actual_cost = journal.get("actual_cost")
+                        if any(
+                                isinstance(item, bool)
+                                or not isinstance(item, (int, float))
+                                or not math.isfinite(float(item))
+                                or item < 0
+                                for item in (reserved_cost, actual_cost)):
+                            raise VendorError(
+                                "durable usage-exceeded result is invalid")
+                        value = VendorUsageExceededReservation(
+                            vendor=self.vendor, model=self.model,
+                            pass_name=call.get("pass_name") or "",
+                            reserved=float(reserved_cost),
+                            actual=float(actual_cost),
+                        )
+                    elif outcome == VendorOutputTruncated.code:
+                        value = VendorOutputTruncated(**common)
+                    elif outcome == VendorMalformedOutput.code:
+                        value = VendorMalformedOutput(
+                            **common,
+                            parse_error="recorded malformed structured output",
+                        )
+                    elif outcome == VendorOutputRejected.code:
+                        value = VendorOutputRejected(**common)
+                    else:
+                        value = VendorTransportAmbiguous(
+                            vendor=self.vendor,
+                            model=self.model,
+                            pass_name=call.get("pass_name") or "",
+                            detail=call.get("detail") or "",
+                            max_tokens=count("max_tokens"),
+                            input_tokens=count("input_tokens"),
+                            output_tokens=count("output_tokens"),
+                        )
+                else:
+                    raise VendorError("durable structured result outcome is invalid")
+                if outcome not in {
+                        VendorTransportAmbiguous.code,
+                        VendorUsageExceededReservation.code,
+                }:
+                    # An ambiguous result is a permanent stop for its exact request.
+                    # Leaving it unclaimed prevents a later identical call in this
+                    # process from falling through to transport.
+                    self._claimed_durable_calls.add(index)
+                return value
+        return None
+
+    def _mark_durable_outcome_consumed(self, request_sha256):
+        """Mark the live result just returned to this process as already consumed."""
+        if not self._durable_outcomes:
+            return
+        with self._durable_claim_lock, self.ledger._lock:
+            for index in range(len(self.ledger.calls) - 1, -1, -1):
+                if index in self._claimed_durable_calls:
+                    continue
+                journal = self.ledger.calls[index].get("structured_result")
+                if (isinstance(journal, dict)
+                        and journal.get("request_sha256") == request_sha256):
+                    self._claimed_durable_calls.add(index)
+                    return
 
     # -- model resolution ------------------------------------------
     def _resolve(self):
@@ -1105,8 +1993,8 @@ class LLM:
         raise VendorError(f"unknown vendor {self.vendor}")
 
     # -- the one call ----------------------------------------------
-    def _call_cost_headroom(self, system, user, schema, max_tokens):
-        """Conservative upper-bound cost before a bounded provider request starts."""
+    def _call_usage_bound(self, system, user, schema, max_tokens):
+        """Conservative token bounds before a bounded provider request starts."""
         request_bytes = len((
             str(system) + str(user)
             + json.dumps(schema, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
@@ -1115,11 +2003,15 @@ class LLM:
         # allowance covers provider wrappers and schema-mode control tokens not present
         # in our serialized request estimate.
         input_tokens = request_bytes + 4096
-        pricing = self.ledger._price(self.vendor, self.model)
-        return (
-            (input_tokens / 1e6) * pricing.get("in_per_mtok", 0.0)
-            + (max_tokens / 1e6) * pricing.get("out_per_mtok", 0.0)
-            + pricing.get("per_request", 0.0)
+        return input_tokens, max_tokens
+
+    def _call_cost_headroom(self, system, user, schema, max_tokens):
+        """Conservative upper-bound cost before a bounded provider request starts."""
+        input_tokens, output_tokens = self._call_usage_bound(
+            system, user, schema, max_tokens)
+        return self.ledger.estimated_cost(
+            self.vendor, model=self.model, in_tok=input_tokens,
+            out_tok=output_tokens,
         )
 
     def _failure_journal(self, request_sha256, outcome, error):
@@ -1149,6 +2041,22 @@ class LLM:
             "response": response,
         }
 
+    @staticmethod
+    def _ambiguous_journal(
+            request_sha256, max_tokens, input_tokens, output_tokens):
+        return {
+            "schema_version": "damm.structured-result/v1",
+            "request_sha256": request_sha256,
+            "outcome": VendorTransportAmbiguous.code,
+            "max_tokens": max_tokens,
+            "stop_reason": "transport_outcome_ambiguous",
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "thinking_tokens": 0,
+            "partial_output_chars": 0,
+            "partial_output_sha256": hashlib.sha256(b"").hexdigest(),
+        }
+
     def json_call_once(
             self, system, user, schema, pass_name, max_tokens=8000, detail=""):
         """Make exactly one bounded provider request and journal its paid outcome.
@@ -1161,13 +2069,19 @@ class LLM:
         """
         request_sha256 = json_call_request_sha256(
             system, user, schema, pass_name, max_tokens, detail)
+        input_bound, output_bound = self._call_usage_bound(
+            system, user, schema, max_tokens)
         reservation = self.ledger.reserve(
             pass_name,
             self._call_cost_headroom(system, user, schema, max_tokens),
+            vendor=self.vendor, model=self.model,
+            request_sha256=request_sha256,
         )
+        transport_attempted = False
         try:
             fn = getattr(self, "_call_" + self.vendor)
             try:
+                transport_attempted = True
                 out, in_tok, out_tok = fn(system, user, schema, max_tokens)
             except _ProviderOutputTruncated as error:
                 ledger_detail = (
@@ -1260,6 +2174,30 @@ class LLM:
                     partial_output_chars=error.partial_output_chars,
                     partial_output_sha256=error.partial_output_sha256,
                 ) from None
+            except Exception as error:
+                # The SDK made exactly one attempt (configured below), but a timeout or
+                # broken response does not prove whether the provider billed it. Charge
+                # the full bounded usage and durably refuse the same request on resume.
+                reservation = self.ledger.settle(
+                    reservation,
+                    self.vendor,
+                    pass_name,
+                    model=self.model,
+                    in_tok=input_bound,
+                    out_tok=output_bound,
+                    detail=f"AMBIGUOUS-UPPER-BOUND {detail}",
+                    structured_result=self._ambiguous_journal(
+                        request_sha256, max_tokens, input_bound, output_bound),
+                )
+                raise VendorTransportAmbiguous(
+                    vendor=self.vendor,
+                    model=self.model,
+                    pass_name=pass_name,
+                    detail=detail,
+                    max_tokens=max_tokens,
+                    input_tokens=input_bound,
+                    output_tokens=output_bound,
+                ) from error
             reservation = self.ledger.settle(
                 reservation,
                 self.vendor, pass_name, model=self.model,
@@ -1267,7 +2205,8 @@ class LLM:
                 structured_result=self._complete_journal(request_sha256, out))
             return out
         finally:
-            if reservation is not None:
+            if (reservation is not None and not transport_attempted
+                    and self.ledger.reservation_pending(reservation)):
                 self.ledger.release(reservation)
 
     def json_call(self, system, user, schema, pass_name, max_tokens=8000, detail=""):
@@ -1279,22 +2218,38 @@ class LLM:
         """
         last = None
         for attempt in range(2):
+            attempt_tokens = max_tokens * (attempt + 1)
+            request_sha256 = json_call_request_sha256(
+                system, user, schema, pass_name, attempt_tokens, detail)
+            durable = self._durable_outcome(request_sha256)
+            if durable is not None:
+                if isinstance(durable, Exception):
+                    error = durable
+                    if isinstance(error, (VendorOutputTruncated, VendorMalformedOutput)):
+                        last = error
+                        continue
+                    raise error
+                return durable
             try:
-                return self.json_call_once(
+                result = self.json_call_once(
                     system,
                     user,
                     schema,
                     pass_name,
-                    max_tokens=max_tokens * (attempt + 1),
+                    max_tokens=attempt_tokens,
                     detail=detail,
                 )
+                self._mark_durable_outcome_consumed(request_sha256)
+                return result
             except (VendorOutputTruncated, VendorMalformedOutput) as error:
+                self._mark_durable_outcome_consumed(request_sha256)
                 last = error
         raise last
 
     def _call_anthropic(self, system, user, schema, max_tokens):
         import anthropic
-        self._client = self._client or anthropic.Anthropic(api_key=key("ANTHROPIC_API_KEY"))
+        self._client = self._client or anthropic.Anthropic(
+            api_key=key("ANTHROPIC_API_KEY"), max_retries=0)
         r = self._client.messages.create(
             model=self.model, max_tokens=max_tokens, system=system,
             messages=[{"role": "user", "content": user}],
@@ -1309,13 +2264,13 @@ class LLM:
         text = next((b.text for b in r.content if b.type == "text"), "")
         usage = r.usage
         details = getattr(usage, "output_tokens_details", None)
-        input_tokens = sum(
-            getattr(usage, field, 0) or 0
-            for field in (
-                "input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
+        input_tokens = _usage_token_count(usage, "input_tokens") + sum(
+            _usage_token_count(usage, field, optional=True)
+            for field in ("cache_creation_input_tokens", "cache_read_input_tokens")
         )
-        output_tokens = getattr(usage, "output_tokens", 0) or 0
-        thinking_tokens = getattr(details, "thinking_tokens", 0) or 0
+        output_tokens = _usage_token_count(usage, "output_tokens")
+        thinking_tokens = _usage_token_count(
+            details, "thinking_tokens", optional=True)
         stop_reason = str(getattr(r, "stop_reason", "") or "")
         stop_details = getattr(r, "stop_details", None)
         if (stop_reason == "refusal"
@@ -1370,7 +2325,8 @@ class LLM:
 
     def _call_openai(self, system, user, schema, max_tokens):
         import openai
-        self._client = self._client or openai.OpenAI(api_key=key("OPENAI_API_KEY"))
+        self._client = self._client or openai.OpenAI(
+            api_key=key("OPENAI_API_KEY"), max_retries=0)
         r = self._client.responses.create(
             model=self.model,
             instructions=system,
@@ -1381,9 +2337,10 @@ class LLM:
         )
         u = r.usage
         details = getattr(u, "output_tokens_details", None)
-        input_tokens = getattr(u, "input_tokens", 0) or 0
-        output_tokens = getattr(u, "output_tokens", 0) or 0
-        thinking_tokens = getattr(details, "reasoning_tokens", 0) or 0
+        input_tokens = _usage_token_count(u, "input_tokens")
+        output_tokens = _usage_token_count(u, "output_tokens")
+        thinking_tokens = _usage_token_count(
+            details, "reasoning_tokens", optional=True)
         text = str(getattr(r, "output_text", "") or "")
         incomplete = getattr(r, "incomplete_details", None)
         reason = str(getattr(incomplete, "reason", "") or "")
@@ -1472,7 +2429,11 @@ class LLM:
     def _call_gemini(self, system, user, schema, max_tokens):
         from google import genai
         from google.genai import types
-        self._client = self._client or genai.Client(api_key=key("GEMINI_API_KEY"))
+        self._client = self._client or genai.Client(
+            api_key=key("GEMINI_API_KEY"),
+            http_options=types.HttpOptions(
+                retry_options=types.HttpRetryOptions(attempts=1)),
+        )
         r = self._client.models.generate_content(
             model=self.model,
             contents=user,
@@ -1486,9 +2447,10 @@ class LLM:
             ),
         )
         u = r.usage_metadata
-        input_tokens = getattr(u, "prompt_token_count", 0) or 0
-        answer_tokens = getattr(u, "candidates_token_count", 0) or 0
-        thinking_tokens = getattr(u, "thoughts_token_count", 0) or 0
+        input_tokens = _usage_token_count(u, "prompt_token_count")
+        answer_tokens = _usage_token_count(u, "candidates_token_count")
+        thinking_tokens = _usage_token_count(
+            u, "thoughts_token_count", optional=True)
         output_tokens = answer_tokens + thinking_tokens
         try:
             text = str(getattr(r, "text", "") or "")

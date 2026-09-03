@@ -82,6 +82,15 @@ UPLOAD_SYNTHESIS_SCHEMA = {
 }
 
 
+def _durable_llm(vendor, ledger, model):
+    """Construct the upload-synthesis LLM with ledger-backed crash replay enabled."""
+    llm = V.LLM(vendor, ledger, model=model or None)
+    enable = getattr(llm, "enable_durable_outcomes", None)
+    if callable(enable):
+        enable()
+    return llm
+
+
 def _sha256(path):
     digest = hashlib.sha256()
     with open(path, "rb") as handle:
@@ -916,7 +925,7 @@ def main():
             if not os.path.exists(cache_path):
                 V.load_env()
                 vendor, _, model = args.vendor.partition("/")
-                llm = V.LLM(vendor, ledger, model=model or None)
+                llm = _durable_llm(vendor, ledger, model)
             upload_findings, upload_gaps, upload_assessments = synthesize_uploads(
                 args.country, args.iso, args.lane, uploads, ledger, llm,
                 cache_path, shared_spend_path,
@@ -962,7 +971,7 @@ def main():
         except (OSError, ValueError, json.JSONDecodeError):
             pass
         print(f"!! could not build the {args.lane} product: {error}")
-        return 1
+        return V.stage_failure_exit(error, 1)
     print(json.dumps({
         "schema_version": "damm.workflow-event/v1",
         "event": "product_written",
@@ -976,4 +985,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

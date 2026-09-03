@@ -6948,7 +6948,9 @@ def main():
         else:
             V.load_env()
             vendor, _, model_name = a.vendor.partition("/")
-            llm = V.LLM(vendor, ledger, model=model_name or None)
+            llm = V.LLM(
+                vendor, ledger, model=model_name or None,
+            ).enable_durable_outcomes()
             adapter_label = f"{llm.vendor}/{llm.model}"
     except (Exception, SystemExit) as error:
         return block("adapter_initialization_failed", str(error))
@@ -7020,6 +7022,7 @@ def main():
         save()
 
     stopped = None
+    terminal_paid_outcome = False
     for n, chapter in enumerate(OUTLINE, 1):
         key = str(chapter["n"])
         try:
@@ -7075,7 +7078,15 @@ def main():
                 rec = write_chapter(chapter, assessment, scans, foresight,
                                     a.country, llm)
         except V.BudgetExhausted as e:
-            stopped = {"code": "budget_exhausted", "detail": str(e), "chapter": key}
+            terminal_paid_outcome = isinstance(e, V.VendorPaidRequestTerminal)
+            stopped = {
+                "code": (
+                    getattr(e, "code", "terminal_paid_request")
+                    if terminal_paid_outcome else "budget_exhausted"
+                ),
+                "detail": str(e),
+                "chapter": key,
+            }
             break
         except Exception as e:
             print(f"!! chapter {key} failed: {str(e)[:120]}")
@@ -7108,7 +7119,10 @@ def main():
               "output, NOT written as empty.")
         save()
         write_manifest("incomplete", stopped)
-        return 1
+        return (
+            V.NONRETRYABLE_STAGE_EXIT
+            if terminal_paid_outcome else 1
+        )
 
     # Persist canonicalized reused chapters before QC. Derived fields from a prior code
     # version or a hand-edited checkpoint never survive this point.
@@ -7189,4 +7203,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

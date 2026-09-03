@@ -2,6 +2,7 @@
 
 import os
 import sys
+import tempfile
 import unittest
 from unittest import mock
 
@@ -12,6 +13,82 @@ import ai_assessment as A
 
 
 class AiAssessmentTest(unittest.TestCase):
+    def test_stage3_crash_after_paid_result_resumes_without_transport(self):
+        prompt = (
+            "COUNTRY UNDER REVIEW: Exampleland\n\nSOURCES:\nsynthetic evidence\n\n"
+            "Produce the as-is AI assessment."
+        )
+        response = {"findings": [], "data_gaps": ["Synthetic gap."]}
+
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "stage3-spend.json")
+            first_ledger = A.V.Ledger(ceiling=500, label="stage3-first")
+            first_ledger.attach(spend_path)
+            first = A.V.LLM(
+                "anthropic", first_ledger, model="claude-opus-5",
+            ).enable_durable_outcomes()
+            first._call_anthropic = mock.Mock(return_value=(response, 100, 20))
+            self.assertEqual(first.json_call(
+                A.SYSTEM, prompt, A.EVIDENCE_SCHEMA, A.PASS,
+                max_tokens=5000, detail="as-is AI assessment",
+            ), response)
+
+            # Simulate process death before Stage 3 can publish any product/state.
+            resumed_ledger = A.V.Ledger(ceiling=500, label="stage3-resumed")
+            resumed_ledger.attach(spend_path)
+            resumed_ledger.load(spend_path)
+            resumed = A.V.LLM(
+                "anthropic", resumed_ledger, model="claude-opus-5",
+            ).enable_durable_outcomes()
+            transport = mock.Mock(side_effect=AssertionError("paid replay"))
+            resumed._call_anthropic = transport
+
+            self.assertEqual(resumed.json_call(
+                A.SYSTEM, prompt, A.EVIDENCE_SCHEMA, A.PASS,
+                max_tokens=5000, detail="as-is AI assessment",
+            ), response)
+            transport.assert_not_called()
+            self.assertEqual(len(resumed_ledger.calls), 1)
+
+    def test_stage3_crash_reuses_paid_retrieval_results_without_transport(self):
+        exa_response = {"results": [{
+            "title": "Synthetic national AI policy",
+            "url": "https://example.gov/ai-policy",
+            "publishedDate": "2026-01-01",
+        }]}
+        jina_response = {"data": {
+            "content": "Published national AI policy evidence. " * 12,
+            "usage": {"tokens": 120},
+        }}
+
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "stage3-retrieval-spend.json")
+            first_ledger = A.V.Ledger(ceiling=500, label="stage3-first")
+            first_ledger.attach(spend_path)
+            with mock.patch.dict(os.environ, {
+                    "EXA_API_KEY": "test-key", "JINA_API_KEY": "test-key",
+            }):
+                with mock.patch.object(
+                        A.V, "_http", side_effect=[exa_response, jina_response]):
+                    first = A._search_sources(
+                        ["Exampleland national AI policy"], [], first_ledger, "ASIS")
+            self.assertEqual(len(first), 1)
+
+            # The product/state write never happened, but both provider outcomes did.
+            resumed_ledger = A.V.Ledger(ceiling=500, label="stage3-resumed")
+            resumed_ledger.attach(spend_path)
+            resumed_ledger.load(spend_path)
+            transport = mock.Mock(side_effect=AssertionError("paid retrieval replay"))
+            with mock.patch.dict(os.environ, {
+                    "EXA_API_KEY": "test-key", "JINA_API_KEY": "test-key",
+            }):
+                with mock.patch.object(A.V, "_http", transport):
+                    resumed = A._search_sources(
+                        ["Exampleland national AI policy"], [], resumed_ledger, "ASIS")
+
+            self.assertEqual(resumed, first)
+            transport.assert_not_called()
+            self.assertEqual(len(resumed_ledger.calls), 2)
     def test_ttl_uploads_are_balanced_bounded_and_marked_untrusted(self):
         long_text = ("START_MARKER" + "a" * 20000 + "MIDDLE_MARKER"
                      + "b" * 20000 + "TAIL_MARKER")

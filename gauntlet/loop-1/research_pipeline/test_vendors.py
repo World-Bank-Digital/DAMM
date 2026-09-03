@@ -4,6 +4,7 @@ import os
 import sys
 import tempfile
 import threading
+import time
 import types
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -40,6 +41,29 @@ class _CreateEndpoint:
 
 
 class VendorJsonCallTest(unittest.TestCase):
+    def setUp(self):
+        patches = (
+            mock.patch.dict(V.PRICES["anthropic"], {
+                "claude-test": {"in_per_mtok": 5.0, "out_per_mtok": 25.0},
+            }),
+            mock.patch.dict(V.PRICES["openai"], {
+                "gpt-test": {"in_per_mtok": 5.0, "out_per_mtok": 25.0},
+            }),
+            mock.patch.dict(V.PRICES["gemini"], {
+                "gemini-test": {"in_per_mtok": 5.0, "out_per_mtok": 25.0},
+            }),
+        )
+        for patcher in patches:
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def test_unknown_reasoning_model_is_rejected_before_transport(self):
+        with self.assertRaisesRegex(V.VendorError, "no explicit tariff"):
+            V.LLM(
+                "anthropic", V.Ledger(ceiling=500, label="test"),
+                model="claude-future-unknown",
+            )
+
     def test_openai_incomplete_response_uses_typed_truncation_and_actual_usage(self):
         usage = SimpleNamespace(
             input_tokens=321,
@@ -121,6 +145,8 @@ class VendorJsonCallTest(unittest.TestCase):
         genai.Client = lambda **_kwargs: SimpleNamespace(models=endpoint)
         genai_types = types.ModuleType("google.genai.types")
         genai_types.GenerateContentConfig = lambda **kwargs: SimpleNamespace(**kwargs)
+        genai_types.HttpRetryOptions = lambda **kwargs: SimpleNamespace(**kwargs)
+        genai_types.HttpOptions = lambda **kwargs: SimpleNamespace(**kwargs)
         google = types.ModuleType("google")
         google.genai = genai
         genai.types = genai_types
@@ -299,6 +325,90 @@ class VendorJsonCallTest(unittest.TestCase):
 
         self.assertEqual(len(ledger.calls), 1)
         self.assertEqual(ledger._reservations, {})
+
+    def test_unsettled_reservation_survives_a_process_crash_at_full_bound(self):
+        # The investment pass cap is $5. A $3 call that may have reached its provider
+        # must remain charged after restart, so another $3 request cannot begin.
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "durable-reservation.json")
+            first = V.Ledger(ceiling=100.0, label="before-crash")
+            first.attach(spend_path)
+            first.reserve(
+                "investment", 3.0,
+                vendor="anthropic", model="claude-test",
+                request_sha256="a" * 64,
+            )
+
+            saved = V.strict_json_load(spend_path)
+            self.assertEqual(len(saved["reservation_journal"]), 1)
+
+            resumed = V.Ledger(ceiling=100.0, label="after-crash")
+            resumed.attach(spend_path)
+            resumed.load(spend_path)
+
+            self.assertEqual(resumed.spent("investment"), 3.0)
+            self.assertEqual(resumed.summary()["unresolved_reservations"], 1)
+            with self.assertRaises(V.BudgetExhausted):
+                resumed.reserve(
+                    "investment", 3.0,
+                    vendor="anthropic", model="claude-test",
+                    request_sha256="b" * 64,
+                )
+
+    def test_settlement_above_reserved_bound_is_recorded_and_fails_closed(self):
+        ledger = V.Ledger(ceiling=100.0, label="test")
+        with mock.patch.dict(V.PRICES, {
+                "jina": {"_default": {"out_per_mtok": 1000.0}},
+        }, clear=False):
+            reservation = ledger.reserve(
+                "research", 0.1, vendor="jina",
+                request_sha256="c" * 64,
+            )
+            with self.assertRaisesRegex(
+                    V.VendorUsageExceededReservation, "reserved upper bound"):
+                ledger.settle(
+                    reservation, "jina", "research", out_tok=500,
+                    detail="provider exceeded advertised cap",
+                )
+
+        self.assertEqual(ledger.calls[0]["cost"], 0.5)
+        self.assertEqual(ledger._reservations, {})
+
+    def test_usage_above_reservation_is_durable_terminal_after_restart(self):
+        request_sha256 = "d" * 64
+        actual_cost = 0.1000004
+        response = {"result": {"citations": [], "lead_prose": "paid result"}}
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "usage-exceeded.json")
+            ledger = V.Ledger(ceiling=100.0, label="before-restart")
+            ledger.attach(spend_path)
+            reservation = ledger.reserve(
+                "research", 0.1, vendor="perplexity", model="sonar-pro",
+                request_sha256=request_sha256,
+            )
+            with self.assertRaises(V.VendorUsageExceededReservation):
+                ledger.settle(
+                    reservation, "perplexity", "research", model="sonar-pro",
+                    structured_result=V._retrieval_result_journal(
+                        request_sha256, response),
+                    billed_cost=actual_cost,
+                )
+
+            self.assertEqual(
+                ledger.calls[0]["structured_result"]["outcome"],
+                V.VendorUsageExceededReservation.code,
+            )
+
+            resumed = V.Ledger(ceiling=100.0, label="after-restart")
+            resumed.attach(spend_path)
+            resumed.load(spend_path)
+            with self.assertRaises(V.VendorUsageExceededReservation):
+                resumed.claim_retrieval_result(
+                    "perplexity", "research", request_sha256,
+                    model="sonar-pro",
+                )
+
+            self.assertEqual(resumed.spent("research"), actual_cost)
 
     def test_legacy_pass_aliases_share_one_reservation_pool(self):
         ledger = V.Ledger(ceiling=100.0, label="test")
@@ -521,6 +631,8 @@ class VendorJsonCallTest(unittest.TestCase):
         genai.Client = lambda **_kwargs: SimpleNamespace(models=endpoint)
         genai_types = types.ModuleType("google.genai.types")
         genai_types.GenerateContentConfig = lambda **kwargs: SimpleNamespace(**kwargs)
+        genai_types.HttpRetryOptions = lambda **kwargs: SimpleNamespace(**kwargs)
+        genai_types.HttpOptions = lambda **kwargs: SimpleNamespace(**kwargs)
         google = types.ModuleType("google")
         google.genai = genai
         genai.types = genai_types
@@ -560,6 +672,8 @@ class VendorJsonCallTest(unittest.TestCase):
         genai.Client = lambda **_kwargs: SimpleNamespace(models=endpoint)
         genai_types = types.ModuleType("google.genai.types")
         genai_types.GenerateContentConfig = lambda **kwargs: SimpleNamespace(**kwargs)
+        genai_types.HttpRetryOptions = lambda **kwargs: SimpleNamespace(**kwargs)
+        genai_types.HttpOptions = lambda **kwargs: SimpleNamespace(**kwargs)
         google = types.ModuleType("google")
         google.genai = genai
         genai.types = genai_types
@@ -750,6 +864,664 @@ class VendorJsonCallTest(unittest.TestCase):
             "TRUNCATED investment options and CBA; stop_reason=max_tokens; "
             "thinking_tokens=7000",
         )
+
+    def test_exa_search_reserves_the_next_search_before_transport(self):
+        per_search = 1.0
+        ledger = V.Ledger(ceiling=(per_search * 1.5) / 0.35, label="test")
+        transport = mock.Mock(return_value={"results": []})
+
+        with mock.patch.dict(
+                V.PRICES, {"exa": {"per_search": per_search}}, clear=False):
+            with mock.patch.dict(os.environ, {"EXA_API_KEY": "test-key"}):
+                with mock.patch.object(V, "_http", transport):
+                    V.exa_search("first", ledger, "research")
+                    with self.assertRaises(V.BudgetExhausted):
+                        V.exa_search("must not leave", ledger, "research")
+
+        self.assertEqual(transport.call_count, 1)
+        self.assertEqual(len(ledger.calls), 1)
+
+    def test_exa_ambiguous_transport_is_not_retried_and_consumes_upper_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "exa-ambiguous.json")
+            ledger = V.Ledger(ceiling=1.0, label="test")
+            ledger.attach(spend_path)
+            transport = mock.Mock(side_effect=TimeoutError("response lost"))
+
+            with mock.patch.dict(os.environ, {"EXA_API_KEY": "test-key"}):
+                with mock.patch.object(V.urllib.request, "urlopen", transport):
+                    with mock.patch.object(V.time, "sleep"):
+                        with self.assertRaisesRegex(
+                                V.VendorError, "outcome is ambiguous"):
+                            V.exa_search("ambiguous", ledger, "research")
+
+            self.assertEqual(transport.call_count, 1)
+            self.assertEqual(len(ledger.calls), 1)
+            self.assertEqual(ledger.calls[0]["cost"], 0.007)
+            self.assertIn("AMBIGUOUS-UPPER-BOUND", ledger.calls[0]["detail"])
+
+            resumed = V.Ledger(ceiling=1.0, label="resumed")
+            resumed.attach(spend_path)
+            resumed.load(spend_path)
+            with mock.patch.object(
+                    V, "_http",
+                    side_effect=AssertionError("ambiguous request was reissued")) as http:
+                with self.assertRaisesRegex(V.VendorError, "ambiguous"):
+                    V.exa_search("ambiguous", resumed, "research")
+            http.assert_not_called()
+
+    def test_exa_malformed_success_is_charged_but_not_reported_as_no_evidence(self):
+        ledger = V.Ledger(ceiling=1.0, label="test")
+        with mock.patch.dict(os.environ, {"EXA_API_KEY": "test-key"}):
+            with mock.patch.object(V, "_http", return_value="not JSON"):
+                with self.assertRaisesRegex(
+                        V.VendorError, "malformed Exa response"):
+                    V.exa_search("malformed", ledger, "research")
+
+        self.assertEqual(ledger.calls[0]["cost"], 0.007)
+        self.assertEqual(
+            ledger.calls[0]["structured_result"]["outcome"],
+            "retrieval_output_malformed",
+        )
+
+    def test_jina_fetch_reserves_token_budget_and_records_exact_usage(self):
+        token_cap = 500
+        out_per_mtok = 1000.0
+        worst_case = token_cap / 1e6 * out_per_mtok
+        ledger = V.Ledger(ceiling=(worst_case * 1.5) / 0.35, label="test")
+        transport = mock.Mock(return_value={
+            "data": {
+                "content": "verified page",
+                "usage": {"tokens": token_cap},
+            },
+        })
+
+        with mock.patch.dict(V.PRICES, {
+                "jina": {"_default": {"out_per_mtok": out_per_mtok}},
+        }, clear=False):
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+                with mock.patch.object(V, "_http", transport):
+                    self.assertEqual(
+                        V.jina_fetch(
+                            "https://example.test/page", ledger, "research",
+                            max_chars=token_cap,
+                        ),
+                        "verified page",
+                    )
+                    with self.assertRaises(V.BudgetExhausted):
+                        V.jina_fetch(
+                            "https://example.test/other", ledger, "research",
+                            max_chars=token_cap,
+                        )
+
+        self.assertEqual(transport.call_count, 1)
+        headers = transport.call_args.kwargs["headers"]
+        self.assertEqual(headers["X-Token-Budget"], str(token_cap))
+        self.assertEqual(headers["X-Max-Tokens"], str(token_cap))
+        self.assertEqual(ledger.calls[0]["out_tok"], token_cap)
+
+    def test_same_jina_url_in_two_scan_lanes_does_not_cross_claim(self):
+        response = {
+            "data": {"content": "verified page", "usage": {"tokens": 10}},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "shared-scan-spend.json")
+            country = V.Ledger(ceiling=500, label="country")
+            country.attach(spend_path)
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+                with mock.patch.object(V, "_http", return_value=response):
+                    V.jina_fetch(
+                        "https://example.test/shared", country,
+                        "country_research", max_chars=500,
+                    )
+
+            international = V.Ledger(ceiling=500, label="international")
+            international.attach(spend_path)
+            international.load(spend_path)
+            transport = mock.Mock(return_value=response)
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+                with mock.patch.object(V, "_http", transport):
+                    self.assertEqual(
+                        V.jina_fetch(
+                            "https://example.test/shared", international,
+                            "international_lessons", max_chars=500,
+                        ),
+                        "verified page",
+                    )
+
+            self.assertEqual(transport.call_count, 1)
+            self.assertEqual(len(international.calls), 2)
+
+    def test_concurrent_identical_jina_fetches_share_one_paid_result(self):
+        workers = 4
+        start = threading.Barrier(workers)
+        response = {
+            "data": {"content": "shared page", "usage": {"tokens": 10}},
+        }
+
+        def transport(*_args, **_kwargs):
+            # Keep the first request in flight long enough for all peers to exercise
+            # the identical-request concurrency path.
+            time.sleep(0.05)
+            return response
+
+        ledger = V.Ledger(ceiling=500, label="test")
+
+        def fetch():
+            start.wait(timeout=2)
+            return V.jina_fetch(
+                "https://example.test/shared", ledger, "research",
+                max_chars=500,
+            )
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(V, "_http", side_effect=transport) as http:
+                with ThreadPoolExecutor(max_workers=workers) as pool:
+                    results = list(pool.map(lambda _index: fetch(), range(workers)))
+
+        self.assertEqual(results, ["shared page"] * workers)
+        self.assertEqual(http.call_count, 1)
+        self.assertEqual(len(ledger.calls), 1)
+
+    def test_jina_failed_request_settles_zero_and_releases_reservation(self):
+        ledger = V.Ledger(ceiling=1.0, label="test")
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(
+                    V, "_http",
+                    side_effect=V.VendorHTTPRejected("provider rejected")):
+                with self.assertRaisesRegex(
+                        V.VendorHTTPRejected, "provider rejected"):
+                    V.jina_fetch(
+                        "https://example.test/failure", ledger, "research",
+                        max_chars=500,
+                    )
+
+        self.assertEqual(len(ledger.calls), 1)
+        self.assertEqual(ledger.calls[0]["out_tok"], 0)
+        self.assertEqual(ledger.calls[0]["cost"], 0)
+        self.assertEqual(ledger._reservations, {})
+
+    def test_jina_ambiguous_transport_consumes_bound_without_a_retry(self):
+        ledger = V.Ledger(ceiling=1.0, label="test")
+        transport = mock.Mock(side_effect=TimeoutError("response lost"))
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(V.urllib.request, "urlopen", transport):
+                with mock.patch.object(V.time, "sleep"):
+                    with self.assertRaisesRegex(
+                            V.VendorError, "outcome is ambiguous"):
+                        V.jina_fetch(
+                            "https://example.test/ambiguous", ledger, "research",
+                            max_chars=500,
+                        )
+
+        self.assertEqual(transport.call_count, 1)
+        self.assertEqual(ledger.calls[0]["out_tok"], 500)
+        self.assertIn("AMBIGUOUS-UPPER-BOUND", ledger.calls[0]["detail"])
+
+    def test_jina_unmetered_success_consumes_the_hard_upper_bound(self):
+        token_cap = 500
+        ledger = V.Ledger(ceiling=1.0, label="test")
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(V, "_http", return_value={
+                    "data": {"content": "unmetered page"},
+            }):
+                with self.assertRaisesRegex(
+                        V.VendorError, "billed-token usage"):
+                    V.jina_fetch(
+                        "https://example.test/unmetered", ledger, "research",
+                        max_chars=token_cap,
+                    )
+
+        self.assertEqual(ledger.calls[0]["out_tok"], token_cap)
+        self.assertIn("UNMETERED-UPPER-BOUND", ledger.calls[0]["detail"])
+        self.assertEqual(ledger._reservations, {})
+
+    def test_perplexity_reserves_capped_request_before_transport(self):
+        per_request = 1.0
+        ledger = V.Ledger(ceiling=(per_request * 1.5) / 0.35, label="test")
+        transport = mock.Mock(return_value={
+            "usage": {
+                "prompt_tokens": 0, "completion_tokens": 0,
+                "cost": {"total_cost": per_request},
+            },
+            "choices": [{"message": {"content": "lead"}}],
+            "citations": [],
+        })
+
+        with mock.patch.dict(V.PRICES, {
+                "perplexity": {
+                    "sonar-pro": {
+                        "in_per_mtok": 0.0,
+                        "out_per_mtok": 0.0,
+                        "per_request": per_request,
+                    },
+                },
+        }, clear=False):
+            with mock.patch.dict(os.environ, {"PERPLEXITY_API_KEY": "test-key"}):
+                with mock.patch.object(V, "_http", transport):
+                    with mock.patch.object(V, "_PPX_MIN_GAP", 0):
+                        V.perplexity_citations("first", ledger, "research")
+                        with self.assertRaises(V.BudgetExhausted):
+                            V.perplexity_citations(
+                                "must not leave", ledger, "research")
+
+        self.assertEqual(transport.call_count, 1)
+        payload = transport.call_args.args[1]
+        self.assertEqual(payload["max_tokens"], V.PERPLEXITY_MAX_TOKENS)
+        self.assertEqual(len(ledger.calls), 1)
+
+    def test_perplexity_reconciles_the_provider_reported_total_cost(self):
+        provider_cost = 0.009321
+        ledger = V.Ledger(ceiling=100.0, label="test")
+        response = {
+            "usage": {
+                "prompt_tokens": 5, "completion_tokens": 7,
+                "cost": {"total_cost": provider_cost},
+            },
+            "choices": [{"message": {"content": "lead"}}],
+            "citations": [],
+        }
+        with mock.patch.dict(os.environ, {"PERPLEXITY_API_KEY": "test-key"}):
+            with mock.patch.object(V, "_http", return_value=response):
+                with mock.patch.object(V, "_PPX_MIN_GAP", 0):
+                    V.perplexity_citations("cost reconciliation", ledger, "research")
+
+        self.assertEqual(ledger.calls[0]["cost"], provider_cost)
+        self.assertEqual(
+            ledger.calls[0]["provider_reported_cost"], provider_cost)
+        self.assertIn("derived_cost", ledger.calls[0])
+
+    def test_perplexity_missing_provider_cost_consumes_the_hard_bound(self):
+        token_cap = 500
+        ledger = V.Ledger(ceiling=100.0, label="test")
+        response = {
+            "usage": {"prompt_tokens": 5, "completion_tokens": 7},
+            "choices": [{"message": {"content": "lead"}}],
+            "citations": [],
+        }
+        with mock.patch.dict(os.environ, {"PERPLEXITY_API_KEY": "test-key"}):
+            with mock.patch.object(V, "_http", return_value=response):
+                with mock.patch.object(V, "_PPX_MIN_GAP", 0):
+                    with self.assertRaisesRegex(
+                            V.VendorError, "provider-reported total cost"):
+                        V.perplexity_citations(
+                            "missing cost", ledger, "research",
+                            max_tokens=token_cap,
+                        )
+
+        self.assertEqual(ledger.calls[0]["out_tok"], token_cap)
+        self.assertIn("UNMETERED-UPPER-BOUND", ledger.calls[0]["detail"])
+
+    def test_perplexity_unmetered_success_consumes_the_hard_upper_bound(self):
+        token_cap = 500
+        ledger = V.Ledger(ceiling=100.0, label="test")
+        transport = mock.Mock(return_value={
+            "choices": [{"message": {"content": "unmetered lead"}}],
+            "citations": ["https://example.test/source"],
+        })
+
+        with mock.patch.dict(os.environ, {"PERPLEXITY_API_KEY": "test-key"}):
+            with mock.patch.object(V, "_http", transport):
+                with mock.patch.object(V, "_PPX_MIN_GAP", 0):
+                    with self.assertRaisesRegex(
+                            V.VendorError, "token usage"):
+                        V.perplexity_citations(
+                            "unmetered", ledger, "research", max_tokens=token_cap,
+                        )
+
+        self.assertEqual(ledger.calls[0]["out_tok"], token_cap)
+        self.assertIn("UNMETERED-UPPER-BOUND", ledger.calls[0]["detail"])
+        self.assertEqual(ledger._reservations, {})
+
+    def test_reasoning_transport_ambiguity_is_durable_and_not_reissued(self):
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "llm-ambiguous.json")
+            ledger = V.Ledger(ceiling=500, label="test")
+            ledger.attach(spend_path)
+            llm = V.LLM(
+                "anthropic", ledger, model="claude-test",
+            ).enable_durable_outcomes()
+            llm._call_anthropic = mock.Mock(
+                side_effect=TimeoutError("response lost"))
+
+            with self.assertRaisesRegex(V.VendorError, "outcome is ambiguous"):
+                llm.json_call(
+                    "system", "user", {"type": "object"}, "foresight",
+                    max_tokens=100, detail="ambiguous unit",
+                )
+
+            self.assertEqual(len(ledger.calls), 1)
+            self.assertGreater(ledger.calls[0]["cost"], 0)
+            self.assertEqual(
+                ledger.calls[0]["structured_result"]["outcome"],
+                "transport_outcome_ambiguous",
+            )
+
+            resumed_ledger = V.Ledger(ceiling=500, label="resumed")
+            resumed_ledger.attach(spend_path)
+            resumed_ledger.load(spend_path)
+            resumed = V.LLM(
+                "anthropic", resumed_ledger, model="claude-test",
+            ).enable_durable_outcomes()
+            transport = mock.Mock(
+                side_effect=AssertionError("ambiguous call was reissued"))
+            resumed._call_anthropic = transport
+
+            with self.assertRaisesRegex(V.VendorError, "outcome is ambiguous"):
+                resumed.json_call(
+                    "system", "user", {"type": "object"}, "foresight",
+                    max_tokens=100, detail="ambiguous unit",
+                )
+            transport.assert_not_called()
+
+    def test_malformed_usage_cannot_release_headroom_after_a_paid_response(self):
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "malformed-usage.json")
+            ledger = V.Ledger(ceiling=500, label="test")
+            ledger.attach(spend_path)
+            llm = V.LLM("anthropic", ledger, model="claude-test")
+            llm._call_anthropic = mock.Mock(
+                return_value=({"value": "response"}, "not-a-token-count", 1))
+
+            with self.assertRaises(TypeError):
+                llm.json_call_once(
+                    "system", "user", {"type": "object"}, "foresight",
+                    max_tokens=100, detail="malformed usage",
+                )
+
+            self.assertEqual(ledger.summary()["unresolved_reservations"], 1)
+            self.assertGreater(ledger.spent("foresight"), 0)
+
+            resumed_ledger = V.Ledger(ceiling=500, label="resumed")
+            resumed_ledger.attach(spend_path)
+            resumed_ledger.load(spend_path)
+            resumed = V.LLM("anthropic", resumed_ledger, model="claude-test")
+            transport = mock.Mock(
+                side_effect=AssertionError("unresolved request was reissued"))
+            resumed._call_anthropic = transport
+            with self.assertRaises(V.VendorRequestPending):
+                resumed.json_call_once(
+                    "system", "user", {"type": "object"}, "foresight",
+                    max_tokens=100, detail="malformed usage",
+                )
+            transport.assert_not_called()
+
+    def test_reasoning_success_without_authoritative_usage_charges_the_bound(self):
+        schema = {"type": "object"}
+
+        anthropic_response = SimpleNamespace(
+            id="a", content=[SimpleNamespace(type="text", text="{}")],
+            usage=SimpleNamespace(output_tokens=1),
+            stop_reason="end_turn", stop_details=None,
+        )
+        anthropic = SimpleNamespace(
+            Anthropic=lambda **_kwargs: SimpleNamespace(
+                messages=_AnthropicMessages(anthropic_response)),
+            transform_schema=lambda value: value,
+        )
+
+        openai_response = SimpleNamespace(
+            id="o", status="completed", incomplete_details=None,
+            output_text="{}", output=[], error=None,
+            usage=SimpleNamespace(output_tokens=1), max_output_tokens=100,
+        )
+        openai = SimpleNamespace(
+            OpenAI=lambda **_kwargs: SimpleNamespace(
+                responses=_CreateEndpoint(openai_response)))
+
+        gemini_response = SimpleNamespace(
+            response_id="g", text="{}",
+            usage_metadata=SimpleNamespace(
+                candidates_token_count=1, thoughts_token_count=0),
+            candidates=[SimpleNamespace(
+                finish_reason=SimpleNamespace(name="STOP"))],
+            prompt_feedback=None,
+        )
+        genai = types.ModuleType("google.genai")
+        genai.Client = lambda **_kwargs: SimpleNamespace(
+            models=_CreateEndpoint(gemini_response))
+        genai_types = types.ModuleType("google.genai.types")
+        genai_types.GenerateContentConfig = (
+            lambda **kwargs: SimpleNamespace(**kwargs))
+        genai_types.HttpRetryOptions = (
+            lambda **kwargs: SimpleNamespace(**kwargs))
+        genai_types.HttpOptions = lambda **kwargs: SimpleNamespace(**kwargs)
+        google = types.ModuleType("google")
+        google.genai = genai
+        genai.types = genai_types
+
+        cases = (
+            ("anthropic", "claude-test", {"anthropic": anthropic},
+             {"ANTHROPIC_API_KEY": "test-key"}),
+            ("openai", "gpt-test", {"openai": openai},
+             {"OPENAI_API_KEY": "test-key"}),
+            ("gemini", "gemini-test", {
+                "google": google, "google.genai": genai,
+                "google.genai.types": genai_types,
+            }, {"GEMINI_API_KEY": "test-key"}),
+        )
+        for vendor, model, modules, environment in cases:
+            with self.subTest(vendor=vendor):
+                ledger = V.Ledger(ceiling=500, label=vendor)
+                with mock.patch.dict(sys.modules, modules):
+                    with mock.patch.dict(os.environ, environment):
+                        llm = V.LLM(
+                            vendor, ledger, model=model).enable_durable_outcomes()
+                        with self.assertRaisesRegex(
+                                V.VendorTransportAmbiguous,
+                                "outcome is ambiguous"):
+                            llm.json_call_once(
+                                "system", "user", schema, "foresight",
+                                max_tokens=100, detail="missing usage",
+                            )
+                self.assertGreater(ledger.calls[0]["cost"], 0)
+                self.assertEqual(
+                    ledger.calls[0]["structured_result"]["outcome"],
+                    V.VendorTransportAmbiguous.code,
+                )
+
+    def test_reasoning_sdk_clients_explicitly_disable_hidden_retries(self):
+        anthropic_kwargs = {}
+        openai_kwargs = {}
+        gemini_kwargs = {}
+
+        anthropic_response = SimpleNamespace(
+            id="a", content=[SimpleNamespace(type="text", text="{}")],
+            usage=SimpleNamespace(input_tokens=1, output_tokens=1),
+            stop_reason="end_turn", stop_details=None,
+        )
+        anthropic_client = SimpleNamespace(
+            messages=_AnthropicMessages(anthropic_response))
+
+        def anthropic_factory(**kwargs):
+            anthropic_kwargs.update(kwargs)
+            return anthropic_client
+
+        openai_response = SimpleNamespace(
+            id="o", status="completed", incomplete_details=None,
+            output_text="{}", output=[], error=None,
+            usage=SimpleNamespace(input_tokens=1, output_tokens=1),
+            max_output_tokens=10,
+        )
+        openai_endpoint = _CreateEndpoint(openai_response)
+
+        def openai_factory(**kwargs):
+            openai_kwargs.update(kwargs)
+            return SimpleNamespace(responses=openai_endpoint)
+
+        gemini_response = SimpleNamespace(
+            response_id="g", text="{}",
+            usage_metadata=SimpleNamespace(
+                prompt_token_count=1, candidates_token_count=1,
+                thoughts_token_count=0),
+            candidates=[SimpleNamespace(
+                finish_reason=SimpleNamespace(name="STOP"))],
+            prompt_feedback=None,
+        )
+        gemini_endpoint = _CreateEndpoint(gemini_response)
+
+        def gemini_factory(**kwargs):
+            gemini_kwargs.update(kwargs)
+            return SimpleNamespace(models=gemini_endpoint)
+
+        anthropic = SimpleNamespace(
+            Anthropic=anthropic_factory, transform_schema=lambda value: value)
+        openai = SimpleNamespace(OpenAI=openai_factory)
+        genai = types.ModuleType("google.genai")
+        genai.Client = gemini_factory
+        genai_types = types.ModuleType("google.genai.types")
+        genai_types.GenerateContentConfig = (
+            lambda **kwargs: SimpleNamespace(**kwargs))
+        genai_types.HttpRetryOptions = (
+            lambda **kwargs: SimpleNamespace(**kwargs))
+        genai_types.HttpOptions = lambda **kwargs: SimpleNamespace(**kwargs)
+        google = types.ModuleType("google")
+        google.genai = genai
+        genai.types = genai_types
+
+        with mock.patch.dict(sys.modules, {
+                "anthropic": anthropic,
+                "openai": openai,
+                "google": google,
+                "google.genai": genai,
+                "google.genai.types": genai_types,
+        }):
+            with mock.patch.dict(os.environ, {
+                    "ANTHROPIC_API_KEY": "test-key",
+                    "OPENAI_API_KEY": "test-key",
+                    "GEMINI_API_KEY": "test-key",
+            }):
+                V.LLM("anthropic", V.Ledger(), model="claude-test")._call_anthropic(
+                    "system", "user", {"type": "object"}, 10)
+                V.LLM("openai", V.Ledger(), model="gpt-test")._call_openai(
+                    "system", "user", {"type": "object"}, 10)
+                V.LLM("gemini", V.Ledger(), model="gemini-test")._call_gemini(
+                    "system", "user", {"type": "object"}, 10)
+
+        self.assertEqual(anthropic_kwargs["max_retries"], 0)
+        self.assertEqual(openai_kwargs["max_retries"], 0)
+        self.assertEqual(
+            gemini_kwargs["http_options"].retry_options.attempts, 1)
+
+    def test_current_model_tariffs_select_the_documented_context_tier(self):
+        cases = (
+            ("anthropic", "claude-sonnet-5", 1, (2.0, 10.0)),
+            ("openai", "gpt-5.6-terra", 272000, (2.5, 12.0)),
+            ("openai", "gpt-5.6-terra", 272001, (5.0, 18.0)),
+            ("openai", "gpt-5.6-luna", 272000, (0.25, 1.2)),
+            ("openai", "gpt-5.6-luna", 272001, (0.5, 1.8)),
+            ("openai", "gpt-5.6-sol", 272000, (5.0, 20.0)),
+            ("openai", "gpt-5.6-sol", 272001, (10.0, 30.0)),
+            ("gemini", "gemini-3.1-pro-preview", 200000, (2.0, 12.0)),
+            ("gemini", "gemini-3.1-pro-preview", 200001, (4.0, 18.0)),
+            ("gemini", "gemini-2.5-pro", 200000, (1.25, 10.0)),
+            ("gemini", "gemini-2.5-pro", 200001, (2.5, 15.0)),
+        )
+
+        for vendor, model, input_tokens, expected in cases:
+            with self.subTest(vendor=vendor, model=model, input_tokens=input_tokens):
+                price = V.Ledger._price(vendor, model, in_tok=input_tokens)
+                self.assertEqual(
+                    (price["in_per_mtok"], price["out_per_mtok"]), expected,
+                )
+
+        self.assertNotIn("gemini-pro-latest", V._MODEL_PREFS["gemini"])
+
+    def test_legacy_json_call_claims_a_matching_durable_result_before_transport(self):
+        response = {"value": "already paid"}
+        first_ledger = V.Ledger(ceiling=500, label="first")
+        first = V.LLM(
+            "anthropic", first_ledger, model="claude-opus-5",
+        ).enable_durable_outcomes()
+        first._call_anthropic = mock.Mock(return_value=(response, 100, 20))
+        self.assertEqual(first.json_call(
+            "system", "user", {"type": "object"}, "foresight",
+            max_tokens=100, detail="crash gap",
+        ), response)
+
+        resumed_ledger = V.Ledger(ceiling=500, label="resumed")
+        resumed_ledger.restore(first_ledger.snapshot())
+        resumed = V.LLM(
+            "anthropic", resumed_ledger, model="claude-opus-5",
+        ).enable_durable_outcomes()
+        transport = mock.Mock(side_effect=AssertionError("transport must not run"))
+        resumed._call_anthropic = transport
+
+        self.assertEqual(resumed.json_call(
+            "system", "user", {"type": "object"}, "foresight",
+            max_tokens=100, detail="crash gap",
+        ), response)
+        transport.assert_not_called()
+        self.assertEqual(len(resumed_ledger.calls), 1)
+
+    def test_legacy_json_call_claims_truncation_then_larger_durable_result(self):
+        response = {"value": "paid on bounded retry"}
+        first_ledger = V.Ledger(ceiling=500, label="first")
+        first = V.LLM(
+            "anthropic", first_ledger, model="claude-opus-5",
+        ).enable_durable_outcomes()
+        first._call_anthropic = mock.Mock(side_effect=[
+            V._ProviderOutputTruncated(
+                stop_reason="max_tokens", request_id="first", max_tokens=100,
+                input_tokens=80, output_tokens=100, thinking_tokens=20,
+                partial_output='{"value":',
+            ),
+            (response, 90, 40),
+        ])
+        self.assertEqual(first.json_call(
+            "system", "user", {"type": "object"}, "foresight",
+            max_tokens=100, detail="bounded retry",
+        ), response)
+        self.assertEqual(len(first_ledger.calls), 2)
+
+        resumed_ledger = V.Ledger(ceiling=500, label="resumed")
+        resumed_ledger.restore(first_ledger.snapshot())
+        resumed = V.LLM(
+            "anthropic", resumed_ledger, model="claude-opus-5",
+        ).enable_durable_outcomes()
+        transport = mock.Mock(side_effect=AssertionError("transport must not run"))
+        resumed._call_anthropic = transport
+
+        self.assertEqual(resumed.json_call(
+            "system", "user", {"type": "object"}, "foresight",
+            max_tokens=100, detail="bounded retry",
+        ), response)
+        transport.assert_not_called()
+        self.assertEqual(len(resumed_ledger.calls), 2)
+
+    def test_legacy_json_call_replays_a_durable_rejection_without_transport(self):
+        first_ledger = V.Ledger(ceiling=500, label="first")
+        first = V.LLM(
+            "anthropic", first_ledger, model="claude-opus-5",
+        ).enable_durable_outcomes()
+        first._call_anthropic = mock.Mock(side_effect=V._ProviderOutputRejected(
+            stop_reason="refusal", request_id="first", max_tokens=100,
+            input_tokens=80, output_tokens=0, thinking_tokens=0,
+            partial_output="",
+        ))
+        with self.assertRaises(V.VendorOutputRejected):
+            first.json_call(
+                "system", "user", {"type": "object"}, "foresight",
+                max_tokens=100, detail="rejected",
+            )
+
+        resumed_ledger = V.Ledger(ceiling=500, label="resumed")
+        resumed_ledger.restore(first_ledger.snapshot())
+        resumed = V.LLM(
+            "anthropic", resumed_ledger, model="claude-opus-5",
+        ).enable_durable_outcomes()
+        transport = mock.Mock(side_effect=AssertionError("transport must not run"))
+        resumed._call_anthropic = transport
+        with self.assertRaises(V.VendorOutputRejected):
+            resumed.json_call(
+                "system", "user", {"type": "object"}, "foresight",
+                max_tokens=100, detail="rejected",
+            )
+        transport.assert_not_called()
+        self.assertEqual(len(resumed_ledger.calls), 1)
 
 
 if __name__ == "__main__":

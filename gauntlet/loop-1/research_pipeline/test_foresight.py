@@ -33,6 +33,28 @@ def m(**kw):
     return base
 
 
+def scenario(name):
+    return {
+        "name": name,
+        "narrative": f"{name} develops from bounded uncertainty.",
+        "drivers": [f"{name} driver"],
+        "what_would_make_it_happen": f"Conditions for {name}",
+        "implication_for_the_sector": f"Sector implication of {name}",
+    }
+
+
+def preferred(**overrides):
+    value = {
+        "name": "Chosen future",
+        "narrative": "A deliberate future direction.",
+        "drawn_from_scenarios": ["Scenario A", "Scenario B"],
+        "what_is_being_chosen": "An inclusive delivery model.",
+        "who_would_have_to_agree": "Cabinet and producer organizations.",
+    }
+    value.update(overrides)
+    return value
+
+
 def section(t):
     print(f"\n## {t}")
 
@@ -173,6 +195,65 @@ check("the three declared steps are used", len(F.FORESIGHT["steps"]), "3")
 check("the method names backcasting", F.FORESIGHT["method"], "backcasting")
 check("the candidate pattern comes from the model",
       F.CANDIDATE_PATTERN.pattern, F.CANDIDATE["id_pattern"])
+
+
+section("A completed foresight stage has a complete decision product")
+
+_scenario_array_schema = F.SCENARIO_SCHEMA["properties"]["scenarios"]
+_milestone_array_schema = F.MILESTONE_SCHEMA["properties"]["milestones"]
+check("the provider contract requires exactly three scenarios",
+      [_scenario_array_schema.get("minItems"), _scenario_array_schema.get("maxItems")],
+      f"[{F.N_SCENARIOS}, {F.N_SCENARIOS}]")
+check("the provider contract requires at least one backcast milestone",
+      _milestone_array_schema.get("minItems"), "1")
+
+_completion_errors = getattr(
+    F, "foresight_completion_errors",
+    lambda _state: ["foresight completion validator is missing"],
+)
+_valid_scenarios = [scenario("Scenario A"), scenario("Scenario B"),
+                    scenario("Scenario C")]
+check("a valid three-scenario product with a bound milestone is complete",
+      _completion_errors({"scenarios": _valid_scenarios,
+                          "preferred_future": preferred(),
+                          "milestones": [m()]}), "[]")
+check("an empty scenario result cannot complete Stage 5",
+      _completion_errors({"scenarios": [], "preferred_future": preferred(),
+                          "milestones": [m()]}),
+      "exactly 3 scenarios")
+check("a contract gate that refuses every milestone cannot complete Stage 5",
+      _completion_errors({"scenarios": _valid_scenarios,
+                          "preferred_future": preferred(), "milestones": []}),
+      "at least one bound milestone")
+check("blank scenario prose cannot complete Stage 5",
+      _completion_errors({
+          "scenarios": [dict(scenario("Scenario A"), narrative="  "),
+                        scenario("Scenario B"), scenario("Scenario C")],
+          "preferred_future": preferred(), "milestones": [m()],
+      }), "scenario 1 narrative is blank")
+check("scenario identities must be distinct",
+      _completion_errors({
+          "scenarios": [scenario("Same"), scenario(" same "), scenario("Other")],
+          "preferred_future": preferred(drawn_from_scenarios=["Same"]),
+          "milestones": [m()],
+      }), "scenario names must be distinct")
+check("every scenario needs substantive drivers",
+      _completion_errors({
+          "scenarios": [dict(scenario("Scenario A"), drivers=[]),
+                        scenario("Scenario B"), scenario("Scenario C")],
+          "preferred_future": preferred(), "milestones": [m()],
+      }), "scenario 1 requires at least one nonblank driver")
+check("a blank preferred future cannot complete Stage 5",
+      _completion_errors({
+          "scenarios": _valid_scenarios,
+          "preferred_future": preferred(name=""), "milestones": [m()],
+      }), "preferred future name is blank")
+check("preferred-future references must name generated scenarios",
+      _completion_errors({
+          "scenarios": _valid_scenarios,
+          "preferred_future": preferred(drawn_from_scenarios=["Invented scenario"]),
+          "milestones": [m()],
+      }), "unknown scenario")
 
 
 section("The standalone report states what it is")

@@ -46,6 +46,16 @@ class SnapshotLedger:
 
 
 class ScanStageTest(unittest.TestCase):
+    def test_upload_synthesis_llm_enables_durable_paid_outcomes(self):
+        llm = mock.Mock()
+        with mock.patch.object(S.V, "LLM", return_value=llm) as constructor:
+            result = S._durable_llm("anthropic", object(), "claude-test")
+
+        constructor.assert_called_once_with(
+            "anthropic", mock.ANY, model="claude-test")
+        llm.enable_durable_outcomes.assert_called_once_with()
+        self.assertIs(result, llm)
+
     def test_all_search_transport_failures_are_retryable_errors(self):
         messages = []
         with mock.patch.object(
@@ -727,17 +737,29 @@ class ScanStageTest(unittest.TestCase):
         )
         ledger.record("exa", "country_research", searches=searches_to_cap)
         with self.assertRaises(S.V.BudgetExhausted):
-            ledger.check("country_research")
+            ledger.check(
+                "country_research",
+                headroom=S.V.PRICES["exa"]["per_search"],
+            )
         # Exhausting Stage 2 does not borrow or consume Stage 4's protected share.
         ledger.check("international_lessons")
         ledger.record("exa", "international_lessons", searches=searches_to_cap)
         with self.assertRaises(S.V.BudgetExhausted):
-            ledger.check("international_lessons")
-        self.assertEqual(ledger.spent("country_research"), 7.5)
-        self.assertEqual(ledger.spent("international_lessons"), 7.5)
-        self.assertEqual(ledger.spent(), 15.0)
+            ledger.check(
+                "international_lessons",
+                headroom=S.V.PRICES["exa"]["per_search"],
+            )
+        spent = round(searches_to_cap * S.V.PRICES["exa"]["per_search"], 6)
+        self.assertEqual(ledger.spent("country_research"), spent)
+        self.assertEqual(ledger.spent("international_lessons"), spent)
+        self.assertEqual(ledger.spent(), round(spent * 2, 6))
 
     def setUp(self):
+        self.price_patcher = mock.patch.dict(S.SC.V.PRICES["anthropic"], {
+            "test-model": {"in_per_mtok": 5.0, "out_per_mtok": 25.0},
+        })
+        self.price_patcher.start()
+        self.addCleanup(self.price_patcher.stop)
         self.scans = {
             "country": "Exampleland",
             "iso3": "EXP",

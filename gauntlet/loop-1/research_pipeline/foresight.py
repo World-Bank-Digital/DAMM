@@ -188,6 +188,77 @@ def milestone_contract_gate(milestones, levels):
     return kept, [*refused, *registry_refused]
 
 
+def foresight_completion_errors(state):
+    """Refuse an incomplete decision product before Stage 5 can publish."""
+    errors = []
+    scenarios = state.get("scenarios")
+    preferred = state.get("preferred_future")
+    milestones = state.get("milestones")
+    if not isinstance(scenarios, list) or len(scenarios) != N_SCENARIOS:
+        errors.append(f"foresight requires exactly {N_SCENARIOS} scenarios")
+        scenario_names = set()
+    else:
+        scenario_names = set()
+        ordered_names = []
+        for index, scenario in enumerate(scenarios, 1):
+            if not isinstance(scenario, dict):
+                errors.append(f"scenario {index} is not an object")
+                continue
+            for field in (
+                    "name", "narrative", "what_would_make_it_happen",
+                    "implication_for_the_sector"):
+                if not str(scenario.get(field) or "").strip():
+                    errors.append(f"scenario {index} {field.replace('_', ' ')} is blank")
+            drivers = scenario.get("drivers")
+            if (not isinstance(drivers, list) or not drivers
+                    or any(not str(driver or "").strip() for driver in drivers)):
+                errors.append(
+                    f"scenario {index} requires at least one nonblank driver")
+            normalized_name = str(scenario.get("name") or "").strip().casefold()
+            if normalized_name:
+                ordered_names.append(normalized_name)
+                scenario_names.add(normalized_name)
+        if len(ordered_names) != len(set(ordered_names)):
+            errors.append("scenario names must be distinct")
+
+    if not isinstance(preferred, dict):
+        errors.append("foresight requires a preferred future")
+    else:
+        for field in (
+                "name", "narrative", "what_is_being_chosen",
+                "who_would_have_to_agree"):
+            if not str(preferred.get(field) or "").strip():
+                errors.append(
+                    f"preferred future {field.replace('_', ' ')} is blank")
+        references = preferred.get("drawn_from_scenarios")
+        if (not isinstance(references, list) or not references
+                or any(not str(reference or "").strip()
+                       for reference in references)):
+            errors.append(
+                "preferred future requires at least one nonblank scenario reference")
+        else:
+            unknown = [
+                str(reference).strip() for reference in references
+                if str(reference).strip().casefold() not in scenario_names
+            ]
+            if unknown:
+                errors.append(
+                    "preferred future references unknown scenario: "
+                    + ", ".join(unknown[:3]))
+    if not isinstance(milestones, list) or not milestones:
+        errors.append("foresight requires at least one bound milestone")
+    else:
+        for index, milestone in enumerate(milestones, 1):
+            if not isinstance(milestone, dict):
+                errors.append(f"milestone {index} is not an object")
+                continue
+            for field in ("statement", "why_this_step"):
+                if not str(milestone.get(field) or "").strip():
+                    errors.append(
+                        f"milestone {index} {field.replace('_', ' ')} is blank")
+    return errors
+
+
 # ------------------------------------------------------------------ schemas
 
 SCENARIO_SCHEMA = {
@@ -195,14 +266,19 @@ SCENARIO_SCHEMA = {
     "properties": {
         "scenarios": {
             "type": "array",
+            "minItems": N_SCENARIOS,
+            "maxItems": N_SCENARIOS,
             "items": {
                 "type": "object",
                 "properties": {
-                    "name": {"type": "string"},
-                    "narrative": {"type": "string"},
-                    "drivers": {"type": "array", "items": {"type": "string"}},
-                    "what_would_make_it_happen": {"type": "string"},
-                    "implication_for_the_sector": {"type": "string"},
+                    "name": {"type": "string", "minLength": 1},
+                    "narrative": {"type": "string", "minLength": 1},
+                    "drivers": {"type": "array", "minItems": 1,
+                                "items": {"type": "string", "minLength": 1}},
+                    "what_would_make_it_happen": {
+                        "type": "string", "minLength": 1},
+                    "implication_for_the_sector": {
+                        "type": "string", "minLength": 1},
                 },
                 "required": ["name", "narrative", "drivers",
                              "what_would_make_it_happen", "implication_for_the_sector"],
@@ -217,11 +293,13 @@ SCENARIO_SCHEMA = {
 PREFERRED_SCHEMA = {
     "type": "object",
     "properties": {
-        "name": {"type": "string"},
-        "narrative": {"type": "string"},
-        "drawn_from_scenarios": {"type": "array", "items": {"type": "string"}},
-        "what_is_being_chosen": {"type": "string"},
-        "who_would_have_to_agree": {"type": "string"},
+        "name": {"type": "string", "minLength": 1},
+        "narrative": {"type": "string", "minLength": 1},
+        "drawn_from_scenarios": {
+            "type": "array", "minItems": 1,
+            "items": {"type": "string", "minLength": 1}},
+        "what_is_being_chosen": {"type": "string", "minLength": 1},
+        "who_would_have_to_agree": {"type": "string", "minLength": 1},
     },
     "required": ["name", "narrative", "drawn_from_scenarios",
                  "what_is_being_chosen", "who_would_have_to_agree"],
@@ -233,14 +311,15 @@ MILESTONE_SCHEMA = {
     "properties": {
         "milestones": {
             "type": "array",
+            "minItems": 1,
             "items": {
                 "type": "object",
                 "properties": {
-                    "statement": {"type": "string"},
+                    "statement": {"type": "string", "minLength": 1},
                     "indicator_id": {"type": "string"},
                     "target_level": {"type": "integer"},
                     "target_year": {"type": "integer"},
-                    "why_this_step": {"type": "string"},
+                    "why_this_step": {"type": "string", "minLength": 1},
                     "candidate_indicator": {
                         "type": ["object", "null"],
                         "properties": {
@@ -613,7 +692,8 @@ def main():
     V.load_env()
     vendor, _, mname = a.vendor.partition("/")
     ledger = V.Ledger(ceiling=a.ceiling, label=f"{a.out}_foresight")
-    llm = V.LLM(vendor, ledger, model=mname or None)
+    llm = V.LLM(
+        vendor, ledger, model=mname or None).enable_durable_outcomes()
 
     state_path = os.path.join(LOOP1, f"{a.out}_foresight_state.json")
     spend_path = os.path.join(LOOP1, f"{a.out}_foresight_spend.json")
@@ -652,7 +732,7 @@ def main():
     except (OSError, ValueError, json.JSONDecodeError, V.BudgetExhausted) as error:
         print(f"!! foresight context failed: {error}")
         ledger.save(spend_path)
-        return 1
+        return V.stage_failure_exit(error, 1)
 
     rows = json.load(open(inp))
     assessment = engine_run(
@@ -753,10 +833,20 @@ def main():
 
     except V.BudgetExhausted as e:
         print(f"\n!! {e}")
-        print("   The exercise stopped where the budget ran out. Steps never reached are "
-              "absent from the output, NOT recorded as having produced nothing.")
+        if isinstance(e, V.VendorPaidRequestTerminal):
+            print("   The exercise stopped after a terminal paid-request outcome. It "
+                  "must not be retried automatically; later steps remain absent.")
+        else:
+            print("   The exercise stopped where the budget ran out. Steps never reached "
+                  "are absent from the output, NOT recorded as having produced nothing.")
         save()
-        return 0
+        return V.stage_failure_exit(e, 0)
+
+    completion_errors = foresight_completion_errors(state)
+    if completion_errors:
+        print("!! foresight failed validation: " + "; ".join(completion_errors))
+        save()
+        return 1
 
     candidates = list(FC.build_candidate_registry(state["milestones"]).indicators)
     payload = {
@@ -805,4 +895,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

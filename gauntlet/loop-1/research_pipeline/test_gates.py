@@ -289,7 +289,7 @@ _f = _tf.mktemp(suffix=".json"); _led.save(_f)
 _l2 = V.Ledger(ceiling=500, label="t")
 check("a resume carries the earlier calls", _l2.load(_f), 1)
 _l2.record("exa", "research", searches=2)
-check("and the counter accumulates", round(_l2.spent(), 6), 0.025)
+check("and the counter accumulates", round(_l2.spent(), 6), 0.035)
 check("the summary counts both sittings", _l2.summary()["calls"], 2)
 _l2.save(_f)
 check("saving does not drop the carried calls", len(_json.load(open(_f))["calls"]), 2)
@@ -317,7 +317,7 @@ check("historical all-lane scans retain their old aggregate cap",
 _legacy_challenge = V.Ledger(ceiling=0.05, label="legacy-challenge")
 _legacy_challenge.record("exa", "g2", searches=2)
 check("legacy g2 spend counts against the canonical challenge pass",
-      _legacy_challenge.spent("automated_challenge"), 0.01)
+      _legacy_challenge.spent("automated_challenge"), 0.014)
 try:
     _legacy_challenge.check("automated_challenge")
     check("legacy g2 spend cannot replay the canonical allocation",
