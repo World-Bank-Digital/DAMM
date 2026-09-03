@@ -1256,7 +1256,7 @@ def main():
                 V.atomic_write_json(state_path, state)
         except V.BudgetExhausted as e:
             print(f"!! {e}")
-            return 0
+            return V.stage_failure_exit(e, 0)
         except Exception as e:
             print(f"  ! initiative discovery failed: {str(e)[:100]}")
             state["failures"]["register:discovery"] = {
@@ -1346,7 +1346,7 @@ def main():
                 )
         except V.BudgetExhausted as e:
             with lock:
-                stopped = str(e)
+                stopped = V.prefer_terminal_stage_failure(stopped, e)
             return
         except Exception as e:
             rec, why = None, None
@@ -1448,10 +1448,14 @@ def main():
 
     if stopped:
         print(f"\n!! {stopped}")
-        print("   The scan stopped where the budget ran out. Topics never reached are "
-              "absent from the output, NOT recorded as having found nothing.")
+        if isinstance(stopped, V.VendorPaidRequestTerminal):
+            print("   The scan stopped after a terminal paid-request outcome. It must "
+                  "not be retried automatically; topics never reached remain absent.")
+        else:
+            print("   The scan stopped where the budget ran out. Topics never reached "
+                  "are absent from the output, NOT recorded as having found nothing.")
         save()
-        return 0
+        return V.stage_failure_exit(stopped, 0)
 
     entries = list(state["register"].values())
     if a.lane in ("country", "all") and entries and not state.get("overlap"):
@@ -1461,7 +1465,7 @@ def main():
         except V.BudgetExhausted as e:
             print(f"\n!! {e}")
             save()
-            return 0
+            return V.stage_failure_exit(e, 0)
         except Exception as e:
             log(f"  ! overlap synthesis failed: {str(e)[:100]}")
 
@@ -1521,4 +1525,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

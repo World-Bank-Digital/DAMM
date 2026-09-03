@@ -18,6 +18,13 @@ import investment_options as I
 
 
 class InvestmentOptionsTest(unittest.TestCase):
+    def setUp(self):
+        self.price_patcher = mock.patch.dict(I.V.PRICES["anthropic"], {
+            "test-model": {"in_per_mtok": 5.0, "out_per_mtok": 25.0},
+        })
+        self.price_patcher.start()
+        self.addCleanup(self.price_patcher.stop)
+
     @staticmethod
     def truncated(detail, max_tokens):
         return I.V.VendorOutputTruncated(

@@ -50,16 +50,40 @@ SIMULATION_CLOCK = datetime.datetime(
 )
 PRODUCTION_CODE_FILES = {
     "gauntlet/loop-1/research_pipeline/simulation.py": HERE / "simulation.py",
+    "gauntlet/loop-1/research_pipeline/simulate_workflow.py": HERE / "simulate_workflow.py",
     "gauntlet/loop-1/research_pipeline/investment_options.py": HERE / "investment_options.py",
     "gauntlet/loop-1/research_pipeline/report_design.py": HERE / "report_design.py",
     "gauntlet/loop-1/research_pipeline/generate_dar.py": HERE / "generate_dar.py",
     "gauntlet/loop-1/research_pipeline/export_package.py": HERE / "export_package.py",
     "gauntlet/loop-1/research_pipeline/run_workflow.py": HERE / "run_workflow.py",
+    "gauntlet/loop-1/research_pipeline/diagnostic_stage.py": HERE / "diagnostic_stage.py",
+    "gauntlet/loop-1/research_pipeline/research_orchestrator.py": HERE / "research_orchestrator.py",
+    "gauntlet/loop-1/research_pipeline/automated_challenge.py": HERE / "automated_challenge.py",
+    "gauntlet/loop-1/research_pipeline/diagnostic.py": HERE / "diagnostic.py",
+    "gauntlet/loop-1/research_pipeline/scan_stage.py": HERE / "scan_stage.py",
+    "gauntlet/loop-1/research_pipeline/scans.py": HERE / "scans.py",
+    "gauntlet/loop-1/research_pipeline/ai_assessment.py": HERE / "ai_assessment.py",
+    "gauntlet/loop-1/research_pipeline/foresight.py": HERE / "foresight.py",
     "gauntlet/loop-1/research_pipeline/vendors.py": HERE / "vendors.py",
+    "gauntlet/loop-1/research_pipeline/prices.json": HERE / "prices.json",
     "gauntlet/loop-1/research_pipeline/workflow_inputs.py": HERE / "workflow_inputs.py",
     "gauntlet/loop-1/research_pipeline/foresight_contract.py": HERE / "foresight_contract.py",
+    "gauntlet/loop-1/research_pipeline/gates.py": HERE / "gates.py",
+    "gauntlet/loop-1/research_pipeline/cell_schema.py": HERE / "cell_schema.py",
+    "gauntlet/loop-1/research_pipeline/nso_registry.py": HERE / "nso_registry.py",
+    "gauntlet/loop-1/research_pipeline/country_names.py": HERE / "country_names.py",
+    "gauntlet/loop-1/research_pipeline/countries.json": HERE / "countries.json",
+    "gauntlet/loop-1/research_pipeline/nso_registry.json": HERE / "nso_registry.json",
     "gauntlet/loop-1/engine_v17.py": HERE.parent / "engine_v17.py",
+    "gauntlet/loop-1/build_inputs.py": HERE.parent / "build_inputs.py",
+    "gauntlet/loop-1/machine_pass.py": HERE.parent / "machine_pass.py",
+    "gauntlet/loop-1/survey_pass.py": HERE.parent / "survey_pass.py",
+    "gauntlet/loop-1/render_v17.py": HERE.parent / "render_v17.py",
+    "gauntlet/loop-1/build_workbook_v17.py": HERE.parent / "build_workbook_v17.py",
+    "gauntlet/loop-1/verify_workbook_parity.py": HERE.parent / "verify_workbook_parity.py",
+    "gauntlet/loop-1/definition_notes.json": HERE.parent / "definition_notes.json",
     "model/reference_scorer.py": REPO_ROOT / "model" / "reference_scorer.py",
+    "model/export_model.py": REPO_ROOT / "model" / "export_model.py",
     "model/DAMM-v1.7-model.json": REPO_ROOT / "model" / "DAMM-v1.7-model.json",
     "workflow/dar-workflow-v1.json": REPO_ROOT / "workflow" / "dar-workflow-v1.json",
 }
@@ -1226,12 +1250,15 @@ def _simulation_source_identity(source: Path) -> tuple[str, str]:
     return title, marker
 
 
-def _deterministic_zip_member(archive: zipfile.ZipFile, name: str, content: str) -> None:
+def _deterministic_zip_member(
+    archive: zipfile.ZipFile, name: str, content: str | bytes
+) -> None:
     info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
     info.compress_type = zipfile.ZIP_DEFLATED
     info.create_system = 3
     info.external_attr = 0o100644 << 16
-    archive.writestr(info, content.encode("utf-8"))
+    payload = content.encode("utf-8") if isinstance(content, str) else content
+    archive.writestr(info, payload)
 
 
 def _write_simulation_docx(path: Path, title: str, marker: str) -> None:
@@ -1439,10 +1466,20 @@ def _stage8_handler(provenance: Mapping[str, Any]):
         })
         bundle = context.stage_dir / "simulated-dar-package.zip"
         with zipfile.ZipFile(bundle, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-            archive.writestr("SIMULATED-NOT-ACCEPTANCE-EVIDENCE.txt", SIMULATION_LABEL + "\n")
-            archive.write(package_manifest, "package-manifest.json")
+            _deterministic_zip_member(
+                archive,
+                "SIMULATED-NOT-ACCEPTANCE-EVIDENCE.txt",
+                SIMULATION_LABEL + "\n",
+            )
+            _deterministic_zip_member(
+                archive, "package-manifest.json", package_manifest.read_bytes()
+            )
             for key, directory in sorted(directories.items()):
-                archive.write(directory / "SIMULATED.json", f"{key}/SIMULATED.json")
+                _deterministic_zip_member(
+                    archive,
+                    f"{key}/SIMULATED.json",
+                    (directory / "SIMULATED.json").read_bytes(),
+                )
         return W.StageResult(
             artifacts={
                 **directories,

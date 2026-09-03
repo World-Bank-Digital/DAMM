@@ -23,7 +23,7 @@ says which one in its own docstring.*
 | File | What it is |
 |---|---|
 | `vendors.py` | The only place an outside call is made. Keys, metering, pricing, tiers, quote verification. |
-| `prices.json` | Unit prices. Usage counts are recorded exactly; dollars are derived, so a wrong price is a one-line correction rather than a re-run. |
+| `prices.json` | Current unit prices. New calls use the current rows; changing them does not retroactively reprice checkpointed ledger costs or mutate terminal runs. |
 | `cell_schema.py` | The research cell — one schema and one prompt, shared by the audition and the orchestrator. |
 | `gates.py` | The gates: isolation, quote, tier, construct, prerequisite, coherence, argument. |
 | `countries.json` | Country isolation data (C7). Adding a name or an adjectival form is a data edit. |

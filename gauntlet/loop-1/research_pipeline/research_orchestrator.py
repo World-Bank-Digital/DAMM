@@ -165,6 +165,10 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
             QUERY_SCHEMA, pass_name, max_tokens=2000, detail=f"queries {spec['id']}")
     except V.BudgetExhausted:
         raise
+    except V.VendorError:
+        # Paid model failures (including an unresolved durable reservation) are not
+        # evidence about the country and cannot authorize a fallback search plan.
+        raise
     except Exception as e:
         log(f"    ! query planning failed: {str(e)[:100]}")
         plan = {"queries": [f"{country} {spec['name']} statistics"], "likely_publishers": []}
@@ -196,17 +200,24 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
 
     def one_search(q):
         try:
-            return V.exa_search(q, ledger, pass_name, num_results=EXA_RESULTS)
+            return True, V.exa_search(
+                q, ledger, pass_name, num_results=EXA_RESULTS), None
         except V.BudgetExhausted:
+            raise
+        except (V.VendorTransportAmbiguous, V.VendorRequestPending):
             raise
         except Exception as e:
             log(f"    ! search failed: {str(e)[:80]}")
-            return []
+            return False, [], f"Exa discovery failed: {type(e).__name__}"
 
     with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as ex:
-        for res in ex.map(one_search, queries):
+        search_outcomes = list(ex.map(one_search, queries))
+        for _succeeded, res, _failure in search_outcomes:
             for r in res:
                 offer(r["url"], r["title"], "exa", r.get("published", ""))
+    search_failures = [
+        failure for _succeeded, _results, failure in search_outcomes if failure
+    ]
 
     # Perplexity as discovery peer only (C6). Its citations join the fetch queue and
     # are quote-verified like any other page; its prose is kept beside the row as a
@@ -221,12 +232,27 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
             offer(u, "", "perplexity")
     except V.BudgetExhausted:
         raise
+    except (V.VendorTransportAmbiguous, V.VendorRequestPending):
+        raise
     except Exception as e:
         # Recorded on the row, not just logged: a row that lost its discovery peer was
         # researched on a narrower base than its neighbours, and that difference has to
         # be visible to anyone reading the row afterwards.
         ppx["error"] = str(e)[:200]
         log(f"    ! {spec['id']}: perplexity discovery unavailable — {str(e)[:90]}")
+
+    if search_failures:
+        exa_error = "; ".join(search_failures[:MAX_QUERIES + 1])
+        ppx["error"] = "; ".join(
+            item for item in (ppx.get("error") or "", exa_error) if item
+        )[:200]
+    if (queries and not any(
+            succeeded for succeeded, _results, _failure in search_outcomes)
+            and not ranked):
+        raise RuntimeError(
+            "every Exa discovery request failed and no independent citation "
+            "was available; evidence absence cannot be established"
+        )
 
     ranked.sort(key=lambda s: (s["tier"], -len(s["surfaced_by"])))
     quota, chosen = dict(TIER_QUOTA), []
@@ -513,7 +539,8 @@ def main():
 
     vendor, _, mname = args.vendor.partition("/")
     ledger = V.Ledger(ceiling=args.ceiling, label=args.out)
-    llm = V.LLM(vendor, ledger, model=mname or None)
+    llm = V.LLM(
+        vendor, ledger, model=mname or None).enable_durable_outcomes()
 
     state_path = os.path.join(LOOP1, f"{args.out}_state.json")
     spend_path = os.path.join(LOOP1, f"{args.out}_spend.json")
@@ -581,7 +608,7 @@ def main():
                                        t1_fill=args.t1_fill)
         except V.BudgetExhausted as e:
             with lock:
-                stopped = str(e)
+                stopped = V.prefer_terminal_stage_failure(stopped, e)
             return
         except Exception as e:
             log(f"  ! {spec['id']} failed: {type(e).__name__}: {str(e)[:160]}")
@@ -602,9 +629,13 @@ def main():
 
     if stopped:
         print(f"\n!! {stopped}")
-        print("   The run stopped where the budget ran out. Rows never reached are "
-              "absent from the output, NOT recorded as gaps — a budget-induced gap "
-              "must never be indistinguishable from a real one.")
+        if isinstance(stopped, V.VendorPaidRequestTerminal):
+            print("   The run stopped after a terminal paid-request outcome. It must "
+                  "not be retried automatically; rows never reached remain absent.")
+        else:
+            print("   The run stopped where the budget ran out. Rows never reached are "
+                  "absent from the output, NOT recorded as gaps — a budget-induced gap "
+                  "must never be indistinguishable from a real one.")
 
     # ---- assemble the engine input
     rows = dict(state["rows"])
@@ -615,7 +646,7 @@ def main():
               "missing rows had been looked for and not found.")
         json.dump(state["records"], open(os.path.join(LOOP1, f"{args.out}_research.json"),
                                          "w"), indent=1, default=str)
-        return 1
+        return V.stage_failure_exit(stopped, 1)
 
     dn_path = os.path.join(LOOP1, "definition_notes.json")
     dnotes = json.load(open(dn_path)) if os.path.exists(dn_path) else {}
@@ -641,4 +672,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

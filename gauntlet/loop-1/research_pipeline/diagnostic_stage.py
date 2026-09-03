@@ -35,6 +35,10 @@ independent_reviewer = independent_challenger
 def run_command(argv):
     completed = subprocess.run(argv, cwd=HERE)
     if completed.returncode:
+        if completed.returncode == V.NONRETRYABLE_STAGE_EXIT:
+            raise V.VendorPaidRequestTerminal(
+                f"{os.path.basename(argv[1])} reported a terminal paid outcome"
+            )
         raise RuntimeError(
             f"{os.path.basename(argv[1])} exited with code {completed.returncode}"
         )
@@ -142,13 +146,13 @@ def main():
     try:
         for command in commands:
             run_command(command)
-    except (OSError, RuntimeError, ValueError) as error:
+    except (V.VendorPaidRequestTerminal, OSError, RuntimeError, ValueError) as error:
         try:
             checkpoint_combined_spend(args.out)
         except (OSError, ValueError, json.JSONDecodeError) as spend_error:
             print(f"!! DAMM diagnostic spend checkpoint failed: {spend_error}")
         print(f"!! DAMM diagnostic stage failed: {error}")
-        return 1
+        return V.stage_failure_exit(error, 1)
 
     required = {
         "damm_observations": f"{args.out}_input.json",
@@ -191,4 +195,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))

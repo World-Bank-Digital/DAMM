@@ -1,33 +1,35 @@
 {
- "_note": "Unit prices in US dollars, used only to convert measured usage counts into a spend figure. Usage counts (tokens, searches, pages) are recorded exactly; dollars are derived. Correct a price here and every past run's cost recomputes from its recorded counts — no re-run needed. Every line names where the price came from and when it was read, so a stale price is visible rather than silent.",
- "_read_on": "2026-08-24",
+ "_note": "Unit prices in US dollars convert measured usage counts into a spend figure. Existing ledgers store then-derived costs that may have been rounded to six decimals; current rows retain full floating-point precision for hard-cap comparisons. Changing this file does not mutate or automatically re-price prior rows. Where the billed dimension was recorded, a separate read-only report can derive a corrected historical estimate while terminal ledgers remain immutable. Every provider entry names its source, verification date, and uncertainty.",
+ "_read_on": "2026-09-03",
  "anthropic": {
-  "_source": "claude-api skill model table, cached 2026-06-24",
+  "_source": "https://platform.claude.com/docs/en/about-claude/pricing and https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions, verified 2026-09-03. Rates assume standard global inference: DAMM sets neither 2x fast mode nor the 1.1x US-only inference option. Unknown model identifiers fail closed.",
   "claude-opus-5":   {"in_per_mtok": 5.00,  "out_per_mtok": 25.00},
   "claude-opus-4-8": {"in_per_mtok": 5.00,  "out_per_mtok": 25.00},
-  "claude-sonnet-5": {"in_per_mtok": 3.00,  "out_per_mtok": 15.00},
-  "claude-haiku-4-5":{"in_per_mtok": 1.00,  "out_per_mtok": 5.00},
-  "_default":        {"in_per_mtok": 5.00,  "out_per_mtok": 25.00}
+  "claude-sonnet-5": {"in_per_mtok": 2.00,  "out_per_mtok": 10.00},
+  "claude-haiku-4-5":{"in_per_mtok": 1.00,  "out_per_mtok": 5.00}
  },
  "openai": {
-  "_source": "UNCONFIRMED — placeholder at Anthropic Opus-tier rates so the counter never reads low. Replace with the published rate for whichever model resolve_model() selects; the recorded token counts make the correction exact.",
-  "_default": {"in_per_mtok": 5.00, "out_per_mtok": 25.00}
+  "_source": "https://developers.openai.com/api/docs/pricing and official gpt-5.6 Terra/Luna/Sol model pages, verified 2026-09-03. Output rates are exact list prices. Input rates conservatively reserve the documented 1.25x cache-write maximum because DAMM does not yet parse cache-write usage; long_context applies the provider's higher full-request tier above 272K input tokens. Sol's short-context rate is promotional through at least 2026-11-21.",
+  "gpt-5.6-terra": {"in_per_mtok": 2.50, "base_in_per_mtok": 2.00, "out_per_mtok": 12.00, "long_context_threshold_tokens": 272000, "long_context": {"in_per_mtok": 5.00, "base_in_per_mtok": 4.00, "out_per_mtok": 18.00}},
+  "gpt-5.6-luna": {"in_per_mtok": 0.25, "base_in_per_mtok": 0.20, "out_per_mtok": 1.20, "long_context_threshold_tokens": 272000, "long_context": {"in_per_mtok": 0.50, "base_in_per_mtok": 0.40, "out_per_mtok": 1.80}},
+  "gpt-5.6-sol": {"in_per_mtok": 5.00, "base_in_per_mtok": 4.00, "out_per_mtok": 20.00, "long_context_threshold_tokens": 272000, "long_context": {"in_per_mtok": 10.00, "base_in_per_mtok": 8.00, "out_per_mtok": 30.00}}
  },
  "gemini": {
-  "_source": "UNCONFIRMED — placeholder at Anthropic Opus-tier rates so the counter never reads low. Replace with the published rate for whichever model resolve_model() selects.",
-  "_default": {"in_per_mtok": 5.00, "out_per_mtok": 25.00}
+  "_source": "https://ai.google.dev/gemini-api/docs/pricing and official Gemini 3.1 Pro Preview / 2.5 Pro model pages, verified 2026-09-03. Each row applies the higher full-request rate when input exceeds 200K tokens. The unresolved mutable gemini-pro-latest alias was removed from resolution; unknown model identifiers fail closed.",
+  "gemini-3.1-pro-preview": {"in_per_mtok": 2.00, "out_per_mtok": 12.00, "long_context_threshold_tokens": 200000, "long_context": {"in_per_mtok": 4.00, "out_per_mtok": 18.00}},
+  "gemini-2.5-pro": {"in_per_mtok": 1.25, "out_per_mtok": 10.00, "long_context_threshold_tokens": 200000, "long_context": {"in_per_mtok": 2.50, "out_per_mtok": 15.00}}
  },
  "perplexity": {
-  "_source": "UNCONFIRMED — placeholder at Anthropic Opus-tier rates plus a per-request search fee. Perplexity is a discovery peer only (decision C6), so its share of spend is small by construction.",
-  "_default": {"in_per_mtok": 5.00, "out_per_mtok": 25.00, "per_request": 0.005}
+  "_source": "https://docs.perplexity.ai/docs/getting-started/pricing and https://docs.perplexity.ai/docs/sonar/models/sonar-pro, verified 2026-09-03. The helper pins low search context, whose Sonar Pro request fee is $6/1K.",
+  "sonar-pro": {"in_per_mtok": 3.00, "out_per_mtok": 15.00, "per_request": 0.006}
  },
  "exa": {
-  "_source": "UNCONFIRMED — Exa publishes per-search and per-page-of-contents pricing. Counts are exact; correct these two numbers to make the dollars exact.",
-  "per_search": 0.005,
-  "per_content_page": 0.001
+  "_source": "https://exa.ai/pricing?tab=api and https://exa.ai/docs/reference/contents-api-guide, verified 2026-09-03. Auto search is $7/1K through 10 results; text contents are included through 10. The helper rejects larger requests and does not request separately billed summaries.",
+  "per_search": 0.007,
+  "per_content_page": 0.0
  },
  "jina": {
-  "_source": "UNCONFIRMED — Jina Reader bills per token of returned page text. Priced here per fetched page as an upper-bound placeholder.",
-  "per_fetch": 0.001
+  "_source": "https://jina.ai/reader/ and https://github.com/jina-ai/reader/blob/main/src/dto/crawler-options.ts, verified 2026-09-03. Reader bills returned output tokens. A read-only view of the logged-in official account dashboard verified current package-menu rates of $50/1B tokens ($0.05/MTok standard) and $500/11B tokens (about $0.045/MTok premium), so $0.05/MTok is a conservative current-account upper rate. The exact Render production key-to-package mapping remains unverified.",
+  "_default": {"out_per_mtok": 0.05}
  }
 }

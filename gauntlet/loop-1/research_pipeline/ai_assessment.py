@@ -455,7 +455,8 @@ def main():
     V.load_env()
     vendor, _, model = args.vendor.partition("/")
     ledger = V.Ledger(ceiling=args.ceiling, label=f"{args.out}_ai")
-    llm = V.LLM(vendor, ledger, model=model or None)
+    llm = V.LLM(
+        vendor, ledger, model=model or None).enable_durable_outcomes()
     spend_path = os.path.join(LOOP1, f"{args.out}_ai_spend.json")
     ledger.attach(spend_path)
     if args.resume and os.path.exists(spend_path):
@@ -517,7 +518,7 @@ def main():
     except (V.BudgetExhausted, V.VendorError, ValueError, OSError, json.JSONDecodeError) as error:
         ledger.save(spend_path)
         print(f"!! AI assessment failed: {error}")
-        return 1
+        return V.stage_failure_exit(error, 1)
     if errors:
         ledger.save(spend_path)
         print("!! AI assessment failed validation: " + "; ".join(errors))
@@ -546,4 +547,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(V.run_stage_main(main))
