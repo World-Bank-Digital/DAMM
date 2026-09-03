@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import io
 import json
 import os
 import sys
@@ -1378,6 +1379,108 @@ class ScanStageTest(unittest.TestCase):
                 completed = json.load(handle)
             self.assertNotIn(
                 "international", completed["empty_lane_recovery_pending"])
+
+    def test_all_lane_resume_recovers_completed_empty_international_lane(self):
+        chapters = [
+            {"n": 3, "title": "Governance", "content": "Institutions"},
+        ]
+        argv = [
+            "scans.py", "--country", "Exampleland", "--iso", "EXP",
+            "--out", "run", "--lane", "all", "--ceiling", "500",
+            "--vendor", "anthropic/test", "--resume",
+        ]
+
+        class BoundaryLlm:
+            def json_call(self, *_args, **kwargs):
+                if kwargs["detail"] == "queries intl ch3":
+                    return {"queries": ["Peerland digital agriculture strategy"]}
+                if kwargs["detail"] == (
+                        "international ch3 empty-lane recovery batch 1/3"):
+                    return {
+                        "found": True,
+                        "statement": "A peer published an approach.",
+                        "quote": "Peerland published an approach.",
+                        "source_name": "Peer ministry",
+                        "source_url": "https://peer.example/strategy",
+                        "published_year": 2026,
+                        "about_country": "Peerland",
+                        "why_it_matters": "It is a bounded transfer candidate.",
+                        "abstained_because": "",
+                    }
+                raise AssertionError(f"unexpected LLM call: {kwargs['detail']}")
+
+        def search(query, *_args, **_kwargs):
+            if query == "Peerland digital agriculture strategy":
+                return [{
+                    "url": "https://peer.example/strategy",
+                    "title": "Peerland strategy",
+                }]
+            return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            state_path = os.path.join(directory, "run_scans_state.json")
+            with open(state_path, "w", encoding="utf-8") as handle:
+                json.dump({
+                    "country": {
+                        "country:3": {
+                            "chapter": 3,
+                            "chapter_title": "Governance",
+                            "lane": "country",
+                            "statement": "Institutions are documented.",
+                        },
+                    },
+                    "international": {},
+                    "register": {},
+                    "abstained": {
+                        "international:3": {
+                            "lane": "international",
+                            "chapter": 3,
+                            "why": "no page could be retrieved",
+                        },
+                    },
+                    "failures": {},
+                    "overlap": "",
+                }, handle)
+
+            with (
+                mock.patch.object(S.SC, "LOOP1", directory),
+                mock.patch.object(S.SC, "prescriptive_chapters", return_value=chapters),
+                mock.patch.object(S.SC.V, "load_env"),
+                mock.patch.object(S.SC.V, "Ledger", FakeScanLedger),
+                mock.patch.object(S.SC.V, "LLM", return_value=BoundaryLlm()),
+                mock.patch.object(S.SC.V, "exa_search", side_effect=search),
+                mock.patch.object(
+                    S.SC.V, "jina_fetch",
+                    return_value="Peerland published an approach.",
+                ),
+                mock.patch.dict(
+                    os.environ, {"DAMM_CHECKPOINT_BINDING_SHA256": ""},
+                ),
+                mock.patch.object(sys, "argv", argv),
+                mock.patch.object(sys, "stdout", new_callable=io.StringIO) as output,
+            ):
+                self.assertEqual(S.SC.main(), 0)
+
+            self.assertIn(
+                "completed-but-empty international scans for bounded recovery attempt 1/1",
+                output.getvalue(),
+            )
+            with open(os.path.join(directory, "run_scans.json"), encoding="utf-8") as handle:
+                product = json.load(handle)
+            self.assertEqual(product["international_pointers"], [{
+                "chapter": 3,
+                "chapter_title": "Governance",
+                "lane": "international",
+                "statement": "A peer published an approach.",
+                "quote": "Peerland published an approach.",
+                "why_it_matters": "It is a bounded transfer candidate.",
+                "source_name": "Peer ministry",
+                "source_url": "https://peer.example/strategy",
+                "tier": "T5",
+                "published_year": 2026,
+                "about_country": "Peerland",
+                "applies_to": "dar_only",
+            }])
 
     def test_resume_researches_a_completed_empty_international_lane_once(self):
         chapters = [
