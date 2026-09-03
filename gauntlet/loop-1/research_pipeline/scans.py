@@ -1213,8 +1213,8 @@ def main():
         if reopened:
             print(
                 f"resuming — reopened {len(reopened)} completed-but-empty "
-                f"{a.lane} scans for bounded recovery attempt "
-                f"{state['empty_lane_recovery_attempts'][a.lane]}/"
+                "international scans for bounded recovery attempt "
+                f"{state['empty_lane_recovery_attempts']['international']}/"
                 f"{EMPTY_LANE_RECOVERY_LIMIT}; {carried} earlier vendor calls carried "
                 f"(${ledger.spent():.2f} spent)"
             )
