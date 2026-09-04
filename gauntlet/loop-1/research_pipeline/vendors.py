@@ -276,6 +276,8 @@ class Ledger:
     # -- pricing ---------------------------------------------------
     @staticmethod
     def _price(vendor, model, in_tok=0):
+        if vendor not in PRICES or vendor.startswith("_"):
+            raise VendorError(f"unknown vendor {vendor!r}; refusing paid request")
         table = PRICES.get(vendor, {})
         price = table.get(model) if model else table.get("_default")
         if model and vendor in {"anthropic", "openai", "gemini", "perplexity"}:
@@ -1819,6 +1821,8 @@ class LLM:
     """
 
     def __init__(self, vendor, ledger, model=None):
+        if vendor not in _MODEL_PREFS:
+            raise VendorError(f"unknown vendor {vendor!r}; refusing reasoning request")
         self.vendor, self.ledger = vendor, ledger
         self.model = model or self._resolve()
         # Model resolution may discover a new or near-matching identifier. Never let
