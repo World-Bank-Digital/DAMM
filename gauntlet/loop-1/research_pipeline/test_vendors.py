@@ -64,6 +64,18 @@ class VendorJsonCallTest(unittest.TestCase):
                 model="claude-future-unknown",
             )
 
+    def test_unknown_vendor_is_rejected_before_ledger_or_transport(self):
+        ledger = V.Ledger(ceiling=500, label="test")
+        with self.assertRaisesRegex(V.VendorError, "unknown vendor"):
+            V.LLM("unknown", ledger, model="model-with-no-tariff")
+        with self.assertRaisesRegex(V.VendorError, "unknown vendor"):
+            ledger.estimated_cost(
+                "unknown", model="model-with-no-tariff",
+                in_tok=1_000, out_tok=1_000,
+            )
+        self.assertEqual(ledger.calls, [])
+        self.assertEqual(ledger._reservations, {})
+
     def test_openai_incomplete_response_uses_typed_truncation_and_actual_usage(self):
         usage = SimpleNamespace(
             input_tokens=321,

@@ -22,7 +22,7 @@ says which one in its own docstring.*
 
 | File | What it is |
 |---|---|
-| `vendors.py` | The only place an outside call is made. Keys, metering, pricing, tiers, quote verification. |
+| `vendors.py` | The only place an outside call is made. Keys, metering, pricing, tiers, quote verification. Unknown vendors and unpriced models fail before ledger mutation or transport. |
 | `prices.json` | Current unit prices. New calls use the current rows; changing them does not retroactively reprice checkpointed ledger costs or mutate terminal runs. |
 | `cell_schema.py` | The research cell — one schema and one prompt, shared by the audition and the orchestrator. |
 | `gates.py` | The gates: isolation, quote, tier, construct, prerequisite, coherence, argument. |
