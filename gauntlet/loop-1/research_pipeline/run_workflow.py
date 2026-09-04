@@ -1661,6 +1661,7 @@ class WorkflowCoordinator:
             vendor=vendor,
         )
 
+        self._manifest = manifest
         stages = manifest.get("stages")
         stage_ids = [
             stage.get("id") for stage in stages or [] if isinstance(stage, dict)
@@ -1686,6 +1687,7 @@ class WorkflowCoordinator:
                 if (
                     isinstance(spend, bool)
                     or not isinstance(spend, (int, float))
+                    or not math.isfinite(float(spend))
                     or spend < 0
                 ):
                     raise WorkflowConfigurationError(f"{stage['id']} spend_usd is invalid")
@@ -1725,9 +1727,35 @@ class WorkflowCoordinator:
             )
         if status == "complete" and not completed:
             raise WorkflowConfigurationError("completed workflow has incomplete stages")
-        self._manifest = manifest
         self._restore_event_sequence(run_id)
         if completed:
+            authoritative, reported = self._spend_totals()
+            root_spend = {}
+            for field in ("spent_usd", "reported_spent_usd"):
+                value = manifest.get(field)
+                if (
+                    isinstance(value, bool)
+                    or not isinstance(value, (int, float))
+                    or not math.isfinite(float(value))
+                    or value < 0
+                ):
+                    raise WorkflowConfigurationError(
+                        f"completed workflow {field} is invalid"
+                    )
+                root_spend[field] = float(value)
+            if (
+                not math.isclose(
+                    root_spend["spent_usd"], authoritative,
+                    rel_tol=0.0, abs_tol=1e-8,
+                )
+                or not math.isclose(
+                    root_spend["reported_spent_usd"], reported,
+                    rel_tol=0.0, abs_tol=1e-8,
+                )
+            ):
+                raise WorkflowConfigurationError(
+                    "completed workflow spend totals do not match completed stages"
+                )
             return run_id, input_snapshot_path, frozen_uploads, True
 
         self._manifest["status"] = "running"
@@ -1782,6 +1810,7 @@ class WorkflowCoordinator:
         self.workspace.mkdir(parents=True, exist_ok=True)
         resumed = False
         if self.manifest_path.exists() and resume:
+            completed_resume_started = self.monotonic()
             run_id, input_snapshot_path, frozen_uploads, completed = self._restore_run(
                 country=country,
                 iso3=iso3,
@@ -1791,6 +1820,18 @@ class WorkflowCoordinator:
                 vendor=vendor,
             )
             if completed:
+                self._emit(
+                    "workflow_complete",
+                    status="complete",
+                    elapsed_seconds=round(
+                        self.monotonic() - completed_resume_started, 3
+                    ),
+                    spent_usd=self._manifest["spent_usd"],
+                    cumulative_spent_usd=self._manifest["spent_usd"],
+                    manifest_path=self.manifest_path.relative_to(
+                        self.workspace
+                    ).as_posix(),
+                )
                 return self._public_manifest()
             resumed = True
         elif self.manifest_path.exists():

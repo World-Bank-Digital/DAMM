@@ -737,6 +737,93 @@ class WorkflowCoordinatorTest(unittest.TestCase):
             ["resume", "workflow_complete"],
         )
 
+    def test_completed_checkpoint_resume_reemits_completion_without_stage_work(self):
+        handlers = self.all_handlers()
+        first_events = []
+        first = self.coordinator(handlers, event_sink=first_events.append).run(
+            country="Egypt",
+            iso3="EGY",
+            run_id="completed-resume",
+            ceiling_usd=500,
+            vendor="test/replay",
+        )
+        calls_before_resume = list(self.calls)
+
+        resumed_events = []
+        resumed = self.coordinator(handlers, event_sink=resumed_events.append).run(
+            country="Egypt",
+            iso3="EGY",
+            run_id="completed-resume",
+            ceiling_usd=500,
+            vendor="test/replay",
+            resume=True,
+        )
+
+        self.assertEqual(resumed, first)
+        self.assertEqual(self.calls, calls_before_resume)
+        self.assertEqual(
+            [event["event"] for event in resumed_events],
+            ["workflow_complete"],
+        )
+        completion = resumed_events[0]
+        self.assertEqual(set(completion), set(first_events[-1]))
+        self.assertEqual(completion["status"], "complete")
+        self.assertEqual(completion["spent_usd"], first["spent_usd"])
+        self.assertEqual(completion["cumulative_spent_usd"], first["spent_usd"])
+        self.assertEqual(completion["manifest_path"], "workflow-manifest.json")
+        self.assertEqual(completion["sequence"], first_events[-1]["sequence"] + 1)
+
+    def test_completed_checkpoint_resume_rejects_corrupt_spend_totals(self):
+        handlers = self.all_handlers()
+        self.coordinator(handlers).run(
+            country="Egypt",
+            iso3="EGY",
+            run_id="completed-spend-integrity",
+            ceiling_usd=500,
+            vendor="test/replay",
+        )
+        manifest_path = self.workspace / "workflow-manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["spent_usd"] += 1
+        manifest_path.write_text(
+            json.dumps(manifest, sort_keys=True, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+        events = []
+        with self.assertRaisesRegex(
+            W.WorkflowConfigurationError,
+            "completed workflow spend totals do not match completed stages",
+        ):
+            self.coordinator(handlers, event_sink=events.append).run(
+                country="Egypt",
+                iso3="EGY",
+                run_id="completed-spend-integrity",
+                ceiling_usd=500,
+                vendor="test/replay",
+                resume=True,
+            )
+        self.assertEqual(events, [])
+
+        manifest["spent_usd"] -= 1
+        manifest["reported_spent_usd"] = float("nan")
+        manifest_path.write_text(
+            json.dumps(manifest, sort_keys=True, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(
+            W.WorkflowConfigurationError,
+            "completed workflow reported_spent_usd is invalid",
+        ):
+            self.coordinator(handlers).run(
+                country="Egypt",
+                iso3="EGY",
+                run_id="completed-spend-integrity",
+                ceiling_usd=500,
+                vendor="test/replay",
+                resume=True,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

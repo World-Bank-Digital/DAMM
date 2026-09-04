@@ -141,6 +141,37 @@ def replace_replay_response(path: Path, chapter: str, response: dict) -> None:
     path.write_text(json.dumps(tape), encoding="utf-8")
 
 
+def add_semantic_repair_response(
+        path: Path, run: Path, chapter_id: str, response: dict) -> None:
+    """Add one request-bound offline response for the bounded chapter repair."""
+    response.setdefault("claims", [])
+    rows = json.loads(Path(f"{run}_g2_input.json").read_text(encoding="utf-8"))
+    scans = json.loads(Path(f"{run}_scans.json").read_text(encoding="utf-8"))
+    foresight = json.loads(Path(f"{run}_foresight.json").read_text(encoding="utf-8"))
+    assessment = engine_run(
+        scans["country"], rows, refyear=D.ASSESSMENT_YEAR,
+        model_spec=D.SPEC, intervention_profiles={})
+    chapter = next(item for item in D.OUTLINE if str(item["n"]) == str(chapter_id))
+    tape = json.loads(path.read_text(encoding="utf-8"))
+    initial = next(item for item in tape["responses"]
+                   if item["detail"] == f"chapter {chapter_id}")["response"]
+    initial_record = D.build_chapter_record(
+        chapter, initial, assessment, scans, foresight)
+    errors = D.chapter_semantic_errors(initial_record)
+    detail = f"chapter {chapter_id} [semantic repair 1/1]"
+    user = D.chapter_semantic_repair_prompt(
+        chapter, assessment, scans, foresight, scans["country"], errors)
+    tape["responses"].append({
+        "pass_name": D.PASS,
+        "detail": detail,
+        "request_sha256": V.json_call_request_sha256(
+            D.SYSTEM, user, D.CHAPTER_SCHEMA, D.PASS, 8000, detail),
+        "response_sha256": V.stable_json_sha256(response),
+        "response": response,
+    })
+    path.write_text(json.dumps(tape), encoding="utf-8")
+
+
 class GenerateDarCliTest(unittest.TestCase):
     def test_missing_engine_input_is_nonzero_and_manifested(self):
         with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as td:
@@ -791,6 +822,95 @@ class GenerateDarCliTest(unittest.TestCase):
             b2 = next(check for check in manifest["qc"] if check["id"] == "B2")
             self.assertFalse(b2["ok"])
 
+    def test_unseen_citation_is_replaced_by_one_recorded_semantic_repair(self):
+        with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as td:
+            run = Path(td) / "fixture"
+            copy_reference_inputs(run)
+            replay = Path(td) / "responses.json"
+            write_success_replay(replay, run=run)
+            replace_replay_response(replay, "2", {
+                "prose": "The chapter makes an unrelated connectivity claim.",
+                "cites": {
+                    "pillars": [], "indicators": ["2.4"],
+                    "use_cases": [], "prerequisites": [],
+                },
+                "figures": [],
+            })
+            add_semantic_repair_response(replay, run, "2", {
+                "prose": "The A1 pillar mean is 3.6.",
+                "cites": {
+                    "pillars": ["A1"], "indicators": [],
+                    "use_cases": [], "prerequisites": [],
+                },
+                "claims": [{
+                    "text": "The A1 pillar mean is 3.6.",
+                    "basis": "evidence",
+                    "source_refs": ["pillar:A1:mean"],
+                }],
+                "figures": [{
+                    "value": "3.6", "what_it_is": "A1 pillar mean",
+                    "basis": "evidence", "operation": "none",
+                    "source_refs": ["pillar:A1:mean"], "inputs": [],
+                    "rationale": "Quoted from the A1 pillar record.",
+                }],
+            })
+
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT),
+                 "--country", "Egypt", "--iso", "EGY", "--out", str(run),
+                 "--replay", str(replay)],
+                text=True, capture_output=True, check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            dar = json.loads(Path(f"{run}_dar.json").read_text(encoding="utf-8"))
+            chapter = next(item for item in dar["chapters"] if str(item["n"]) == "2")
+            self.assertEqual(chapter["cited_outside_binding"], [])
+            self.assertEqual(chapter["unsupported_figures"], [])
+            self.assertEqual(chapter["stray_numbers"], [])
+
+    def test_exhausted_recorded_semantic_repair_is_nonretryable_and_bounded(self):
+        with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as td:
+            run = Path(td) / "fixture"
+            copy_reference_inputs(run)
+            replay = Path(td) / "responses.json"
+            write_success_replay(replay, run=run)
+            invalid = {
+                "prose": "The chapter makes an unrelated connectivity claim.",
+                "cites": {
+                    "pillars": [], "indicators": ["2.4"],
+                    "use_cases": [], "prerequisites": [],
+                },
+                "claims": [],
+                "figures": [],
+            }
+            replace_replay_response(replay, "2", copy.deepcopy(invalid))
+            add_semantic_repair_response(
+                replay, run, "2", copy.deepcopy(invalid))
+            command = [
+                sys.executable, str(SCRIPT),
+                "--country", "Egypt", "--iso", "EGY", "--out", str(run),
+                "--replay", str(replay),
+            ]
+
+            first = subprocess.run(
+                command, text=True, capture_output=True, check=False)
+            resumed = subprocess.run(
+                command + ["--resume"], text=True, capture_output=True, check=False)
+
+            self.assertEqual(first.returncode, V.NONRETRYABLE_STAGE_EXIT,
+                             first.stdout + first.stderr)
+            self.assertEqual(resumed.returncode, V.NONRETRYABLE_STAGE_EXIT,
+                             resumed.stdout + resumed.stderr)
+            manifest = json.loads(
+                Path(f"{run}_dar_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["status"], "incomplete")
+            self.assertEqual(
+                manifest["reason"]["code"],
+                D.ChapterSemanticRepairExhausted.code,
+            )
+            self.assertEqual(manifest["chapters"]["completed"], 1)
+
     def test_unseen_prose_reference_cannot_bypass_empty_cites(self):
         with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as td:
             run = Path(td) / "fixture"
@@ -1309,6 +1429,49 @@ class GenerateDarCliTest(unittest.TestCase):
             self.assertNotIn("999", b5["detail"])
             self.assertNotIn("1", manifest["chapters"]["reused"])
             self.assertIn("1", manifest["chapters"]["regenerated"])
+
+    def test_resume_rejects_stale_response_hash_before_later_chapter_calls(self):
+        with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as td:
+            run = Path(td) / "fixture"
+            copy_reference_inputs(run)
+            replay = Path(td) / "responses.json"
+            write_success_replay(replay, fixture_id="resume-hash-integrity-v1")
+            tape = json.loads(replay.read_text(encoding="utf-8"))
+            tape["responses"] = tape["responses"][:1]
+            replay.write_text(json.dumps(tape), encoding="utf-8")
+
+            first = subprocess.run(
+                [sys.executable, str(SCRIPT),
+                 "--country", "Egypt", "--iso", "EGY", "--out", str(run),
+                 "--replay", str(replay)],
+                text=True, capture_output=True, check=False,
+            )
+            self.assertNotEqual(first.returncode, 0, first.stdout + first.stderr)
+
+            state_path = Path(f"{run}_generation_state.json")
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            self.assertEqual(set(state["chapters"]), {"1"})
+            state["response_sha256"]["1"] = "0" * 64
+            state_path.write_text(json.dumps(state), encoding="utf-8")
+            write_success_replay(replay, fixture_id="resume-hash-integrity-v1")
+
+            resumed = subprocess.run(
+                [sys.executable, str(SCRIPT),
+                 "--country", "Egypt", "--iso", "EGY", "--out", str(run),
+                 "--replay", str(replay), "--resume"],
+                text=True, capture_output=True, check=False,
+            )
+
+            self.assertEqual(
+                resumed.returncode,
+                D.V.NONRETRYABLE_STAGE_EXIT,
+                resumed.stdout + resumed.stderr,
+            )
+            manifest = json.loads(
+                Path(f"{run}_dar_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                manifest["reason"]["code"], "chapter_cache_integrity_error")
+            self.assertEqual(manifest["chapters"]["regenerated"], [])
 
     def test_resume_rejects_a_tampered_response_with_a_matching_checkpoint_hash(self):
         with tempfile.TemporaryDirectory(prefix="damm-dar-cli-") as td:

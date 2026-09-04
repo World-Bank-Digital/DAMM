@@ -29,7 +29,7 @@ milestones aimed at levels nobody has measured.
     python3 foresight.py --country Egypt --iso EGY --out EGY_shadow [--ceiling 500] [--resume]
 """
 
-import argparse, json, os, re, sys, time
+import argparse, copy, json, os, re, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOOP1 = os.path.abspath(os.path.join(HERE, ".."))
@@ -41,6 +41,7 @@ import vendors as V
 import workflow_inputs as WI
 import foresight_contract as FC
 import report_design as RD
+import semantic_repair as SR
 from engine_v17 import MODEL, run as engine_run
 
 PASS = "foresight"
@@ -188,18 +189,14 @@ def milestone_contract_gate(milestones, levels):
     return kept, [*refused, *registry_refused]
 
 
-def foresight_completion_errors(state):
-    """Refuse an incomplete decision product before Stage 5 can publish."""
+def scenario_completion_errors(scenarios):
+    """Return local-contract failures for the scenario unit."""
     errors = []
-    scenarios = state.get("scenarios")
-    preferred = state.get("preferred_future")
-    milestones = state.get("milestones")
     if not isinstance(scenarios, list) or len(scenarios) != N_SCENARIOS:
         errors.append(f"foresight requires exactly {N_SCENARIOS} scenarios")
-        scenario_names = set()
     else:
-        scenario_names = set()
         ordered_names = []
+        substantive_signatures = []
         for index, scenario in enumerate(scenarios, 1):
             if not isinstance(scenario, dict):
                 errors.append(f"scenario {index} is not an object")
@@ -217,9 +214,35 @@ def foresight_completion_errors(state):
             normalized_name = str(scenario.get("name") or "").strip().casefold()
             if normalized_name:
                 ordered_names.append(normalized_name)
-                scenario_names.add(normalized_name)
+            driver_values = drivers if isinstance(drivers, list) else []
+            substantive_signatures.append((
+                " ".join(str(scenario.get("narrative") or "").split()).casefold(),
+                tuple(sorted(
+                    " ".join(str(driver or "").split()).casefold()
+                    for driver in driver_values
+                )),
+                " ".join(str(
+                    scenario.get("what_would_make_it_happen") or ""
+                ).split()).casefold(),
+                " ".join(str(
+                    scenario.get("implication_for_the_sector") or ""
+                ).split()).casefold(),
+            ))
         if len(ordered_names) != len(set(ordered_names)):
             errors.append("scenario names must be distinct")
+        if len(substantive_signatures) != len(set(substantive_signatures)):
+            errors.append("scenario substance must be distinct")
+    return errors
+
+
+def preferred_future_completion_errors(preferred, scenarios):
+    """Return local-contract failures for the preferred-future unit."""
+    errors = []
+    scenario_names = {
+        str(scenario.get("name") or "").strip().casefold()
+        for scenario in (scenarios or []) if isinstance(scenario, dict)
+        and str(scenario.get("name") or "").strip()
+    }
 
     if not isinstance(preferred, dict):
         errors.append("foresight requires a preferred future")
@@ -245,6 +268,12 @@ def foresight_completion_errors(state):
                 errors.append(
                     "preferred future references unknown scenario: "
                     + ", ".join(unknown[:3]))
+    return errors
+
+
+def milestone_completion_errors(milestones):
+    """Return local-contract failures for the canonical milestone unit."""
+    errors = []
     if not isinstance(milestones, list) or not milestones:
         errors.append("foresight requires at least one bound milestone")
     else:
@@ -257,6 +286,16 @@ def foresight_completion_errors(state):
                     errors.append(
                         f"milestone {index} {field.replace('_', ' ')} is blank")
     return errors
+
+
+def foresight_completion_errors(state):
+    """Refuse an incomplete decision product before Stage 5 can publish."""
+    return [
+        *scenario_completion_errors(state.get("scenarios")),
+        *preferred_future_completion_errors(
+            state.get("preferred_future"), state.get("scenarios")),
+        *milestone_completion_errors(state.get("milestones")),
+    ]
 
 
 # ------------------------------------------------------------------ schemas
@@ -343,6 +382,202 @@ MILESTONE_SCHEMA = {
     "required": ["milestones"],
     "additionalProperties": False,
 }
+
+
+# ------------------------------------------------------ bounded semantic repair
+
+def prepare_scenarios(raw):
+    scenarios = raw.get("scenarios") if isinstance(raw, dict) else None
+    errors = scenario_completion_errors(scenarios)
+    if errors:
+        raise SR.SemanticResponseInvalid(errors)
+    return copy.deepcopy(scenarios), []
+
+
+def prepare_preferred_future(raw, scenarios):
+    errors = preferred_future_completion_errors(raw, scenarios)
+    if errors:
+        raise SR.SemanticResponseInvalid(errors)
+    return copy.deepcopy(raw), []
+
+
+def prepare_milestones(raw, levels):
+    milestones = raw.get("milestones") if isinstance(raw, dict) else None
+    if not isinstance(milestones, list):
+        raise SR.SemanticResponseInvalid(
+            ["foresight requires at least one bound milestone"])
+    kept, refused = milestone_contract_gate(milestones, levels)
+    errors = milestone_completion_errors(kept)
+    if errors:
+        raise SR.SemanticResponseInvalid(errors, refusals=refused)
+    return kept, refused
+
+
+def _response_from_checkpoint(value, response_key):
+    if response_key is None:
+        return copy.deepcopy(value)
+    return {response_key: copy.deepcopy(value)}
+
+
+def _merge_refusals(existing, additions):
+    """Keep first-seen refusal evidence without multiplying it on resume."""
+    merged = []
+    seen = set()
+    for refusal in [*(existing or []), *(additions or [])]:
+        if not isinstance(refusal, dict):
+            continue
+        canonical = {
+            "statement": str(refusal.get("statement") or ""),
+            "why": str(refusal.get("why") or ""),
+        }
+        identity = json.dumps(
+            canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        merged.append(canonical)
+    return merged
+
+
+def _apply_refusals(state, refusal_state_key, additions):
+    if refusal_state_key is not None:
+        state[refusal_state_key] = _merge_refusals(
+            state.get(refusal_state_key), additions)
+
+
+def _invalid_preparation(prepare, response):
+    try:
+        prepare(copy.deepcopy(response))
+    except SR.SemanticResponseInvalid as error:
+        return error
+    raise ValueError("semantic-repair checkpoint carries a valid initial response")
+
+
+def resolve_semantic_step(
+        llm, state, save_checkpoint, *, step_id, state_key, response_key,
+        system, user, schema, max_tokens, detail, prepare,
+        refusal_state_key=None):
+    """Resolve one Stage 5 unit, with at most one distinct semantic repair.
+
+    Provider responses and their usage remain authoritative in the durable spend
+    journal.  This state records why a locally invalid response was repaired.  The
+    invalid value is never stored in the top-level field that means "step complete".
+    """
+    repairs = state.setdefault("semantic_repairs", {})
+    if not isinstance(repairs, dict):
+        raise ValueError("foresight semantic-repair checkpoint is not an object")
+    record = repairs.get(step_id)
+
+    if record is not None:
+        if not isinstance(record, dict):
+            raise ValueError(f"semantic-repair checkpoint is invalid at {step_id}")
+        status = record.get("status")
+        if status == "exhausted":
+            if state.get(state_key) is not None:
+                raise ValueError(
+                    f"exhausted semantic repair marks {step_id} complete")
+            raise SR.SemanticRepairExhausted(
+                step_id, record.get("repair_errors") or ())
+        if status == "complete":
+            value = state.get(state_key)
+            if value is None:
+                raise ValueError(
+                    f"completed semantic repair has no value at {step_id}")
+            prepared, refusals = prepare(
+                _response_from_checkpoint(value, response_key))
+            if (record.get("completed_value_sha256")
+                    != SR.response_sha256(prepared)):
+                raise ValueError(
+                    f"completed semantic repair value mismatch at {step_id}")
+            _apply_refusals(state, refusal_state_key, refusals)
+            return copy.deepcopy(prepared)
+        if status != "required":
+            raise ValueError(
+                f"semantic-repair checkpoint has unknown status at {step_id}")
+
+        original = record.get("initial_response")
+        if (not isinstance(original, dict)
+                or record.get("initial_response_sha256")
+                != SR.response_sha256(original)):
+            raise ValueError(
+                f"semantic-repair initial response mismatch at {step_id}")
+        original_error = _invalid_preparation(prepare, original)
+        if (list(original_error.errors) != record.get("initial_errors")
+                or original_error.refusals != record.get("initial_refusals")):
+            raise ValueError(
+                f"semantic-repair reasons mismatch at {step_id}")
+        repair_user = SR.repair_user(user, original, original_error.errors)
+        repair_detail = SR.repair_detail(detail)
+        repair_request_sha256 = V.json_call_request_sha256(
+            system, repair_user, schema, PASS, max_tokens, repair_detail)
+        if record.get("repair_request_sha256") != repair_request_sha256:
+            raise ValueError(
+                f"semantic-repair request mismatch at {step_id}")
+    else:
+        existing = state.get(state_key)
+        if existing is None:
+            original = llm.json_call(
+                system, user, schema, PASS,
+                max_tokens=max_tokens, detail=detail)
+            origin = "model"
+        else:
+            # Old checkpoints had no semantic-repair status. Revalidate them instead
+            # of treating a truthy field as proof of completion.
+            original = _response_from_checkpoint(existing, response_key)
+            origin = "legacy_checkpoint"
+        try:
+            prepared, refusals = prepare(copy.deepcopy(original))
+        except SR.SemanticResponseInvalid as error:
+            repair_user = SR.repair_user(user, original, error.errors)
+            repair_detail = SR.repair_detail(detail)
+            repair_request_sha256 = V.json_call_request_sha256(
+                system, repair_user, schema, PASS, max_tokens, repair_detail)
+            record = {
+                "status": "required",
+                "origin": origin,
+                "initial_response_sha256": SR.response_sha256(original),
+                "initial_response": copy.deepcopy(original),
+                "initial_errors": list(error.errors),
+                "initial_refusals": copy.deepcopy(error.refusals),
+                "repair_request_sha256": repair_request_sha256,
+            }
+            repairs[step_id] = record
+            state[state_key] = None
+            _apply_refusals(state, refusal_state_key, error.refusals)
+            save_checkpoint()
+        else:
+            state[state_key] = copy.deepcopy(prepared)
+            _apply_refusals(state, refusal_state_key, refusals)
+            save_checkpoint()
+            return prepared
+
+    repaired_response = llm.json_call(
+        system, repair_user, schema, PASS,
+        max_tokens=max_tokens, detail=repair_detail)
+    try:
+        prepared, refusals = prepare(copy.deepcopy(repaired_response))
+    except SR.SemanticResponseInvalid as error:
+        record.update({
+            "status": "exhausted",
+            "repair_response_sha256": SR.response_sha256(repaired_response),
+            "repair_response": copy.deepcopy(repaired_response),
+            "repair_errors": list(error.errors),
+            "repair_refusals": copy.deepcopy(error.refusals),
+        })
+        state[state_key] = None
+        _apply_refusals(state, refusal_state_key, error.refusals)
+        save_checkpoint()
+        raise SR.SemanticRepairExhausted(step_id, error.errors) from None
+
+    state[state_key] = copy.deepcopy(prepared)
+    _apply_refusals(state, refusal_state_key, refusals)
+    record.update({
+        "status": "complete",
+        "repair_response_sha256": SR.response_sha256(repaired_response),
+        "completed_value_sha256": SR.response_sha256(prepared),
+    })
+    save_checkpoint()
+    return prepared
 
 
 # ------------------------------------------------------------------ grounding
@@ -704,7 +939,7 @@ def main():
     out_path = os.path.join(LOOP1, f"{a.out}_foresight.json")
 
     state = {"scenarios": None, "preferred_future": None, "milestones": None,
-             "refused": [], "context_sources": None}
+             "refused": [], "context_sources": None, "semantic_repairs": {}}
     loaded_state = False
     if a.resume and os.path.exists(state_path):
         state = json.load(open(state_path))
@@ -712,6 +947,7 @@ def main():
     WI.bind_checkpoint_state(state, loaded=loaded_state)
     if loaded_state:
         state.setdefault("context_sources", None)
+        state.setdefault("semantic_repairs", {})
         done = sum(1 for k in ("scenarios", "preferred_future", "milestones") if state.get(k))
         print(f"resuming — {done} of 3 steps already done, {carried} earlier vendor calls "
               f"carried (${ledger.spent():.2f} spent)")
@@ -762,75 +998,85 @@ def main():
     try:
         # ---- 1. scenarios
         t0 = time.time()
-        if not state.get("scenarios"):
-            ans = llm.json_call(
-                SYSTEM,
-                f"COUNTRY: {a.country}\nASSESSMENT YEAR: {ASSESSMENT_YEAR}\n\n"
-                f"WHERE THE COUNTRY STANDS:\n{standing}\n\n"
-                f"STEP: {steps[0]['name']} — {steps[0]['purpose']}\n\n"
-                f"Write {N_SCENARIOS} scenarios for this country's digital agriculture "
-                f"sector to {ASSESSMENT_YEAR + 10}. These bound the uncertainty; they are "
-                "not forecasts and none of them is the recommendation. Make them "
-                "genuinely different in what drives them, and ground each in the standing "
-                "above.",
-                SCENARIO_SCHEMA, PASS, max_tokens=6000, detail="scenarios")
-            state["scenarios"] = ans["scenarios"]
-            save()
+        scenario_user = (
+            f"COUNTRY: {a.country}\nASSESSMENT YEAR: {ASSESSMENT_YEAR}\n\n"
+            f"WHERE THE COUNTRY STANDS:\n{standing}\n\n"
+            f"STEP: {steps[0]['name']} — {steps[0]['purpose']}\n\n"
+            f"Write {N_SCENARIOS} scenarios for this country's digital agriculture "
+            f"sector to {ASSESSMENT_YEAR + 10}. These bound the uncertainty; they are "
+            "not forecasts and none of them is the recommendation. Make them "
+            "genuinely different in what drives them, and ground each in the standing "
+            "above."
+        )
+        state["scenarios"] = resolve_semantic_step(
+            llm, state, save,
+            step_id=steps[0]["id"], state_key="scenarios",
+            response_key="scenarios", system=SYSTEM, user=scenario_user,
+            schema=SCENARIO_SCHEMA, max_tokens=6000, detail="scenarios",
+            prepare=prepare_scenarios,
+        )
         report(1, steps[0]["id"], "written", f"{len(state['scenarios'])} scenarios", t0)
 
         # ---- 2. preferred future
         t0 = time.time()
-        if not state.get("preferred_future"):
-            names = ", ".join(s["name"] for s in state["scenarios"])
-            ans = llm.json_call(
-                SYSTEM,
-                f"COUNTRY: {a.country}\n\nSCENARIOS: {names}\n\n"
-                + json.dumps(state["scenarios"])[:6000] + "\n\n"
-                f"STEP: {steps[1]['name']} — {steps[1]['purpose']}\n\n"
-                "Describe the future this country would choose to bring about. Say "
-                "plainly in what_is_being_chosen that this is a normative selection — a "
-                "claim about values rather than a finding from evidence — and say who "
-                "would have to agree to it.",
-                PREFERRED_SCHEMA, PASS, max_tokens=4000, detail="preferred future")
-            state["preferred_future"] = ans
-            save()
+        names = ", ".join(s["name"] for s in state["scenarios"])
+        preferred_user = (
+            f"COUNTRY: {a.country}\n\nSCENARIOS: {names}\n\n"
+            + json.dumps(state["scenarios"])[:6000] + "\n\n"
+            f"STEP: {steps[1]['name']} — {steps[1]['purpose']}\n\n"
+            "Describe the future this country would choose to bring about. Say "
+            "plainly in what_is_being_chosen that this is a normative selection — a "
+            "claim about values rather than a finding from evidence — and say who "
+            "would have to agree to it."
+        )
+        state["preferred_future"] = resolve_semantic_step(
+            llm, state, save,
+            step_id=steps[1]["id"], state_key="preferred_future",
+            response_key=None, system=SYSTEM, user=preferred_user,
+            schema=PREFERRED_SCHEMA, max_tokens=4000, detail="preferred future",
+            prepare=lambda raw: prepare_preferred_future(
+                raw, state["scenarios"]),
+        )
         report(2, steps[1]["id"], "written", state["preferred_future"]["name"], t0)
 
         # ---- 3. backcasting
         t0 = time.time()
-        if not state.get("milestones"):
-            ids = ", ".join(f"{i}({MODEL[i]['name']})" for i in sorted(MODEL))
-            ans = llm.json_call(
-                SYSTEM,
-                f"COUNTRY: {a.country}\nASSESSMENT YEAR: {ASSESSMENT_YEAR}\n\n"
-                f"WHERE THE COUNTRY STANDS:\n{standing}\n\n"
-                f"PREFERRED FUTURE:\n{json.dumps(state['preferred_future'])[:3000]}\n\n"
-                f"STEP: {steps[2]['name']} — {steps[2]['purpose']}\n\n"
-                f"INDICATORS YOU MAY BIND TO:\n{ids}\n\n"
-                "Work back from the preferred future to dated, measurable milestones. "
-                "EVERY milestone must name one indicator_id from the list above, a "
-                f"target_level between 1 and 5 that is HIGHER than the level recorded "
-                f"above, and a target_year after {ASSESSMENT_YEAR} and no later than "
-                f"{ASSESSMENT_YEAR + HORIZON_YEARS}.\n\n"
-                "Where nothing in the list measures what a milestone needs, propose a "
-                f"candidate indicator instead: set indicator_id to an id matching "
-                f"{CANDIDATE['id_pattern']} and fill candidate_indicator with id, name, "
-                "proposed_pillar, rationale and proposed_by. Otherwise leave "
-                "candidate_indicator null.",
-                MILESTONE_SCHEMA, PASS, max_tokens=8000, detail="backcasting")
-
-            state["milestones"] = ans["milestones"]
-            state["refused"] = []
-
-        state["milestones"], contract_refused = milestone_contract_gate(
-            state["milestones"], levels)
-        if contract_refused:
-            state["refused"] = [*(state.get("refused") or []), *contract_refused]
-        save()
+        ids = ", ".join(f"{i}({MODEL[i]['name']})" for i in sorted(MODEL))
+        milestone_user = (
+            f"COUNTRY: {a.country}\nASSESSMENT YEAR: {ASSESSMENT_YEAR}\n\n"
+            f"WHERE THE COUNTRY STANDS:\n{standing}\n\n"
+            f"PREFERRED FUTURE:\n{json.dumps(state['preferred_future'])[:3000]}\n\n"
+            f"STEP: {steps[2]['name']} — {steps[2]['purpose']}\n\n"
+            f"INDICATORS YOU MAY BIND TO:\n{ids}\n\n"
+            "Work back from the preferred future to dated, measurable milestones. "
+            "EVERY milestone must name one indicator_id from the list above, a "
+            f"target_level between 1 and 5 that is HIGHER than the level recorded "
+            f"above, and a target_year after {ASSESSMENT_YEAR} and no later than "
+            f"{ASSESSMENT_YEAR + HORIZON_YEARS}.\n\n"
+            "Where nothing in the list measures what a milestone needs, propose a "
+            f"candidate indicator instead: set indicator_id to an id matching "
+            f"{CANDIDATE['id_pattern']} and fill candidate_indicator with id, name, "
+            "proposed_pillar, rationale and proposed_by. Otherwise leave "
+            "candidate_indicator null."
+        )
+        state["milestones"] = resolve_semantic_step(
+            llm, state, save,
+            step_id=steps[2]["id"], state_key="milestones",
+            response_key="milestones", system=SYSTEM, user=milestone_user,
+            schema=MILESTONE_SCHEMA, max_tokens=8000, detail="backcasting",
+            prepare=lambda raw: prepare_milestones(raw, levels),
+            refusal_state_key="refused",
+        )
         n_ref = len(state.get("refused") or [])
         report(3, steps[2]["id"], "written",
                f"{len(state['milestones'])} bound, {n_ref} refused", t0)
 
+    except SR.SemanticRepairExhausted as error:
+        print(f"\n!! {error}")
+        print("   The only bounded semantic repair was rejected by the local contract. "
+              "The stage must not be retried automatically.")
+        save()
+        return SR.stage_failure_exit(error)
     except V.BudgetExhausted as e:
         print(f"\n!! {e}")
         if isinstance(e, V.VendorPaidRequestTerminal):

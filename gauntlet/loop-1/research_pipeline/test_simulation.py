@@ -76,6 +76,7 @@ class SimulationHarnessTest(unittest.TestCase):
             "gauntlet/loop-1/research_pipeline/country_names.py",
             "gauntlet/loop-1/research_pipeline/countries.json",
             "gauntlet/loop-1/research_pipeline/nso_registry.json",
+            "gauntlet/loop-1/research_pipeline/semantic_repair.py",
             "gauntlet/loop-1/build_inputs.py",
             "gauntlet/loop-1/machine_pass.py",
             "gauntlet/loop-1/survey_pass.py",
