@@ -12,7 +12,255 @@ sys.path.insert(0, HERE)
 import ai_assessment as A
 
 
+class ScriptedLLM:
+    model = "fixture-model"
+
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.calls = []
+
+    def enable_durable_outcomes(self):
+        return self
+
+    def json_call(self, system, user, schema, pass_name, max_tokens=8000,
+                  detail=""):
+        self.calls.append({
+            "system": system,
+            "user": user,
+            "schema": schema,
+            "pass_name": pass_name,
+            "max_tokens": max_tokens,
+            "detail": detail,
+        })
+        if not self.responses:
+            raise AssertionError(f"unexpected model call: {detail}")
+        return self.responses.pop(0)
+
+
 class AiAssessmentTest(unittest.TestCase):
+    @staticmethod
+    def sources():
+        return {
+            "as_is": [{
+                "id": "ASIS-WEB-1",
+                "source_name": "National AI policy",
+                "source_url": "https://example.gov/ai-policy",
+                "tier": "T1",
+                "text": "Exampleland adopted a national AI policy.",
+                "source_kind": "published_source",
+            }],
+            "peer": [{
+                "id": "PEER-WEB-1",
+                "source_name": "Peer AI safeguards",
+                "source_url": "https://peer.gov/ai-safeguards",
+                "tier": "T1",
+                "text": "Peerland published agricultural AI safeguards.",
+                "source_kind": "published_source",
+            }],
+        }
+
+    @staticmethod
+    def evidence_response(*, peer=False, valid=True):
+        return {
+            "findings": [{
+                "statement": (
+                    "Peerland published agricultural AI safeguards."
+                    if peer else "Exampleland adopted a national AI policy."
+                ),
+                "quote": (
+                    "Peerland published agricultural AI safeguards."
+                    if peer and valid
+                    else "Exampleland adopted a national AI policy."
+                    if valid
+                    else "This quotation is not in the named source."
+                ),
+                "source_id": "PEER-WEB-1" if peer else "ASIS-WEB-1",
+                "about_country": "Peerland" if peer else "Exampleland",
+                "dimension": "safeguards" if peer else "governance",
+                "why_it_matters": "It establishes a documented baseline.",
+                "limitation": "Implementation evidence is not available.",
+            }],
+            "data_gaps": [],
+        }
+
+    @staticmethod
+    def agenda_response(*, valid=True):
+        return {
+            "actions": [{
+                "priority": "1",
+                "action": "Create an AI governance sandbox",
+                "rationale": "Address the documented governance gap.",
+                "horizon": "0–2 years",
+                "lead": "Agriculture ministry",
+                "prerequisites": ["legal mandate"],
+                "risks_and_safeguards": ["independent review"],
+                "indicators": ["sandbox decisions published"],
+                "evidence_ids": [
+                    "AI-ASIS-1", "AI-PEER-1"
+                ] if valid else ["NOT-VERIFIED"],
+            }],
+            "sequencing_note": "Governance precedes scale.",
+        }
+
+    def run_main_with(self, directory, llm, sources):
+        argv = [
+            "ai_assessment.py",
+            "--country", "Exampleland",
+            "--iso", "EXP",
+            "--out", "EXP_stage3",
+            "--vendor", "anthropic/claude-opus-5",
+        ]
+        with mock.patch.object(sys, "argv", argv):
+            with mock.patch.object(A, "LOOP1", directory):
+                with mock.patch.object(A.V, "load_env"):
+                    with mock.patch.object(A.V, "LLM", return_value=llm):
+                        with mock.patch.object(A, "_uploads", return_value=[]):
+                            with mock.patch.object(
+                                A,
+                                "_search_sources",
+                                side_effect=[sources["as_is"], sources["peer"]],
+                            ):
+                                with mock.patch("builtins.print"):
+                                    return A.main()
+
+    def test_each_semantically_invalid_stage3_unit_gets_one_distinct_repair(self):
+        invalid_as = self.evidence_response(valid=False)
+        invalid_peer = self.evidence_response(peer=True, valid=False)
+        invalid_agenda = self.agenda_response(valid=False)
+        llm = ScriptedLLM([
+            invalid_as,
+            self.evidence_response(),
+            invalid_peer,
+            self.evidence_response(peer=True),
+            invalid_agenda,
+            self.agenda_response(),
+        ])
+        sources = self.sources()
+
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(self.run_main_with(directory, llm, sources), 0)
+            self.assertTrue(os.path.exists(os.path.join(
+                directory, "EXP_stage3_ai_assessment.json")))
+
+        self.assertEqual([call["detail"] for call in llm.calls], [
+            "as-is AI assessment",
+            "as-is AI assessment [semantic repair 1/1]",
+            "peer AI experience",
+            "peer AI experience [semantic repair 1/1]",
+            "recommended AI agenda",
+            "recommended AI agenda [semantic repair 1/1]",
+        ])
+        request_hashes = {
+            A.V.json_call_request_sha256(
+                call["system"], call["user"], call["schema"],
+                call["pass_name"], call["max_tokens"], call["detail"],
+            )
+            for call in llm.calls
+        }
+        self.assertEqual(len(request_hashes), len(llm.calls))
+        self.assertIn("This quotation is not in the named source.",
+                      llm.calls[1]["user"])
+        self.assertIn("NOT-VERIFIED", llm.calls[5]["user"])
+
+    def test_exhausted_country_evidence_repair_stops_before_peer_and_agenda(self):
+        llm = ScriptedLLM([
+            self.evidence_response(valid=False),
+            self.evidence_response(valid=False),
+        ])
+
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(
+                self.run_main_with(directory, llm, self.sources()),
+                A.V.NONRETRYABLE_STAGE_EXIT,
+            )
+            self.assertFalse(os.path.exists(os.path.join(
+                directory, "EXP_stage3_ai_assessment.json")))
+
+        self.assertEqual([call["detail"] for call in llm.calls], [
+            "as-is AI assessment",
+            "as-is AI assessment [semantic repair 1/1]",
+        ])
+
+    def test_exhausted_peer_evidence_repair_stops_before_agenda(self):
+        llm = ScriptedLLM([
+            self.evidence_response(),
+            self.evidence_response(peer=True, valid=False),
+            self.evidence_response(peer=True, valid=False),
+        ])
+
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(
+                self.run_main_with(directory, llm, self.sources()),
+                A.V.NONRETRYABLE_STAGE_EXIT,
+            )
+
+        self.assertEqual([call["detail"] for call in llm.calls], [
+            "as-is AI assessment",
+            "peer AI experience",
+            "peer AI experience [semantic repair 1/1]",
+        ])
+
+    def test_exhausted_agenda_repair_is_nonretryable_and_bounded(self):
+        llm = ScriptedLLM([
+            self.evidence_response(),
+            self.evidence_response(peer=True),
+            self.agenda_response(valid=False),
+            self.agenda_response(valid=False),
+        ])
+
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(
+                self.run_main_with(directory, llm, self.sources()),
+                A.V.NONRETRYABLE_STAGE_EXIT,
+            )
+
+        self.assertEqual([call["detail"] for call in llm.calls], [
+            "as-is AI assessment",
+            "peer AI experience",
+            "recommended AI agenda",
+            "recommended AI agenda [semantic repair 1/1]",
+        ])
+
+    def test_blank_finding_and_agenda_content_require_semantic_repair(self):
+        blank_finding = self.evidence_response()
+        blank_finding["findings"][0].update({
+            "statement": "  ",
+            "dimension": "",
+            "why_it_matters": "\t",
+            "limitation": "",
+        })
+        blank_agenda = self.agenda_response()
+        blank_agenda["actions"][0].update({
+            "priority": "",
+            "action": "  ",
+            "rationale": "",
+            "horizon": "",
+            "lead": "",
+            "prerequisites": [],
+            "risks_and_safeguards": [],
+            "indicators": [],
+            "evidence_ids": [],
+        })
+        blank_agenda["sequencing_note"] = ""
+        llm = ScriptedLLM([
+            blank_finding,
+            self.evidence_response(),
+            self.evidence_response(peer=True),
+            blank_agenda,
+            self.agenda_response(),
+        ])
+
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(self.run_main_with(directory, llm, self.sources()), 0)
+
+        self.assertEqual([call["detail"] for call in llm.calls], [
+            "as-is AI assessment",
+            "as-is AI assessment [semantic repair 1/1]",
+            "peer AI experience",
+            "recommended AI agenda",
+            "recommended AI agenda [semantic repair 1/1]",
+        ])
+
     def test_stage3_crash_after_paid_result_resumes_without_transport(self):
         prompt = (
             "COUNTRY UNDER REVIEW: Exampleland\n\nSOURCES:\nsynthetic evidence\n\n"

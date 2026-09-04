@@ -72,6 +72,7 @@ PRODUCTION_CODE_FILES = {
     "gauntlet/loop-1/research_pipeline/cell_schema.py": HERE / "cell_schema.py",
     "gauntlet/loop-1/research_pipeline/nso_registry.py": HERE / "nso_registry.py",
     "gauntlet/loop-1/research_pipeline/country_names.py": HERE / "country_names.py",
+    "gauntlet/loop-1/research_pipeline/semantic_repair.py": HERE / "semantic_repair.py",
     "gauntlet/loop-1/research_pipeline/countries.json": HERE / "countries.json",
     "gauntlet/loop-1/research_pipeline/nso_registry.json": HERE / "nso_registry.json",
     "gauntlet/loop-1/engine_v17.py": HERE.parent / "engine_v17.py",

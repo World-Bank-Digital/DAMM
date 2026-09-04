@@ -148,6 +148,20 @@ CHAPTER_SCHEMA = {
 }
 
 
+class ChapterSemanticRepairExhausted(V.VendorError):
+    """A schema-valid chapter remained unpublishable after its one repair."""
+
+    code = "chapter_semantic_repair_exhausted"
+
+    def __init__(self, chapter_id, errors):
+        self.chapter_id = str(chapter_id)
+        self.errors = tuple(errors)
+        super().__init__(
+            f"chapter {self.chapter_id} exhausted its one bounded semantic repair: "
+            + "; ".join(self.errors)
+        )
+
+
 # ------------------------------------------------------- reviewed assessment input
 
 def _candidate_input_rows(rows):
@@ -2019,6 +2033,10 @@ def validate_chapter_response(response):
         if not all(isinstance(figure[key], str)
                    for key in ("value", "what_it_is", "basis", "operation", "rationale")):
             raise V.VendorError(f"chapter response figure {index} has invalid text fields")
+        if not figure["value"].strip() or not figure["what_it_is"].strip():
+            raise V.VendorError(
+                f"chapter response figure {index} has blank substantive fields"
+            )
         if not all(isinstance(figure[key], list)
                    and all(isinstance(value, str) for value in figure[key])
                    for key in ("source_refs", "inputs")):
@@ -2127,13 +2145,90 @@ def chapter_user_prompt(chapter, assessment, scans, foresight, country):
     )
 
 
+def chapter_semantic_errors(record):
+    """Return deterministic, bounded reasons a schema-valid chapter cannot publish."""
+    errors = []
+    categories = (
+        ("binding", record.get("cited_outside_binding") or []),
+        ("unsupported_figure", record.get("unsupported_figures") or []),
+        ("undeclared_number", record.get("stray_numbers") or []),
+    )
+    for category, values in categories:
+        normalized = sorted({
+            " ".join(str(value or "").split())[:240]
+            for value in values
+            if " ".join(str(value or "").split())
+        })
+        errors.extend(f"{category}: {value}" for value in normalized[:12])
+    return tuple(errors[:24])
+
+
+def chapter_semantic_repair_prompt(
+        chapter, assessment, scans, foresight, country, errors):
+    """Build the sole, request-distinct repair prompt for a rejected chapter."""
+    normalized = tuple(sorted({
+        " ".join(str(error or "").split())[:260]
+        for error in errors
+        if " ".join(str(error or "").split())
+    }))[:24]
+    return (
+        chapter_user_prompt(chapter, assessment, scans, foresight, country)
+        + "\n\nBOUNDED SEMANTIC REPAIR 1/1. The prior schema-valid response failed "
+        "local publication gates for these reasons:\n- "
+        + "\n- ".join(normalized)
+        + "\nReturn one complete replacement response that corrects every listed "
+        "failure. This is the only semantic repair attempt; do not explain the repair."
+    )
+
+
 def write_chapter(chapter, assessment, scans, foresight, country, llm, allowed=None):
     ans = llm.json_call(
         SYSTEM,
         chapter_user_prompt(chapter, assessment, scans, foresight, country),
         CHAPTER_SCHEMA, PASS, max_tokens=8000, detail=f"chapter {chapter['n']}")
 
-    return build_chapter_record(chapter, ans, assessment, scans, foresight)
+    initial_error = None
+    try:
+        record = build_chapter_record(
+            chapter, ans, assessment, scans, foresight)
+        errors = chapter_semantic_errors(record)
+    except V.VendorError as error:
+        initial_error = error
+        record = None
+        errors = (f"response_contract: {' '.join(str(error).split())[:240]}",)
+    if not errors:
+        return record
+
+    try:
+        repaired = llm.json_call(
+            SYSTEM,
+            chapter_semantic_repair_prompt(
+                chapter, assessment, scans, foresight, country, errors),
+            CHAPTER_SCHEMA,
+            PASS,
+            max_tokens=8000,
+            detail=f"chapter {chapter['n']} [semantic repair 1/1]",
+        )
+    except V.ReplayExhausted:
+        # Historical rejection fixtures intentionally contain only the response whose
+        # gate behavior they exercise.  A live adapter never raises ReplayExhausted;
+        # preserve those offline fixtures as rejection evidence rather than pretending
+        # an absent recording was a failed provider repair.
+        if record is not None:
+            return record
+        raise initial_error
+    try:
+        record = build_chapter_record(
+            chapter, repaired, assessment, scans, foresight)
+    except V.VendorError as error:
+        raise ChapterSemanticRepairExhausted(
+            chapter["n"],
+            (f"response_contract: {' '.join(str(error).split())[:240]}",),
+        ) from None
+    remaining = chapter_semantic_errors(record)
+    if remaining:
+        raise ChapterSemanticRepairExhausted(chapter["n"], remaining)
+    return record
 
 
 def build_annex_chapter(rows, assessment, scans, foresight, country, iso3):
@@ -7060,8 +7155,19 @@ def main():
                         }
                 state["chapters"][key] = rec
                 state["response_sha256"].setdefault(key, actual_response_sha)
-                reused.append(key)
-                continue
+                if rec.get("cache_integrity_error"):
+                    stopped = {
+                        "code": "chapter_cache_integrity_error",
+                        "detail": (
+                            f"cached response hash for chapter {key} does not match "
+                            "the current response"
+                        ),
+                        "chapter": key,
+                    }
+                    break
+                if not chapter_semantic_errors(rec):
+                    reused.append(key)
+                    continue
             except (KeyError, TypeError, V.VendorError):
                 # A malformed cache is a miss, never a trusted shortcut around the
                 # response schema or the current gates.
@@ -7084,6 +7190,13 @@ def main():
                     getattr(e, "code", "terminal_paid_request")
                     if terminal_paid_outcome else "budget_exhausted"
                 ),
+                "detail": str(e),
+                "chapter": key,
+            }
+            break
+        except ChapterSemanticRepairExhausted as e:
+            stopped = {
+                "code": e.code,
                 "detail": str(e),
                 "chapter": key,
             }
@@ -7121,7 +7234,12 @@ def main():
         write_manifest("incomplete", stopped)
         return (
             V.NONRETRYABLE_STAGE_EXIT
-            if terminal_paid_outcome else 1
+            if (terminal_paid_outcome
+                or stopped.get("code") in {
+                    ChapterSemanticRepairExhausted.code,
+                    "chapter_cache_integrity_error",
+                })
+            else 1
         )
 
     # Persist canonicalized reused chapters before QC. Derived fields from a prior code
