@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Focused failure-boundary tests for canonical Stage 1 retrieval."""
 
+import io
+import json
 import os
 import sys
+import tempfile
 import threading
 import time
 import unittest
@@ -24,6 +27,60 @@ class ResearchOrchestratorRetrievalTest(unittest.TestCase):
             "description": "Synthetic construct",
             "open_question": "",
         }
+
+    def test_reader_no_content_assertion_keeps_other_evidence_without_paid_replay(self):
+        """Exercise HTTP parsing, accounting, retrieval and restart together.
+
+        Jina's published Reader code emits this exact source-specific message.
+        The live 42206 ledger lost its message, so this is a synthetic supported
+        subtype, not a claim to reproduce the live response body.
+        """
+        missing = "https://example.test/missing?token=synthetic-private"
+        usable = "https://example.test/usable"
+        llm = mock.Mock()
+        llm.json_call.return_value = {"queries": ["synthetic"], "likely_publishers": []}
+        discovery = [{"url": url, "title": "Synthetic source"}
+                     for url in (missing, usable)]
+        body = json.dumps({
+            "code": 422, "status": 42206, "name": "AssertionFailureError",
+            "message": "No content available for URL " + missing,
+        }).encode()
+
+        def respond(request, **_kwargs):
+            if request.full_url.endswith(missing):
+                raise R.V.urllib.error.HTTPError(
+                    request.full_url, 422, "Rejected", {}, io.BytesIO(body))
+            return io.BytesIO(json.dumps({"data": {
+                "content": "Verified synthetic evidence. " * 20,
+                "usage": {"tokens": 50},
+            }}).encode())
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "spend.json")
+            ledger = R.V.Ledger(ceiling=1, label="synthetic")
+            ledger.attach(path)
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "synthetic-key"}), \
+                    mock.patch.object(R.V, "exa_search", return_value=discovery), \
+                    mock.patch.object(R.V, "perplexity_citations", return_value={
+                        "citations": [], "lead_prose": "", "error": ""}), \
+                    mock.patch.object(R.V.urllib.request, "urlopen", side_effect=respond) as transport:
+                pack, *_ = R.retrieve(self.spec(), "Exampleland", llm, ledger,
+                                      log=lambda _message: None)
+                self.assertEqual([item["url"] for item in pack], [usable])
+                self.assertEqual(transport.call_count, 2)
+                self.assertEqual(len(ledger.calls), 2)
+                self.assertAlmostEqual(ledger.spent(), 0.0011073)
+                self.assertEqual(ledger._reservations, {})
+                self.assertNotIn("synthetic-private", json.dumps(ledger.calls))
+                resumed = R.V.Ledger(ceiling=1, label="synthetic-resumed")
+                resumed.attach(path)
+                resumed.load(path)
+                transport.side_effect = AssertionError("paid request replayed")
+                pack, *_ = R.retrieve(self.spec(), "Exampleland", llm, resumed,
+                                      log=lambda _message: None)
+                self.assertEqual([item["url"] for item in pack], [usable])
+                self.assertEqual(transport.call_count, 2)
+                self.assertEqual(resumed.spent(), ledger.spent())
 
     def test_all_failed_discovery_requests_cannot_be_published_as_evidence_absence(self):
         llm = mock.Mock()
@@ -160,6 +217,29 @@ class ResearchOrchestratorRetrievalTest(unittest.TestCase):
             R.V.stage_failure_exit(caught.exception),
             R.V.NONRETRYABLE_STAGE_EXIT,
         )
+
+    def test_all_no_content_assertions_stop_without_claiming_evidence_absence(self):
+        url = "https://example.test/no-content"
+        llm = mock.Mock()
+        llm.json_call.return_value = {"queries": ["synthetic"], "likely_publishers": []}
+        response = R.V.urllib.error.HTTPError(
+            "https://r.jina.ai/" + url, 422, "Rejected", {}, io.BytesIO(json.dumps({
+                "code": 422, "status": 42206, "name": "AssertionFailureError",
+                "message": "No content available for URL " + url,
+            }).encode()))
+        ledger = R.V.Ledger(ceiling=1, label="synthetic")
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "synthetic-key"}), \
+                mock.patch.object(R.V, "exa_search", return_value=[{
+                    "url": url, "title": "Synthetic source"}]), \
+                mock.patch.object(R.V, "perplexity_citations", return_value={
+                    "citations": [], "lead_prose": "", "error": ""}), \
+                mock.patch.object(R.V.urllib.request, "urlopen", side_effect=response) as transport:
+            with self.assertRaises(R.SelectedReaderEvidenceUnavailable):
+                R.retrieve(self.spec(), "Exampleland", llm, ledger,
+                           log=lambda _message: None)
+        self.assertEqual(transport.call_count, 1)
+        self.assertEqual(ledger.calls[0]["out_tok"], 22096)
+        self.assertEqual(ledger._reservations, {})
 
     def test_ambiguous_reader_outcome_still_propagates(self):
         llm = mock.Mock()

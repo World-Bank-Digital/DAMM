@@ -645,7 +645,7 @@ def foresight_context_sources(country, uploads, ledger):
     ]
     for query in queries:
         try:
-            results = V.exa_search(query, ledger, PASS, num_results=5)
+            results = V.exa_search(query, ledger, PASS, num_results=5, text_chars=16000)
         except V.BudgetExhausted:
             raise
         except Exception as error:
@@ -661,7 +661,8 @@ def foresight_context_sources(country, uploads, ledger):
                 continue
             seen.add(url)
             try:
-                text = V.jina_fetch(url, ledger, PASS, max_chars=16000)
+                fetched = V.read_source(dict(row, url=url), ledger, PASS, max_chars=16000)
+                text = fetched["text"]
             except V.BudgetExhausted:
                 raise
             except Exception:
@@ -675,6 +676,7 @@ def foresight_context_sources(country, uploads, ledger):
                     "source_kind": "published_source",
                     "sha256": "",
                     "text": text,
+                    "retrieval_provider": fetched["retrieval_provider"],
                 })
             if sum(s["source_kind"] == "published_source" for s in sources) >= 8:
                 break

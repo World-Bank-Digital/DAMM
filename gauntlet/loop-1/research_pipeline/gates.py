@@ -22,7 +22,8 @@ still carries what was found. A withheld level is not an absence.
 import json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-_C = json.load(open(os.path.join(HERE, "countries.json")))
+with open(os.path.join(HERE, "countries.json")) as handle:
+    _C = json.load(handle)
 
 # Longest first, so "Niger" can never match inside "Nigeria".
 _ALL_TERMS = []

@@ -52,7 +52,8 @@ PASS = "research"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
 # The assessment year comes from the model file, so a ratification that moves it moves
 # the currency gate with it rather than leaving a constant behind in this file.
-ASSESSMENT_YEAR = json.load(open(MODEL_FILE))["config"]["assessment_year"]
+with open(MODEL_FILE) as handle:
+    ASSESSMENT_YEAR = json.load(handle)["config"]["assessment_year"]
 
 MAX_QUERIES = 3
 EXA_RESULTS = 6
@@ -186,16 +187,19 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
 
     seen, ranked = {}, []
 
-    def offer(url, title, who, published=""):
+    def offer(url, title, who, published="", text=""):
         if not url:
             return
         u = url.split("#")[0]
         if u in seen:
             if who not in seen[u]["surfaced_by"]:
                 seen[u]["surfaced_by"].append(who)
+            if who == "exa" and not V.usable_source_text(seen[u].get("text"), PAGE_CHARS * 3):
+                seen[u]["text"] = V.usable_source_text(text, PAGE_CHARS * 3) or seen[u].get("text", "")
             return
         seen[u] = dict(url=u, title=title or "", published=published,
-                       tier=V.tier_for_url(u, country), surfaced_by=[who])
+                       tier=V.tier_for_url(u, country), surfaced_by=[who],
+                       text=text if who == "exa" else "")
         ranked.append(seen[u])
 
     # The planner's queries plus one deterministic query built from the country and the
@@ -212,7 +216,8 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
     def one_search(q):
         try:
             return True, V.exa_search(
-                q, ledger, pass_name, num_results=EXA_RESULTS), None
+                q, ledger, pass_name, num_results=EXA_RESULTS,
+                text_chars=PAGE_CHARS * 3), None
         except V.BudgetExhausted:
             raise
         except (V.VendorTransportAmbiguous, V.VendorRequestPending):
@@ -225,7 +230,8 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
         search_outcomes = list(ex.map(one_search, queries))
         for _succeeded, res, _failure in search_outcomes:
             for r in res:
-                offer(r["url"], r["title"], "exa", r.get("published", ""))
+                offer(r["url"], r["title"], "exa", r.get("published", ""),
+                      r.get("text", ""))
     search_failures = [
         failure for _succeeded, _results, failure in search_outcomes if failure
     ]
@@ -279,8 +285,8 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
 
     def one_fetch(s):
         try:
-            return s, V.jina_fetch(
-                s["url"], ledger, pass_name, max_chars=PAGE_CHARS * 3), None
+            fetched = V.read_source(s, ledger, pass_name, max_chars=PAGE_CHARS * 3)
+            return dict(s, retrieval_provider=fetched["retrieval_provider"]), fetched["text"], None
         except V.JinaSourceRejected as error:
             # An explicit unsuccessful Reader response is source-local. Keep looking
             # at the other selected pages, but never turn an all-page failure into a
@@ -567,7 +573,8 @@ def main():
     args = ap.parse_args()
 
     V.load_env()
-    model = json.load(open(MODEL_FILE))
+    with open(MODEL_FILE) as handle:
+        model = json.load(handle)
     specs = build_specs(model)
     if args.rows:
         want = {r.strip() for r in args.rows.split(",")}
@@ -588,7 +595,8 @@ def main():
     state = {"rows": {}, "records": {}}
     loaded_state = False
     if args.resume and os.path.exists(state_path):
-        state = json.load(open(state_path))
+        with open(state_path) as handle:
+            state = json.load(handle)
         loaded_state = True
     WI.bind_checkpoint_state(state, loaded=loaded_state)
     if loaded_state:
@@ -680,21 +688,25 @@ def main():
         print(f"\n!! {len(missing)} rows not researched: {missing}")
         print("   Engine input NOT written — a partial input would score as though the "
               "missing rows had been looked for and not found.")
-        json.dump(state["records"], open(os.path.join(LOOP1, f"{args.out}_research.json"),
-                                         "w"), indent=1, default=str)
+        with open(os.path.join(LOOP1, f"{args.out}_research.json"), "w") as handle:
+            json.dump(state["records"], handle, indent=1, default=str)
         return V.stage_failure_exit(stopped, 1)
 
     dn_path = os.path.join(LOOP1, "definition_notes.json")
-    dnotes = json.load(open(dn_path)) if os.path.exists(dn_path) else {}
+    dnotes = {}
+    if os.path.exists(dn_path):
+        with open(dn_path) as handle:
+            dnotes = json.load(handle)
     for i, r in rows.items():
         if i in dnotes:
             r["defnote"] = dnotes[i]["q"]
             r["defsev"] = dnotes[i]["sev"]
 
     inp = os.path.join(LOOP1, f"{args.out}_input.json")
-    json.dump(rows, open(inp, "w"), indent=1, default=str)
-    json.dump(state["records"], open(os.path.join(LOOP1, f"{args.out}_research.json"), "w"),
-              indent=1, default=str)
+    with open(inp, "w") as handle:
+        json.dump(rows, handle, indent=1, default=str)
+    with open(os.path.join(LOOP1, f"{args.out}_research.json"), "w") as handle:
+        json.dump(state["records"], handle, indent=1, default=str)
     ledger.save(spend_path)
 
     s = ledger.summary()

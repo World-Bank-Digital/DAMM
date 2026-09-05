@@ -6,6 +6,7 @@ import sys
 import tempfile
 import threading
 import time
+import traceback
 import types
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -937,6 +938,129 @@ class VendorJsonCallTest(unittest.TestCase):
             "retrieval_output_malformed",
         )
 
+    def test_exa_invalid_page_fields_are_terminal_and_settled_before_restart(self):
+        payloads = [
+            {"results": [{"url": 7}]},
+            {"results": [{"url": "https://example.test", "text": {"secret": "synthetic-private"}}]},
+            {"results": [{"url": "https://example.test", "title": ["unexpected"]}]},
+            {"results": [{"url": "https://example.test", "publishedDate": False}]},
+            {"results": [{"url": "file:///private/synthetic-private"}]},
+            {"results": None},
+        ]
+        for payload in payloads:
+            with self.subTest(payload=payload), tempfile.TemporaryDirectory() as directory:
+                path = os.path.join(directory, "ledger.json")
+                ledger = V.Ledger(ceiling=1, label="synthetic")
+                ledger.attach(path)
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V, "_http", return_value=payload) as transport:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.exa_search("synthetic", ledger, "research", text_chars=18000)
+                self.assertEqual(ledger.spent(), 0.007)
+                self.assertEqual(ledger._reservations, {})
+                self.assertNotIn("synthetic-private", V.json.dumps(ledger.calls))
+                resumed = V.Ledger(ceiling=1, label="synthetic restart")
+                resumed.attach(path)
+                resumed.load(path)
+                with mock.patch.object(V, "_http") as transport:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.exa_search("synthetic", resumed, "research", text_chars=18000)
+                    transport.assert_not_called()
+
+    def test_missing_or_changed_retrieval_identity_cannot_reissue_settled_request(self):
+        calls = (
+            (lambda ledger: V.exa_search("synthetic", ledger, "research"), {"results": []}),
+            (lambda ledger: V.jina_fetch("https://example.test", ledger, "research"),
+             {"data": {"content": "synthetic page", "usage": {"tokens": 10}}}),
+            (lambda ledger: V.perplexity_citations("synthetic", ledger, "research"),
+             {"usage": {"prompt_tokens": 10, "completion_tokens": 10, "cost": {"total_cost": 0.01}}, "citations": [],
+              "choices": [{"message": {"content": "synthetic lead"}}]}),
+        )
+        for invoke, payload in calls:
+            for mutation in ("missing_journal", "missing_hash", "changed_hash"):
+                with self.subTest(provider=tuple(payload), mutation=mutation):
+                    ledger = V.Ledger(ceiling=500)
+                    with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic", "JINA_API_KEY": "synthetic", "PERPLEXITY_API_KEY": "synthetic"}), \
+                            mock.patch.object(V, "_http", return_value=payload):
+                        invoke(ledger)
+                    saved = V.strict_json_loads(V.json.dumps(ledger.snapshot()))
+                    call = saved["calls"][0]
+                    if mutation == "missing_journal":
+                        call.pop("structured_result")
+                    elif mutation == "missing_hash":
+                        call["structured_result"].pop("request_sha256")
+                    else:
+                        call["structured_result"]["request_sha256"] = "0" * 64
+                    restored = V.Ledger(ceiling=500)
+                    restored.restore(saved)
+                    before = V.json.dumps([restored.calls, restored._reservation_journal])
+                    with mock.patch.object(V, "_http", return_value=payload) as http, \
+                            mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic", "JINA_API_KEY": "synthetic", "PERPLEXITY_API_KEY": "synthetic"}):
+                        with self.assertRaises(V.VendorPaidRequestTerminal):
+                            invoke(restored)
+                        http.assert_not_called()
+                    self.assertEqual(restored.spent(), ledger.spent())
+                    self.assertEqual(V.json.dumps([restored.calls, restored._reservation_journal]), before)
+
+    def test_invalid_cached_provider_payloads_remain_terminal(self):
+        cases = (
+            (lambda ledger: V.jina_fetch("https://example.test", ledger, "research"),
+             {"data": {"content": "synthetic page", "usage": {"tokens": 10}}}, {"text": 42}),
+            (lambda ledger: V.perplexity_citations("synthetic", ledger, "research"),
+             {"usage": {"prompt_tokens": 10, "completion_tokens": 10, "cost": {"total_cost": 0.01}}, "citations": [],
+              "choices": [{"message": {"content": "synthetic lead"}}]},
+             {"result": {"citations": 42, "lead_prose": ""}}),
+            (lambda ledger: V.perplexity_citations("synthetic", ledger, "research"),
+             {"usage": {"prompt_tokens": 10, "completion_tokens": 10, "cost": {"total_cost": 0.01}}, "citations": [],
+              "choices": [{"message": {"content": "synthetic lead"}}]},
+             {"result": {"citations": ["file:///synthetic-private"], "lead_prose": ""}}),
+        )
+        for invoke, payload, corrupted in cases:
+            with self.subTest(corrupted=corrupted):
+                ledger = V.Ledger(ceiling=500)
+                with mock.patch.dict(os.environ, {"JINA_API_KEY": "synthetic", "PERPLEXITY_API_KEY": "synthetic"}), \
+                        mock.patch.object(V, "_http", return_value=payload):
+                    invoke(ledger)
+                saved = V.strict_json_loads(V.json.dumps(ledger.snapshot()))
+                journal = saved["calls"][0]["structured_result"]
+                journal["response"] = corrupted
+                journal["response_sha256"] = V.stable_json_sha256(corrupted)
+                restored = V.Ledger(ceiling=500)
+                restored.restore(saved)
+                with mock.patch.object(V, "_http") as http:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        invoke(restored)
+                    http.assert_not_called()
+                self.assertEqual(restored.spent(), ledger.spent())
+
+    def test_invalid_utf8_success_is_settled_terminal_and_never_reissued(self):
+        cases = (
+            (lambda ledger: V.exa_search("synthetic", ledger, "research"),
+             b'{"results":[{"url":"https://example.test","text":"bad\xff"}]}'),
+            (lambda ledger: V.jina_fetch("https://example.test", ledger, "research", max_chars=500),
+             b'{"data":{"content":"bad\xff","usage":{"tokens":10}}}'),
+            (lambda ledger: V.perplexity_citations("synthetic", ledger, "research"),
+             b'{"citations":[],"choices":[{"message":{"content":"bad\xff"}}],'
+             b'"usage":{"prompt_tokens":10,"completion_tokens":10,"cost":{"total_cost":0.01}}}'),
+        )
+        for invoke, body in cases:
+            with self.subTest(body=body):
+                ledger = V.Ledger(ceiling=500)
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic", "JINA_API_KEY": "synthetic", "PERPLEXITY_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen", return_value=io.BytesIO(body)) as http:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        invoke(ledger)
+                self.assertEqual(http.call_count, 1)
+                self.assertEqual(len(ledger.calls), 1)
+                self.assertFalse(ledger._reservations)
+                restored = V.Ledger(ceiling=500)
+                restored.restore(ledger.snapshot())
+                with mock.patch.object(V.urllib.request, "urlopen") as http:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        invoke(restored)
+                    http.assert_not_called()
+                self.assertEqual(restored.spent(), ledger.spent())
+
     def test_jina_fetch_reserves_total_provider_cap_with_metadata_headroom(self):
         """The strict provider cap, not only returned content, bounds spend."""
         content_token_cap = 500
@@ -1281,6 +1405,177 @@ class VendorJsonCallTest(unittest.TestCase):
         self.assertNotIn(
             "not-for-ledger", str(ledger.calls[0]["structured_result"]))
 
+    def test_jina_42206_ambiguous_or_internal_assertions_remain_terminal(self):
+        url = "https://example.test/unavailable?token=synthetic-private"
+        no_content = "No content available for URL " + url
+        cases = [
+            {"message": "Failed to access " + url + ": Failed writing received data to disk/application"},
+            {"message": "Unknown model: synthetic-private"},
+            {"message": "No content available for URL https://different.test/"},
+            {"message": no_content, "cause": {"name": "ServiceCrashedError"}},
+            {"message": no_content, "readableMessage": "ServiceCrashedError: synthetic-private"},
+            {"message": no_content, "data": {"error": "synthetic-private"}},
+            {"message": no_content, "name": "UnknownAssertion", "expected_name": ""},
+            {"message": no_content, "status": 42207, "expected_name": ""},
+            {"message": no_content, "code": 500, "expected_name": ""},
+            {},
+        ]
+        for extra in cases:
+            with self.subTest(extra=extra):
+                ledger = V.Ledger(ceiling=1.0, label="synthetic")
+                payload = {"code": 422, "status": 42206,
+                           "name": "AssertionFailureError", **extra}
+                expected_name = payload.pop("expected_name", "AssertionFailureError")
+                response = V.urllib.error.HTTPError(
+                    "https://r.jina.ai/" + url, 422, "Rejected", {},
+                    io.BytesIO(V.json.dumps(payload).encode()))
+                with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}), \
+                        mock.patch.object(V.urllib.request, "urlopen", side_effect=response) as transport:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.jina_fetch(url, ledger, "research", max_chars=500)
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.jina_fetch(url, ledger, "research", max_chars=500)
+                self.assertEqual(transport.call_count, 1)
+                self.assertEqual(len(ledger.calls), 1)
+                self.assertEqual(ledger.calls[0]["out_tok"], 4596)
+                self.assertEqual(ledger._reservations, {})
+                result = ledger.calls[0]["structured_result"]
+                self.assertEqual(result["outcome"], "retrieval_http_terminal")
+                self.assertEqual(result["failure"]["provider_name"], expected_name)
+                self.assertNotIn("synthetic-private", V.json.dumps(ledger.calls))
+
+    def test_jina_terminal_diagnostics_preserve_only_fixed_categories_after_restart(self):
+        url = "https://example.test/source?token=synthetic-private"
+        cases = [
+            ("Failed to goto " + url + ": TimeoutError: synthetic-private", "jina_navigation_failed"),
+            ("Failed to access https://example.test: synthetic-private", "jina_access_failed"),
+            ("Invalid concurrency: synthetic-private", "jina_internal_assertion"),
+            ("opaque synthetic-private assertion", "jina_assertion_unclassified"),
+        ]
+        for message, diagnostic in cases:
+            with self.subTest(diagnostic=diagnostic), tempfile.TemporaryDirectory() as directory:
+                path = os.path.join(directory, "spend.json")
+                ledger = V.Ledger(ceiling=1, label="synthetic")
+                ledger.attach(path)
+                response = V.urllib.error.HTTPError("https://r.jina.ai/" + url, 422, "Rejected", {},
+                    io.BytesIO(V.json.dumps({"code":422,"status":42206,
+                        "name":"AssertionFailureError","message":message}).encode()))
+                with mock.patch.dict(os.environ, {"JINA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen", side_effect=response):
+                    with self.assertRaises(V.VendorPaidRequestTerminal) as caught:
+                        V.jina_fetch(url, ledger, "research", max_chars=500)
+                failure = ledger.calls[0]["structured_result"]["failure"]
+                self.assertEqual(failure["kind"], diagnostic)
+                self.assertNotIn("synthetic-private", V.json.dumps(ledger.calls))
+                self.assertNotIn("synthetic-private", str(caught.exception))
+                resumed = V.Ledger(ceiling=1, label="synthetic restart")
+                resumed.attach(path)
+                resumed.load(path)
+                with mock.patch.object(V, "_http") as transport:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.jina_fetch(url, resumed, "research", max_chars=500)
+                    transport.assert_not_called()
+
+    def test_reader_response_reads_are_bounded_and_oversized_results_are_terminal(self):
+        class TrackedBody(io.BytesIO):
+            def read(self, size=-1):
+                self.read_size = size
+                return super().read(size)
+
+        for status, bound in ((200, 8 * 1024 * 1024), (422, 65536)):
+            with self.subTest(status=status):
+                body = TrackedBody(b'{"data":{"usage":{"tokens":1},"content":"'
+                                   + b'x' * (bound + 1) + b'"}}')
+                ledger = V.Ledger(ceiling=1, label="synthetic")
+                response = (body if status == 200 else V.urllib.error.HTTPError(
+                    "https://r.jina.ai/https://example.test", status, "Rejected", {}, body))
+                with mock.patch.dict(os.environ, {"JINA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen",
+                                          **({"return_value": response} if status == 200
+                                             else {"side_effect": response})):
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.jina_fetch("https://example.test", ledger, "research", max_chars=500)
+                self.assertGreater(body.read_size, 0)
+                self.assertLessEqual(body.read_size, bound + 1)
+                self.assertTrue(body.closed)
+                self.assertEqual(ledger._reservations, {})
+                self.assertEqual(ledger.calls[0]["out_tok"], 4596)
+
+    def test_corrupted_retrieval_checkpoint_is_terminal_before_any_transport(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "spend.json")
+            ledger = V.Ledger(ceiling=1, label="synthetic")
+            ledger.attach(path)
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "synthetic"}), \
+                    mock.patch.object(V, "_http", side_effect=V.VendorHTTPRejected(
+                        "synthetic", status=422, provider_status=42206,
+                        provider_name="AssertionFailureError")):
+                with self.assertRaises(V.VendorPaidRequestTerminal):
+                    V.jina_fetch("https://example.test", ledger, "research", max_chars=500)
+            saved = V.strict_json_load(path)
+            saved["calls"][0]["structured_result"]["failure"]["kind"] = "synthetic-private"
+            V.atomic_write_json(path, saved)
+            resumed = V.Ledger(ceiling=1, label="synthetic restart")
+            resumed.attach(path)
+            resumed.load(path)
+            with mock.patch.object(V, "_http") as transport:
+                with self.assertRaises(V.VendorPaidRequestTerminal) as caught:
+                    V.jina_fetch("https://example.test", resumed, "research", max_chars=500)
+                transport.assert_not_called()
+            self.assertNotIn("synthetic-private", str(caught.exception))
+
+    def test_corrupted_completed_checkpoint_never_enters_retryable_channel(self):
+        for field in ("schema_version", "response_sha256"):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
+                path = os.path.join(directory, "spend.json")
+                ledger = V.Ledger(ceiling=1, label="synthetic")
+                ledger.attach(path)
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V, "_http", return_value={"results": []}):
+                    V.exa_search("synthetic", ledger, "research")
+                saved = V.strict_json_load(path)
+                saved["calls"][0]["structured_result"][field] = "synthetic-private"
+                V.atomic_write_json(path, saved)
+                resumed = V.Ledger(ceiling=1, label="synthetic restart")
+                resumed.attach(path)
+                resumed.load(path)
+                with mock.patch.object(V, "_http") as transport:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.exa_search("synthetic", resumed, "research")
+                    transport.assert_not_called()
+
+    def test_retrieval_failure_tracebacks_do_not_disclose_provider_diagnostics(self):
+        for vendor, invoke in (
+                ("exa", lambda ledger: V.exa_search("safe query", ledger, "research")),
+                ("perplexity", lambda ledger: V.perplexity_citations("safe query", ledger, "research")),
+                ("jina", lambda ledger: V.jina_fetch("https://example.test", ledger, "research"))):
+            with self.subTest(vendor=vendor):
+                response = V.urllib.error.HTTPError(
+                    "https://example.test/?token=synthetic-private", 403,
+                    "synthetic-private", {}, io.BytesIO(b'{"message":"synthetic-private"}'))
+                ledger = V.Ledger(ceiling=100, label="synthetic")
+                with mock.patch.dict(os.environ, {
+                        "EXA_API_KEY": "synthetic", "PERPLEXITY_API_KEY": "synthetic", "JINA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V, "_PPX_MIN_GAP", 0), \
+                        mock.patch.object(V.urllib.request, "urlopen", side_effect=response):
+                    with self.assertRaises(V.VendorPaidRequestTerminal) as caught:
+                        invoke(ledger)
+                self.assertNotIn("synthetic-private", "".join(traceback.format_exception(caught.exception)))
+
+    def test_reasoning_transport_traceback_does_not_disclose_provider_diagnostics(self):
+        ledger = V.Ledger(ceiling=100, label="synthetic")
+        llm = V.LLM("anthropic", ledger, model="claude-test")
+        client = SimpleNamespace(messages=SimpleNamespace(
+            create=mock.Mock(side_effect=RuntimeError("synthetic-private"))))
+        sdk = SimpleNamespace(Anthropic=mock.Mock(return_value=client),
+                              transform_schema=lambda schema: schema)
+        with mock.patch.dict(sys.modules, {"anthropic": sdk}), \
+                mock.patch.dict(os.environ, {"ANTHROPIC_API_KEY": "synthetic"}):
+            with self.assertRaises(V.VendorPaidRequestTerminal) as caught:
+                llm.json_call_once("system", "user", {"type":"object"}, "research", max_tokens=500)
+        self.assertNotIn("synthetic-private", "".join(traceback.format_exception(caught.exception)))
+        self.assertEqual(ledger._reservations, {})
+
     def test_jina_classified_http_outcomes_replay_without_transport_after_restart(self):
         cases = (
             (
@@ -1296,6 +1591,32 @@ class VendorJsonCallTest(unittest.TestCase):
                 b'{"code":422,"name":"SubmittedDataMalformedError","status":42203}',
                 V.JinaSourceRejected,
                 "retrieval_source_rejected",
+            ),
+            (
+                "source-no-content",
+                422,
+                b'{"code":422,"name":"AssertionFailureError","status":42206,'
+                b'"message":"No content available for URL https://example.test/source-no-content",'
+                b'"readableMessage":"AssertionFailureError: No content available for URL https://example.test/source-no-content",'
+                b'"data":null,"cause":{}}',
+                V.JinaSourceRejected,
+                "retrieval_source_rejected",
+            ),
+            (
+                "terminal-assertion",
+                422,
+                b'{"code":422,"name":"AssertionFailureError","status":42206}',
+                V.VendorPaidRequestTerminal,
+                "retrieval_http_terminal",
+            ),
+            (
+                # The failed production checkpoint retained this numeric status
+                # and an empty provider name. It must remain terminal forever.
+                "legacy-terminal-assertion",
+                422,
+                b'{"code":422,"status":42206}',
+                V.VendorPaidRequestTerminal,
+                "retrieval_http_terminal",
             ),
             (
                 "terminal",
@@ -1614,6 +1935,37 @@ class VendorJsonCallTest(unittest.TestCase):
         self.assertEqual(ledger.calls[0]["out_tok"], token_cap)
         self.assertIn("UNMETERED-UPPER-BOUND", ledger.calls[0]["detail"])
         self.assertEqual(ledger._reservations, {})
+
+    def test_perplexity_malformed_success_is_settled_terminal_and_never_replayed(self):
+        valid = {"usage": {"prompt_tokens": 5, "completion_tokens": 7,
+                           "cost": {"total_cost": 0.009321}},
+                 "choices": [{"message": {"content": "lead"}}], "citations": []}
+        cases = [{"usage": ["unexpected"]}, {"choices": []},
+                 {"citations": [42]}, {"citations": "synthetic-private"},
+                 {"search_results": [{"url": "file:///synthetic-private"}]},
+                 {"choices": [{"message": {"content": {"secret": "synthetic-private"}}}]}]
+        for extra in cases:
+            with self.subTest(extra=extra), tempfile.TemporaryDirectory() as directory:
+                path = os.path.join(directory, "spend.json")
+                ledger = V.Ledger(ceiling=1, label="synthetic")
+                ledger.attach(path)
+                with mock.patch.dict(os.environ, {"PERPLEXITY_API_KEY": "synthetic"}), \
+                        mock.patch.object(V, "_PPX_MIN_GAP", 0), \
+                        mock.patch.object(V, "_http", return_value={**valid, **extra}):
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.perplexity_citations("synthetic", ledger, "research")
+                self.assertEqual(len(ledger.calls), 1)
+                self.assertGreater(ledger.spent(), 0)
+                self.assertEqual(ledger._reservations, {})
+                self.assertNotIn("synthetic-private", V.json.dumps(ledger.calls))
+                resumed = V.Ledger(ceiling=1, label="synthetic restart")
+                resumed.attach(path)
+                resumed.load(path)
+                with mock.patch.object(V, "_http") as transport:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.perplexity_citations("synthetic", resumed, "research")
+                    transport.assert_not_called()
+                self.assertEqual(resumed.spent(), ledger.spent())
 
     def test_reasoning_transport_ambiguity_is_durable_and_not_reissued(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -27,7 +27,8 @@ import urllib.parse, urllib.request, urllib.error
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
-PRICES = json.load(open(os.path.join(HERE, "prices.json")))
+with open(os.path.join(HERE, "prices.json")) as handle:
+    PRICES = json.load(handle)
 
 # Reader's ``X-Max-Tokens`` trims content, while ``X-Token-Budget`` rejects a
 # request whose total charge would exceed the budget. Keep enough deliberately
@@ -413,8 +414,25 @@ class Ledger:
             self, vendor, pass_name, request_sha256, model=""):
         """Return the oldest matching durable retrieval result as an exact cache."""
         with self._lock:
+            reserved = {
+                event["reservation_id"]: event
+                for event in self._reservation_journal
+                if event.get("event") == "reserved"
+            }
             for index, call in enumerate(self.calls):
                 journal = call.get("structured_result")
+                reservation = reserved.get(call.get("reservation_id"), {})
+                if (reservation.get("request_sha256") == request_sha256
+                        and reservation.get("vendor") == vendor
+                        and reservation.get("pass_name") == pass_name
+                        and reservation.get("model") == model
+                        and (not isinstance(journal, dict)
+                             or journal.get("request_sha256") != request_sha256)):
+                    # Settlement does not erase the pre-transport request identity.
+                    # Losing its result journal is corruption, never a cache miss
+                    # that authorizes another charge for that same request.
+                    raise VendorPaidRequestTerminal(
+                        "settled retrieval request lost its durable result identity")
                 if (not isinstance(journal, dict)
                         or journal.get("request_sha256") != request_sha256):
                     continue
@@ -425,8 +443,12 @@ class Ledger:
                     # payload digest across protected lanes. They are not candidates
                     # for this call; keep scanning rather than cross-claiming or failing.
                     continue
+                if (reservation.get("request_sha256")
+                        and reservation["request_sha256"] != request_sha256):
+                    raise VendorPaidRequestTerminal(
+                        "durable retrieval result does not match its reservation")
                 if journal.get("schema_version") != "damm.structured-result/v1":
-                    raise VendorError("durable retrieval result is invalid")
+                    raise VendorPaidRequestTerminal("durable retrieval result is invalid")
                 outcome = journal.get("outcome")
                 if outcome == "retrieval_transport_ambiguous":
                     # This is deliberately not marked consumed: every later invocation
@@ -459,7 +481,7 @@ class Ledger:
                         detail="durable retrieval usage missing",
                     )
                 if outcome == "retrieval_output_malformed":
-                    raise VendorError(
+                    raise VendorPaidRequestTerminal(
                         f"durable {vendor} retrieval failure: {outcome}")
                 if outcome == VendorUsageExceededReservation.code:
                     reserved_cost = journal.get("reserved_cost")
@@ -470,7 +492,7 @@ class Ledger:
                             or not math.isfinite(float(value))
                             or value < 0
                             for value in (reserved_cost, actual_cost)):
-                        raise VendorError(
+                        raise VendorPaidRequestTerminal(
                             "durable usage-exceeded result is invalid")
                     raise VendorUsageExceededReservation(
                         vendor=vendor, model=model, pass_name=pass_name,
@@ -480,7 +502,7 @@ class Ledger:
                 if (outcome != "complete" or not isinstance(response, dict)
                         or stable_json_sha256(response)
                         != journal.get("response_sha256")):
-                    raise VendorError("durable retrieval result is invalid")
+                    raise VendorPaidRequestTerminal("durable retrieval result is invalid")
                 return True, strict_json_loads(json.dumps(response, allow_nan=False))
         return False, None
 
@@ -836,13 +858,16 @@ class VendorHTTPRejected(VendorError):
     """The provider returned an explicit unsuccessful HTTP response."""
 
     def __init__(self, message, *, status=None, provider_status=None,
-                 provider_name=""):
+                 provider_name="", reader_content_unavailable=False,
+                 reader_diagnostic="endpoint_rejected"):
         super().__init__(message)
         self.http_status = status
         # ``status`` remains as a compatibility alias for existing callers.
         self.status = status
         self.provider_status = provider_status
         self.provider_name = provider_name
+        self.reader_content_unavailable = reader_content_unavailable
+        self.reader_diagnostic = reader_diagnostic
 
 
 class JinaSourceRejected(VendorHTTPRejected):
@@ -1150,8 +1175,13 @@ _JINA_SOURCE_REJECTION_TUPLES = {
     ("jina_submitted_data_malformed", 422, 42203,
      "SubmittedDataMalformedError"),
     ("jina_budget_cap", 409, 40904, "BudgetExceededError"),
+    ("jina_content_unavailable", 422, 42206, "AssertionFailureError"),
 }
 _JINA_PROVIDER_NAME = re.compile(r"[A-Za-z][A-Za-z0-9_-]{0,79}")
+_JINA_TERMINAL_KINDS = frozenset({
+    "endpoint_rejected", "jina_navigation_failed", "jina_access_failed",
+    "jina_internal_assertion", "jina_assertion_unclassified",
+})
 
 
 def _jina_failure_fields(error, kind):
@@ -1175,9 +1205,12 @@ def _jina_failure_fields(error, kind):
         "provider_status": provider_status,
         "provider_name": provider_name,
     }
-    if kind == "endpoint_rejected":
+    if kind in _JINA_TERMINAL_KINDS:
         # Unknown provider names are untrusted text, even when identifier-shaped.
-        failure["provider_name"] = ""
+        failure["provider_name"] = (
+            "AssertionFailureError" if (
+                http_status, provider_status, provider_name
+            ) == (422, 42206, "AssertionFailureError") else "")
         return failure
     if tuple(failure[key] for key in (
             "kind", "http_status", "provider_status", "provider_name")) \
@@ -1190,7 +1223,7 @@ def _jina_failure_from_journal(journal, *, source):
     failure = journal.get("failure")
     if not isinstance(failure, dict) or set(failure) != {
             "kind", "http_status", "provider_status", "provider_name"}:
-        raise VendorError("durable Jina retrieval failure is invalid")
+        raise VendorPaidRequestTerminal("durable Jina retrieval failure is invalid")
     kind = failure.get("kind")
     http_status = failure.get("http_status")
     provider_status = failure.get("provider_status")
@@ -1203,7 +1236,7 @@ def _jina_failure_from_journal(journal, *, source):
             or not 0 <= provider_status <= 99_999
             or not isinstance(provider_name, str)
             or (provider_name and not _JINA_PROVIDER_NAME.fullmatch(provider_name))):
-        raise VendorError("durable Jina retrieval failure is invalid")
+        raise VendorPaidRequestTerminal("durable Jina retrieval failure is invalid")
     fields = {
         "kind": kind,
         "http_status": http_status,
@@ -1214,9 +1247,13 @@ def _jina_failure_from_journal(journal, *, source):
         if tuple(fields[key] for key in (
                 "kind", "http_status", "provider_status", "provider_name")) \
                 not in _JINA_SOURCE_REJECTION_TUPLES:
-            raise VendorError("durable Jina source rejection is invalid")
-    elif kind != "endpoint_rejected":
-        raise VendorError("durable Jina endpoint rejection is invalid")
+            raise VendorPaidRequestTerminal("durable Jina source rejection is invalid")
+    elif kind not in _JINA_TERMINAL_KINDS:
+        raise VendorPaidRequestTerminal("durable Jina endpoint rejection is invalid")
+    elif kind != "endpoint_rejected" and (
+            http_status, provider_status, provider_name
+    ) != (422, 42206, "AssertionFailureError"):
+        raise VendorPaidRequestTerminal("durable Jina assertion classification is invalid")
     return fields
 
 
@@ -1229,6 +1266,56 @@ def _unique_http_fields(pairs):
     return result
 
 
+def _reader_content_unavailable(body, url):
+    """Recognize one target-bound Reader assertion, never arbitrary 42206s.
+
+    jina-ai/reader@1574bfd src/api/crawler.ts emits this exact message when
+    no snapshot exists. Other AssertionFailureErrors include service failures.
+    Keep only this boolean; never propagate the provider message or URL.
+    """
+    if (not isinstance(body, dict)
+            or not url.startswith(("https://r.jina.ai/https://",
+                                   "https://r.jina.ai/http://"))
+            or set(body) - {"data", "cause", "code", "status", "name",
+                            "message", "readableMessage"}
+            or body.get("code") != 422
+            or body.get("data") is not None
+            or body.get("cause") not in (None, {})):
+        return False
+    message = "No content available for URL " + url[len("https://r.jina.ai/"):]
+    return (body.get("message") == message
+            and ("readableMessage" not in body
+                 or body["readableMessage"] == "AssertionFailureError: " + message))
+
+
+def _reader_diagnostic(body, url):
+    """Retain fixed investigation categories without retaining provider prose.
+
+    These labels never authorize fallback. Even a navigation/access assertion
+    can originate in the Reader service, so every one remains terminal.
+    """
+    if (not isinstance(body, dict)
+            or (body.get("code"), body.get("status"), body.get("name"))
+            != (422, 42206, "AssertionFailureError")
+            or not url.startswith(("https://r.jina.ai/https://",
+                                   "https://r.jina.ai/http://"))):
+        return "endpoint_rejected"
+    message = body.get("message")
+    if isinstance(message, str):
+        target = url[len("https://r.jina.ai/"):]
+        parsed = urllib.parse.urlsplit(target)
+        origin = urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, "", "", ""))
+        if message.startswith(f"Failed to goto {target}: "):
+            return "jina_navigation_failed"
+        if message.startswith((f"Failed to access {target}: ",
+                               f"Failed to access {origin}: ")):
+            return "jina_access_failed"
+        if message.startswith(("Invalid concurrency: ", "Unknown model: ",
+                               "Failed to process the page: ")):
+            return "jina_internal_assertion"
+    return "jina_assertion_unclassified"
+
+
 def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
     body = json.dumps(data, allow_nan=False).encode() if data is not None else None
     h = {"Content-Type": "application/json", "Accept": "application/json"}
@@ -1238,7 +1325,17 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
         req = urllib.request.Request(url, data=body, headers=h, method=method)
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
-                raw = r.read().decode("utf-8", "replace")
+                raw_bytes = r.read(8 * 1024 * 1024 + 1)
+            if len(raw_bytes) > 8 * 1024 * 1024:
+                # A completed oversized response is malformed, not permission
+                # to retry. The caller settles its existing bounded reservation.
+                return None
+            try:
+                raw = raw_bytes.decode("utf-8")
+            except UnicodeDecodeError:
+                # Do not silently repair malformed provider bytes into evidence.
+                # This completed response still settles the caller's reservation.
+                return None
             try:
                 return require_finite_json(json.loads(
                     raw, parse_constant=_invalid_json_constant,
@@ -1252,7 +1349,9 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
         except urllib.error.HTTPError as e:
             raw_detail = ""
             try:
-                raw_detail = e.read().decode("utf-8", "replace")
+                error_bytes = e.read(65536 + 1)
+                if len(error_bytes) <= 65536:
+                    raw_detail = error_bytes.decode("utf-8", "replace")
             except Exception as read_error:
                 raw_detail = (
                     f"<unreadable HTTP error body: {type(read_error).__name__}>"
@@ -1285,7 +1384,9 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
             last = VendorHTTPRejected(
                 f"{e.code} {url.split('?')[0]} :: {detail}",
                 status=e.code, provider_status=provider_status,
-                provider_name=provider_name)
+                provider_name=provider_name,
+                reader_content_unavailable=_reader_content_unavailable(error_body, url),
+                reader_diagnostic=_reader_diagnostic(error_body, url))
             if e.code in (400, 401, 402, 403, 404, 409, 422):   # not retryable
                 raise last
             if e.code == 429:
@@ -1456,6 +1557,22 @@ def quote_verify(quote, page_text):
 
 # ---------------------------------------------------------------- retrieval
 
+def _valid_web_url(value):
+    if not isinstance(value, str) or not value or any(ord(c) < 32 for c in value):
+        return False
+    try:
+        parsed = urllib.parse.urlsplit(value)
+        return (parsed.scheme in ("http", "https") and bool(parsed.hostname)
+                and parsed.username is None and parsed.password is None)
+    except ValueError:
+        return False
+
+
+def _valid_exa_page(result):
+    return (isinstance(result, dict) and _valid_web_url(result.get("url"))
+            and all(result.get(field) is None or isinstance(result[field], str)
+                    for field in ("title", "text", "publishedDate", "published")))
+
 def exa_search(query, ledger, pass_name, num_results=8, include_domains=None,
                start_published=None, category=None, text_chars=0):
     lock_sha256 = stable_json_sha256({
@@ -1482,6 +1599,9 @@ def _exa_search_unlocked(
     if (isinstance(num_results, bool) or not isinstance(num_results, int)
             or not 1 <= num_results <= 10):
         raise ValueError("Exa num_results must be an integer from 1 to 10")
+    if (isinstance(text_chars, bool) or not isinstance(text_chars, int)
+            or not 0 <= text_chars <= 120000):
+        raise ValueError("Exa text_chars must be an integer from 0 to 120000")
     payload = {"query": query, "numResults": num_results, "type": "auto"}
     if include_domains:
         payload["includeDomains"] = include_domains
@@ -1497,9 +1617,8 @@ def _exa_search_unlocked(
         "exa", pass_name, request_sha256)
     if claimed:
         results = cached.get("results")
-        if not isinstance(results, list) or not all(
-                isinstance(result, dict) for result in results):
-            raise VendorError("durable Exa result is invalid")
+        if not isinstance(results, list) or not all(_valid_exa_page(result) for result in results):
+            raise VendorPaidRequestTerminal("durable Exa result is invalid")
         return results
 
     # Auto search is a fixed-price request through ten results, including text
@@ -1529,25 +1648,25 @@ def _exa_search_unlocked(
             raise VendorTransportAmbiguous(
                 vendor="exa", model="", pass_name=pass_name, detail=query,
                 max_tokens=0, input_tokens=0, output_tokens=0,
-            ) from error
+            ) from None
         if (not isinstance(j, dict) or "results" not in j
                 or not isinstance(j.get("results"), list)
-                or not all(isinstance(result, dict)
-                           for result in j["results"])):
+                or len(j["results"]) > num_results
+                or not all(_valid_exa_page(result) for result in j["results"])):
             reservation = ledger.settle(
                 reservation, "exa", pass_name, searches=1,
                 detail=f"MALFORMED-UPPER-BOUND {query}",
                 structured_result=_retrieval_failure_journal(
                     request_sha256, "retrieval_output_malformed"),
             )
-            raise VendorError("malformed Exa response: results is not an object array")
+            raise VendorPaidRequestTerminal("malformed Exa response: invalid source fields")
         raw_results = j["results"]
         results = [
             dict(
                 title=result.get("title") or "",
                 url=result.get("url") or "",
                 published=result.get("publishedDate") or "",
-                text=result.get("text") or "",
+                text=(result.get("text") or "")[:text_chars or 120000],
                 tier=tier_for_url(result.get("url") or ""),
             )
             for result in raw_results
@@ -1566,6 +1685,32 @@ def _exa_search_unlocked(
         if (reservation is not None and not transport_attempted
                 and ledger.reservation_pending(reservation)):
             ledger.release(reservation)
+
+
+def usable_source_text(text, max_chars):
+    """Return the bounded extract only when it has enough text for evidence gates."""
+    if isinstance(text, str) and len(text[:max_chars].strip()) >= 200:
+        return text[:max_chars]
+    return ""
+
+
+def read_source(source, ledger, pass_name, max_chars=18000):
+    """Use Exa's extractive page text before requesting the same page from Reader.
+
+    Callers pass an Exa result (or a citation with no text), never generated
+    summaries or discovery-peer prose. Quote and country gates still apply to
+    the returned page. An insufficient excerpt needs Reader; an actual terminal
+    Reader outcome must propagate rather than be hidden by a fallback.
+    """
+    if isinstance(max_chars, bool) or not isinstance(max_chars, int) or max_chars < 200:
+        raise ValueError("source text cap must be an integer of at least 200")
+    text = usable_source_text(source.get("text"), max_chars)
+    if text:
+        return {"text": text, "retrieval_provider": "exa"}
+    return {
+        "text": jina_fetch(source["url"], ledger, pass_name, max_chars=max_chars),
+        "retrieval_provider": "jina",
+    }
 
 
 def jina_fetch(url, ledger, pass_name, max_chars=120000, timeout=90):
@@ -1589,6 +1734,9 @@ def _jina_source_rejection_kind(error):
     for kind, http_status, provider_status, provider_name \
             in _JINA_SOURCE_REJECTION_TUPLES:
         if fields == (http_status, provider_status, provider_name):
+            if (kind == "jina_content_unavailable"
+                    and error.reader_content_unavailable is not True):
+                return None
             return kind
     return None
 
@@ -1634,7 +1782,7 @@ def _jina_fetch_unlocked(
     if claimed:
         text = cached.get("text")
         if not isinstance(text, str):
-            raise VendorError("durable Jina result is invalid")
+            raise VendorPaidRequestTerminal("durable Jina result is invalid")
         return text
     reservation = ledger.reserve(
         pass_name,
@@ -1671,7 +1819,9 @@ def _jina_fetch_unlocked(
                     structured_result=_retrieval_failure_journal(
                         request_sha256, "retrieval_http_terminal",
                         failure=_jina_failure_fields(
-                            error, "endpoint_rejected")),
+                            error, error.reader_diagnostic
+                            if error.reader_diagnostic in _JINA_TERMINAL_KINDS
+                            else "endpoint_rejected")),
                 )
                 raise _jina_http_terminal_error(error) from None
             # The provider gives no metered usage with an explicit rejection. Keep the
@@ -1836,10 +1986,10 @@ def _perplexity_citations_unlocked(
         result = cached.get("result")
         if (not isinstance(result, dict)
                 or not isinstance(result.get("citations"), list)
-                or not all(isinstance(url, str)
+                or not all(_valid_web_url(url)
                            for url in result["citations"])
                 or not isinstance(result.get("lead_prose"), str)):
-            raise VendorError("durable Perplexity result is invalid")
+            raise VendorPaidRequestTerminal("durable Perplexity result is invalid")
         return result
     # Ordinary text tokenization cannot exceed UTF-8 bytes. The fixed allowance
     # covers the request wrapper and provider control tokens not present in question.
@@ -1880,8 +2030,9 @@ def _perplexity_citations_unlocked(
                 vendor="perplexity", model=model, pass_name=pass_name,
                 detail=question[:120], max_tokens=max_tokens,
                 input_tokens=input_token_bound, output_tokens=max_tokens,
-            ) from error
-        u = (j.get("usage") or {}) if isinstance(j, dict) else {}
+            ) from None
+        u = j.get("usage") if isinstance(j, dict) else None
+        u = u if isinstance(u, dict) else {}
         prompt_tokens = u.get("prompt_tokens")
         completion_tokens = u.get("completion_tokens")
         cost_data = u.get("cost") if isinstance(u.get("cost"), dict) else {}
@@ -1909,22 +2060,32 @@ def _perplexity_citations_unlocked(
                 vendor="perplexity", model=model, pass_name=pass_name,
                 detail=question[:120],
             )
-        raw_citations = j.get("citations") if isinstance(j, dict) else []
-        cites = ([url for url in raw_citations if isinstance(url, str)]
-                 if isinstance(raw_citations, list) else [])
-        raw_search_results = (
-            j.get("search_results") if isinstance(j, dict) else [])
-        raw_search_results = (
-            raw_search_results if isinstance(raw_search_results, list) else [])
+        raw_citations = j.get("citations", [])
+        raw_search_results = j.get("search_results", [])
+        choices = j.get("choices")
+        if (not isinstance(raw_citations, list)
+                or not all(_valid_web_url(url) for url in raw_citations)
+                or not isinstance(raw_search_results, list)
+                or not all(isinstance(row, dict) and _valid_web_url(row.get("url"))
+                           for row in raw_search_results)
+                or not isinstance(choices, list) or len(choices) != 1
+                or not isinstance(choices[0], dict)
+                or not isinstance(choices[0].get("message"), dict)
+                or not isinstance(choices[0]["message"].get("content"), str)):
+            reservation = ledger.settle(
+                reservation, "perplexity", pass_name, model=model, requests=1,
+                in_tok=prompt_tokens, out_tok=completion_tokens,
+                billed_cost=total_cost, detail="MALFORMED-DISCOVERY-RESPONSE",
+                structured_result=_retrieval_failure_journal(
+                    request_sha256, "retrieval_output_malformed"),
+            )
+            raise VendorPaidRequestTerminal("malformed Perplexity discovery response")
+        cites = list(raw_citations)
         for sr in raw_search_results:
             if (isinstance(sr, dict) and isinstance(sr.get("url"), str)
                     and sr["url"] not in cites):
                 cites.append(sr["url"])
-        prose = ""
-        try:
-            prose = j["choices"][0]["message"]["content"]
-        except Exception:
-            pass
+        prose = choices[0]["message"]["content"]
         result = dict(
             citations=cites,
             lead_prose=prose if isinstance(prose, str) else "",
@@ -2431,7 +2592,7 @@ class LLM:
                     max_tokens=max_tokens,
                     input_tokens=input_bound,
                     output_tokens=output_bound,
-                ) from error
+                ) from None
             reservation = self.ledger.settle(
                 reservation,
                 self.vendor, pass_name, model=self.model,

@@ -292,7 +292,8 @@ _l2.record("exa", "research", searches=2)
 check("and the counter accumulates", round(_l2.spent(), 6), 0.035)
 check("the summary counts both sittings", _l2.summary()["calls"], 2)
 _l2.save(_f)
-check("saving does not drop the carried calls", len(_json.load(open(_f))["calls"]), 2)
+with open(_f) as _handle:
+    check("saving does not drop the carried calls", len(_json.load(_handle)["calls"]), 2)
 
 _l3 = V.Ledger(ceiling=0.02, label="t"); _l3.load(_f)
 try:

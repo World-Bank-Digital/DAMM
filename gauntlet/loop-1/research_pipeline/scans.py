@@ -45,7 +45,8 @@ import workflow_inputs as WI
 
 PASS = "scans"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
-MODEL = json.load(open(MODEL_FILE))
+with open(MODEL_FILE) as handle:
+    MODEL = json.load(handle)
 ASSESSMENT_YEAR = MODEL["config"]["assessment_year"]
 
 EXA_RESULTS = 6
@@ -241,7 +242,8 @@ def _search_and_fetch(
 
     def one_search(q):
         try:
-            return True, V.exa_search(q, ledger, PASS, num_results=EXA_RESULTS), None
+            return True, V.exa_search(q, ledger, PASS, num_results=EXA_RESULTS,
+                                      text_chars=PAGE_CHARS * 3), None
         except V.BudgetExhausted:
             raise
         except Exception as e:
@@ -253,10 +255,15 @@ def _search_and_fetch(
         for _succeeded, res, _failure in search_outcomes:
             for r in res or []:
                 u = (r.get("url") or "").split("#")[0]
-                if not u or u in seen:
+                if not u:
+                    continue
+                if u in seen:
+                    if not V.usable_source_text(seen[u].get("text"), PAGE_CHARS * 3):
+                        seen[u]["text"] = (V.usable_source_text(r.get("text"), PAGE_CHARS * 3)
+                                           or seen[u].get("text", ""))
                     continue
                 seen[u] = dict(url=u, title=r.get("title") or "",
-                               tier=V.tier_for_url(u))
+                               tier=V.tier_for_url(u), text=r.get("text", ""))
                 ranked.append(seen[u])
     if queries and not any(succeeded for succeeded, _results, _failure in search_outcomes):
         raise RuntimeError("every search request failed")
@@ -277,11 +284,12 @@ def _search_and_fetch(
 
     def fetch(r):
         try:
-            text = V.jina_fetch(r["url"], ledger, PASS, max_chars=PAGE_CHARS * 3)
+            fetched = V.read_source(r, ledger, PASS, max_chars=PAGE_CHARS * 3)
+            text = fetched["text"]
             if not str(text or "").strip():
                 log(f"    ! fetch failed {r['url'][:50]}: no text returned")
                 return False, None, "page fetch returned no text"
-            return True, dict(r, text=text or ""), None
+            return True, dict(r, **fetched), None
         except V.BudgetExhausted:
             raise
         except Exception as e:
