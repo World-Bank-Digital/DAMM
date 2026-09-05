@@ -2,6 +2,7 @@
 """Zero-spend regression coverage for bounded Stage 5 semantic repair."""
 
 import copy
+import io
 import os
 import sys
 import tempfile
@@ -340,6 +341,14 @@ class ForesightSemanticRepairTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             engine_input = Path(directory) / "engine-input.json"
             engine_input.write_text("{}", encoding="utf-8")
+            tracked_input = io.StringIO("{}")
+            real_open = open
+
+            def open_for_engine_input(path, *args, **kwargs):
+                if os.fspath(path) == str(engine_input):
+                    return tracked_input
+                return real_open(path, *args, **kwargs)
+
             argv = [
                 "foresight.py", "--country", "Fixtureland", "--iso", "FIX",
                 "--out", "FIX_semantic", "--vendor", "anthropic/claude-opus-5",
@@ -354,9 +363,14 @@ class ForesightSemanticRepairTest(unittest.TestCase):
                     mock.patch.object(
                         F, "foresight_context_sources", return_value=[source]), \
                     mock.patch.object(
-                        F, "engine_run", return_value={"pillars": {}, "prerequisites": {}}):
+                        F, "engine_run", return_value={"pillars": {}, "prerequisites": {}}), \
+                    mock.patch("builtins.open", side_effect=open_for_engine_input):
                 self.assertEqual(F.main(), F.V.NONRETRYABLE_STAGE_EXIT)
 
+            self.assertTrue(
+                tracked_input.closed,
+                "Stage 5 must close the engine-input file after loading it",
+            )
             checkpoint = F.V.strict_json_load(
                 Path(directory) / "FIX_semantic_foresight_state.json")
             self.assertIsNone(checkpoint["scenarios"])

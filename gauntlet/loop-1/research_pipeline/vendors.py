@@ -29,6 +29,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 PRICES = json.load(open(os.path.join(HERE, "prices.json")))
 
+# Reader's ``X-Max-Tokens`` trims content, while ``X-Token-Budget`` rejects a
+# request whose total charge would exceed the budget. Keep enough deliberately
+# bounded room for the text response envelope, but reserve the *total* strict
+# budget before transport so the local ledger and provider cap agree.
+JINA_READER_METADATA_HEADROOM_TOKENS = 4_096
+
 
 def _durable_temporary(path, content, suffix):
     """Write and fsync bytes beside their destination, returning the temporary path."""
@@ -428,6 +434,25 @@ class Ledger:
                     # never reissue an attempt whose billing outcome is unresolved.
                     raise VendorPaidRequestTerminal(
                         f"durable {vendor} retrieval failure: {outcome}")
+                if outcome == "retrieval_source_rejected":
+                    # An authoritative unsuccessful response is reusable as a failed
+                    # retrieval outcome. Replaying the exact request could only add an
+                    # unaccounted provider charge; callers decide whether another
+                    # selected source can still establish the needed evidence.
+                    failure = _jina_failure_from_journal(journal, source=True)
+                    raise JinaSourceRejected(
+                        f"durable {vendor} retrieval failure: {failure['kind']}",
+                        status=failure["http_status"],
+                        provider_status=failure["provider_status"],
+                        provider_name=failure["provider_name"],
+                    )
+                if outcome == "retrieval_http_terminal":
+                    # Credential, credit, throttle, and endpoint failures are not
+                    # evidence about one source. Their billing result lacks a usage
+                    # field, so retain the conservative bound and never reissue them.
+                    _jina_failure_from_journal(journal, source=False)
+                    raise VendorPaidRequestTerminal(
+                        f"durable {vendor} retrieval failure: {outcome}")
                 if outcome == "retrieval_usage_missing":
                     raise VendorUsageUnmetered(
                         vendor=vendor, model=model, pass_name=pass_name,
@@ -810,6 +835,19 @@ class VendorPaidRequestTerminal(VendorError, BudgetExhausted):
 class VendorHTTPRejected(VendorError):
     """The provider returned an explicit unsuccessful HTTP response."""
 
+    def __init__(self, message, *, status=None, provider_status=None,
+                 provider_name=""):
+        super().__init__(message)
+        self.http_status = status
+        # ``status`` remains as a compatibility alias for existing callers.
+        self.status = status
+        self.provider_status = provider_status
+        self.provider_name = provider_name
+
+
+class JinaSourceRejected(VendorHTTPRejected):
+    """A known permanent Reader response for one selected source only."""
+
 
 class VendorNetworkError(VendorError):
     """No authoritative provider response was received after one transport attempt."""
@@ -1093,12 +1131,102 @@ def _retrieval_result_journal(request_sha256, response):
     }
 
 
-def _retrieval_failure_journal(request_sha256, outcome):
-    return {
+def _retrieval_failure_journal(request_sha256, outcome, failure=None):
+    journal = {
         "schema_version": "damm.structured-result/v1",
         "request_sha256": request_sha256,
         "outcome": outcome,
     }
+    if failure is not None:
+        if not isinstance(failure, dict):
+            raise ValueError("retrieval failure journal is not an object")
+        journal["failure"] = strict_json_loads(json.dumps(
+            failure, ensure_ascii=False, allow_nan=False))
+    return journal
+
+
+_JINA_SOURCE_REJECTION_TUPLES = {
+    # Exact payload observed in the Nigeria canary.
+    ("jina_submitted_data_malformed", 422, 42203,
+     "SubmittedDataMalformedError"),
+    ("jina_budget_cap", 409, 40904, "BudgetExceededError"),
+}
+_JINA_PROVIDER_NAME = re.compile(r"[A-Za-z][A-Za-z0-9_-]{0,79}")
+
+
+def _jina_failure_fields(error, kind):
+    """Store a fixed, redacted classification rather than an HTTP response body."""
+    http_status = error.http_status
+    provider_status = error.provider_status
+    provider_name = error.provider_name
+    if (isinstance(http_status, bool) or not isinstance(http_status, int)
+            or not 100 <= http_status <= 599):
+        http_status = 0
+    if (isinstance(provider_status, bool)
+            or not isinstance(provider_status, int)
+            or not 0 <= provider_status <= 99_999):
+        provider_status = 0
+    if (not isinstance(provider_name, str)
+            or not _JINA_PROVIDER_NAME.fullmatch(provider_name)):
+        provider_name = ""
+    failure = {
+        "kind": kind,
+        "http_status": http_status,
+        "provider_status": provider_status,
+        "provider_name": provider_name,
+    }
+    if kind == "endpoint_rejected":
+        # Unknown provider names are untrusted text, even when identifier-shaped.
+        failure["provider_name"] = ""
+        return failure
+    if tuple(failure[key] for key in (
+            "kind", "http_status", "provider_status", "provider_name")) \
+            not in _JINA_SOURCE_REJECTION_TUPLES:
+        raise ValueError("unrecognized Jina source rejection")
+    return failure
+
+
+def _jina_failure_from_journal(journal, *, source):
+    failure = journal.get("failure")
+    if not isinstance(failure, dict) or set(failure) != {
+            "kind", "http_status", "provider_status", "provider_name"}:
+        raise VendorError("durable Jina retrieval failure is invalid")
+    kind = failure.get("kind")
+    http_status = failure.get("http_status")
+    provider_status = failure.get("provider_status")
+    provider_name = failure.get("provider_name")
+    if (not isinstance(kind, str) or isinstance(http_status, bool)
+            or not isinstance(http_status, int)
+            or not (http_status == 0 or 100 <= http_status <= 599)
+            or isinstance(provider_status, bool)
+            or not isinstance(provider_status, int)
+            or not 0 <= provider_status <= 99_999
+            or not isinstance(provider_name, str)
+            or (provider_name and not _JINA_PROVIDER_NAME.fullmatch(provider_name))):
+        raise VendorError("durable Jina retrieval failure is invalid")
+    fields = {
+        "kind": kind,
+        "http_status": http_status,
+        "provider_status": provider_status,
+        "provider_name": provider_name,
+    }
+    if source:
+        if tuple(fields[key] for key in (
+                "kind", "http_status", "provider_status", "provider_name")) \
+                not in _JINA_SOURCE_REJECTION_TUPLES:
+            raise VendorError("durable Jina source rejection is invalid")
+    elif kind != "endpoint_rejected":
+        raise VendorError("durable Jina endpoint rejection is invalid")
+    return fields
+
+
+def _unique_http_fields(pairs):
+    result = {}
+    for name, value in pairs:
+        if name in result:
+            raise ValueError("ambiguous HTTP JSON envelope")
+        result[name] = value
+    return result
 
 
 def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
@@ -1112,19 +1240,60 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 raw = r.read().decode("utf-8", "replace")
             try:
-                return strict_json_loads(raw)
-            except json.JSONDecodeError:
+                return require_finite_json(json.loads(
+                    raw, parse_constant=_invalid_json_constant,
+                    object_pairs_hook=_unique_http_fields))
+            except (ValueError, json.JSONDecodeError):
+                # A completed HTTP response with non-standard JSON (such as NaN)
+                # is still a response, not a lost transport outcome. Let the
+                # provider-specific caller account for its malformed payload under
+                # its strict cap instead of treating it as ambiguous network loss.
                 return raw
         except urllib.error.HTTPError as e:
-            detail = e.read().decode("utf-8", "replace")[:400]
+            raw_detail = ""
+            try:
+                raw_detail = e.read().decode("utf-8", "replace")
+            except Exception as read_error:
+                raw_detail = (
+                    f"<unreadable HTTP error body: {type(read_error).__name__}>"
+                )
+            finally:
+                # HTTPError owns a file-like response body. Close it after the small
+                # diagnostic read so a burst of rejected pages cannot leak handles.
+                e.close()
+            detail = raw_detail[:400]
+            provider_status = None
+            provider_name = ""
+            try:
+                error_body = require_finite_json(json.loads(
+                    raw_detail, parse_constant=_invalid_json_constant,
+                    object_pairs_hook=_unique_http_fields))
+            except (ValueError, json.JSONDecodeError):
+                error_body = None
+            if isinstance(error_body, dict) and "code" in error_body:
+                code = error_body["code"]
+                if isinstance(code, bool) or not isinstance(code, int) or code != e.code:
+                    error_body = None
+            if isinstance(error_body, dict):
+                candidate_status = error_body.get("status")
+                if (isinstance(candidate_status, int)
+                        and not isinstance(candidate_status, bool)):
+                    provider_status = candidate_status
+                candidate_name = error_body.get("name")
+                if isinstance(candidate_name, str):
+                    provider_name = candidate_name[:80]
             last = VendorHTTPRejected(
-                f"{e.code} {url.split('?')[0]} :: {detail}")
-            if e.code in (400, 401, 403, 404, 422):   # not retryable
+                f"{e.code} {url.split('?')[0]} :: {detail}",
+                status=e.code, provider_status=provider_status,
+                provider_name=provider_name)
+            if e.code in (400, 401, 402, 403, 404, 409, 422):   # not retryable
                 raise last
             if e.code == 429:
                 # A rate limit is a wait, not a failure, and giving up on one turns a
                 # vendor's throttle into a hole in the evidence. Honour Retry-After
                 # when it is offered, and otherwise back off far enough to matter.
+                if attempt + 1 >= retries:
+                    break
                 try:
                     wait = float(e.headers.get("Retry-After") or 0)
                 except (TypeError, ValueError):
@@ -1134,7 +1303,8 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
         except Exception as e:                        # timeouts, connection resets
             last = VendorNetworkError(
                 f"{type(e).__name__} {url.split('?')[0]} :: {e}")
-        time.sleep(2 * (attempt + 1))
+        if attempt + 1 < retries:
+            time.sleep(2 * (attempt + 1))
     raise last
 
 
@@ -1409,19 +1579,51 @@ def jina_fetch(url, ledger, pass_name, max_chars=120000, timeout=90):
             url, ledger, pass_name, max_chars=max_chars, timeout=timeout)
 
 
+def _jina_source_rejection_kind(error):
+    """Return a known per-source Reader failure kind, else fail closed."""
+    fields = (
+        error.http_status,
+        error.provider_status,
+        error.provider_name,
+    )
+    for kind, http_status, provider_status, provider_name \
+            in _JINA_SOURCE_REJECTION_TUPLES:
+        if fields == (http_status, provider_status, provider_name):
+            return kind
+    return None
+
+
+def _jina_http_terminal_error(error):
+    status = error.status if error.status is not None else "unclassified"
+    return VendorPaidRequestTerminal(
+        f"Jina Reader endpoint returned HTTP {status}; charged the bounded upper "
+        "estimate and refused retry"
+    )
+
+
+def _redacted_request_url(url):
+    """Identify a request without exposing credentials, paths, or query material."""
+    return "source-sha256:" + hashlib.sha256(str(url).encode("utf-8")).hexdigest()
+
+
 def _jina_fetch_unlocked(
         url, ledger, pass_name, max_chars=120000, timeout=90):
     """Fetch page text a quote can be verified against. Returns '' on failure."""
     if (isinstance(max_chars, bool) or not isinstance(max_chars, int)
             or max_chars <= 0):
         raise ValueError("Jina max_chars must be a positive integer")
-    # Reader's hard token controls are both at least 500. A token can represent more
-    # than one character, so matching the token ceiling to the requested character
-    # ceiling is conservative; the local character slice remains the caller contract.
-    token_budget = max(500, max_chars)
+    # Reader's output cap is at least 500. It trims returned content, whereas
+    # its strict total budget can also cover the response envelope. Sending the
+    # same value for both headers left no envelope room and produced 40904
+    # BudgetExceededError on otherwise usable pages. The total provider budget
+    # is nevertheless the hard pre-call spend bound, so reserve and send it.
+    content_token_cap = max(500, max_chars)
+    strict_token_budget = (
+        content_token_cap + JINA_READER_METADATA_HEADROOM_TOKENS)
     request_payload = {
         "url": url,
-        "token_budget": token_budget,
+        "max_tokens": content_token_cap,
+        "token_budget": strict_token_budget,
         "max_characters": max_chars,
         "return_format": "text",
     }
@@ -1436,10 +1638,11 @@ def _jina_fetch_unlocked(
         return text
     reservation = ledger.reserve(
         pass_name,
-        ledger.estimated_cost("jina", out_tok=token_budget),
+        ledger.estimated_cost("jina", out_tok=strict_token_budget),
         vendor="jina", request_sha256=request_sha256,
     )
     transport_attempted = False
+    detail_url = _redacted_request_url(url)
     target = "https://r.jina.ai/" + url
     try:
         try:
@@ -1449,39 +1652,66 @@ def _jina_fetch_unlocked(
                 headers={
                     "Authorization": "Bearer " + key("JINA_API_KEY"),
                     "X-Return-Format": "text",
-                    "X-Token-Budget": str(token_budget),
-                    "X-Max-Tokens": str(token_budget),
+                    "X-Max-Tokens": str(content_token_cap),
+                    "X-Token-Budget": str(strict_token_budget),
                     "Accept": "application/json",
                 },
                 method="GET", timeout=timeout, retries=1,
             )
-        except VendorHTTPRejected:
-            # Jina documents failed Reader requests as zero-token deductions. Keep the
-            # failed attempt visible while atomically retiring its reservation.
+        except VendorHTTPRejected as error:
+            # Only target-specific, permanent Reader rejections can be handled as one
+            # unusable source. Authentication, balance, throttling, and service errors
+            # must not turn into an evidence gap or invite a second paid attempt.
+            source_kind = _jina_source_rejection_kind(error)
+            if source_kind is None:
+                reservation = ledger.settle(
+                    reservation, "jina", pass_name,
+                    out_tok=strict_token_budget, fetches=1,
+                    detail=f"HTTP-TERMINAL-UPPER-BOUND {detail_url}",
+                    structured_result=_retrieval_failure_journal(
+                        request_sha256, "retrieval_http_terminal",
+                        failure=_jina_failure_fields(
+                            error, "endpoint_rejected")),
+                )
+                raise _jina_http_terminal_error(error) from None
+            # The provider gives no metered usage with an explicit rejection. Keep the
+            # full bounded reservation as spent rather than assuming the request was
+            # free, and journal it so an immediate retry cannot make another request.
             reservation = ledger.settle(
-                reservation, "jina", pass_name, fetches=1,
-                detail=f"FAIL {url}",
+                reservation, "jina", pass_name,
+                out_tok=strict_token_budget, fetches=1,
+                detail=f"HTTP-REJECTED-UPPER-BOUND {detail_url}",
+                structured_result=_retrieval_failure_journal(
+                    request_sha256, "retrieval_source_rejected",
+                    failure=_jina_failure_fields(error, source_kind)),
             )
-            raise
+            raise JinaSourceRejected(
+                "Jina Reader provider rejected the selected source", status=error.http_status,
+                provider_status=error.provider_status,
+                provider_name=error.provider_name,
+            ) from None
         except VendorError as error:
             reservation = ledger.settle(
-                reservation, "jina", pass_name, out_tok=token_budget, fetches=1,
-                detail=f"AMBIGUOUS-UPPER-BOUND {url}",
+                reservation, "jina", pass_name,
+                out_tok=strict_token_budget, fetches=1,
+                detail=f"AMBIGUOUS-UPPER-BOUND {detail_url}",
                 structured_result=_retrieval_failure_journal(
                     request_sha256, "retrieval_transport_ambiguous"),
             )
             raise VendorTransportAmbiguous(
-                vendor="jina", model="", pass_name=pass_name, detail=url,
-                max_tokens=token_budget, input_tokens=0,
-                output_tokens=token_budget,
-            ) from error
+                vendor="jina", model="", pass_name=pass_name, detail=detail_url,
+                max_tokens=strict_token_budget, input_tokens=0,
+                output_tokens=strict_token_budget,
+            ) from None
 
         data = response.get("data") if isinstance(response, dict) else None
         if not isinstance(data, dict):
             data = {}
         usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
         usage_tokens = usage.get("tokens")
-        if (isinstance(usage_tokens, bool) or not isinstance(usage_tokens, int)
+        # Do not stringify arbitrary JSON into purported source evidence.
+        text = data.get("content", data.get("text", response.get("text") if isinstance(response, dict) else None))
+        if (not isinstance(text, str) or isinstance(usage_tokens, bool) or not isinstance(usage_tokens, int)
                 or usage_tokens < 0):
             # A successful response without its documented billed-token field cannot
             # be accounted exactly. Charge the full hard provider cap and fail closed
@@ -1490,20 +1720,20 @@ def _jina_fetch_unlocked(
             journal = _retrieval_failure_journal(
                 request_sha256, "retrieval_usage_missing")
             reservation = ledger.settle(
-                reservation, "jina", pass_name, out_tok=token_budget, fetches=1,
-                detail=f"UNMETERED-UPPER-BOUND {url}",
+                reservation, "jina", pass_name,
+                out_tok=strict_token_budget, fetches=1,
+                detail=f"UNMETERED-UPPER-BOUND {detail_url}",
                 structured_result=journal,
             )
             raise VendorUsageUnmetered(
-                vendor="jina", model="", pass_name=pass_name, detail=url)
+                vendor="jina", model="", pass_name=pass_name, detail=detail_url)
 
-        text = data.get("content") or data.get("text") or response.get("text") or ""
-        text = str(text)[:max_chars]
+        text = text[:max_chars]
         journal = _retrieval_result_journal(
             request_sha256, {"text": text})
         reservation = ledger.settle(
             reservation, "jina", pass_name, out_tok=usage_tokens, fetches=1,
-            detail=url, structured_result=journal,
+            detail=detail_url, structured_result=journal,
         )
         ledger.mark_retrieval_result_consumed(
             "jina", pass_name, request_sha256)

@@ -46,7 +46,8 @@ from engine_v17 import MODEL, run as engine_run
 
 PASS = "foresight"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
-SPEC = json.load(open(MODEL_FILE))
+with open(MODEL_FILE, encoding="utf-8") as stream:
+    SPEC = json.load(stream)
 ASSESSMENT_YEAR = SPEC["config"]["assessment_year"]
 FORESIGHT = SPEC["foresight"]
 CANDIDATE = SPEC["candidate_indicators"]
@@ -609,7 +610,8 @@ def scans_text(basename):
     p = os.path.join(LOOP1, f"{basename}_scans.json")
     if not os.path.exists(p):
         return ""
-    data = json.load(open(p))
+    with open(p, encoding="utf-8") as stream:
+        data = json.load(stream)
     rows = data.get("country_findings") or []
     if not rows:
         return ""
@@ -942,7 +944,8 @@ def main():
              "refused": [], "context_sources": None, "semantic_repairs": {}}
     loaded_state = False
     if a.resume and os.path.exists(state_path):
-        state = json.load(open(state_path))
+        with open(state_path, encoding="utf-8") as stream:
+            state = json.load(stream)
         loaded_state = True
     WI.bind_checkpoint_state(state, loaded=loaded_state)
     if loaded_state:
@@ -970,7 +973,8 @@ def main():
         ledger.save(spend_path)
         return V.stage_failure_exit(error, 1)
 
-    rows = json.load(open(inp))
+    with open(inp, encoding="utf-8") as stream:
+        rows = json.load(stream)
     assessment = engine_run(
         a.country, rows, refyear=ASSESSMENT_YEAR, model_spec=SPEC,
         intervention_profiles={})

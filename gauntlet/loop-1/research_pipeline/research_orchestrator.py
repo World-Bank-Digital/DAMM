@@ -62,6 +62,17 @@ FETCH_WORKERS = 6
 ROW_WORKERS = 4
 TIER_QUOTA = {"T1": 4, "T2": 2, "T3": 2, "T4": 2, "T5": 1}
 
+
+class SelectedReaderEvidenceUnavailable(V.VendorPaidRequestTerminal):
+    """No selected page yielded usable evidence after Reader retrieval.
+
+    This is terminal for the coordinator: each source supplied an authoritative
+    non-transient response or durable too-short result, so an immediate replay cannot
+    turn an access failure into evidence absence. A later, separately authorized run
+    may use changed provider or source conditions.
+    """
+
+
 # The two carried candidates (spec 13.2). They are researched like any other row and
 # then held outside every aggregate — `candidate_indicators.never` in the model file
 # bars them from every mean, every prerequisite and the readiness matrix.
@@ -267,15 +278,40 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
             chosen.append(s)
 
     def one_fetch(s):
-        return s, V.jina_fetch(s["url"], ledger, pass_name, max_chars=PAGE_CHARS * 3)
+        try:
+            return s, V.jina_fetch(
+                s["url"], ledger, pass_name, max_chars=PAGE_CHARS * 3), None
+        except V.JinaSourceRejected as error:
+            # An explicit unsuccessful Reader response is source-local. Keep looking
+            # at the other selected pages, but never turn an all-page failure into a
+            # statement that the country has no evidence.
+            return s, "", error
 
     pack = []
+    reader_rejections = []
     with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as ex:
-        for s, txt in ex.map(one_fetch, chosen):
+        for s, txt, rejection in ex.map(one_fetch, chosen):
+            if rejection is not None:
+                reader_rejections.append(rejection)
+                source_url = V._redacted_request_url(s["url"])
+                log(f"    ! Reader rejected selected page: {source_url[:100]}")
+                continue
             if len(txt.strip()) < 200:
+                source_url = V._redacted_request_url(s["url"])
+                log(f"    ! Reader returned too little text: {source_url[:100]}")
                 continue
             pack.append(dict(s, text=txt, cap=PAGE_CHARS,
                              surfaced_by=", ".join(s["surfaced_by"])))
+    if chosen and not pack:
+        if len(reader_rejections) == len(chosen):
+            raise SelectedReaderEvidenceUnavailable(
+                "every selected Reader page was explicitly rejected; "
+                "evidence absence cannot be established"
+            )
+        raise SelectedReaderEvidenceUnavailable(
+            "no selected Reader page produced usable evidence; "
+            "evidence absence cannot be established"
+        )
     pack.sort(key=lambda p: p["tier"])
     return pack, plan, ppx, construct
 

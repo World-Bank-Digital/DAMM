@@ -301,7 +301,7 @@ class WorkflowCoordinatorTest(unittest.TestCase):
         self.assertEqual(
             manifest["failure"]["type"], "MissingRequiredArtifacts"
         )
-        self.assertIn("source_inventory", manifest["failure"]["message"])
+        self.assertIn("outputs or protected budget could not be validated", manifest["failure"]["message"])
 
         serialized = json.dumps(manifest).lower()
         self.assertNotIn("awaiting_human", serialized)
@@ -631,7 +631,7 @@ class WorkflowCoordinatorTest(unittest.TestCase):
         self.assertEqual(manifest["status"], "failed")
         self.assertEqual(manifest["current_stage"], "country_research")
         self.assertEqual(manifest["stages"][1]["spent_usd"], 8.0)
-        self.assertIn("exceeds its protected allocation $7.500000", manifest["failure"]["message"])
+        self.assertIn("protected budget could not be validated", manifest["failure"]["message"])
 
     def test_resume_skips_hash_verified_completed_stages(self):
         handlers = self.all_handlers()

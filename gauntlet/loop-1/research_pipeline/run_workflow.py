@@ -2026,7 +2026,7 @@ class WorkflowCoordinator:
                         next_attempt=attempt + 1,
                         elapsed_seconds=round(self.monotonic() - stage_started, 3),
                         cumulative_spent_usd=self._manifest["spent_usd"],
-                        error={"type": type(error).__name__, "message": str(error)},
+                        error={"type": "RetryableStageError", "message": "The stage will use its bounded automatic retry."},
                     )
                     if self.retry_delay_seconds:
                         self.sleep(self.retry_delay_seconds)
@@ -2066,7 +2066,13 @@ class WorkflowCoordinator:
             if last_error is not None:
                 record["status"] = "failed"
                 record["completed_at"] = _utc_now(self.clock)
-                failure = {"type": type(last_error).__name__, "message": str(last_error)}
+                failure = {
+                    "type": type(last_error).__name__ if type(last_error) in (
+                        WorkflowContractError, WorkflowConfigurationError,
+                        RetryableStageError, NonRetryableStageError, MissingRequiredArtifacts,
+                    ) else "StageFailure",
+                    "message": "The stage stopped before completion; its outputs or protected budget could not be validated.",
+                }
                 self._manifest["status"] = "failed"
                 self._manifest["current_stage"] = stage_id
                 self._manifest["completed_at"] = _utc_now(self.clock)
