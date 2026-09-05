@@ -98,7 +98,7 @@ class TerminalPaidOutcomePropagationTest(unittest.TestCase):
         with mock.patch.object(A.V, "exa_search", return_value=discovery):
             with mock.patch.object(
                     A.V, "jina_fetch",
-                    side_effect=V.VendorHTTPRejected("synthetic 422")):
+                    side_effect=V.JinaSourceRejected("synthetic 422")):
                 self.assertEqual(
                     A._search_sources(["query"], [], object(), "ASIS"), [])
 

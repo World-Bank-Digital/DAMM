@@ -102,6 +102,26 @@ class WorkflowExportIntegrationTest(unittest.TestCase):
             spent_usd=0.0,
         )
 
+    def test_retry_diagnostics_do_not_escape_into_downloadable_events(self):
+        sentinel = "SYNTHETIC_PRIVATE_VALUE https://provider.test/?key=private /var/worker/private"
+        def retry_once(context):
+            if context.attempt == 1:
+                raise W.RetryableStageError(sentinel)
+            return self.analytical_handler(context)
+        handlers = {stage_id: self.analytical_handler for stage_id in W.EXPECTED_STAGE_IDS[:7]}
+        handlers[W.EXPECTED_STAGE_IDS[0]] = retry_once
+        handlers["export_package"] = self.export_handler
+        result = W.WorkflowCoordinator(
+            contract=self.contract, workspace=self.workspace,
+            handlers=handlers, retry_delay_seconds=0,
+        ).run(country="Egypt", iso3="EGY", run_id="safe-retry")
+        self.assertEqual(result["status"], "complete")
+        events = (self.workspace / "workflow-events.jsonl").read_text()
+        self.assertNotIn("SYNTHETIC_PRIVATE_VALUE", events)
+        self.assertNotIn("provider.test", events)
+        self.assertNotIn("/var/worker", events)
+        self.assertIn('"event":"retry"', events)
+
     def test_one_launch_produces_hash_bound_all_format_draft_package(self):
         handlers = {
             stage_id: self.analytical_handler

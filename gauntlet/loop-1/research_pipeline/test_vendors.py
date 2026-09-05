@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import io
 import os
 import sys
 import tempfile
@@ -936,15 +937,18 @@ class VendorJsonCallTest(unittest.TestCase):
             "retrieval_output_malformed",
         )
 
-    def test_jina_fetch_reserves_token_budget_and_records_exact_usage(self):
-        token_cap = 500
+    def test_jina_fetch_reserves_total_provider_cap_with_metadata_headroom(self):
+        """The strict provider cap, not only returned content, bounds spend."""
+        content_token_cap = 500
+        metadata_headroom = 4096
+        strict_token_budget = content_token_cap + metadata_headroom
         out_per_mtok = 1000.0
-        worst_case = token_cap / 1e6 * out_per_mtok
+        worst_case = strict_token_budget / 1e6 * out_per_mtok
         ledger = V.Ledger(ceiling=(worst_case * 1.5) / 0.35, label="test")
         transport = mock.Mock(return_value={
             "data": {
                 "content": "verified page",
-                "usage": {"tokens": token_cap},
+                "usage": {"tokens": strict_token_budget},
             },
         })
 
@@ -956,21 +960,81 @@ class VendorJsonCallTest(unittest.TestCase):
                     self.assertEqual(
                         V.jina_fetch(
                             "https://example.test/page", ledger, "research",
-                            max_chars=token_cap,
+                            max_chars=content_token_cap,
                         ),
                         "verified page",
                     )
                     with self.assertRaises(V.BudgetExhausted):
                         V.jina_fetch(
                             "https://example.test/other", ledger, "research",
-                            max_chars=token_cap,
+                            max_chars=content_token_cap,
                         )
 
         self.assertEqual(transport.call_count, 1)
         headers = transport.call_args.kwargs["headers"]
-        self.assertEqual(headers["X-Token-Budget"], str(token_cap))
-        self.assertEqual(headers["X-Max-Tokens"], str(token_cap))
-        self.assertEqual(ledger.calls[0]["out_tok"], token_cap)
+        self.assertEqual(headers["X-Max-Tokens"], str(content_token_cap))
+        self.assertEqual(headers["X-Token-Budget"], str(strict_token_budget))
+        self.assertEqual(ledger.calls[0]["out_tok"], strict_token_budget)
+
+    def test_jina_usage_above_strict_cap_is_terminal_across_restart(self):
+        content_token_cap = 500
+        strict_token_budget = (
+            content_token_cap + V.JINA_READER_METADATA_HEADROOM_TOKENS)
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "jina-over-cap.json")
+            ledger = V.Ledger(ceiling=1.0, label="test")
+            ledger.attach(spend_path)
+            response = {
+                "data": {
+                    "content": "provider exceeded the advertised strict cap",
+                    "usage": {"tokens": strict_token_budget + 1},
+                },
+            }
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+                with mock.patch.object(V, "_http", return_value=response) as transport:
+                    with self.assertRaises(V.VendorUsageExceededReservation):
+                        V.jina_fetch(
+                            "https://example.test/over-cap", ledger, "research",
+                            max_chars=content_token_cap,
+                        )
+
+            resumed = V.Ledger(ceiling=1.0, label="resumed")
+            resumed.attach(spend_path)
+            resumed.load(spend_path)
+            with mock.patch.object(
+                    V, "_http",
+                    side_effect=AssertionError("over-cap request was reissued")):
+                with self.assertRaises(V.VendorUsageExceededReservation):
+                    V.jina_fetch(
+                        "https://example.test/over-cap", resumed, "research",
+                        max_chars=content_token_cap,
+                    )
+
+        self.assertEqual(transport.call_count, 1)
+
+    def test_jina_fetch_separates_content_trim_from_total_provider_cap(self):
+        """A total cap retains metadata room while the content trim stays narrow."""
+        ledger = V.Ledger(ceiling=1.0, label="test")
+        transport = mock.Mock(return_value={
+            "data": {"content": "verified page", "usage": {"tokens": 500}},
+        })
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(V, "_http", transport):
+                self.assertEqual(
+                    V.jina_fetch(
+                        "https://example.test/page", ledger, "research",
+                        max_chars=500,
+                    ),
+                    "verified page",
+                )
+
+        headers = transport.call_args.kwargs["headers"]
+        self.assertEqual(headers["X-Max-Tokens"], "500")
+        self.assertEqual(
+            headers["X-Token-Budget"],
+            str(500 + V.JINA_READER_METADATA_HEADROOM_TOKENS),
+        )
 
     def test_same_jina_url_in_two_scan_lanes_does_not_cross_claim(self):
         response = {
@@ -1035,24 +1099,251 @@ class VendorJsonCallTest(unittest.TestCase):
         self.assertEqual(http.call_count, 1)
         self.assertEqual(len(ledger.calls), 1)
 
-    def test_jina_failed_request_settles_zero_and_releases_reservation(self):
+    def test_jina_explicit_rejection_keeps_conservative_bound_and_replays_durably(self):
         ledger = V.Ledger(ceiling=1.0, label="test")
+        rejection = V.JinaSourceRejected(
+            "provider rejected", status=422, provider_status=42203,
+            provider_name="SubmittedDataMalformedError")
 
         with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
             with mock.patch.object(
                     V, "_http",
-                    side_effect=V.VendorHTTPRejected("provider rejected")):
+                    side_effect=rejection) as transport:
                 with self.assertRaisesRegex(
-                        V.VendorHTTPRejected, "provider rejected"):
+                        V.JinaSourceRejected, "provider rejected"):
+                    V.jina_fetch(
+                        "https://example.test/failure", ledger, "research",
+                        max_chars=500,
+                    )
+                with self.assertRaisesRegex(
+                        V.JinaSourceRejected, "retrieval failure"):
                     V.jina_fetch(
                         "https://example.test/failure", ledger, "research",
                         max_chars=500,
                     )
 
         self.assertEqual(len(ledger.calls), 1)
-        self.assertEqual(ledger.calls[0]["out_tok"], 0)
-        self.assertEqual(ledger.calls[0]["cost"], 0)
+        self.assertEqual(transport.call_count, 1)
+        strict_token_budget = 500 + V.JINA_READER_METADATA_HEADROOM_TOKENS
+        self.assertEqual(ledger.calls[0]["out_tok"], strict_token_budget)
+        self.assertEqual(
+            ledger.calls[0]["cost"],
+            ledger.estimated_cost("jina", out_tok=strict_token_budget),
+        )
+        self.assertEqual(
+            ledger.calls[0]["structured_result"]["outcome"],
+            "retrieval_source_rejected",
+        )
         self.assertEqual(ledger._reservations, {})
+
+    def test_jina_account_rejection_is_terminal_and_never_reissued(self):
+        """An API-key or credit failure is not an evidence-source rejection."""
+        ledger = V.Ledger(ceiling=1.0, label="test")
+        response = V.urllib.error.HTTPError(
+            "https://r.jina.ai/https://example.test/account",
+            402,
+            "Payment Required",
+            {},
+            io.BytesIO(b'{"code":402,"name":"PaymentRequired"}'),
+        )
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(
+                    V.urllib.request, "urlopen", side_effect=response) as transport:
+                with mock.patch.object(V.time, "sleep"):
+                    with self.assertRaisesRegex(
+                            V.VendorPaidRequestTerminal, "Reader endpoint"):
+                        V.jina_fetch(
+                            "https://example.test/account", ledger, "research",
+                            max_chars=500,
+                        )
+                    with self.assertRaisesRegex(
+                            V.VendorPaidRequestTerminal, "durable"):
+                        V.jina_fetch(
+                            "https://example.test/account", ledger, "research",
+                            max_chars=500,
+                        )
+
+        response.close()
+        self.assertEqual(transport.call_count, 1)
+        self.assertEqual(len(ledger.calls), 1)
+        self.assertEqual(
+            ledger.calls[0]["out_tok"],
+            500 + V.JINA_READER_METADATA_HEADROOM_TOKENS,
+        )
+        self.assertEqual(
+            ledger.calls[0]["structured_result"]["outcome"],
+            "retrieval_http_terminal",
+        )
+
+    def test_jina_non_source_http_failures_do_not_become_source_gaps(self):
+        """Account, throttle, and service errors must fail closed before a retry."""
+        for status in (401, 402, 403, 404, 409, 422, 429, 503):
+            with self.subTest(status=status):
+                ledger = V.Ledger(ceiling=1.0, label=f"test-{status}")
+                response = V.urllib.error.HTTPError(
+                    "https://r.jina.ai/https://example.test/endpoint-failure",
+                    status,
+                    "endpoint failure",
+                    {"Retry-After": "0"},
+                    io.BytesIO(b'{"name":"EndpointFailure"}'),
+                )
+                with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+                    with mock.patch.object(
+                            V.urllib.request, "urlopen", side_effect=response):
+                        with mock.patch.object(V.time, "sleep") as sleeper:
+                            with self.assertRaises(V.VendorPaidRequestTerminal):
+                                V.jina_fetch(
+                                    "https://example.test/endpoint-failure",
+                                    ledger, "research", max_chars=500,
+                                )
+                        if status == 429:
+                            sleeper.assert_not_called()
+                response.close()
+                self.assertEqual(
+                    ledger.calls[0]["structured_result"]["outcome"],
+                    "retrieval_http_terminal",
+                )
+
+    def test_jina_40904_budget_rejection_is_source_local_and_durable(self):
+        """The deliberate per-page strict cap can reject one source safely."""
+        ledger = V.Ledger(ceiling=1.0, label="test")
+        response = V.urllib.error.HTTPError(
+            "https://r.jina.ai/https://example.test/over-budget",
+            409,
+            "Conflict",
+            {},
+            io.BytesIO(
+                b'{"code":409,"name":"BudgetExceededError","status":40904}'
+            ),
+        )
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(
+                    V.urllib.request, "urlopen", side_effect=response) as transport:
+                with mock.patch.object(V.time, "sleep"):
+                    with self.assertRaises(V.JinaSourceRejected) as raised:
+                        V.jina_fetch(
+                            "https://example.test/over-budget", ledger, "research",
+                            max_chars=500,
+                        )
+                    self.assertEqual(raised.exception.status, 409)
+                    self.assertEqual(raised.exception.provider_status, 40904)
+                    self.assertEqual(
+                        raised.exception.provider_name, "BudgetExceededError")
+                    with self.assertRaisesRegex(
+                            V.VendorHTTPRejected, "durable"):
+                        V.jina_fetch(
+                            "https://example.test/over-budget", ledger, "research",
+                            max_chars=500,
+                        )
+
+        response.close()
+        self.assertEqual(transport.call_count, 1)
+        self.assertEqual(
+            ledger.calls[0]["structured_result"]["outcome"],
+            "retrieval_source_rejected",
+        )
+
+    def test_jina_42203_submitted_data_rejection_is_source_local(self):
+        ledger = V.Ledger(ceiling=1.0, label="test")
+        response = V.urllib.error.HTTPError(
+            "https://r.jina.ai/https://example.test/malformed",
+            422,
+            "Unprocessable Content",
+            {},
+            io.BytesIO(
+                b'{"code":422,"name":"SubmittedDataMalformedError","status":42203}'
+            ),
+        )
+
+        with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+            with mock.patch.object(
+                    V.urllib.request, "urlopen", side_effect=response) as transport:
+                with self.assertRaises(V.JinaSourceRejected) as raised:
+                    V.jina_fetch(
+                        "https://example.test/malformed?token=not-for-ledger",
+                        ledger, "research",
+                        max_chars=500,
+                    )
+
+        response.close()
+        self.assertEqual(raised.exception.http_status, 422)
+        self.assertEqual(raised.exception.provider_status, 42203)
+        self.assertEqual(
+            raised.exception.provider_name, "SubmittedDataMalformedError")
+        self.assertEqual(transport.call_count, 1)
+        self.assertEqual(
+            ledger.calls[0]["structured_result"]["outcome"],
+            "retrieval_source_rejected",
+        )
+        self.assertNotIn("not-for-ledger", ledger.calls[0]["detail"])
+        self.assertNotIn(
+            "not-for-ledger", str(ledger.calls[0]["structured_result"]))
+
+    def test_jina_classified_http_outcomes_replay_without_transport_after_restart(self):
+        cases = (
+            (
+                "source-budget",
+                409,
+                b'{"code":409,"name":"BudgetExceededError","status":40904}',
+                V.JinaSourceRejected,
+                "retrieval_source_rejected",
+            ),
+            (
+                "source-malformed",
+                422,
+                b'{"code":422,"name":"SubmittedDataMalformedError","status":42203}',
+                V.JinaSourceRejected,
+                "retrieval_source_rejected",
+            ),
+            (
+                "terminal",
+                402,
+                b'{"code":402,"name":"PaymentRequired"}',
+                V.VendorPaidRequestTerminal,
+                "retrieval_http_terminal",
+            ),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            for label, status, payload, error_type, outcome in cases:
+                with self.subTest(label=label):
+                    spend_path = os.path.join(directory, f"jina-{label}.json")
+                    ledger = V.Ledger(ceiling=1.0, label=label)
+                    ledger.attach(spend_path)
+                    response = V.urllib.error.HTTPError(
+                        f"https://r.jina.ai/https://example.test/{label}",
+                        status, "rejected", {}, io.BytesIO(payload),
+                    )
+                    with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+                        with mock.patch.object(
+                                V.urllib.request, "urlopen", side_effect=response) as transport:
+                            with mock.patch.object(V.time, "sleep"):
+                                with self.assertRaises(error_type):
+                                    V.jina_fetch(
+                                        f"https://example.test/{label}", ledger,
+                                        "research", max_chars=500,
+                                    )
+                    response.close()
+                    self.assertEqual(transport.call_count, 1)
+                    self.assertEqual(
+                        ledger.calls[0]["structured_result"]["outcome"], outcome)
+                    spent_before_restart = ledger.spent()
+
+                    resumed = V.Ledger(ceiling=1.0, label=f"{label}-resumed")
+                    resumed.attach(spend_path)
+                    resumed.load(spend_path)
+                    with mock.patch.object(
+                            V, "_http",
+                            side_effect=AssertionError("classified request was reissued")):
+                        with self.assertRaises(error_type) as raised:
+                            V.jina_fetch(
+                                f"https://example.test/{label}", resumed,
+                                "research", max_chars=500,
+                            )
+                    self.assertEqual(resumed.spent(), spent_before_restart)
+                    if error_type is V.JinaSourceRejected:
+                        self.assertEqual(raised.exception.http_status, status)
 
     def test_jina_ambiguous_transport_consumes_bound_without_a_retry(self):
         ledger = V.Ledger(ceiling=1.0, label="test")
@@ -1069,7 +1360,10 @@ class VendorJsonCallTest(unittest.TestCase):
                         )
 
         self.assertEqual(transport.call_count, 1)
-        self.assertEqual(ledger.calls[0]["out_tok"], 500)
+        self.assertEqual(
+            ledger.calls[0]["out_tok"],
+            500 + V.JINA_READER_METADATA_HEADROOM_TOKENS,
+        )
         self.assertIn("AMBIGUOUS-UPPER-BOUND", ledger.calls[0]["detail"])
 
     def test_jina_unmetered_success_consumes_the_hard_upper_bound(self):
@@ -1087,9 +1381,142 @@ class VendorJsonCallTest(unittest.TestCase):
                         max_chars=token_cap,
                     )
 
-        self.assertEqual(ledger.calls[0]["out_tok"], token_cap)
+        self.assertEqual(
+            ledger.calls[0]["out_tok"],
+            token_cap + V.JINA_READER_METADATA_HEADROOM_TOKENS,
+        )
         self.assertIn("UNMETERED-UPPER-BOUND", ledger.calls[0]["detail"])
         self.assertEqual(ledger._reservations, {})
+
+    def test_jina_nonfinite_success_response_settles_and_replays_after_restart(self):
+        """A malformed 200 response cannot leave a paid Reader claim pending."""
+        token_cap = 500
+        with tempfile.TemporaryDirectory() as directory:
+            spend_path = os.path.join(directory, "jina-nonfinite-success.json")
+            ledger = V.Ledger(ceiling=1.0, label="test")
+            ledger.attach(spend_path)
+            response = mock.MagicMock()
+            response.__enter__.return_value = response
+            response.__exit__.return_value = False
+            response.read.return_value = (
+                b'{"data":{"usage":{"tokens":NaN}}}')
+
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "test-key"}):
+                with mock.patch.object(
+                        V.urllib.request, "urlopen", return_value=response) as transport:
+                    with self.assertRaises(V.VendorUsageUnmetered):
+                        V.jina_fetch(
+                            "https://example.test/nonfinite", ledger, "research",
+                            max_chars=token_cap,
+                        )
+
+            self.assertEqual(transport.call_count, 1)
+            self.assertEqual(len(ledger.calls), 1)
+            self.assertEqual(
+                ledger.calls[0]["structured_result"]["outcome"],
+                "retrieval_usage_missing",
+            )
+            self.assertEqual(ledger._reservations, {})
+            spent_before_restart = ledger.spent()
+
+            resumed = V.Ledger(ceiling=1.0, label="resumed")
+            resumed.attach(spend_path)
+            resumed.load(spend_path)
+            with mock.patch.object(
+                    V, "_http",
+                    side_effect=AssertionError("nonfinite response was reissued")) as http:
+                with self.assertRaises(V.VendorUsageUnmetered):
+                    V.jina_fetch(
+                        "https://example.test/nonfinite", resumed, "research",
+                        max_chars=token_cap,
+                    )
+            http.assert_not_called()
+            self.assertEqual(resumed.spent(), spent_before_restart)
+
+    def test_duplicate_success_usage_settles_unmetered_and_never_replays(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "spend.json")
+            ledger = V.Ledger(ceiling=1, label="synthetic")
+            ledger.attach(path)
+            response = mock.MagicMock()
+            response.__enter__.return_value = response
+            response.read.return_value = (b'{"data":{"content":"evidence","usage":{"tokens":3000,"tokens":0}}}')
+            with mock.patch.dict(os.environ, {"JINA_API_KEY": "fixture"}):
+                with mock.patch.object(V.urllib.request, "urlopen", return_value=response) as transport:
+                    with self.assertRaises(V.VendorUsageUnmetered):
+                        V.jina_fetch("https://example.test/page", ledger, "research", max_chars=500)
+            self.assertEqual(transport.call_count, 1)
+            self.assertEqual(ledger.calls[0]["out_tok"], 4596)
+            self.assertEqual(ledger._reservations, {})
+            resumed = V.Ledger(ceiling=1, label="synthetic")
+            resumed.attach(path)
+            resumed.load(path)
+            with mock.patch.object(V, "_http") as http:
+                with self.assertRaises(V.VendorUsageUnmetered):
+                    V.jina_fetch("https://example.test/page", resumed, "research", max_chars=500)
+            http.assert_not_called()
+            self.assertEqual(resumed.spent(), ledger.spent())
+
+    def test_jina_ambiguous_error_envelopes_are_terminal(self):
+        for body in (
+            b'{"status":40101,"status":42203,"name":"SubmittedDataMalformedError"}',
+            b'{"status":42203,"name":"AuthenticationError","name":"SubmittedDataMalformedError"}',
+            b'{"code":401,"status":42203,"name":"SubmittedDataMalformedError"}',
+        ):
+            with self.subTest(body=body):
+                ledger = V.Ledger(ceiling=1, label="synthetic")
+                error = V.urllib.error.HTTPError("https://example.test", 422, "rejected", {}, io.BytesIO(body))
+                with mock.patch.dict(os.environ, {"JINA_API_KEY": "fixture"}):
+                    with mock.patch.object(V.urllib.request, "urlopen", side_effect=error):
+                        with self.assertRaises(V.VendorPaidRequestTerminal):
+                            V.jina_fetch("https://example.test/page", ledger, "research", max_chars=500)
+                self.assertEqual(ledger.calls[0]["structured_result"]["outcome"], "retrieval_http_terminal")
+
+    def test_jina_malformed_content_with_valid_usage_is_terminal_and_not_replayed(self):
+        # Post-incident audit: token usage does not validate the evidence payload.
+        for content in ({"invented": "evidence " * 40}, ["text"], 42, None):
+            with self.subTest(content_type=type(content).__name__):
+                with tempfile.TemporaryDirectory() as directory:
+                    path = os.path.join(directory, "spend.json")
+                    ledger = V.Ledger(ceiling=1, label="synthetic")
+                    ledger.attach(path)
+                    with mock.patch.dict(os.environ, {"JINA_API_KEY": "fixture"}):
+                        with mock.patch.object(V, "_http", return_value={
+                                "data": {"content": content, "usage": {"tokens": 10}}}) as http:
+                            with self.assertRaises(V.VendorUsageUnmetered):
+                                V.jina_fetch("https://example.test/page", ledger, "research", max_chars=500)
+                    self.assertEqual(http.call_count, 1)
+                    self.assertEqual(ledger.calls[0]["out_tok"], 4596)
+                    self.assertEqual(ledger._reservations, {})
+                    resumed = V.Ledger(ceiling=1, label="synthetic")
+                    resumed.attach(path)
+                    resumed.load(path)
+                    with mock.patch.object(V, "_http") as http:
+                        with self.assertRaises(V.VendorUsageUnmetered):
+                            V.jina_fetch("https://example.test/page", resumed, "research", max_chars=500)
+                    http.assert_not_called()
+
+    def test_jina_failure_diagnostics_do_not_disclose_provider_or_url_material(self):
+        import traceback
+        import json
+        sentinel = "SYNTHETIC_PRIVATE_VALUE"
+        for status, name, provider_status in ((422, "SubmittedDataMalformedError", 42203),
+                                               (402, sentinel, 40200)):
+            with self.subTest(status=status):
+                ledger = V.Ledger(ceiling=1, label="synthetic")
+                url = f"https://user:{sentinel}@example.test/{sentinel}?key={sentinel}#{sentinel}"
+                body = json.dumps({"status": provider_status, "name": name, "message": sentinel}).encode()
+                error = V.urllib.error.HTTPError(url, status, sentinel, {}, io.BytesIO(body))
+                with mock.patch.dict(os.environ, {"JINA_API_KEY": "fixture"}):
+                    with mock.patch.object(V.urllib.request, "urlopen", side_effect=error):
+                        try:
+                            V.jina_fetch(url, ledger, "research", max_chars=500)
+                        except V.VendorError as caught:
+                            rendered = "".join(traceback.format_exception(caught))
+                        else:
+                            self.fail("rejection was accepted")
+                self.assertNotIn(sentinel, rendered)
+                self.assertNotIn(sentinel, json.dumps(ledger.snapshot()))
 
     def test_perplexity_reserves_capped_request_before_transport(self):
         per_request = 1.0
