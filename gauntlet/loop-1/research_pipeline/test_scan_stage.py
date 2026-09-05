@@ -755,6 +755,8 @@ class ScanStageTest(unittest.TestCase):
         self.assertEqual(ledger.spent(), round(spent * 2, 6))
 
     def setUp(self):
+        # These scan fixtures exercise Reader fallback and downstream synthesis.
+        self.enterContext(mock.patch.object(S.SC.V, "exa_contents", return_value=""))
         self.price_patcher = mock.patch.dict(S.SC.V.PRICES["anthropic"], {
             "test-model": {"in_per_mtok": 5.0, "out_per_mtok": 25.0},
         })

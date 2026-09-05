@@ -88,9 +88,22 @@ failure.
 Stage 1 (including automated challenge), country/international scans, AI assessment, and
 foresight request bounded Exa page text with their existing discovery searches. The shared
 `vendors.read_source` uses that extractive text when at least 200 non-padding characters
-are available; otherwise it calls Jina Reader. Generated summaries and Perplexity prose
+are available; otherwise it requests one citation URL through Exa Contents, text only,
+with no subpages. An authoritative short text response can fall through to Jina Reader.
+Generated summaries and Perplexity prose
 are never source evidence. Source URLs, tiers, country isolation and quote verification
 remain mandatory, and each retrieved page identifies its retrieval provider.
+
+The Contents request reserves its full $0.001 one-page bound before transport and journals
+its response before exposing evidence. Status ID, result ID and returned URL must all match
+the requested URL; changed redirect identities stop conservatively instead of inheriting
+the original publisher's tier. Only documented, exact source-level Exa error tuples permit
+another selected page to satisfy the row. Authentication, throttling, unknown errors,
+malformed responses and conflicting cost estimates remain terminal across restart. If every
+selected source is unavailable, Stage 1 stops without publishing a country evidence gap.
+See the [Contents API](https://exa.ai/docs/reference/get-contents),
+[pricing](https://exa.ai/docs/reference/pricing) and
+[error codes](https://exa.ai/docs/reference/error-codes), verified 2026-09-05.
 
 **A Reader rejection is not proof of an evidence gap.** Only the enumerated 40904 and
 42203 tuples, plus the strictly validated, exact target-bound 42206 no-content response,

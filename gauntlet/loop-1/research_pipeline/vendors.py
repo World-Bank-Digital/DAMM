@@ -11,7 +11,7 @@ One place where every outside call is made, metered and priced, so that:
     named exception, because a budget-induced gap that looks like a real one is how
     Nigeria's 21 phantom gaps happened.
 
-Retrieval is Exa (discovery) + Jina (fetch), per standing decision 3: the tier
+Retrieval is Exa (discovery and extractive contents) + Jina (fallback fetch): the tier
 protocol can be enforced in Exa's API parameters, and Jina returns the page text a
 quote is verified against. Perplexity is a discovery peer only (decision C6) — this
 module deliberately returns its *citations* separately from its prose so a caller
@@ -450,7 +450,7 @@ class Ledger:
                 if journal.get("schema_version") != "damm.structured-result/v1":
                     raise VendorPaidRequestTerminal("durable retrieval result is invalid")
                 outcome = journal.get("outcome")
-                if outcome == "retrieval_transport_ambiguous":
+                if outcome in ("retrieval_transport_ambiguous", "retrieval_endpoint_rejected"):
                     # This is deliberately not marked consumed: every later invocation
                     # of the same logical request must fail from the durable record,
                     # never reissue an attempt whose billing outcome is unresolved.
@@ -468,6 +468,10 @@ class Ledger:
                         provider_status=failure["provider_status"],
                         provider_name=failure["provider_name"],
                     )
+                if outcome == "retrieval_exa_source_rejected":
+                    failure = _exa_source_rejection_fields(journal.get("failure"))
+                    raise SourceRejected("Exa could not retrieve the selected source",
+                                         status=failure["http_status"])
                 if outcome == "retrieval_http_terminal":
                     # Credential, credit, throttle, and endpoint failures are not
                     # evidence about one source. Their billing result lacks a usage
@@ -859,7 +863,7 @@ class VendorHTTPRejected(VendorError):
 
     def __init__(self, message, *, status=None, provider_status=None,
                  provider_name="", reader_content_unavailable=False,
-                 reader_diagnostic="endpoint_rejected"):
+                 reader_diagnostic="endpoint_rejected", provider_tag=""):
         super().__init__(message)
         self.http_status = status
         # ``status`` remains as a compatibility alias for existing callers.
@@ -868,9 +872,14 @@ class VendorHTTPRejected(VendorError):
         self.provider_name = provider_name
         self.reader_content_unavailable = reader_content_unavailable
         self.reader_diagnostic = reader_diagnostic
+        self.provider_tag = provider_tag
 
 
-class JinaSourceRejected(VendorHTTPRejected):
+class SourceRejected(VendorHTTPRejected):
+    """An authoritative source-specific rejection; another page may be usable."""
+
+
+class JinaSourceRejected(SourceRejected):
     """A known permanent Reader response for one selected source only."""
 
 
@@ -1385,6 +1394,10 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
                 f"{e.code} {url.split('?')[0]} :: {detail}",
                 status=e.code, provider_status=provider_status,
                 provider_name=provider_name,
+                provider_tag=(error_body.get("tag") if isinstance(error_body, dict)
+                              and error_body.get("tag") in (
+                                  "NO_CONTENT_FOUND", "FETCH_DOCUMENT_ERROR", "ROBOTS_FILTER_FAILED")
+                              else ""),
                 reader_content_unavailable=_reader_content_unavailable(error_body, url),
                 reader_diagnostic=_reader_diagnostic(error_body, url))
             if e.code in (400, 401, 402, 403, 404, 409, 422):   # not retryable
@@ -1687,6 +1700,132 @@ def _exa_search_unlocked(
             ledger.release(reservation)
 
 
+_EXA_SOURCE_HTTP_REJECTIONS = frozenset({
+    ("NO_CONTENT_FOUND", 400), ("FETCH_DOCUMENT_ERROR", 422), ("ROBOTS_FILTER_FAILED", 403),
+})
+_EXA_SOURCE_STATUS_REJECTIONS = frozenset({
+    ("CRAWL_NOT_FOUND", 404), ("SOURCE_NOT_AVAILABLE", 403),
+})
+
+
+def _exa_source_rejection_fields(failure):
+    if (not isinstance(failure, dict) or set(failure) != {"tag", "http_status"}
+            or not isinstance(failure["tag"], str)
+            or type(failure["http_status"]) is not int
+            or (failure["tag"], failure["http_status"])
+            not in _EXA_SOURCE_HTTP_REJECTIONS | _EXA_SOURCE_STATUS_REJECTIONS):
+        raise VendorPaidRequestTerminal("invalid durable Exa source rejection")
+    return failure
+
+
+def exa_contents(url, ledger, pass_name, max_chars=18000):
+    """Fetch one citation's extractive text, with a durable one-page cost bound.
+
+    Search already includes page text. This separate endpoint covers citations
+    discovered by the peer, without relying on Reader as their only fetcher.
+    No generated summaries, highlights, or additional pages are requested.
+    """
+    if (not _valid_web_url(url) or len(url) > 2048
+            or isinstance(max_chars, bool) or not isinstance(max_chars, int)
+            or not 200 <= max_chars <= 120000):
+        raise ValueError("invalid bounded Exa contents request")
+    payload = {"urls": [url], "text": {"maxCharacters": max_chars},
+               "highlights": False, "subpages": 0}
+    request_sha256 = _retrieval_request_sha256(
+        "exa.contents/v1", payload, vendor="exa", model="contents", pass_name=pass_name)
+    with ledger.retrieval_request_lock("exa", pass_name, request_sha256, model="contents"):
+        claimed, cached = ledger.claim_retrieval_result(
+            "exa", pass_name, request_sha256, model="contents")
+        if claimed:
+            if not isinstance(cached.get("text"), str):
+                raise VendorPaidRequestTerminal("durable Exa contents result is invalid")
+            return cached["text"][:max_chars]
+        credential = key("EXA_API_KEY")
+        headroom = ledger.estimated_cost("exa", model="contents", requests=1)
+        if not math.isfinite(headroom) or headroom <= 0:
+            raise VendorError("Exa contents tariff is unavailable")
+        reservation = ledger.reserve(
+            pass_name, headroom, vendor="exa", model="contents", request_sha256=request_sha256)
+
+        def settle(outcome, response=None, reported_bound=None, failure=None):
+            journal = (_retrieval_result_journal(request_sha256, response)
+                       if response is not None
+                       else _retrieval_failure_journal(request_sha256, outcome, failure))
+            ledger.settle(reservation, "exa", pass_name, model="contents", requests=1,
+                          detail=_redacted_request_url(url), structured_result=journal,
+                          billed_cost=reported_bound)
+
+        try:
+            result = _http("https://api.exa.ai/contents", data=payload,
+                           headers={"x-api-key": credential}, retries=1)
+        except VendorHTTPRejected as error:
+            if (error.provider_tag, error.http_status) in _EXA_SOURCE_HTTP_REJECTIONS:
+                fields = {"tag": error.provider_tag, "http_status": error.http_status}
+                settle("retrieval_exa_source_rejected", failure=fields)
+                raise SourceRejected("Exa could not retrieve the selected source",
+                                     status=error.http_status) from None
+            settle("retrieval_endpoint_rejected")
+            raise VendorPaidRequestTerminal(
+                "Exa contents endpoint rejected the request; bounded charge retained") from None
+        except VendorError:
+            settle("retrieval_transport_ambiguous")
+            raise VendorPaidRequestTerminal(
+                "Exa contents request outcome is ambiguous; bounded charge retained") from None
+
+        # The API calls this an estimate. It cannot reduce our reservation, but
+        # evidence of a higher possible charge must stop the workflow and survive
+        # restart, rather than silently accept a changed tariff or extra product.
+        if isinstance(result, dict) and "costDollars" in result:
+            costs = result["costDollars"]
+            reported = costs.get("total") if isinstance(costs, dict) else None
+            try:
+                valid_cost = (not isinstance(reported, bool) and isinstance(reported, (int, float))
+                              and math.isfinite(reported) and reported >= 0)
+            except OverflowError:
+                valid_cost = False
+            if not valid_cost:
+                settle("retrieval_usage_missing")
+                raise VendorUsageUnmetered(vendor="exa", model="contents", pass_name=pass_name)
+            if reported > headroom + 1e-9:
+                settle("usage_exceeded_reservation", reported_bound=reported)
+
+        # Bind the sole status/result to the requested page. An empty or malformed
+        # envelope is never permission to fall through to another paid provider.
+        statuses = result.get("statuses") if isinstance(result, dict) else None
+        pages = result.get("results") if isinstance(result, dict) else None
+        valid = (isinstance(statuses, list) and len(statuses) == 1
+                 and isinstance(statuses[0], dict) and statuses[0].get("id") == url
+                 and isinstance(pages, list) and len(pages) <= 1)
+        text = None
+        if valid and statuses[0].get("status") == "success" and len(pages) == 1:
+            page = pages[0]
+            if (_valid_exa_page(page) and page.get("id") == url and page.get("url") == url
+                    and isinstance(page.get("text"), str)):
+                try:
+                    page["text"].encode("utf-8")
+                    text = page["text"][:max_chars]
+                except UnicodeEncodeError:
+                    pass
+        if valid and statuses[0].get("status") == "error" and not pages:
+            failure = statuses[0].get("error")
+            if (isinstance(failure, dict) and isinstance(failure.get("tag"), str)
+                    and type(failure.get("httpStatusCode")) is int
+                    and (failure["tag"], failure["httpStatusCode"])
+                    in _EXA_SOURCE_STATUS_REJECTIONS):
+                fields = _exa_source_rejection_fields({"tag": failure["tag"],
+                                                      "http_status": failure["httpStatusCode"]})
+                settle("retrieval_exa_source_rejected", failure=fields)
+                raise SourceRejected("Exa could not retrieve the selected source",
+                                     status=fields["http_status"])
+        if text is None:
+            settle("retrieval_usage_missing")
+            raise VendorUsageUnmetered(vendor="exa", model="contents", pass_name=pass_name)
+        # One requested page, one content type: retain the full documented bound
+        # even for an unavailable source. costDollars is an estimate, not billing.
+        settle("complete", {"text": text})
+        return text
+
+
 def usable_source_text(text, max_chars):
     """Return the bounded extract only when it has enough text for evidence gates."""
     if isinstance(text, str) and len(text[:max_chars].strip()) >= 200:
@@ -1695,16 +1834,19 @@ def usable_source_text(text, max_chars):
 
 
 def read_source(source, ledger, pass_name, max_chars=18000):
-    """Use Exa's extractive page text before requesting the same page from Reader.
+    """Use Exa's extractive page text and citation contents before Reader.
 
     Callers pass an Exa result (or a citation with no text), never generated
     summaries or discovery-peer prose. Quote and country gates still apply to
-    the returned page. An insufficient excerpt needs Reader; an actual terminal
+    the returned page. Short contents need Reader; an actual terminal
     Reader outcome must propagate rather than be hidden by a fallback.
     """
     if isinstance(max_chars, bool) or not isinstance(max_chars, int) or max_chars < 200:
         raise ValueError("source text cap must be an integer of at least 200")
     text = usable_source_text(source.get("text"), max_chars)
+    if text:
+        return {"text": text, "retrieval_provider": "exa"}
+    text = usable_source_text(exa_contents(source["url"], ledger, pass_name, max_chars), max_chars)
     if text:
         return {"text": text, "retrieval_provider": "exa"}
     return {

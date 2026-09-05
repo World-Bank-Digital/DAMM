@@ -304,10 +304,11 @@ class AiAssessmentTest(unittest.TestCase):
             "url": "https://example.gov/ai-policy",
             "publishedDate": "2026-01-01",
         }]}
-        jina_response = {"data": {
-            "content": "Published national AI policy evidence. " * 12,
-            "usage": {"tokens": 120},
-        }}
+        contents_response = {
+            "results": [{"id": "https://example.gov/ai-policy", "url": "https://example.gov/ai-policy",
+                         "text": "Published national AI policy evidence. " * 12}],
+            "statuses": [{"id": "https://example.gov/ai-policy", "status": "success"}],
+        }
 
         with tempfile.TemporaryDirectory() as directory:
             spend_path = os.path.join(directory, "stage3-retrieval-spend.json")
@@ -317,7 +318,7 @@ class AiAssessmentTest(unittest.TestCase):
                     "EXA_API_KEY": "test-key", "JINA_API_KEY": "test-key",
             }):
                 with mock.patch.object(
-                        A.V, "_http", side_effect=[exa_response, jina_response]):
+                        A.V, "_http", side_effect=[exa_response, contents_response]):
                     first = A._search_sources(
                         ["Exampleland national AI policy"], [], first_ledger, "ASIS")
             self.assertEqual(len(first), 1)
