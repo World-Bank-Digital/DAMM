@@ -22,6 +22,32 @@ def page_response(**changes):
 
 
 class ExaContentsTest(unittest.TestCase):
+    def test_document_id_can_differ_when_requested_status_and_result_url_match(self):
+        # Sanitized live PDF response captured 2026-09-06: Exa's document ID
+        # differs from the request, while status.id and result.url match it.
+        payload = page_response(results=[{
+            "id": "https://example.test/document-identity",
+            "url": URL, "text": PAGE,
+        }])
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "spend.json")
+            ledger = V.Ledger(ceiling=1)
+            ledger.attach(path)
+            with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                    mock.patch.object(V.urllib.request, "urlopen",
+                        return_value=io.BytesIO(json.dumps(payload).encode())) as http, \
+                    mock.patch.object(V, "jina_fetch", side_effect=AssertionError("Reader called")):
+                source = {"url": URL}
+                self.assertEqual(V.read_source(source, ledger, "research"),
+                                 {"text": PAGE, "retrieval_provider": "exa"})
+                restarted = V.Ledger(ceiling=1)
+                restarted.attach(path)
+                restarted.load(path)
+                self.assertEqual(V.read_source(source, restarted, "research")["text"], PAGE)
+                self.assertEqual(http.call_count, 1)
+                self.assertAlmostEqual(restarted.spent(), .001)
+                self.assertEqual(restarted.summary()["unresolved_reservations"], 0)
+
     def test_unknown_http_transport_and_malformed_results_never_fallback_or_replay(self):
         cases = []
         for status, tag in [(401, "INVALID_API_KEY"), (402, "NO_MORE_CREDITS"),
@@ -35,7 +61,7 @@ class ExaContentsTest(unittest.TestCase):
         malformed = [None, {}, {"results": []}, page_response(statuses=[]),
                      page_response(results=[{"id": URL, "url": URL, "text": 42}]),
                      page_response(statuses=[{"id": URL + "/other", "status": "success"}]),
-                     page_response(results=[{"id": URL + "/other", "url": URL, "text": PAGE}]),
+                     page_response(results=[{"id": None, "url": URL, "text": PAGE}]),
                      page_response(results=[{"id": URL, "url": "https://other.test/unrelated", "text": PAGE}]),
                      page_response(results=[{"id": URL, "url": URL, "text": PAGE + "\ud800"}]),
                      page_response(results=[], statuses=[{"id": URL, "status": "error", "error": {
@@ -46,6 +72,9 @@ class ExaContentsTest(unittest.TestCase):
                      page_response(costDollars={"total": -1}),
                      page_response(costDollars={"total": "0.001"})]
         malformed.append(page_response(costDollars={"total": 10 ** 400}))
+        for document_id in ("", "  ", True, 42, [], {}):
+            malformed.append(page_response(results=[{
+                "id": document_id, "url": URL, "text": PAGE}]))
         for i, payload in enumerate(malformed):
             cases.append((f"malformed-{i}", lambda p=payload: io.BytesIO(json.dumps(p).encode())))
         for i, raw in enumerate([b'\xff', b'{"results":[],"results":[],"statuses":[]}', b'{"x":NaN}']):
@@ -75,6 +104,122 @@ class ExaContentsTest(unittest.TestCase):
                     self.assertEqual(http.call_count, 1)
                     reader.assert_not_called()
                     self.assertNotIn("SYNTHETIC_PRIVATE_DETAIL", Path(path).read_text())
+
+    def test_invalid_cost_keeps_safe_reason_after_restart_without_reissue(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "spend.json")
+            ledger = V.Ledger(ceiling=1)
+            ledger.attach(path)
+            response = page_response(costDollars={"total": "SYNTHETIC_PRIVATE_DETAIL"})
+            with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                    mock.patch.object(V.urllib.request, "urlopen",
+                        return_value=io.BytesIO(json.dumps(response).encode())) as http:
+                with self.assertRaises(V.VendorUsageUnmetered) as first:
+                    V.read_source({"url": URL}, ledger, "research")
+                self.assertEqual(first.exception.detail, "exa_contents_cost_invalid")
+                self.assertEqual(ledger.calls[-1]["structured_result"]["failure"],
+                                 {"kind": "exa_contents_cost_invalid"})
+                restarted = V.Ledger(ceiling=1)
+                restarted.attach(path)
+                restarted.load(path)
+                with self.assertRaises(V.VendorUsageUnmetered) as replay:
+                    V.read_source({"url": URL}, restarted, "research")
+                self.assertEqual(replay.exception.detail, first.exception.detail)
+                self.assertEqual(http.call_count, 1)
+                self.assertAlmostEqual(restarted.spent(), 0.001)
+                self.assertEqual(restarted.summary()["unresolved_reservations"], 0)
+                self.assertNotIn("SYNTHETIC_PRIVATE_DETAIL", Path(path).read_text())
+                self.assertNotIn(URL, Path(path).read_text())
+
+    def test_content_rejection_keeps_the_distinguishing_safe_reason(self):
+        cases = [
+            (None, "exa_contents_envelope_invalid"),
+            ({}, "exa_contents_statuses_invalid"),
+            (page_response(statuses=[]), "exa_contents_statuses_invalid"),
+            (page_response(statuses=[{"id": URL + "/other", "status": "success"}]),
+             "exa_contents_status_identity_mismatch"),
+            (page_response(results=[]), "exa_contents_results_invalid"),
+            (page_response(results=[None]), "exa_contents_result_invalid"),
+            (page_response(results=[{"id": None, "url": URL, "text": PAGE}]),
+             "exa_contents_result_invalid"),
+            (page_response(results=[{"id": URL, "url": URL + "/other", "text": PAGE}]),
+             "exa_contents_result_identity_mismatch"),
+            (page_response(results=[{"id": URL, "url": URL}]),
+             "exa_contents_text_invalid"),
+            (page_response(results=[{"id": URL, "url": URL, "text": 42}]),
+             "exa_contents_text_invalid"),
+            (page_response(results=[{"id": URL, "url": URL, "text": []}]),
+             "exa_contents_text_invalid"),
+            (page_response(results=[{"id": URL, "url": URL, "text": {}}]),
+             "exa_contents_text_invalid"),
+            (page_response(results=[{"id": URL, "url": URL, "text": PAGE + "\ud800"}]),
+             "exa_contents_text_encoding_invalid"),
+            (page_response(statuses=[{"id": URL, "status": "SYNTHETIC_PRIVATE_DETAIL"}]),
+             "exa_contents_status_unclassified"),
+            (page_response(results=[], statuses=[{"id": URL, "status": "error", "error": {
+                "tag": "SYNTHETIC_PRIVATE_DETAIL", "httpStatusCode": 500}}]),
+             "exa_contents_source_error_unclassified"),
+            (page_response(statuses=[{"id": URL, "status": "error", "error": {
+                "tag": "CRAWL_NOT_FOUND", "httpStatusCode": 404}}]),
+             "exa_contents_error_result_conflict"),
+        ]
+        for response, reason in cases:
+            with self.subTest(reason=reason), tempfile.TemporaryDirectory() as tmp:
+                path = str(Path(tmp) / "spend.json")
+                ledger = V.Ledger(ceiling=1)
+                ledger.attach(path)
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen",
+                            return_value=io.BytesIO(json.dumps(response).encode())) as http:
+                    with self.assertRaises(V.VendorUsageUnmetered) as first:
+                        V.read_source({"url": URL}, ledger, "research")
+                    self.assertEqual(first.exception.detail, reason)
+                    self.assertEqual(ledger.calls[-1]["structured_result"]["failure"],
+                                     {"kind": reason})
+                    restarted = V.Ledger(ceiling=1)
+                    restarted.attach(path)
+                    restarted.load(path)
+                    with self.assertRaises(V.VendorUsageUnmetered) as replay:
+                        V.read_source({"url": URL}, restarted, "research")
+                    self.assertEqual(replay.exception.detail, reason)
+                    self.assertEqual(http.call_count, 1)
+                    self.assertAlmostEqual(restarted.spent(), 0.001)
+                    self.assertEqual(restarted.summary()["unresolved_reservations"], 0)
+                    self.assertNotIn("SYNTHETIC_PRIVATE_DETAIL", Path(path).read_text())
+                    self.assertNotIn(URL, Path(path).read_text())
+
+    def test_legacy_or_untrusted_diagnostic_checkpoint_never_reissues(self):
+        for failure in [None, {"kind": "SYNTHETIC_PRIVATE_DETAIL"},
+                        {"kind": []}, {"kind": "exa_contents_cost_invalid", "url": URL}]:
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as tmp:
+                path = str(Path(tmp) / "spend.json")
+                ledger = V.Ledger(ceiling=1)
+                ledger.attach(path)
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen",
+                            return_value=io.BytesIO(b"{}")) as http:
+                    with self.assertRaises(V.VendorUsageUnmetered):
+                        V.read_source({"url": URL}, ledger, "research")
+                    saved = json.loads(Path(path).read_text())
+                    journal = saved["calls"][-1]["structured_result"]
+                    if failure is None:
+                        del journal["failure"]
+                    else:
+                        journal["failure"] = failure
+                    Path(path).write_text(json.dumps(saved))
+                    restarted = V.Ledger(ceiling=1)
+                    restarted.attach(path)
+                    restarted.load(path)
+                    with self.assertRaises(V.VendorPaidRequestTerminal) as replay:
+                        V.read_source({"url": URL}, restarted, "research")
+                    if failure is None:
+                        self.assertIsInstance(replay.exception, V.VendorUsageUnmetered)
+                        self.assertEqual(replay.exception.detail, "durable retrieval usage missing")
+                    else:
+                        self.assertEqual(str(replay.exception), "durable Exa contents failure is invalid")
+                    self.assertEqual(http.call_count, 1)
+                    self.assertAlmostEqual(restarted.spent(), 0.001)
+                    self.assertEqual(restarted.summary()["unresolved_reservations"], 0)
 
     def test_simultaneous_identical_citations_share_one_charge(self):
         barrier = threading.Barrier(6)

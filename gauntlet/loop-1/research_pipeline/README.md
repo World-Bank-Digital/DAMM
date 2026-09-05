@@ -95,15 +95,26 @@ are never source evidence. Source URLs, tiers, country isolation and quote verif
 remain mandatory, and each retrieved page identifies its retrieval provider.
 
 The Contents request reserves its full $0.001 one-page bound before transport and journals
-its response before exposing evidence. Status ID, result ID and returned URL must all match
-the requested URL; changed redirect identities stop conservatively instead of inheriting
-the original publisher's tier. Only documented, exact source-level Exa error tuples permit
+its response before exposing evidence. The sole status ID and returned URL must both match
+the requested URL. Exa's nonempty document ID may differ, as observed in a live PDF
+response; it is not used as the source URL. A changed returned URL still stops conservatively
+instead of inheriting the original publisher's tier. Only documented, exact source-level Exa error tuples permit
 another selected page to satisfy the row. Authentication, throttling, unknown errors,
 malformed responses and conflicting cost estimates remain terminal across restart. If every
 selected source is unavailable, Stage 1 stops without publishing a country evidence gap.
+Invalid Contents responses retain only a fixed validation category in the private paid
+ledger, distinguishing cost, envelope, status, identity, text and source-error failures.
+The category survives restart; raw provider responses, URLs and error strings are not
+included. Older checkpoints without a category still stop and cannot be reissued. This
+instrumentation does not determine response acceptance or make an unknown source failure
+safe to retry. A terminal `retrieval_usage_missing` record from an older build does not
+identify which validation failed; diagnose it as unclassified until independent evidence
+is available.
+
 See the [Contents API](https://exa.ai/docs/reference/get-contents),
 [pricing](https://exa.ai/docs/reference/pricing) and
-[error codes](https://exa.ai/docs/reference/error-codes), verified 2026-09-05.
+[error codes](https://exa.ai/docs/reference/error-codes), verified 2026-09-05; the
+Contents document-ID distinction was reproduced with a bounded live request on 2026-09-06.
 
 **A Reader rejection is not proof of an evidence gap.** Only the enumerated 40904 and
 42203 tuples, plus the strictly validated, exact target-bound 42206 no-content response,

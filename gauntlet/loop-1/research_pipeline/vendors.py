@@ -480,9 +480,11 @@ class Ledger:
                     raise VendorPaidRequestTerminal(
                         f"durable {vendor} retrieval failure: {outcome}")
                 if outcome == "retrieval_usage_missing":
+                    detail = "durable retrieval usage missing"
+                    if vendor == "exa" and model == "contents" and "failure" in journal:
+                        detail = _exa_contents_failure_kind(journal["failure"])
                     raise VendorUsageUnmetered(
-                        vendor=vendor, model=model, pass_name=pass_name,
-                        detail="durable retrieval usage missing",
+                        vendor=vendor, model=model, pass_name=pass_name, detail=detail,
                     )
                 if outcome == "retrieval_output_malformed":
                     raise VendorPaidRequestTerminal(
@@ -1718,6 +1720,25 @@ def _exa_source_rejection_fields(failure):
     return failure
 
 
+_EXA_CONTENTS_VALIDATION_FAILURES = frozenset({
+    "exa_contents_cost_invalid", "exa_contents_envelope_invalid",
+    "exa_contents_statuses_invalid", "exa_contents_status_identity_mismatch",
+    "exa_contents_results_invalid", "exa_contents_result_invalid",
+    "exa_contents_result_identity_mismatch", "exa_contents_text_invalid",
+    "exa_contents_text_encoding_invalid", "exa_contents_status_unclassified",
+    "exa_contents_source_error_unclassified", "exa_contents_error_result_conflict",
+})
+
+
+def _exa_contents_failure_kind(failure):
+    """Only fixed validation categories may survive paid-request replay."""
+    if (not isinstance(failure, dict) or set(failure) != {"kind"}
+            or not isinstance(failure.get("kind"), str)
+            or failure["kind"] not in _EXA_CONTENTS_VALIDATION_FAILURES):
+        raise VendorPaidRequestTerminal("durable Exa contents failure is invalid")
+    return failure["kind"]
+
+
 def exa_contents(url, ledger, pass_name, max_chars=18000):
     """Fetch one citation's extractive text, with a durable one-page cost bound.
 
@@ -1784,8 +1805,10 @@ def exa_contents(url, ledger, pass_name, max_chars=18000):
             except OverflowError:
                 valid_cost = False
             if not valid_cost:
-                settle("retrieval_usage_missing")
-                raise VendorUsageUnmetered(vendor="exa", model="contents", pass_name=pass_name)
+                kind = "exa_contents_cost_invalid"
+                settle("retrieval_usage_missing", failure={"kind": kind})
+                raise VendorUsageUnmetered(vendor="exa", model="contents",
+                                          pass_name=pass_name, detail=kind)
             if reported > headroom + 1e-9:
                 settle("usage_exceeded_reservation", reported_bound=reported)
 
@@ -1793,33 +1816,61 @@ def exa_contents(url, ledger, pass_name, max_chars=18000):
         # envelope is never permission to fall through to another paid provider.
         statuses = result.get("statuses") if isinstance(result, dict) else None
         pages = result.get("results") if isinstance(result, dict) else None
-        valid = (isinstance(statuses, list) and len(statuses) == 1
-                 and isinstance(statuses[0], dict) and statuses[0].get("id") == url
-                 and isinstance(pages, list) and len(pages) <= 1)
+        validation_failure = None
+        if not isinstance(result, dict):
+            validation_failure = "exa_contents_envelope_invalid"
+        elif (not isinstance(statuses, list) or len(statuses) != 1
+              or not isinstance(statuses[0], dict)):
+            validation_failure = "exa_contents_statuses_invalid"
+        elif statuses[0].get("id") != url:
+            validation_failure = "exa_contents_status_identity_mismatch"
+        elif not isinstance(pages, list) or len(pages) > 1:
+            validation_failure = "exa_contents_results_invalid"
+        valid = validation_failure is None
+        kind = validation_failure or "exa_contents_status_unclassified"
         text = None
-        if valid and statuses[0].get("status") == "success" and len(pages) == 1:
-            page = pages[0]
-            if (_valid_exa_page(page) and page.get("id") == url and page.get("url") == url
-                    and isinstance(page.get("text"), str)):
-                try:
-                    page["text"].encode("utf-8")
-                    text = page["text"][:max_chars]
-                except UnicodeEncodeError:
-                    pass
-        if valid and statuses[0].get("status") == "error" and not pages:
-            failure = statuses[0].get("error")
-            if (isinstance(failure, dict) and isinstance(failure.get("tag"), str)
-                    and type(failure.get("httpStatusCode")) is int
-                    and (failure["tag"], failure["httpStatusCode"])
-                    in _EXA_SOURCE_STATUS_REJECTIONS):
-                fields = _exa_source_rejection_fields({"tag": failure["tag"],
-                                                      "http_status": failure["httpStatusCode"]})
-                settle("retrieval_exa_source_rejected", failure=fields)
-                raise SourceRejected("Exa could not retrieve the selected source",
-                                     status=fields["http_status"])
+        if valid and statuses[0].get("status") == "success":
+            kind = "exa_contents_results_invalid"
+            if len(pages) == 1:
+                page = pages[0]
+                kind = "exa_contents_result_invalid"
+                if (isinstance(page, dict) and "text" in page
+                        and not isinstance(page["text"], (str, type(None)))):
+                    kind = "exa_contents_text_invalid"
+                elif _valid_exa_page(page):
+                    # Exa's document ID may be canonical or opaque and need not
+                    # equal its URL (observed for PDFs). Bind source evidence to
+                    # the sole matching status.id AND result.url instead.
+                    if not isinstance(page.get("id"), str) or not page["id"].strip():
+                        kind = "exa_contents_result_invalid"
+                    elif page.get("url") != url:
+                        kind = "exa_contents_result_identity_mismatch"
+                    elif not isinstance(page.get("text"), str):
+                        kind = "exa_contents_text_invalid"
+                    else:
+                        try:
+                            page["text"].encode("utf-8")
+                            text = page["text"][:max_chars]
+                        except UnicodeEncodeError:
+                            kind = "exa_contents_text_encoding_invalid"
+        if valid and statuses[0].get("status") == "error":
+            kind = "exa_contents_error_result_conflict"
+            if not pages:
+                kind = "exa_contents_source_error_unclassified"
+                failure = statuses[0].get("error")
+                if (isinstance(failure, dict) and isinstance(failure.get("tag"), str)
+                        and type(failure.get("httpStatusCode")) is int
+                        and (failure["tag"], failure["httpStatusCode"])
+                        in _EXA_SOURCE_STATUS_REJECTIONS):
+                    fields = _exa_source_rejection_fields({"tag": failure["tag"],
+                                                          "http_status": failure["httpStatusCode"]})
+                    settle("retrieval_exa_source_rejected", failure=fields)
+                    raise SourceRejected("Exa could not retrieve the selected source",
+                                         status=fields["http_status"])
         if text is None:
-            settle("retrieval_usage_missing")
-            raise VendorUsageUnmetered(vendor="exa", model="contents", pass_name=pass_name)
+            settle("retrieval_usage_missing", failure={"kind": kind})
+            raise VendorUsageUnmetered(vendor="exa", model="contents",
+                                      pass_name=pass_name, detail=kind)
         # One requested page, one content type: retain the full documented bound
         # even for an unavailable source. costDollars is an estimate, not billing.
         settle("complete", {"text": text})
