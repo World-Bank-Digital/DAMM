@@ -127,7 +127,7 @@ def _search_sources(queries, uploads, ledger, id_prefix):
     seen = set()
     for query in queries:
         try:
-            results = V.exa_search(query, ledger, PASS, num_results=6)
+            results = V.exa_search(query, ledger, PASS, num_results=6, text_chars=18000)
         except V.BudgetExhausted:
             raise
         except Exception as error:
@@ -139,7 +139,8 @@ def _search_sources(queries, uploads, ledger, id_prefix):
                 continue
             seen.add(url)
             try:
-                text = V.jina_fetch(url, ledger, PASS, max_chars=18000)
+                fetched = V.read_source(dict(result, url=url), ledger, PASS, max_chars=18000)
+                text = fetched["text"]
             except V.BudgetExhausted:
                 raise
             except Exception:
@@ -151,6 +152,7 @@ def _search_sources(queries, uploads, ledger, id_prefix):
                     "source_url": url,
                     "tier": V.tier_for_url(url),
                     "text": text,
+                    "retrieval_provider": fetched["retrieval_provider"],
                     "source_kind": "published_source",
                 })
             if len(sources) >= 10:

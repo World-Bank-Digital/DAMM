@@ -62,7 +62,8 @@ WORKBOOK_BUILDER_FILE = os.path.join(LOOP1, "build_workbook_v17.py")
 WORKBOOK_PARITY_FILE = os.path.join(LOOP1, "verify_workbook_parity.py")
 RENDERER_FILE = os.path.join(LOOP1, "render_v17.py")
 VENDORS_FILE = os.path.abspath(V.__file__)
-SPEC = json.load(open(MODEL_FILE))
+with open(MODEL_FILE) as handle:
+    SPEC = json.load(handle)
 ASSESSMENT_YEAR = SPEC["config"]["assessment_year"]
 OUTLINE = SPEC["dar_outline"]
 PROHIBITIONS = SPEC.get("prohibitions", [])
@@ -1957,8 +1958,10 @@ def chapter_adapter_cache_identity(chapter, assessment, scans, foresight,
 def chapter_request_sha256(chapter, rows, assessment, scans, foresight,
                            country, iso3, llm):
     """Identity of everything that can change a cached chapter's meaning."""
-    source_sha = hashlib.sha256(open(__file__, "rb").read()).hexdigest()
-    model_sha = hashlib.sha256(open(MODEL_FILE, "rb").read()).hexdigest()
+    with open(__file__, "rb") as handle:
+        source_sha = hashlib.sha256(handle.read()).hexdigest()
+    with open(MODEL_FILE, "rb") as handle:
+        model_sha = hashlib.sha256(handle.read()).hexdigest()
     if str(chapter["n"]) == "A":
         material = {
             "mode": "deterministic-annex",

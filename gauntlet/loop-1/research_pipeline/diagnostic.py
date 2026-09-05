@@ -32,7 +32,8 @@ import engine_v17
 
 PASS = "diagnostic"
 MODEL_FILE = os.path.join(REPO, "model", "DAMM-v1.7-model.json")
-SPEC = json.load(open(MODEL_FILE))
+with open(MODEL_FILE) as handle:
+    SPEC = json.load(handle)
 ASSESSMENT_YEAR = SPEC["config"]["assessment_year"]
 
 
@@ -89,7 +90,8 @@ def main():
     except SystemExit as e:
         print(f"!! the engine refused the input: {e}")
         return 1
-    d = json.load(open(scored))
+    with open(scored) as handle:
+        d = json.load(handle)
     step(1, "score", "done",
          f"{d['rated']} rated, {d['held']} withheld, from {src}", t0)
 
@@ -97,23 +99,25 @@ def main():
     t0 = time.time()
     register_path = os.path.join(LOOP1, f"{a.out}_register.json")
     if os.path.exists(register_path):
-        n = len(json.load(open(register_path)).get("entries", []))
+        with open(register_path) as handle:
+            n = len(json.load(handle).get("entries", []))
         step(2, "register", "found", f"{n} initiatives from the scans pass", t0)
     else:
         # Written empty rather than omitted: render_v17 requires a register, and an empty
         # one with a stated reason reads as "nothing was gathered", where a fabricated one
         # would read as "nothing exists".
-        json.dump({
-            "country": a.iso,
-            "register": "Initiative & solutions register — DAMM v1.7 diagnostic",
-            "access_date": "",
-            "protocol": "DAMM-v1.6-Source-Tier-Protocol",
-            "entries": [],
-            "overlap_finding": "",
-            "issues": ("The scans pass has not run for this assessment, so no initiative "
-                       "register was gathered. This section is empty because nothing was "
-                       "looked for, not because nothing was found."),
-        }, open(register_path, "w"), indent=1)
+        with open(register_path, "w") as handle:
+            json.dump({
+                "country": a.iso,
+                "register": "Initiative & solutions register — DAMM v1.7 diagnostic",
+                "access_date": "",
+                "protocol": "DAMM-v1.6-Source-Tier-Protocol",
+                "entries": [],
+                "overlap_finding": "",
+                "issues": ("The scans pass has not run for this assessment, so no initiative "
+                           "register was gathered. This section is empty because nothing was "
+                           "looked for, not because nothing was found."),
+            }, handle, indent=1)
         step(2, "register", "empty", "the scans pass has not run", t0)
 
     # ---- 3. render
@@ -121,17 +125,18 @@ def main():
     key = a.out.lower()
     out_html = os.path.join(LOOP1, f"{a.out}_diagnostic.html")
     status = review_status(challenged)
-    json.dump({
-        "country": a.country,
-        "period": str(ASSESSMENT_YEAR),
-        "assessment": "machine-assisted desk assessment",
-        "data_path": scored,
-        "register_path": register_path,
-        # Keeps this run's report off any hand-built one for the same country.
-        "out_path": out_html,
-        "gates": status["human_gates"],
-        "automated_challenge": status["automated_challenge"],
-    }, open(os.path.join(LOOP1, f"config_{key}.json"), "w"), indent=1)
+    with open(os.path.join(LOOP1, f"config_{key}.json"), "w") as handle:
+        json.dump({
+            "country": a.country,
+            "period": str(ASSESSMENT_YEAR),
+            "assessment": "machine-assisted desk assessment",
+            "data_path": scored,
+            "register_path": register_path,
+            # Keeps this run's report off any hand-built one for the same country.
+            "out_path": out_html,
+            "gates": status["human_gates"],
+            "automated_challenge": status["automated_challenge"],
+        }, handle, indent=1)
 
     proc = subprocess.run([sys.executable, "render_v17.py", a.out],
                           cwd=LOOP1, capture_output=True, text=True)

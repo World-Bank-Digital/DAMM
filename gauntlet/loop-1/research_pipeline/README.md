@@ -84,6 +84,24 @@ failure.
 
 ## Things worth knowing before changing anything
 
+**Read extractive source text before asking a second service for the same page.**
+Stage 1 (including automated challenge), country/international scans, AI assessment, and
+foresight request bounded Exa page text with their existing discovery searches. The shared
+`vendors.read_source` uses that extractive text when at least 200 non-padding characters
+are available; otherwise it calls Jina Reader. Generated summaries and Perplexity prose
+are never source evidence. Source URLs, tiers, country isolation and quote verification
+remain mandatory, and each retrieved page identifies its retrieval provider.
+
+**A Reader rejection is not proof of an evidence gap.** Only the enumerated 40904 and
+42203 tuples, plus the strictly validated, exact target-bound 42206 no-content response,
+are source-local. Another selected source can satisfy the row. Authentication, credit,
+throttling, service errors and all ambiguous or unknown assertions remain durable terminal
+outcomes. Fixed private diagnostic categories aid investigation without keeping provider
+prose or secrets. Every started request remains accounted for; a checkpoint must not replay
+an identical completed or unresolved paid request. This policy does not make failed runs
+eligible for resume, or authorize a live smoke test. Use synthetic fixtures for repair work;
+any new paid case requires separate authorization.
+
 **The oracle is not to be written to.** `EGY_v17.json` and `NGA_v17.json` are the test
 oracle. The orchestrator never reads them and the comparison never writes to them. A
 shadow run goes to its own `--out` basename throughout.

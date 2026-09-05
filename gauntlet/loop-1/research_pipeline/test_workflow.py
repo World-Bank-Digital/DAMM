@@ -602,6 +602,56 @@ class WorkflowCoordinatorTest(unittest.TestCase):
         ]
         self.assertNotIn("retry", [event["event"] for event in events])
 
+    def test_terminal_failure_at_each_stage_preserves_outputs_and_cannot_resume(self):
+        for index, stage_id in enumerate(W.EXPECTED_STAGE_IDS):
+            with self.subTest(stage=stage_id):
+                self.workspace = Path(self.temp.name) / stage_id
+                handlers = self.all_handlers()
+                handlers.pop(stage_id)
+                self.calls.clear()
+                spend_path = Path(self.temp.name) / f"{stage_id}-spend.json"
+                spend_path.write_text(json.dumps({"summary": {"total": 2.5}}))
+                command = W.CommandSpec(argv=("synthetic",), artifacts={}, spend_path=spend_path)
+                before_failure = {}
+                attempts = []
+
+                def terminal_failure(_spec, _context):
+                    attempts.append(stage_id)
+                    before_failure.update({
+                        str(path.relative_to(self.workspace)): path.read_bytes()
+                        for path in self.workspace.rglob("*")
+                        if path.is_file() and path.name not in (
+                            "workflow-manifest.json", "workflow-events.jsonl")
+                    })
+                    return SimpleNamespace(
+                        returncode=W.NONRETRYABLE_COMMAND_EXIT, stdout="",
+                        stderr="synthetic-secret https://provider.invalid/path?key=synthetic-secret")
+
+                options = {"commands": {stage_id: command}, "command_runner": terminal_failure}
+                with self.assertRaises(W.WorkflowRunFailed) as caught:
+                    self.coordinator(handlers, **options).run(
+                        country="Nigeria", iso3="NGA", run_id=f"synthetic-{stage_id}")
+                manifest = caught.exception.manifest
+                self.assertEqual(attempts, [stage_id])
+                self.assertEqual(self.calls, list(W.EXPECTED_STAGE_IDS[:index]))
+                self.assertEqual(manifest["spent_usd"], index * 1.25 + 2.5)
+                self.assertEqual(manifest["stages"][index]["attempts"], 1)
+                self.assertTrue(all(stage["status"] == "complete" for stage in manifest["stages"][:index]))
+                self.assertTrue(all(stage["attempts"] == 0 for stage in manifest["stages"][index + 1:]))
+                for path, raw in before_failure.items():
+                    self.assertEqual((self.workspace / path).read_bytes(), raw)
+                saved = {path: path.read_bytes() for path in self.workspace.rglob("*") if path.is_file()}
+                for filename in ("workflow-manifest.json", "workflow-events.jsonl"):
+                    self.assertNotIn(b"synthetic-secret", saved[self.workspace / filename])
+                    self.assertNotIn(b"provider.invalid", saved[self.workspace / filename])
+                events = [json.loads(line) for line in saved[self.workspace / "workflow-events.jsonl"].splitlines()]
+                self.assertNotIn("retry", [event["event"] for event in events])
+                with self.assertRaises(W.WorkflowConfigurationError):
+                    self.coordinator(handlers, **options).run(
+                        country="Nigeria", iso3="NGA", run_id=f"synthetic-{stage_id}", resume=True)
+                self.assertEqual(attempts, [stage_id])
+                self.assertEqual({path: path.read_bytes() for path in saved}, saved)
+
     def test_command_cannot_spend_another_stages_protected_allocation(self):
         handlers = self.all_handlers()
         handlers.pop("country_research")

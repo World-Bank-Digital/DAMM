@@ -6,7 +6,7 @@ binding allows, every figure must trace to the engine, and the gate blocks the e
 
     python3 test_generate_dar.py
 """
-import copy, hashlib, io, json, os, re, shutil, sys, tempfile, zipfile
+import atexit, copy, hashlib, io, json, os, re, shutil, sys, tempfile, zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import generate_dar as D
@@ -102,6 +102,7 @@ _ratified_model.update({
 })
 
 _evidence_dir = tempfile.TemporaryDirectory()
+atexit.register(_evidence_dir.cleanup)
 
 
 def _archive_bytes(reference, raw):
