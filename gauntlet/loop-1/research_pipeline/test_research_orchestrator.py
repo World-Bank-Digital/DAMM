@@ -19,6 +19,10 @@ import research_orchestrator as R
 
 
 class ResearchOrchestratorRetrievalTest(unittest.TestCase):
+    def setUp(self):
+        # Reader-specific fixtures begin after the contents fetch was too short.
+        self.enterContext(mock.patch.object(R.V, "exa_contents", return_value=""))
+
     @staticmethod
     def spec():
         return {

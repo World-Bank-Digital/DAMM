@@ -38,6 +38,10 @@ def _pending(vendor, pass_name):
 
 
 class TerminalPaidOutcomePropagationTest(unittest.TestCase):
+    def setUp(self):
+        # Existing cases inject terminal outcomes at the Reader boundary.
+        self.enterContext(mock.patch.object(V, "exa_contents", return_value=""))
+
     def test_operator_docs_do_not_claim_old_ledgers_are_automatically_repriced(self):
         with open(os.path.join(HERE, "README.md"), encoding="utf-8") as handle:
             readme = handle.read()

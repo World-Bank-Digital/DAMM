@@ -26,7 +26,9 @@
  "exa": {
   "_source": "https://exa.ai/pricing?tab=api and https://exa.ai/docs/reference/contents-api-guide, verified 2026-09-04. Auto search is $7/1K through 10 results; text contents are included through 10. The helper rejects larger requests and does not request separately billed summaries.",
   "per_search": 0.007,
-  "per_content_page": 0.0
+  "per_content_page": 0.0,
+  "contents": {"per_request": 0.001},
+  "_contents_source": "https://exa.ai/docs/reference/pricing and https://exa.ai/docs/reference/get-contents, verified 2026-09-05. Contents costs $1/1K pages per content type. The helper requests exactly one URL, text only, with zero subpages and reserves the full $0.001 before dispatch. Search's included text remains separately priced above. Response costDollars is an estimate, not authoritative billing."
  },
  "jina": {
   "_source": "https://jina.ai/reader/ and https://github.com/jina-ai/reader/blob/main/src/dto/crawler-options.ts, verified 2026-09-04. Reader bills returned output tokens. An authenticated read-only dashboard comparison verified that the exact Render production key belongs to the standard account package at $50/1B tokens ($0.05/MTok), with auto-recharge disabled and its prepaid balance unchanged during the audit. The public menu also lists $500/11B tokens (about $0.045/MTok premium), so $0.05/MTok remains the conservative current-account rate.",

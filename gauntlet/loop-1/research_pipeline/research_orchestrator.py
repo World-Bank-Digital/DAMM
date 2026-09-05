@@ -287,7 +287,7 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
         try:
             fetched = V.read_source(s, ledger, pass_name, max_chars=PAGE_CHARS * 3)
             return dict(s, retrieval_provider=fetched["retrieval_provider"]), fetched["text"], None
-        except V.JinaSourceRejected as error:
+        except V.SourceRejected as error:
             # An explicit unsuccessful Reader response is source-local. Keep looking
             # at the other selected pages, but never turn an all-page failure into a
             # statement that the country has no evidence.
