@@ -271,7 +271,16 @@ def retrieve(spec, country, llm, ledger, log, pass_name=PASS):
             "was available; evidence absence cannot be established"
         )
 
-    ranked.sort(key=lambda s: (s["tier"], -len(s["surfaced_by"])))
+    # Within a tier, prefer extractive text already returned by discovery. A
+    # citation found by both peers is still only a lead when its page has too
+    # little text; it must not displace readable evidence of the same tier and
+    # force an unnecessary paid Reader request. Tier quotas and evidence gates
+    # remain unchanged, and any paid terminal outcome still propagates.
+    ranked.sort(key=lambda s: (
+        s["tier"],
+        not bool(V.usable_source_text(s.get("text"), PAGE_CHARS * 3)),
+        -len(s["surfaced_by"]),
+    ))
     quota, chosen = dict(TIER_QUOTA), []
     for s in ranked:
         if quota.get(s["tier"], 0) > 0 and len(chosen) < MAX_PAGES:
