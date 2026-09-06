@@ -16,7 +16,7 @@
     "failed_stage": null,
     "error_code": null,
     "fixture_call_count": 18,
-    "code_sha256": "dce8994d1e788b2487737e0235ec1e779853e5faa0c8f0b341cdb30137fc7b66"
+    "code_sha256": "61d78ea4ff58c69b21591a997f34f71e1748859ae317910806e1cdf985856f39"
   },
   "fixture": {
     "evidence_batches": 3,

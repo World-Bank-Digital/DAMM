@@ -1,6 +1,6 @@
 """Synthetic HTTP-to-evidence coverage for the shared retrieval policy."""
 
-import io
+from http_test_fixtures import response_bytes
 import json
 import os
 import tempfile
@@ -34,16 +34,20 @@ class CitationContentsRetrievalTest(unittest.TestCase):
             "foresight": lambda ledger: F.foresight_context_sources("Exampleland", [], ledger),
         }
         for stage, consume in consumers.items():
-            for terminal in (False, True):
-                with self.subTest(stage=stage, terminal=terminal):
+            for tag, status in [
+                    ("CRAWL_NOT_FOUND", 404), ("CRAWL_TIMEOUT", 504),
+                    ("CRAWL_LIVECRAWL_TIMEOUT", 504), ("CRAWL_UNKNOWN_ERROR", 503),
+                    ("UNSUPPORTED_URL", None), ("INVALID_API_KEY", 401)]:
+                terminal = tag == "INVALID_API_KEY"
+                with self.subTest(stage=stage, tag=tag):
                     def respond(request, **_kwargs):
                         self.assertEqual(request.full_url, "https://api.exa.ai/contents")
                         if terminal:
                             raise V.urllib.error.HTTPError(request.full_url, 401, "Unauthorized", {},
-                                io.BytesIO(b'{"tag":"INVALID_API_KEY"}'))
-                        return io.BytesIO(json.dumps({"results": [], "statuses": [{
+                                response_bytes(b'{"tag":"INVALID_API_KEY"}'))
+                        return response_bytes(json.dumps({"results": [], "statuses": [{
                             "id": missing, "status": "error", "error": {
-                                "tag": "CRAWL_NOT_FOUND", "httpStatusCode": 404}}]}).encode())
+                                "tag": tag, "httpStatusCode": status}}]}).encode())
                     with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                             mock.patch.object(V, "exa_search", return_value=[
                                 {"url": missing, "title": "Unavailable"},
@@ -67,7 +71,7 @@ class CitationContentsRetrievalTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                 mock.patch.object(V, "exa_search", return_value=[{"url": URL, "title": "Unavailable"}]), \
                 mock.patch.object(V, "perplexity_citations", return_value={"citations": []}), \
-                mock.patch.object(V.urllib.request, "urlopen", return_value=io.BytesIO(json.dumps({
+                mock.patch.object(V.urllib.request, "urlopen", return_value=response_bytes(json.dumps({
                     "results": [], "statuses": [{"id": URL, "status": "error", "error": {
                         "tag": "CRAWL_NOT_FOUND", "httpStatusCode": 404}}]}).encode())) as http:
             with self.assertRaises(R.SelectedReaderEvidenceUnavailable):
@@ -87,13 +91,13 @@ class CitationContentsRetrievalTest(unittest.TestCase):
                     "urls": [URL], "text": {"maxCharacters": 18000},
                     "highlights": False, "subpages": 0,
                 })
-                return io.BytesIO(json.dumps({
+                return response_bytes(json.dumps({
                     "results": [{"id": URL, "url": URL, "text": PAGE}],
                     "statuses": [{"id": URL, "status": "success"}],
                     "costDollars": {"total": 0.001},
                 }).encode())
             raise V.urllib.error.HTTPError(request.full_url, 422, "Rejected", {},
-                io.BytesIO(json.dumps({"code": 422, "status": 42206,
+                response_bytes(json.dumps({"code": 422, "status": 42206,
                     "name": "AssertionFailureError", "message": "Synthetic assertion"}).encode()))
 
         with tempfile.TemporaryDirectory() as directory:
@@ -163,7 +167,7 @@ class SourceRetrievalTest(unittest.TestCase):
                     "content": PAGE, "usage": {"tokens": 100}}}
                 with mock.patch.dict(os.environ, {"JINA_API_KEY": "synthetic"}), \
                         mock.patch.object(V.urllib.request, "urlopen",
-                            return_value=io.BytesIO(json.dumps(payload).encode())) as http:
+                            return_value=response_bytes(json.dumps(payload).encode())) as http:
                     result = V.read_source(page, ledger, "research", max_chars=400)
                     self.assertEqual(result, {"text": PAGE[:400], "retrieval_provider": "jina"})
                     self.assertEqual(http.call_count, 1)
@@ -215,9 +219,9 @@ class SourceRetrievalTest(unittest.TestCase):
                 def respond(request, **_kwargs):
                     if request.full_url != "https://api.exa.ai/search":
                         raise V.urllib.error.HTTPError(request.full_url, 422, "Rejected", {},
-                            io.BytesIO(b'{"code":422,"status":42206,"name":"AssertionFailureError"}'))
+                            response_bytes(b'{"code":422,"status":42206,"name":"AssertionFailureError"}'))
                     wants_text = "text" in json.loads(request.data).get("contents", {})
-                    return io.BytesIO(json.dumps({"results": [{
+                    return response_bytes(json.dumps({"results": [{
                         "url": URL, "title": "Synthetic survey", "text": PAGE if wants_text else "",
                     }]}).encode())
                 ledger = V.Ledger(ceiling=1, label="synthetic")
@@ -236,8 +240,8 @@ class SourceRetrievalTest(unittest.TestCase):
             requests.append(request)
             if request.full_url != "https://api.exa.ai/search":
                 raise V.urllib.error.HTTPError(request.full_url, 422, "Rejected", {},
-                    io.BytesIO(b'{"code":422,"status":42206,"name":"AssertionFailureError"}'))
-            return io.BytesIO(json.dumps({"results": [{
+                    response_bytes(b'{"code":422,"status":42206,"name":"AssertionFailureError"}'))
+            return response_bytes(json.dumps({"results": [{
                 "url": URL, "title": "Synthetic survey", "text": PAGE,
                 "summary": "This generated summary must not become evidence.",
             }]}).encode())

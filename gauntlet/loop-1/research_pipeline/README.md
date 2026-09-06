@@ -102,7 +102,13 @@ instead of inheriting the original publisher's tier. Only documented, exact sour
 another selected page to satisfy the row. Authentication, throttling, unknown errors,
 malformed responses and conflicting cost estimates remain terminal across restart. If every
 selected source is unavailable, Stage 1 stops without publishing a country evidence gap.
-Invalid Contents responses retain only a fixed validation category in the private paid
+Documented per-URL crawl timeouts (504), crawl errors (500–599), and unsupported
+URLs (null/absent code) are also source-local when the endpoint returns exactly
+HTTP 200, the sole status belongs to the requested URL, and results is empty.
+Other successful endpoint statuses remain terminal. Failed sources retain the full bounded
+charge and replay locally without another request. See the [Exa error contract](https://exa.ai/docs/reference/error-codes).
+
+Invalid Contents responses retain a fixed validation category in the private paid
 ledger, distinguishing cost, envelope, status, identity, text and source-error failures.
 The category survives restart; raw provider responses, URLs and error strings are not
 included. Older checkpoints without a category still stop and cannot be reissued. This
@@ -172,3 +178,8 @@ stage order, infer completion from filenames, or introduce an active-run human g
 that independent automated challenge before scoring. The automated challenge is not human G2:
 G2 is a post-completion peer-review control. Shadow figures therefore remain a useful
 before-measurement, but they do not define a separate workflow stage or fixed budget share.
+
+Unclassified Contents source errors additionally retain only an allowlisted crawl
+tag (or `unrecognized`) and a numeric HTTP status (or null) in the private ledger.
+Raw provider messages, arbitrary tags and URLs are excluded. Historical terminal
+outcomes remain terminal; new diagnostics never reclassify a prior paid result.

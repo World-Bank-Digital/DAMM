@@ -1327,7 +1327,8 @@ def _reader_diagnostic(body, url):
     return "jina_assertion_unclassified"
 
 
-def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
+def _http(url, data=None, headers=None, method=None, timeout=90, retries=1,
+          expected_status=None):
     body = json.dumps(data, allow_nan=False).encode() if data is not None else None
     h = {"Content-Type": "application/json", "Accept": "application/json"}
     h.update(headers or {})
@@ -1336,6 +1337,12 @@ def _http(url, data=None, headers=None, method=None, timeout=90, retries=1):
         req = urllib.request.Request(url, data=body, headers=h, method=method)
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
+                if expected_status is not None:
+                    status = getattr(r, "status", None)
+                    if type(status) is not int or status != expected_status:
+                        # An accepted/partial response cannot authorize evidence
+                        # or a source skip. The caller retains its bounded charge.
+                        return None
                 raw_bytes = r.read(8 * 1024 * 1024 + 1)
             if len(raw_bytes) > 8 * 1024 * 1024:
                 # A completed oversized response is malformed, not permission
@@ -1706,14 +1713,20 @@ _EXA_SOURCE_HTTP_REJECTIONS = frozenset({
     ("NO_CONTENT_FOUND", 400), ("FETCH_DOCUMENT_ERROR", 422), ("ROBOTS_FILTER_FAILED", 403),
 })
 _EXA_SOURCE_STATUS_REJECTIONS = frozenset({
+    # /contents HTTP-200 per-URL statuses, bound to the requested URL.
+    # https://exa.ai/docs/reference/error-codes#content-fetch-status-tags
+    # These never classify an endpoint HTTP 5xx response as source-local.
     ("CRAWL_NOT_FOUND", 404), ("SOURCE_NOT_AVAILABLE", 403),
-})
+    ("CRAWL_TIMEOUT", 504), ("CRAWL_LIVECRAWL_TIMEOUT", 504),
+    ("UNSUPPORTED_URL", None),
+} | {("CRAWL_UNKNOWN_ERROR", status) for status in range(500, 600)})
 
 
 def _exa_source_rejection_fields(failure):
     if (not isinstance(failure, dict) or set(failure) != {"tag", "http_status"}
             or not isinstance(failure["tag"], str)
-            or type(failure["http_status"]) is not int
+            or (failure["http_status"] is not None
+                and type(failure["http_status"]) is not int)
             or (failure["tag"], failure["http_status"])
             not in _EXA_SOURCE_HTTP_REJECTIONS | _EXA_SOURCE_STATUS_REJECTIONS):
         raise VendorPaidRequestTerminal("invalid durable Exa source rejection")
@@ -1730,12 +1743,33 @@ _EXA_CONTENTS_VALIDATION_FAILURES = frozenset({
 })
 
 
+def _exa_safe_source_error(error):
+    """Private checkpoint diagnostics: fixed tags and numeric codes only."""
+    error = error if isinstance(error, dict) else {}
+    tag, status = error.get("tag"), error.get("httpStatusCode")
+    tags = {tag for tag, _ in _EXA_SOURCE_STATUS_REJECTIONS}
+    return {
+        "tag": tag if isinstance(tag, str) and tag in tags else "unrecognized",
+        "http_status": status if type(status) is int and 100 <= status <= 599 else None,
+    }
+
+
 def _exa_contents_failure_kind(failure):
     """Only fixed validation categories may survive paid-request replay."""
-    if (not isinstance(failure, dict) or set(failure) != {"kind"}
+    if (not isinstance(failure, dict) or set(failure) not in (
+            {"kind"}, {"kind", "source_error"})
             or not isinstance(failure.get("kind"), str)
             or failure["kind"] not in _EXA_CONTENTS_VALIDATION_FAILURES):
         raise VendorPaidRequestTerminal("durable Exa contents failure is invalid")
+    if "source_error" in failure:
+        fields = failure["source_error"]
+        if (failure["kind"] != "exa_contents_source_error_unclassified"
+                or not isinstance(fields, dict) or set(fields) != {"tag", "http_status"}
+                or (fields["http_status"] is not None
+                    and type(fields["http_status"]) is not int)
+                or fields != _exa_safe_source_error({
+                    "tag": fields["tag"], "httpStatusCode": fields["http_status"]})):
+            raise VendorPaidRequestTerminal("durable Exa contents failure is invalid")
     return failure["kind"]
 
 
@@ -1778,7 +1812,8 @@ def exa_contents(url, ledger, pass_name, max_chars=18000):
 
         try:
             result = _http("https://api.exa.ai/contents", data=payload,
-                           headers={"x-api-key": credential}, retries=1)
+                           headers={"x-api-key": credential}, retries=1,
+                           expected_status=200)
         except VendorHTTPRejected as error:
             if (error.provider_tag, error.http_status) in _EXA_SOURCE_HTTP_REJECTIONS:
                 fields = {"tag": error.provider_tag, "http_status": error.http_status}
@@ -1829,6 +1864,7 @@ def exa_contents(url, ledger, pass_name, max_chars=18000):
         valid = validation_failure is None
         kind = validation_failure or "exa_contents_status_unclassified"
         text = None
+        source_error = None
         if valid and statuses[0].get("status") == "success":
             kind = "exa_contents_results_invalid"
             if len(pages) == 1:
@@ -1858,17 +1894,22 @@ def exa_contents(url, ledger, pass_name, max_chars=18000):
             if not pages:
                 kind = "exa_contents_source_error_unclassified"
                 failure = statuses[0].get("error")
+                source_error = _exa_safe_source_error(failure)
                 if (isinstance(failure, dict) and isinstance(failure.get("tag"), str)
-                        and type(failure.get("httpStatusCode")) is int
-                        and (failure["tag"], failure["httpStatusCode"])
+                        and (failure.get("httpStatusCode") is None
+                             or type(failure.get("httpStatusCode")) is int)
+                        and (failure["tag"], failure.get("httpStatusCode"))
                         in _EXA_SOURCE_STATUS_REJECTIONS):
                     fields = _exa_source_rejection_fields({"tag": failure["tag"],
-                                                          "http_status": failure["httpStatusCode"]})
+                                                          "http_status": failure.get("httpStatusCode")})
                     settle("retrieval_exa_source_rejected", failure=fields)
                     raise SourceRejected("Exa could not retrieve the selected source",
                                          status=fields["http_status"])
         if text is None:
-            settle("retrieval_usage_missing", failure={"kind": kind})
+            failure = {"kind": kind}
+            if source_error is not None:
+                failure["source_error"] = source_error
+            settle("retrieval_usage_missing", failure=failure)
             raise VendorUsageUnmetered(vendor="exa", model="contents",
                                       pass_name=pass_name, detail=kind)
         # One requested page, one content type: retain the full documented bound
