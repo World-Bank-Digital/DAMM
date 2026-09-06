@@ -1,5 +1,5 @@
 """Bounded citation retrieval at the real HTTP and durable-ledger boundaries."""
-import io
+from http_test_fixtures import response_bytes
 import json
 import os
 from pathlib import Path
@@ -22,6 +22,96 @@ def page_response(**changes):
 
 
 class ExaContentsTest(unittest.TestCase):
+    def test_non_200_http_response_cannot_authorize_source_skip_or_replay(self):
+        for status in [202, 204, 206, None, True, "200"]:
+            with self.subTest(status=status), tempfile.TemporaryDirectory() as tmp:
+                path = str(Path(tmp) / "spend.json")
+                ledger = V.Ledger(ceiling=1)
+                ledger.attach(path)
+                payload = page_response(results=[], statuses=[{
+                    "id": URL, "status": "error", "error": {
+                        "tag": "CRAWL_TIMEOUT", "httpStatusCode": 504}}])
+                response = response_bytes(json.dumps(payload).encode())
+                response.status = status
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen", return_value=response) as http:
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.read_source({"url": URL}, ledger, "research")
+                    restarted = V.Ledger(ceiling=1)
+                    restarted.attach(path)
+                    restarted.load(path)
+                    with self.assertRaises(V.VendorPaidRequestTerminal):
+                        V.read_source({"url": URL}, restarted, "research")
+                    self.assertEqual(http.call_count, 1)
+                    self.assertAlmostEqual(restarted.spent(), .001)
+                    self.assertEqual(restarted.summary()["unresolved_reservations"], 0)
+
+    def test_unclassified_source_error_keeps_only_safe_contract_fields(self):
+        for tag, status, expected_tag, expected_status in [
+                ("CRAWL_TIMEOUT", 408, "CRAWL_TIMEOUT", 408),
+                ("SYNTHETIC_PRIVATE_DETAIL", 500, "unrecognized", 500),
+                ([], "SYNTHETIC_PRIVATE_DETAIL", "unrecognized", None)]:
+            with self.subTest(tag=tag), tempfile.TemporaryDirectory() as tmp:
+                path = str(Path(tmp) / "spend.json")
+                ledger = V.Ledger(ceiling=1)
+                ledger.attach(path)
+                response = page_response(results=[], statuses=[{
+                    "id": URL, "status": "error", "error": {
+                        "tag": tag, "httpStatusCode": status,
+                        "message": "SYNTHETIC_PRIVATE_DETAIL"}}])
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen",
+                            return_value=response_bytes(json.dumps(response).encode())) as http:
+                    with self.assertRaises(V.VendorUsageUnmetered):
+                        V.read_source({"url": URL}, ledger, "research")
+                    self.assertEqual(ledger.calls[-1]["structured_result"]["failure"], {
+                        "kind": "exa_contents_source_error_unclassified",
+                        "source_error": {"tag": expected_tag, "http_status": expected_status}})
+                    restarted = V.Ledger(ceiling=1)
+                    restarted.attach(path)
+                    restarted.load(path)
+                    with self.assertRaises(V.VendorUsageUnmetered):
+                        V.read_source({"url": URL}, restarted, "research")
+                    self.assertEqual(http.call_count, 1)
+                    self.assertNotIn("SYNTHETIC_PRIVATE_DETAIL", Path(path).read_text())
+                    self.assertNotIn(URL, Path(path).read_text())
+
+    def test_documented_crawl_failures_are_source_local_and_never_reissued(self):
+        # Exa's per-URL error contract, not endpoint HTTP error codes.
+        cases = [
+            {"tag": "CRAWL_TIMEOUT", "httpStatusCode": 504},
+            {"tag": "CRAWL_LIVECRAWL_TIMEOUT", "httpStatusCode": 504},
+            {"tag": "CRAWL_UNKNOWN_ERROR", "httpStatusCode": 500},
+            {"tag": "CRAWL_UNKNOWN_ERROR", "httpStatusCode": 503},
+            {"tag": "CRAWL_UNKNOWN_ERROR", "httpStatusCode": 599},
+            {"tag": "UNSUPPORTED_URL", "httpStatusCode": None},
+            {"tag": "UNSUPPORTED_URL"},
+        ]
+        for error in cases:
+            payload = page_response(results=[], statuses=[{
+                "id": URL, "status": "error", "error": {
+                    **error,
+                    "message": "SYNTHETIC_PRIVATE_DETAIL"}}])
+            with tempfile.TemporaryDirectory() as tmp:
+                path = str(Path(tmp) / "spend.json")
+                ledger = V.Ledger(ceiling=1)
+                ledger.attach(path)
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen",
+                            return_value=response_bytes(json.dumps(payload).encode())) as http, \
+                        mock.patch.object(V, "jina_fetch", side_effect=AssertionError("Reader called")):
+                    with self.assertRaises(V.SourceRejected):
+                        V.read_source({"url": URL}, ledger, "research")
+                    restarted = V.Ledger(ceiling=1)
+                    restarted.attach(path)
+                    restarted.load(path)
+                    with self.assertRaises(V.SourceRejected):
+                        V.read_source({"url": URL}, restarted, "research")
+                    self.assertEqual(http.call_count, 1)
+                    self.assertAlmostEqual(restarted.spent(), .001)
+                    self.assertEqual(restarted.summary()["unresolved_reservations"], 0)
+                    self.assertNotIn("SYNTHETIC_PRIVATE_DETAIL", Path(path).read_text())
+
     def test_document_id_can_differ_when_requested_status_and_result_url_match(self):
         # Sanitized live PDF response captured 2026-09-06: Exa's document ID
         # differs from the request, while status.id and result.url match it.
@@ -35,7 +125,7 @@ class ExaContentsTest(unittest.TestCase):
             ledger.attach(path)
             with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                     mock.patch.object(V.urllib.request, "urlopen",
-                        return_value=io.BytesIO(json.dumps(payload).encode())) as http, \
+                        return_value=response_bytes(json.dumps(payload).encode())) as http, \
                     mock.patch.object(V, "jina_fetch", side_effect=AssertionError("Reader called")):
                 source = {"url": URL}
                 self.assertEqual(V.read_source(source, ledger, "research"),
@@ -52,11 +142,12 @@ class ExaContentsTest(unittest.TestCase):
         cases = []
         for status, tag in [(401, "INVALID_API_KEY"), (402, "NO_MORE_CREDITS"),
                             (403, "ACCESS_DENIED"), (429, "RATE_LIMIT_EXCEEDED"),
-                            (500, "DEFAULT_ERROR"), (422, "UNKNOWN"),
+                            (500, "DEFAULT_ERROR"), (500, "CRAWL_UNKNOWN_ERROR"),
+                            (504, "CRAWL_TIMEOUT"), (422, "UNKNOWN"),
                             (401, "FETCH_DOCUMENT_ERROR"), (403, "SOURCE_NOT_AVAILABLE")]:
             cases.append((f"http-{status}-{tag}", lambda s=status, t=tag:
                 V.urllib.error.HTTPError("https://api.exa.ai/contents", s, "Rejected", {},
-                    io.BytesIO(json.dumps({"tag": t, "error": "SYNTHETIC_PRIVATE_DETAIL"}).encode()))))
+                    response_bytes(json.dumps({"tag": t, "error": "SYNTHETIC_PRIVATE_DETAIL"}).encode()))))
         cases.append(("transport", lambda: V.urllib.error.URLError("SYNTHETIC_PRIVATE_DETAIL")))
         malformed = [None, {}, {"results": []}, page_response(statuses=[]),
                      page_response(results=[{"id": URL, "url": URL, "text": 42}]),
@@ -65,20 +156,30 @@ class ExaContentsTest(unittest.TestCase):
                      page_response(results=[{"id": URL, "url": "https://other.test/unrelated", "text": PAGE}]),
                      page_response(results=[{"id": URL, "url": URL, "text": PAGE + "\ud800"}]),
                      page_response(results=[], statuses=[{"id": URL, "status": "error", "error": {
-                         "tag": "CRAWL_UNKNOWN_ERROR", "httpStatusCode": 500}}]),
+                         "tag": "UNKNOWN_ERROR", "httpStatusCode": 500}}]),
                      page_response(results=[], statuses=[{"id": URL, "status": "error", "error": {
                          "tag": [], "httpStatusCode": 404}}]),
                      page_response(costDollars={"total": True}),
                      page_response(costDollars={"total": -1}),
                      page_response(costDollars={"total": "0.001"})]
+        for tag, status in [
+                ("CRAWL_TIMEOUT", 401), ("CRAWL_TIMEOUT", None),
+                ("CRAWL_TIMEOUT", "504"), ("CRAWL_TIMEOUT", 504.0),
+                ("CRAWL_TIMEOUT", True), ("CRAWL_UNKNOWN_ERROR", 499),
+                ("CRAWL_UNKNOWN_ERROR", 600), ("UNSUPPORTED_URL", 403),
+                ("INVALID_API_KEY", 401), ("NO_MORE_CREDITS", 402),
+                ("RATE_LIMIT_EXCEEDED", 429)]:
+            malformed.append(page_response(results=[], statuses=[{
+                "id": URL, "status": "error", "error": {
+                    "tag": tag, "httpStatusCode": status}}]))
         malformed.append(page_response(costDollars={"total": 10 ** 400}))
         for document_id in ("", "  ", True, 42, [], {}):
             malformed.append(page_response(results=[{
                 "id": document_id, "url": URL, "text": PAGE}]))
         for i, payload in enumerate(malformed):
-            cases.append((f"malformed-{i}", lambda p=payload: io.BytesIO(json.dumps(p).encode())))
+            cases.append((f"malformed-{i}", lambda p=payload: response_bytes(json.dumps(p).encode())))
         for i, raw in enumerate([b'\xff', b'{"results":[],"results":[],"statuses":[]}', b'{"x":NaN}']):
-            cases.append((f"invalid-json-{i}", lambda r=raw: io.BytesIO(r)))
+            cases.append((f"invalid-json-{i}", lambda r=raw: response_bytes(r)))
         for name, response in cases:
             with self.subTest(case=name), tempfile.TemporaryDirectory() as tmp:
                 path = str(Path(tmp) / "spend.json")
@@ -113,7 +214,7 @@ class ExaContentsTest(unittest.TestCase):
             response = page_response(costDollars={"total": "SYNTHETIC_PRIVATE_DETAIL"})
             with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                     mock.patch.object(V.urllib.request, "urlopen",
-                        return_value=io.BytesIO(json.dumps(response).encode())) as http:
+                        return_value=response_bytes(json.dumps(response).encode())) as http:
                 with self.assertRaises(V.VendorUsageUnmetered) as first:
                     V.read_source({"url": URL}, ledger, "research")
                 self.assertEqual(first.exception.detail, "exa_contents_cost_invalid")
@@ -170,12 +271,15 @@ class ExaContentsTest(unittest.TestCase):
                 ledger.attach(path)
                 with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                         mock.patch.object(V.urllib.request, "urlopen",
-                            return_value=io.BytesIO(json.dumps(response).encode())) as http:
+                            return_value=response_bytes(json.dumps(response).encode())) as http:
                     with self.assertRaises(V.VendorUsageUnmetered) as first:
                         V.read_source({"url": URL}, ledger, "research")
                     self.assertEqual(first.exception.detail, reason)
-                    self.assertEqual(ledger.calls[-1]["structured_result"]["failure"],
-                                     {"kind": reason})
+                    failure = ledger.calls[-1]["structured_result"]["failure"]
+                    expected = {"kind": reason}
+                    if reason == "exa_contents_source_error_unclassified":
+                        expected["source_error"] = {"tag": "unrecognized", "http_status": 500}
+                    self.assertEqual(failure, expected)
                     restarted = V.Ledger(ceiling=1)
                     restarted.attach(path)
                     restarted.load(path)
@@ -190,14 +294,20 @@ class ExaContentsTest(unittest.TestCase):
 
     def test_legacy_or_untrusted_diagnostic_checkpoint_never_reissues(self):
         for failure in [None, {"kind": "SYNTHETIC_PRIVATE_DETAIL"},
-                        {"kind": []}, {"kind": "exa_contents_cost_invalid", "url": URL}]:
+                        {"kind": []}, {"kind": "exa_contents_cost_invalid", "url": URL},
+                        {"kind": "exa_contents_source_error_unclassified", "source_error": {
+                            "tag": "SYNTHETIC_PRIVATE_DETAIL", "http_status": 500}},
+                        {"kind": "exa_contents_source_error_unclassified", "source_error": {
+                            "tag": "CRAWL_TIMEOUT", "http_status": 504.0}},
+                        {"kind": "exa_contents_source_error_unclassified", "source_error": {
+                            "tag": "CRAWL_TIMEOUT", "http_status": 504, "url": URL}}]:
             with self.subTest(failure=failure), tempfile.TemporaryDirectory() as tmp:
                 path = str(Path(tmp) / "spend.json")
                 ledger = V.Ledger(ceiling=1)
                 ledger.attach(path)
                 with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                         mock.patch.object(V.urllib.request, "urlopen",
-                            return_value=io.BytesIO(b"{}")) as http:
+                            return_value=response_bytes(b"{}")) as http:
                     with self.assertRaises(V.VendorUsageUnmetered):
                         V.read_source({"url": URL}, ledger, "research")
                     saved = json.loads(Path(path).read_text())
@@ -221,6 +331,31 @@ class ExaContentsTest(unittest.TestCase):
                     self.assertAlmostEqual(restarted.spent(), 0.001)
                     self.assertEqual(restarted.summary()["unresolved_reservations"], 0)
 
+    def test_historical_unclassified_outcome_stays_terminal_even_for_a_known_tuple(self):
+        for diagnostic in [None, {"tag": "CRAWL_TIMEOUT", "http_status": 504}]:
+            with self.subTest(diagnostic=diagnostic), tempfile.TemporaryDirectory() as tmp:
+                path = str(Path(tmp) / "spend.json")
+                ledger = V.Ledger(ceiling=1)
+                ledger.attach(path)
+                with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
+                        mock.patch.object(V.urllib.request, "urlopen",
+                            return_value=response_bytes(b"{}")) as http:
+                    with self.assertRaises(V.VendorUsageUnmetered):
+                        V.read_source({"url": URL}, ledger, "research")
+                    saved = json.loads(Path(path).read_text())
+                    failure = {"kind": "exa_contents_source_error_unclassified"}
+                    if diagnostic is not None:
+                        failure["source_error"] = diagnostic
+                    saved["calls"][-1]["structured_result"]["failure"] = failure
+                    Path(path).write_text(json.dumps(saved))
+                    restarted = V.Ledger(ceiling=1)
+                    restarted.attach(path)
+                    restarted.load(path)
+                    with self.assertRaises(V.VendorUsageUnmetered):
+                        V.read_source({"url": URL}, restarted, "research")
+                    self.assertEqual(http.call_count, 1)
+                    self.assertAlmostEqual(restarted.spent(), .001)
+
     def test_simultaneous_identical_citations_share_one_charge(self):
         barrier = threading.Barrier(6)
         ledger = V.Ledger(ceiling=1)
@@ -229,7 +364,7 @@ class ExaContentsTest(unittest.TestCase):
             return V.read_source({"url": URL}, ledger, "research")
         with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                 mock.patch.object(V.urllib.request, "urlopen", side_effect=lambda *_a, **_k:
-                    io.BytesIO(json.dumps(page_response()).encode())) as http:
+                    response_bytes(json.dumps(page_response()).encode())) as http:
             with ThreadPoolExecutor(max_workers=6) as pool:
                 results = list(pool.map(read, range(6)))
             self.assertTrue(all(result == {"text": PAGE, "retrieval_provider": "exa"} for result in results))
@@ -262,7 +397,7 @@ class ExaContentsTest(unittest.TestCase):
                 ledger = V.Ledger(ceiling=1)
                 ledger.attach(path)
                 error = V.urllib.error.HTTPError("https://api.exa.ai/contents", status, "Rejected", {},
-                    io.BytesIO(json.dumps({"tag": tag, "error": "SYNTHETIC_PRIVATE_DETAIL"}).encode()))
+                    response_bytes(json.dumps({"tag": tag, "error": "SYNTHETIC_PRIVATE_DETAIL"}).encode()))
                 with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                         mock.patch.object(V.urllib.request, "urlopen", side_effect=error) as http, \
                         mock.patch.object(V, "jina_fetch", side_effect=AssertionError("Reader called")) as reader:
@@ -286,7 +421,7 @@ class ExaContentsTest(unittest.TestCase):
                 "error": {"tag": "CRAWL_NOT_FOUND", "httpStatusCode": 404}}]}
             with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                     mock.patch.object(V.urllib.request, "urlopen",
-                        return_value=io.BytesIO(json.dumps(payload).encode())) as http, \
+                        return_value=response_bytes(json.dumps(payload).encode())) as http, \
                     mock.patch.object(V, "jina_fetch", side_effect=AssertionError("Reader called")) as reader:
                 with self.assertRaises(V.VendorHTTPRejected):
                     V.read_source({"url": URL}, ledger, "research")
@@ -307,7 +442,7 @@ class ExaContentsTest(unittest.TestCase):
             payload = page_response(costDollars={"total": 0.002})
             with mock.patch.dict(os.environ, {"EXA_API_KEY": "synthetic"}), \
                     mock.patch.object(V.urllib.request, "urlopen",
-                        return_value=io.BytesIO(json.dumps(payload).encode())) as http, \
+                        return_value=response_bytes(json.dumps(payload).encode())) as http, \
                     mock.patch.object(V, "jina_fetch", side_effect=AssertionError("Reader called")):
                 with self.assertRaises(V.VendorUsageExceededReservation):
                     V.read_source({"url": URL}, ledger, "research")
