@@ -1,0 +1,213 @@
+{
+  "row": "4.2",
+  "searches": [
+    [
+      {
+        "id": 0,
+        "tier": "T1",
+        "chars": 18000
+      },
+      {
+        "id": 1,
+        "tier": "T5",
+        "chars": 2894
+      },
+      {
+        "id": 2,
+        "tier": "T1",
+        "chars": 958
+      },
+      {
+        "id": 3,
+        "tier": "T1",
+        "chars": 143
+      },
+      {
+        "id": 4,
+        "tier": "T5",
+        "chars": 4366
+      },
+      {
+        "id": 5,
+        "tier": "T1",
+        "chars": 15545
+      }
+    ],
+    [
+      {
+        "id": 0,
+        "tier": "T1",
+        "chars": 18000
+      },
+      {
+        "id": 6,
+        "tier": "T1",
+        "chars": 143
+      },
+      {
+        "id": 5,
+        "tier": "T1",
+        "chars": 15545
+      },
+      {
+        "id": 2,
+        "tier": "T1",
+        "chars": 958
+      },
+      {
+        "id": 7,
+        "tier": "T1",
+        "chars": 3643
+      },
+      {
+        "id": 8,
+        "tier": "T1",
+        "chars": 1995
+      }
+    ],
+    [
+      {
+        "id": 9,
+        "tier": "T1",
+        "chars": 18000
+      },
+      {
+        "id": 10,
+        "tier": "T1",
+        "chars": 3328
+      },
+      {
+        "id": 11,
+        "tier": "T5",
+        "chars": 18000
+      },
+      {
+        "id": 12,
+        "tier": "T5",
+        "chars": 10724
+      },
+      {
+        "id": 13,
+        "tier": "T1",
+        "chars": 18000
+      },
+      {
+        "id": 14,
+        "tier": "T1",
+        "chars": 3103
+      }
+    ],
+    [
+      {
+        "id": 15,
+        "tier": "T1",
+        "chars": 18000
+      },
+      {
+        "id": 0,
+        "tier": "T1",
+        "chars": 18000
+      },
+      {
+        "id": 16,
+        "tier": "T3",
+        "chars": 18000
+      },
+      {
+        "id": 7,
+        "tier": "T1",
+        "chars": 3643
+      },
+      {
+        "id": 17,
+        "tier": "T1",
+        "chars": 18000
+      },
+      {
+        "id": 18,
+        "tier": "T3",
+        "chars": 18000
+      }
+    ]
+  ],
+  "citations": [
+    {
+      "id": 3,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 19,
+      "tier": "T5",
+      "chars": 0
+    },
+    {
+      "id": 6,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 20,
+      "tier": "T5",
+      "chars": 0
+    },
+    {
+      "id": 1,
+      "tier": "T5",
+      "chars": 0
+    },
+    {
+      "id": 21,
+      "tier": "T5",
+      "chars": 0
+    },
+    {
+      "id": 7,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 0,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 22,
+      "tier": "T5",
+      "chars": 0
+    },
+    {
+      "id": 5,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 23,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 24,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 25,
+      "tier": "T5",
+      "chars": 0
+    },
+    {
+      "id": 26,
+      "tier": "T1",
+      "chars": 0
+    },
+    {
+      "id": 27,
+      "tier": "T5",
+      "chars": 0
+    }
+  ],
+  "failed_source_id": 6,
+  "contents_chars": 143,
+  "failure": "retrieval_transport_ambiguous"
+}
